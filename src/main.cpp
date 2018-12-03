@@ -1,15 +1,11 @@
 #include <SFML/Graphics.hpp>
 
+#include "base_entity.h"
+
 int main() {
     sf::RenderWindow window(sf::VideoMode(1000,1000), "BLAAAAH");
 
-    sf::Texture texture;
-    if (!texture.loadFromFile("box.png")) {
-        exit(1);
-    }
-
-    sf::Sprite sprite;
-    sprite.setTexture(texture);
+    std::vector<BaseEntity> entities;
 
     while (window.isOpen()) {
         sf::Event event;
@@ -19,19 +15,19 @@ int main() {
             }
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-            sprite.move(-0.1, 0);
-        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-            sprite.move(0.1, 0);
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-            sprite.move(0, -0.1);
-        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-            sprite.move(0, 0.1);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+            entities.push_back(BaseEntity());
+        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+            entities.pop_back();
         }
 
         window.clear();
-        window.draw(sprite);
+
+        for (auto it = entities.begin(); it != entities.end(); ++it) {
+            it->update();
+            window.draw(it->sprite_);
+        }
+
         window.display();
     }
 }
