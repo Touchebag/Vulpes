@@ -8,15 +8,17 @@ BaseEntity::BaseEntity() {
     sprite_.setTexture(texture_);
 }
 
+void BaseEntity::setPosiition(float abs_x, float abs_y) {
+    sprite_.setPosition(abs_x, abs_y);
+}
+
 void BaseEntity::update() {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-        sprite_.move(-0.1, 0);
-    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-        sprite_.move(0.1, 0);
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-        sprite_.move(0, -0.1);
-    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-        sprite_.move(0, 0.1);
-    }
+}
+
+void BaseEntity::render(sf::RenderWindow& window) {
+    window.draw(sprite_);
+}
+
+void BaseEntity::move(float rel_x,float rel_y) {
+    sprite_.move(rel_x, rel_y);
 }
