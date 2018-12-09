@@ -9,16 +9,14 @@ BaseEntity::BaseEntity() {
 }
 
 void BaseEntity::setPosiition(float abs_x, float abs_y) {
-    sprite_.setPosition(abs_x, abs_y);
+    trans_.setPosition(abs_x, abs_y);
 }
 
 void BaseEntity::update() {
 }
 
 void BaseEntity::render(sf::RenderWindow& window) {
+    sprite_.setPosition(trans_.getX(), trans_.getY());
     window.draw(sprite_);
 }
 
-void BaseEntity::move(float rel_x,float rel_y) {
-    sprite_.move(rel_x, rel_y);
-}
