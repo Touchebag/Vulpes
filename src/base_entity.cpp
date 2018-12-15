@@ -14,6 +14,10 @@ void BaseEntity::setPosiition(float abs_x, float abs_y) {
     trans_.setPosition(abs_x, abs_y);
 }
 
+void BaseEntity::setHitbox(float left, float right, float top, float bottom) {
+    hitbox_.setHitbox(left, right, top, bottom);
+}
+
 void BaseEntity::update() {
 }
 
