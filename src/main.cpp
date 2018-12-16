@@ -4,22 +4,26 @@
 
 #include "base_entity.h"
 #include "player.h"
+#include "world.h"
+
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(1000,1000), "BLAAAAH");
 
     std::vector<std::shared_ptr<BaseEntity>> entities;
 
+    World worldInst = World::getInstance();
+
     std::shared_ptr<BaseEntity> be1 = std::make_shared<BaseEntity>();
     std::shared_ptr<BaseEntity> be2 = std::make_shared<BaseEntity>();
     std::shared_ptr<BaseEntity> be3 = std::make_shared<BaseEntity>();
 
     be1->setPosiition(100.0, 200.0);
-    entities.push_back(be1);
+    worldInst.getWorldObjects().push_back(be1);
     be2->setPosiition(400.0, 200.0);
-    entities.push_back(be2);
+    worldInst.getWorldObjects().push_back(be2);
     be3->setPosiition(700.0, 100.0);
-    entities.push_back(be3);
+    worldInst.getWorldObjects().push_back(be3);
 
     std::shared_ptr<Player> player = std::make_shared<Player>();
     entities.push_back(player);
@@ -32,9 +36,18 @@ int main() {
             }
         }
 
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
+            window.close();
+        }
+
         window.clear();
 
         for (auto it = entities.begin(); it != entities.end(); ++it) {
+            (*it)->update();
+            (*it)->render(window);
+        }
+
+        for (auto it = worldInst.getWorldObjects().begin(); it != worldInst.getWorldObjects().end(); ++it) {
             (*it)->update();
             (*it)->render(window);
         }
