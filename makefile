@@ -1,5 +1,5 @@
 CC = g++
-CPPFLAGS =
+CPPFLAGS = -Wall -Wpedantic
 
 TARGET = out.exe
 
