@@ -6,6 +6,8 @@ BaseEntity::BaseEntity() {
     }
 
     sprite_.setTexture(texture_);
+    sf::FloatRect sprite_bounds = sprite_.getLocalBounds();
+    sprite_.setOrigin(sprite_bounds.width / 2, sprite_bounds.height / 2);
 }
 
 void BaseEntity::setPosiition(float abs_x, float abs_y) {
