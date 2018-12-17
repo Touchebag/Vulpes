@@ -12,24 +12,24 @@ int main() {
 
     std::vector<std::shared_ptr<BaseEntity>> entities;
 
-    World worldInst = World::getInstance();
+    World& worldInst = World::getInstance();
 
     std::shared_ptr<BaseEntity> be1 = std::make_shared<BaseEntity>();
     std::shared_ptr<BaseEntity> be2 = std::make_shared<BaseEntity>();
     std::shared_ptr<BaseEntity> be3 = std::make_shared<BaseEntity>();
 
     be1->setPosiition(100.0, 200.0);
-    be1->setHitbox(50.0, 50.0, 50.0, 50.0);
+    be1->setHitbox(50.0, -50.0, -50.0, 50.0);
     worldInst.getWorldObjects().push_back(be1);
     be2->setPosiition(400.0, 200.0);
-    be2->setHitbox(50.0, 50.0, 50.0, 50.0);
+    be2->setHitbox(50.0, -50.0, -50.0, 50.0);
     worldInst.getWorldObjects().push_back(be2);
     be3->setPosiition(700.0, 100.0);
-    be3->setHitbox(50.0, 50.0, 50.0, 50.0);
+    be3->setHitbox(50.0, -50.0, -50.0, 50.0);
     worldInst.getWorldObjects().push_back(be3);
 
     std::shared_ptr<Player> player = std::make_shared<Player>();
-    player->setHitbox(50.0, 50.0, 50.0, 50.0);
+    player->setHitbox(50.0, -50.0, -50.0, 50.0);
     entities.push_back(player);
 
     while (window.isOpen()) {

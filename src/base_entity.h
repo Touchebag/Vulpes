@@ -14,6 +14,7 @@ public:
     // TODO Move to constructor?
     void setPosiition(float abs_x, float abs_y);
     void setHitbox(float left, float right, float top, float bottom);
+    Hitbox getAbsHitbox();
 
     void render(sf::RenderWindow& window);
 

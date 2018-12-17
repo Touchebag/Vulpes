@@ -18,6 +18,12 @@ void BaseEntity::setHitbox(float left, float right, float top, float bottom) {
     hitbox_.setHitbox(left, right, top, bottom);
 }
 
+Hitbox BaseEntity::getAbsHitbox() {
+    Hitbox abs_hitbox;
+    abs_hitbox.setHitbox(hitbox_.right_ + trans_.getX(), hitbox_.left_ + trans_.getX(), hitbox_.top_ + trans_.getY(), hitbox_.bottom_ + trans_.getY());
+    return abs_hitbox;
+}
+
 void BaseEntity::update() {
 }
 

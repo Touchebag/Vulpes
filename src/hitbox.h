@@ -2,7 +2,7 @@
 
 class Hitbox {
   public:
-    setHitbox(float right, float left, float top, float bottom);
+    void setHitbox(float right, float left, float top, float bottom);
 
     bool collides(Hitbox hitbox);
 

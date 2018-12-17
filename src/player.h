@@ -5,4 +5,7 @@
 class Player : public BaseEntity {
     public:
         void update() override;
+
+    private:
+        void moveAndCheckCollision(float x, float y);
 };
