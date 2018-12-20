@@ -30,5 +30,11 @@ void BaseEntity::update() {
 void BaseEntity::render(sf::RenderWindow& window) {
     sprite_.setPosition(trans_.getX(), trans_.getY());
     window.draw(sprite_);
+
+    // TODO Move to debug menu
+    sf::RectangleShape rectangle(sf::Vector2f(hitbox_.right_ - hitbox_.left_, hitbox_.bottom_ - hitbox_.top_));
+    rectangle.setPosition(trans_.getX() + hitbox_.left_, trans_.getY() + hitbox_.top_);
+    rectangle.setFillColor(sf::Color(255, 0, 0, 64));
+    window.draw(rectangle);
 }
 
