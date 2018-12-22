@@ -3,8 +3,8 @@ CPPFLAGS = -MMD -MP -Wall -Wpedantic
 
 TARGET = out.exe
 
-INC_DIRS = src SFML/include
-LIB_DIRS = SFML/lib
+INC_DIRS = src libs/SFML/include libs/nlohmann
+LIB_DIRS = libs/SFML/lib
 BUILD_DIR = build
 
 LIBS = sfml-graphics sfml-window sfml-system
