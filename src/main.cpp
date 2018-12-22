@@ -6,13 +6,15 @@
 #include "player.h"
 #include "world.h"
 
-
 int main() {
     sf::RenderWindow window(sf::VideoMode(1000,1000), "BLAAAAH");
 
     std::vector<std::shared_ptr<BaseEntity>> entities;
 
     World& worldInst = World::getInstance();
+
+    sf::Time frames;
+    sf::Clock frame_time;
 
     std::shared_ptr<BaseEntity> be1 = std::make_shared<BaseEntity>();
     std::shared_ptr<BaseEntity> be2 = std::make_shared<BaseEntity>();
@@ -32,7 +34,11 @@ int main() {
     player->setHitbox(50.0, -50.0, -50.0, 50.0);
     entities.push_back(player);
 
+    frame_time.restart();
     while (window.isOpen()) {
+        frames += frame_time.getElapsedTime();
+        frame_time.restart();
+
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
@@ -46,13 +52,24 @@ int main() {
 
         window.clear();
 
+        // If we have rendered more than one physics frame then advance physics
+        while (frames.asMilliseconds() >= 16) {
+            for (auto it = entities.begin(); it != entities.end(); ++it) {
+                (*it)->update();
+            }
+
+            for (auto it = worldInst.getWorldObjects().begin(); it != worldInst.getWorldObjects().end(); ++it) {
+                (*it)->update();
+            }
+
+            frames -= sf::milliseconds(16);
+        }
+
         for (auto it = entities.begin(); it != entities.end(); ++it) {
-            (*it)->update();
             (*it)->render(window);
         }
 
         for (auto it = worldInst.getWorldObjects().begin(); it != worldInst.getWorldObjects().end(); ++it) {
-            (*it)->update();
             (*it)->render(window);
         }
 
