@@ -1,6 +1,8 @@
 #include <memory>
 
 #include <SFML/Graphics.hpp>
+#include <json.hpp>
+#include <fstream>
 
 #include "base_entity.h"
 #include "player.h"
@@ -16,22 +18,19 @@ int main() {
     sf::Time frames;
     sf::Clock frame_time;
 
-    std::shared_ptr<BaseEntity> be1 = std::make_shared<BaseEntity>();
-    std::shared_ptr<BaseEntity> be2 = std::make_shared<BaseEntity>();
-    std::shared_ptr<BaseEntity> be3 = std::make_shared<BaseEntity>();
+    std::ifstream ifs("assets/world.json");
+    nlohmann::json j = nlohmann::json::parse(ifs);
 
-    be1->setPosiition(100.0, 200.0);
-    be1->setHitbox(25.0, -25.0, -25.0, 25.0);
-    worldInst.getWorldObjects().push_back(be1);
-    be2->setPosiition(400.0, 200.0);
-    be2->setHitbox(10.0, -30.0, -20.0, 70.0);
-    worldInst.getWorldObjects().push_back(be2);
-    be3->setPosiition(700.0, 100.0);
-    be3->setHitbox(34.0, -56.0, -13.0, 43.0);
-    worldInst.getWorldObjects().push_back(be3);
+    for (auto it : j) {
+        BaseEntity ent;
+        ent.loadFromJson(it);
+        std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>(ent);
+        worldInst.getWorldObjects().push_back(std::move(entity));
+    }
 
     std::shared_ptr<Player> player = std::make_shared<Player>();
-    player->setHitbox(50.0, -50.0, -50.0, 50.0);
+    player->setPosiition(200.0, 200.0);
+    player->setHitbox(25.0, -25.0, -25.0, 25.0);
     entities.push_back(player);
 
     frame_time.restart();

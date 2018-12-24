@@ -24,6 +24,11 @@ Hitbox BaseEntity::getAbsHitbox() {
     return abs_hitbox;
 }
 
+void BaseEntity::loadFromJson(nlohmann::json j) {
+    setPosiition(j["position"]["x"].get<float>(), j["position"]["y"].get<float>());
+    setHitbox(j["hitbox"]["right"].get<float>(), j["hitbox"]["left"].get<float>(), j["hitbox"]["top"].get<float>(), j["hitbox"]["bottom"].get<float>());
+}
+
 void BaseEntity::update() {
 }
 

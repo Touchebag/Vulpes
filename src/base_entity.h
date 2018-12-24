@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <json.hpp>
 
 #include "transform.h"
 #include "hitbox.h"
@@ -16,6 +17,7 @@ public:
     void setHitbox(float left, float right, float top, float bottom);
     Hitbox getAbsHitbox();
 
+    void loadFromJson(nlohmann::json j);
     void render(sf::RenderWindow& window);
 
 protected:
