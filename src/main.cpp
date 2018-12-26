@@ -31,7 +31,7 @@ int main() {
     }
 
     std::shared_ptr<Player> player = std::make_shared<Player>();
-    player->setPosiition(200.0, 200.0);
+    player->setPosiition(util::X(200.0), util::Y(200.0));
     player->setHitbox(25.0, -25.0, -25.0, 25.0);
     entities.push_back(player);
 

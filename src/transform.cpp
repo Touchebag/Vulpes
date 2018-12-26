@@ -1,19 +1,19 @@
 #include "transform.h"
 
-void Transform::setPosition(float x, float y) {
+void Transform::setPosition(util::X x, util::Y y) {
     pos_x_ = x;
     pos_y_ = y;
 }
 
-void Transform::move(float x, float y) {
+void Transform::move(util::X x, util::Y y) {
     pos_x_ += x;
     pos_y_ += y;
 }
 
-float Transform::getX() {
+util::X Transform::getX() {
     return pos_x_;
 }
 
-float Transform::getY() {
+util::Y Transform::getY() {
     return pos_y_;
 }

@@ -2,6 +2,8 @@
 
 #include <tuple>
 
+#include "util.h"
+
 class Hitbox {
   public:
     void setHitbox(float right, float left, float top, float bottom);
@@ -9,12 +11,12 @@ class Hitbox {
     bool collides(const Hitbox& hitbox);
 
     // This assumes that the objects have already been checked for rough collision
-    std::tuple<float, float> getMaximumMovement(float stepX, float stepY, Hitbox otherHitbox);
+    std::tuple<util::X, util::Y> getMaximumMovement(util::X stepX, util::Y stepY, Hitbox otherHitbox);
 
-    float right_ = 0.0;
-    float left_ = 0.0;
-    float top_ = 0.0;
-    float bottom_ = 0.0;
+    double right_ = 0.0;
+    double left_ = 0.0;
+    double top_ = 0.0;
+    double bottom_ = 0.0;
 
   private:
     bool collidesX(const Hitbox& otherHitbox);

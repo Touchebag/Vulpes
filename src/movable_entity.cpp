@@ -1,4 +1,4 @@
 #include "movable_entity.h"
 
-void MovableEntity::move(vec2d velocity) {
+void MovableEntity::move(util::X velX, util::Y velY) {
 }

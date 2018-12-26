@@ -11,7 +11,7 @@ bool Hitbox::collides(const Hitbox& hitbox) {
     return collidesX(hitbox) && collidesY(hitbox);
 }
 
-std::tuple<float, float> Hitbox::getMaximumMovement(float stepX, float stepY, Hitbox otherHitbox) {
+std::tuple<util::X, util::Y> Hitbox::getMaximumMovement(util::X stepX, util::Y stepY, Hitbox otherHitbox) {
     float retX = stepX, retY = stepY;
 
     // If X direction was already colliding last step then we are parallell in this direction
@@ -33,7 +33,7 @@ std::tuple<float, float> Hitbox::getMaximumMovement(float stepX, float stepY, Hi
         }
     }
 
-    return { retX, retY };
+    return { util::X(retX), util::Y(retY) };
 }
 
 bool Hitbox::collidesX(const Hitbox& otherHitbox) {

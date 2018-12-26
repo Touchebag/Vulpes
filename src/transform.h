@@ -1,14 +1,16 @@
 #pragma once
 
+#include "util.h"
+
 class Transform {
 public:
-    void setPosition(float x, float y);
-    void move(float x, float y);
+    void setPosition(util::X x, util::Y y);
+    void move(util::X x, util::Y y);
 
-    float getX();
-    float getY();
+    util::X getX();
+    util::Y getY();
 
 private:
-    float pos_x_ = 0.0;
-    float pos_y_ = 0.0;
+    util::X pos_x_ = util::X(0.0);
+    util::Y pos_y_ = util::Y(0.0);
 };

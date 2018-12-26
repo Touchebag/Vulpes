@@ -5,6 +5,7 @@
 
 #include "transform.h"
 #include "hitbox.h"
+#include "util.h"
 
 class BaseEntity {
 public:
@@ -13,7 +14,7 @@ public:
     virtual void update();
 
     // TODO Move to constructor?
-    void setPosiition(float abs_x, float abs_y);
+    void setPosiition(util::X abs_x, util::Y abs_y);
     void setHitbox(float left, float right, float top, float bottom);
     Hitbox getAbsHitbox();
 

@@ -8,7 +8,7 @@ class Player : public BaseEntity,
     public:
         void update() override;
 
-        void move(vec2d velocity) override;
+        void move(util::X velX, util::Y velY) override;
 
     private:
         void moveAndCheckCollision();

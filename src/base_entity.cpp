@@ -10,7 +10,7 @@ BaseEntity::BaseEntity() {
     sprite_.setOrigin(sprite_bounds.width / 2, sprite_bounds.height / 2);
 }
 
-void BaseEntity::setPosiition(float abs_x, float abs_y) {
+void BaseEntity::setPosiition(util::X abs_x, util::Y abs_y) {
     trans_.setPosition(abs_x, abs_y);
 }
 
@@ -25,7 +25,9 @@ Hitbox BaseEntity::getAbsHitbox() {
 }
 
 void BaseEntity::loadFromJson(nlohmann::json j) {
-    setPosiition(j["position"]["x"].get<float>(), j["position"]["y"].get<float>());
+    setPosiition(util::X(j["position"]["x"].get<float>()),
+                 util::Y(j["position"]["y"].get<float>()));
+
     setHitbox(j["hitbox"]["right"].get<float>(), j["hitbox"]["left"].get<float>(), j["hitbox"]["top"].get<float>(), j["hitbox"]["bottom"].get<float>());
 }
 

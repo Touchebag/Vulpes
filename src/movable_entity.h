@@ -1,11 +1,12 @@
 #pragma once
 
-#include "utility.h"
+#include "util.h"
 
 class MovableEntity {
   public:
-    virtual void move(vec2d velocity);
+    virtual void move(util::X velX, util::Y velY);
 
   protected:
-    vec2d velocity_;
+    util::X velX_ = util::X(0.0);
+    util::Y velY_ = util::Y(0.0);
 };
