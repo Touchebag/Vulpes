@@ -25,7 +25,7 @@ $(BUILD_DIR)/%.o: src/%.cpp
 	@mkdir -p $(BUILD_DIR)
 	$(CC) $(LDFLAGS) -c $< -o $@
 
-include $(DEPS)
+-include $(DEPS)
 
 clean:
 	$(RM) $(OBJS)
