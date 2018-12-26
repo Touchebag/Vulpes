@@ -5,24 +5,30 @@
 #include <tuple>
 
 void Player::update() {
-    float move_x = 0.0;
-    float move_y = 0.0;
+    vec2d vel;
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-        move_x = -10;
+        vel.x = -10;
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-        move_x = 10;
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-        move_y = -10;
-    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-        move_y = 10;
+        vel.x = 10;
     }
 
-    moveAndCheckCollision(move_x, move_y);
+    move(vel);
 }
 
-void Player::moveAndCheckCollision(float x, float y) {
+void Player::move(vec2d velocity) {
+    // Gravity
+    // TODO Max limit
+    velocity_.y = velocity_.y + 1;
+
+    velocity_.x = velocity.x;
+
+    moveAndCheckCollision();
+}
+
+void Player::moveAndCheckCollision() {
+    float x = velocity_.x;
+    float y = velocity_.y;
     World& worldInst = World::getInstance();
     Hitbox abs_hitbox = getAbsHitbox();
     abs_hitbox.left_ += x;
@@ -39,9 +45,15 @@ void Player::moveAndCheckCollision(float x, float y) {
             y = std::get<1>(newMoveValues);
         }
 
-        // TODO Apply new move values to abs_hitbox for multiple hitboxes
+        // Readjust abs_hitbox to new values
+        abs_hitbox.left_ += x - velocity_.x;
+        abs_hitbox.right_ += x - velocity_.x;
+        abs_hitbox.top_ += y - velocity_.y;
+        abs_hitbox.bottom_ += y - velocity_.y;
     }
 
-    trans_.move(x, y);
+    velocity_.x = x;
+    velocity_.y = y;
+    trans_.move(velocity_.x, velocity_.y);
 }
 
