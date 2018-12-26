@@ -8,6 +8,8 @@
 #include "player.h"
 #include "world.h"
 
+#define PHYSICS_FRAME_RATE 60
+
 int main() {
     sf::RenderWindow window(sf::VideoMode(1000,1000), "BLAAAAH");
 
@@ -52,7 +54,7 @@ int main() {
         window.clear();
 
         // If we have rendered more than one physics frame then advance physics
-        while (frames.asMilliseconds() >= 16) {
+        while (frames.asMilliseconds() >= (1000.0 / PHYSICS_FRAME_RATE)) {
             for (auto it = entities.begin(); it != entities.end(); ++it) {
                 (*it)->update();
             }
@@ -61,7 +63,7 @@ int main() {
                 (*it)->update();
             }
 
-            frames -= sf::milliseconds(16);
+            frames -= sf::milliseconds(1000.0 / PHYSICS_FRAME_RATE);
         }
 
         for (auto it = entities.begin(); it != entities.end(); ++it) {
