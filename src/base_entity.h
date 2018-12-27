@@ -15,7 +15,7 @@ public:
 
     // TODO Move to constructor?
     void setPosiition(util::X abs_x, util::Y abs_y);
-    void setHitbox(float left, float right, float top, float bottom);
+    void setHitbox(util::Right right, util::Left left, util::Top top, util::Bottom bottom);
     Hitbox getAbsHitbox();
 
     void loadFromJson(nlohmann::json j);

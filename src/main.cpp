@@ -7,6 +7,7 @@
 #include "base_entity.h"
 #include "player.h"
 #include "world.h"
+#include "util.h"
 
 #define PHYSICS_FRAME_RATE 60
 
@@ -32,7 +33,7 @@ int main() {
 
     std::shared_ptr<Player> player = std::make_shared<Player>();
     player->setPosiition(util::X(200.0), util::Y(200.0));
-    player->setHitbox(25.0, -25.0, -25.0, 25.0);
+    player->setHitbox(util::Right(25.0), util::Left(-25.0), util::Top(-25.0), util::Bottom(25.0));
     entities.push_back(player);
 
     frame_time.restart();

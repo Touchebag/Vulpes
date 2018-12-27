@@ -8,22 +8,30 @@ class TypesafeDouble {
         return d_;
     }
 
-    operator +(double d) {
+    double operator +(double d) {
         return d_ + d;
     }
 
-    operator -(double d) {
+    double operator -(double d) {
         return d_ - d;
     }
 
-    operator +=(double d) {
+    double operator +=(double d) {
         d_ += d;
         return d_;
     }
 
-    operator -=(double d) {
+    double operator -=(double d) {
         d_ -= d;
         return d_;
+    }
+
+    bool operator <(double d) {
+        return d_ < d;
+    }
+
+    bool operator >(double d) {
+        return d_ > d;
     }
 
   protected:
@@ -40,6 +48,26 @@ class X : public TypesafeDouble {
 class Y : public TypesafeDouble{
   public:
     explicit Y(double y) { d_ = y; };
+};
+
+class Right : public TypesafeDouble{
+  public:
+    explicit Right(double r) { d_ = r; };
+};
+
+class Left : public TypesafeDouble{
+  public:
+    explicit Left(double l) { d_ = l; };
+};
+
+class Top : public TypesafeDouble{
+  public:
+    explicit Top(double t) { d_ = t; };
+};
+
+class Bottom : public TypesafeDouble{
+  public:
+    explicit Bottom(double b) { d_ = b; };
 };
 
 } // namespace

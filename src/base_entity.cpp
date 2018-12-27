@@ -14,13 +14,17 @@ void BaseEntity::setPosiition(util::X abs_x, util::Y abs_y) {
     trans_.setPosition(abs_x, abs_y);
 }
 
-void BaseEntity::setHitbox(float left, float right, float top, float bottom) {
-    hitbox_.setHitbox(left, right, top, bottom);
+void BaseEntity::setHitbox(util::Right right, util::Left left, util::Top top, util::Bottom bottom) {
+    hitbox_.setHitbox(right, left, top, bottom);
 }
 
 Hitbox BaseEntity::getAbsHitbox() {
     Hitbox abs_hitbox;
-    abs_hitbox.setHitbox(hitbox_.right_ + trans_.getX(), hitbox_.left_ + trans_.getX(), hitbox_.top_ + trans_.getY(), hitbox_.bottom_ + trans_.getY());
+    auto right = util::Right(hitbox_.right_ + trans_.getX());
+    auto left = util::Left(hitbox_.left_ + trans_.getX());
+    auto top = util::Top(hitbox_.top_ + trans_.getY());
+    auto bottom = util::Bottom(hitbox_.bottom_ + trans_.getY());
+    abs_hitbox.setHitbox(right, left, top, bottom);
     return abs_hitbox;
 }
 
@@ -28,7 +32,11 @@ void BaseEntity::loadFromJson(nlohmann::json j) {
     setPosiition(util::X(j["position"]["x"].get<float>()),
                  util::Y(j["position"]["y"].get<float>()));
 
-    setHitbox(j["hitbox"]["right"].get<float>(), j["hitbox"]["left"].get<float>(), j["hitbox"]["top"].get<float>(), j["hitbox"]["bottom"].get<float>());
+    auto right = util::Right(j["hitbox"]["right"].get<double>());
+    auto left = util::Left(j["hitbox"]["left"].get<double>());
+    auto top = util::Top(j["hitbox"]["top"].get<double>());
+    auto bottom = util::Bottom(j["hitbox"]["bottom"].get<double>());
+    setHitbox(right, left, top, bottom);
 }
 
 void BaseEntity::update() {
