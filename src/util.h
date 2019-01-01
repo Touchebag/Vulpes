@@ -43,11 +43,13 @@ class TypesafeDouble {
 class X : public TypesafeDouble {
   public:
     explicit X(double x) { d_ = x; };
+    void operator= (double x) { d_ = x; };
 };
 
 class Y : public TypesafeDouble{
   public:
     explicit Y(double y) { d_ = y; };
+    void operator= (double y) { d_ = y; };
 };
 
 class Right : public TypesafeDouble{

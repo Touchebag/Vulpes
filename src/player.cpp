@@ -1,8 +1,8 @@
 #include "player.h"
 #include "world.h"
 
-#include <iostream>
 #include <tuple>
+#include <algorithm>
 
 void Player::update() {
     double x = 0.0, y = 0.0;
@@ -14,14 +14,30 @@ void Player::update() {
     }
 
     move(util::X(x), util::Y(y));
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+        if (getProperty(state::Property::TOUCHING_GROUND) &&
+            !getProperty(state::Property::MOVEMENT_LOCKED)) {
+            velY_ = util::Y(-20.0);
+        } else if (getProperty(state::Property::TOUCHING_RIGHT_WALL)) {
+            velY_ = util::Y(-20.0);
+            velX_ = util::X(-20.0);
+        } else if (getProperty(state::Property::TOUCHING_LEFT_WALL)) {
+            velY_ = util::Y(-20.0);
+            velX_ = util::X(20.0);
+        }
+
+        incomingEvent(state::Event::JUMP);
+    }
 }
 
 void Player::move(util::X velX, util::Y velY) {
     // Gravity
-    // TODO Max limit
-    velY_ += 1.0;
+    velY_ = std::min(velY_ + 1.0, 20.0);
 
-    velX_ = velX;
+    if (!getProperty(state::Property::MOVEMENT_LOCKED)) {
+        velX_ = velX;
+    }
 
     moveAndCheckCollision();
 }
@@ -30,6 +46,7 @@ void Player::moveAndCheckCollision() {
     double x = velX_;
     double y = velY_;
     World& worldInst = World::getInstance();
+
     Hitbox abs_hitbox = getAbsHitbox();
     abs_hitbox.left_ += x;
     abs_hitbox.right_ += x;
@@ -50,6 +67,16 @@ void Player::moveAndCheckCollision() {
         abs_hitbox.right_ += x - velX_;
         abs_hitbox.top_ += y - velY_;
         abs_hitbox.bottom_ += y - velY_;
+    }
+
+    if (x < velX_) {
+        incomingEvent(state::Event::TOUCHING_WALL_RIGHT);
+    } else if (x > velX_) {
+        incomingEvent(state::Event::TOUCHING_WALL_LEFT);
+    }
+
+    if (y < velY_) {
+        incomingEvent(state::Event::TOUCHING_FLOOR);
     }
 
     velX_ = util::X(x);
