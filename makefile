@@ -1,5 +1,6 @@
 CC = g++
 CPPFLAGS = -MMD -MP -Wall -Wpedantic -std=c++17
+LOG_LEVEL = 0
 
 TARGET = out.exe
 
@@ -16,7 +17,9 @@ INC_PARAMS=$(foreach d, $(INC_DIRS), -I$d)
 LIB_DIR_PARAMS=$(foreach d, $(LIB_DIRS), -L$d)
 LIB_PARAMS=$(foreach d, $(LIBS), -l$d)
 
-LDFLAGS = $(CPPFLAGS) $(INC_PARAMS)
+LOG_LEVEL_PARAM = -DLOG_LEVEL=$(LOG_LEVEL)
+
+LDFLAGS = $(CPPFLAGS) $(LOG_LEVEL_PARAM) $(INC_PARAMS)
 
 $(TARGET): $(OBJS)
 	$(CC) $(LDFLAGS) $(OBJS) -o $@ $(LIB_DIR_PARAMS) $(LIB_PARAMS)
