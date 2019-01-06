@@ -2,12 +2,12 @@
 
 #include <SFML/Graphics.hpp>
 #include <json.hpp>
-#include <fstream>
 
 #include "base_entity.h"
 #include "player.h"
 #include "world.h"
 #include "util.h"
+#include "file.h"
 
 #define PHYSICS_FRAME_RATE 60
 
@@ -21,14 +21,15 @@ int main() {
     sf::Time frames;
     sf::Clock frame_time;
 
-    std::ifstream ifs("assets/world.json");
-    nlohmann::json j = nlohmann::json::parse(ifs);
+    std::optional<nlohmann::json> j = file::loadJson("assets/world.json");
 
-    for (auto it : j) {
-        BaseEntity ent;
-        ent.loadFromJson(it);
-        std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>(ent);
-        worldInst.getWorldObjects().push_back(std::move(entity));
+    if (j) {
+        for (auto it : j.value()) {
+            BaseEntity ent;
+            ent.loadFromJson(it);
+            std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>(ent);
+            worldInst.getWorldObjects().push_back(std::move(entity));
+        }
     }
 
     std::shared_ptr<Player> player = std::make_shared<Player>();

@@ -1,6 +1,6 @@
 CC = g++
 CPPFLAGS = -MMD -MP -Wall -Wpedantic -std=c++17
-LOG_LEVEL = 0
+LOG_LEVEL = 3
 
 TARGET = out.exe
 
