@@ -29,6 +29,7 @@ Hitbox BaseEntity::getAbsHitbox() {
 }
 
 void BaseEntity::loadFromJson(nlohmann::json j) {
+    // TODO Error handling
     setPosiition(util::X(j["position"]["x"].get<float>()),
                  util::Y(j["position"]["y"].get<float>()));
 

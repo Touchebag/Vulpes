@@ -1,0 +1,42 @@
+[
+    {
+        "id": 1,
+        "next_states": [
+            {"event": 2, "state": 2},
+            {"event": 3, "state": 3},
+            {"event": 4, "state": 4}
+        ]
+    },
+    {
+        "id": 2,
+        "movement_locked": true,
+        "touching_left_wall": true,
+        "touching_ground": false,
+        "next_states": [
+            {"event": 1, "state": 1},
+            {"event": 2, "state": 2},
+            {"event": 4, "state": 4}
+        ]
+    },
+    {
+        "id": 3,
+        "movement_locked": true,
+        "touching_right_wall": true,
+        "touching_ground": false,
+        "next_states": [
+            {"event": 1, "state": 1},
+            {"event": 3, "state": 3},
+            {"event": 4, "state": 4}
+        ]
+    },
+    {
+        "id": 4,
+        "movement_locked": true,
+        "touching_ground": false,
+        "next_states": [
+            {"event": 1, "state": 1},
+            {"event": 2, "state": 2},
+            {"event": 3, "state": 3}
+        ]
+    }
+]

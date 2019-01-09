@@ -1,27 +1,20 @@
 #include "stateful_entity.h"
 
+#include "file.h"
+#include "json.hpp"
+
 StatefulEntity::StatefulEntity() {
-    state::InitParams init1;
-    init1.next_states = {{state::Event::TOUCHING_WALL_LEFT, 2}, {state::Event::TOUCHING_WALL_RIGHT, 3}, {state::Event::JUMP, 4}};
+    // TODO Take as argument
+    std::string filepath = "assets/player_state.json";
 
-    state::InitParams init2;
-    init2.movement_locked = true;
-    init2.touching_left_wall = true;
-    init2.touching_ground = false;
-    init2.next_states = {{state::Event::TOUCHING_FLOOR, 1}, {state::Event::TOUCHING_WALL_LEFT, 2}, {state::Event::JUMP, 4}};
+    auto j = file::loadJson(filepath);
 
-    state::InitParams init3;
-    init3.movement_locked = true;
-    init3.touching_right_wall = true;
-    init3.touching_ground = false;
-    init3.next_states = {{state::Event::TOUCHING_FLOOR, 1}, {state::Event::TOUCHING_WALL_RIGHT, 3}, {state::Event::JUMP, 4}};
-
-    state::InitParams init4;
-    init4.movement_locked = true;
-    init4.touching_ground = false;
-    init4.next_states = {{state::Event::TOUCHING_FLOOR, 1}, {state::Event::TOUCHING_WALL_LEFT, 2}, {state::Event::TOUCHING_WALL_RIGHT, 3}};
-
-    state_list_.insert({{1, init1}, {2, init2}, {3, init3}, {4, init4}});
+    // TODO Error handling
+    if (j) {
+        for (auto state : j.value()) {
+            state_list_.insert(std::make_pair(state["id"].get<int>(), State::loadStateFromJson(state)));
+        }
+    }
 
     // TODO Error handling
     current_state_ = &state_list_.at(1);
