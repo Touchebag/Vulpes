@@ -8,11 +8,14 @@
 #include "world.h"
 #include "util.h"
 #include "file.h"
+#include "log.h"
+#include "input_event.h"
 
 #define PHYSICS_FRAME_RATE 60
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(1000,1000), "BLAAAAH");
+    window.setKeyRepeatEnabled(false);
 
     std::vector<std::shared_ptr<BaseEntity>> entities;
 
@@ -32,6 +35,11 @@ int main() {
         }
     }
 
+    Input::getInstance().setKeyboardMap(
+            {{sf::Keyboard::Key::Space, input::button::JUMP},
+            {sf::Keyboard::Key::Left, input::button::LEFT},
+            {sf::Keyboard::Key::Right, input::button::RIGHT}});
+
     std::shared_ptr<Player> player = std::make_shared<Player>();
     player->setPosiition(util::X(200.0), util::Y(200.0));
     player->setHitbox(util::Right(25.0), util::Left(-25.0), util::Top(-25.0), util::Bottom(25.0));
@@ -42,13 +50,6 @@ int main() {
         frames += frame_time.getElapsedTime();
         frame_time.restart();
 
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
-                window.close();
-            }
-        }
-
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
             window.close();
         }
@@ -57,6 +58,28 @@ int main() {
 
         // If we have rendered more than one physics frame then advance physics
         while (frames.asMilliseconds() >= (1000.0 / PHYSICS_FRAME_RATE)) {
+            Input::getInstance().update();
+
+            sf::Event event;
+            while (window.pollEvent(event)) {
+                switch (event.type) {
+                    case sf::Event::Closed:
+                        window.close();
+                        break;
+                    case sf::Event::KeyPressed:
+                        LOGV("Key pressed %i\n", event.key.code);
+                        Input::getInstance().keyEvent(event.key.code, true);
+                        break;
+                    case sf::Event::KeyReleased:
+                        LOGV("Key released %i\n", event.key.code);
+                        Input::getInstance().keyEvent(event.key.code, false);
+                        break;
+                    default:
+                        LOGD("Unknown event %i\n", event.type);
+                        break;
+                }
+            }
+
             for (auto it = entities.begin(); it != entities.end(); ++it) {
                 (*it)->update();
             }

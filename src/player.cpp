@@ -1,5 +1,6 @@
 #include "player.h"
 #include "world.h"
+#include "input_event.h"
 
 #include <tuple>
 #include <algorithm>
@@ -7,15 +8,15 @@
 void Player::update() {
     double x = 0.0, y = 0.0;
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+    if (Input::getInstance().isButtonHeld(input::button::LEFT)) {
         x = -10.0;
-    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+    } else if (Input::getInstance().isButtonHeld(input::button::RIGHT)) {
         x = 10.0;
     }
 
     move(util::X(x), util::Y(y));
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+    if (Input::getInstance().isButtonPressed(input::button::JUMP)) {
         if (getProperty(state::Property::TOUCHING_GROUND) &&
             !getProperty(state::Property::MOVEMENT_LOCKED)) {
             velY_ = util::Y(-20.0);
