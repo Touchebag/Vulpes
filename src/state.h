@@ -3,6 +3,7 @@
 #include <memory>
 #include <optional>
 #include <unordered_map>
+#include <climits>
 
 #include "event.h"
 #include "json.hpp"
@@ -14,7 +15,7 @@ struct InitParams {
     bool touching_ground = true;
     bool touching_right_wall = false;
     bool touching_left_wall = false;
-    unsigned int frame_timer = 0;
+    unsigned int frame_timer = UINT_MAX;
     std::unordered_map<state::Event, int> next_states;
 };
 

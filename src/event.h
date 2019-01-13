@@ -8,7 +8,8 @@ enum class Event {
     TOUCHING_FLOOR = 1,
     TOUCHING_WALL_LEFT = 2,
     TOUCHING_WALL_RIGHT = 3,
-    JUMP = 4
+    JUMP = 4,
+    FRAME_TIMEOUT = 5
 };
 
 }

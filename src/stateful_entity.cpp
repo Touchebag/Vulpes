@@ -25,6 +25,7 @@ void StatefulEntity::incomingEvent(state::Event event) {
 
     if (new_state) {
         current_state_ = &state_list_.at(new_state.value());
+        frame_counter_ = current_state_->frame_timer_;
     }
 }
 

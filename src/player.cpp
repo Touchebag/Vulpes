@@ -6,6 +6,12 @@
 #include <algorithm>
 
 void Player::update() {
+    // Check before decreasing
+    // If previous frame was the last one (i.e. ticked down to 0) then trigger event before this frame
+    if (frame_counter_-- == 0) {
+        incomingEvent(state::Event::FRAME_TIMEOUT);
+    }
+
     double x = 0.0, y = 0.0;
 
     if (Input::getInstance().isButtonHeld(input::button::LEFT)) {
