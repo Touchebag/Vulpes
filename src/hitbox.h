@@ -2,7 +2,7 @@
 
 #include <tuple>
 
-#include "util.h"
+#include "utils/common.h"
 
 class Hitbox {
   public:

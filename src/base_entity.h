@@ -5,7 +5,7 @@
 
 #include "transform.h"
 #include "hitbox.h"
-#include "util.h"
+#include "utils/common.h"
 
 class BaseEntity {
 public:

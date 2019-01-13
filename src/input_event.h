@@ -3,16 +3,7 @@
 #include <unordered_map>
 #include <SFML/Window.hpp>
 
-namespace input {
-
-enum class button {
-    UNKNOWN,
-    LEFT,
-    RIGHT,
-    JUMP
-};
-
-} // namespace
+#include "utils/input.h"
 
 class Input {
   public:

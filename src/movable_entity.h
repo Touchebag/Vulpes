@@ -1,6 +1,6 @@
 #pragma once
 
-#include "util.h"
+#include "utils/common.h"
 
 class MovableEntity {
   public:

@@ -2,19 +2,6 @@
 
 #include "state.h"
 
-// TODO Move to utils?
-namespace state {
-
-enum class Property {
-    UNKNOWN,
-    TOUCHING_GROUND,
-    TOUCHING_RIGHT_WALL,
-    TOUCHING_LEFT_WALL,
-    MOVEMENT_LOCKED
-};
-
-}
-
 class StatefulEntity {
   public:
     StatefulEntity();
