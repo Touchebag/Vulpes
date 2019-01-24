@@ -28,10 +28,9 @@ int main() {
 
     if (j) {
         for (auto it : j.value()) {
-            BaseEntity ent;
-            ent.loadFromJson(it);
-            std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>(ent);
-            worldInst.getWorldObjects().push_back(std::move(entity));
+            std::shared_ptr<BaseEntity> ent = std::make_shared<BaseEntity>();
+            ent->loadFromJson(it);
+            worldInst.getWorldObjects().push_back(std::move(ent));
         }
     }
 
