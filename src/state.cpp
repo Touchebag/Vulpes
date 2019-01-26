@@ -8,8 +8,15 @@ State::State(state::InitParams ips) :
     touching_right_wall_(ips.touching_right_wall),
     touching_left_wall_(ips.touching_left_wall),
     frame_timer_(ips.frame_timer),
-    next_state_list_(ips.next_states) {
+    next_state_list_(ips.next_states),
+    frame_names_(ips.frame_names) {
     // TODO check for at least one following state
+}
+
+void State::update() {
+    if (++current_frame_ >= frame_names_.size()) {
+        current_frame_ = 0;
+    }
 }
 
 State State::loadStateFromJson(nlohmann::json j) {
@@ -40,6 +47,12 @@ State State::loadStateFromJson(nlohmann::json j) {
         for (auto it : next_state_array) {
             ips.next_states.insert(std::make_pair(state::Event(it["event"].get<int>()), it["state"].get<int>()));
         }
+
+        nlohmann::json frame_names_array = j["frame_names"];
+
+        for (auto it : frame_names_array) {
+            ips.frame_names.push_back(it.get<std::string>());
+        }
     }
 
     return State(ips);
@@ -56,3 +69,6 @@ std::optional<int> State::incomingEvent(state::Event event) {
     }
 }
 
+std::string State::getCurrentSpriteName() {
+    return frame_names_.at(current_frame_);
+}

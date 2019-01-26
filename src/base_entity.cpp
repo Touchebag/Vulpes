@@ -1,13 +1,21 @@
 #include "base_entity.h"
 
-BaseEntity::BaseEntity() {
-    if (!texture_.loadFromFile("box.png")) {
-        exit(1);
+#include "log.h"
+
+#include <unistd.h>
+
+bool BaseEntity::loadTexture(std::string file_path) {
+    LOGV("%s\n", file_path.c_str());
+    if (!texture_.loadFromFile(file_path.c_str())) {
+        LOGW("Error loading image %s", file_path.c_str());
+        return false;
     }
 
-    sprite_.setTexture(texture_);
+    sprite_.setTexture(texture_, true);
     sf::FloatRect sprite_bounds = sprite_.getLocalBounds();
     sprite_.setOrigin(sprite_bounds.width / 2, sprite_bounds.height / 2);
+
+    return true;
 }
 
 void BaseEntity::setPosiition(util::X abs_x, util::Y abs_y) {
@@ -38,6 +46,15 @@ void BaseEntity::loadFromJson(nlohmann::json j) {
     auto top = util::Top(j["hitbox"]["top"].get<double>());
     auto bottom = util::Bottom(j["hitbox"]["bottom"].get<double>());
     setHitbox(right, left, top, bottom);
+
+    loadTexture(j["sprite"].get<std::string>());
+}
+
+void BaseEntity::setTextureCoords(std::pair<util::Point, util::Point> rect) {
+    sprite_.setTextureRect(sf::IntRect(rect.first.x, rect.first.y, rect.second.x, rect.second.y));
+    sprite_.setOrigin(rect.second.x / 2, rect.second.y / 2);
+    // Scale to 100px, keep aspect ratio
+    sprite_.setScale(200.0 / rect.second.y, 200.0 / rect.second.y);
 }
 
 void BaseEntity::update() {

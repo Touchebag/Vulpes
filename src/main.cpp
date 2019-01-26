@@ -39,9 +39,24 @@ int main() {
             {sf::Keyboard::Key::Left, input::button::LEFT},
             {sf::Keyboard::Key::Right, input::button::RIGHT}});
 
+    std::unordered_map<std::string, std::pair<util::Point, util::Point>> sprite_map = {
+        {"0", {{0, 0}, {360, 480}}},
+        {"1", {{361, 0}, {360, 480}}},
+        {"2", {{0, 481}, {360, 480}}},
+        {"3", {{361, 481}, {360, 480}}},
+        {"4", {{722, 0}, {360, 480}}},
+        {"5", {{1083, 0}, {360, 480}}},
+        {"6", {{722, 481}, {360, 480}}},
+        {"7", {{1444, 0}, {360, 480}}},
+        {"8", {{1083, 481}, {360, 480}}},
+        {"9", {{1444, 481}, {360, 480}}}
+    };
+
     std::shared_ptr<Player> player = std::make_shared<Player>();
     player->setPosiition(util::X(200.0), util::Y(200.0));
-    player->setHitbox(util::Right(25.0), util::Left(-25.0), util::Top(-25.0), util::Bottom(25.0));
+    player->setHitbox(util::Right(50.0), util::Left(-0.0), util::Top(-100.0), util::Bottom(100.0));
+    player->loadTexture("idle.png");
+    player->set_sprite_map(sprite_map);
     entities.push_back(player);
 
     frame_time.restart();

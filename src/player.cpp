@@ -36,6 +36,10 @@ void Player::update() {
 
         incomingEvent(state::Event::JUMP);
     }
+
+    updateState();
+    auto tmp_rect = get_sprite_rect(getCurrentSpriteName());
+    setTextureCoords(tmp_rect);
 }
 
 void Player::move(util::X velX, util::Y velY) {

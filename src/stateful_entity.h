@@ -6,9 +6,13 @@ class StatefulEntity {
   public:
     StatefulEntity();
 
+    void updateState();
+
     void incomingEvent(state::Event event);
 
     bool getProperty(state::Property property);
+
+    std::string getCurrentSpriteName();
 
   protected:
     unsigned int frame_counter_;

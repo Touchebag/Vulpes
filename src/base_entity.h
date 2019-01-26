@@ -9,8 +9,7 @@
 
 class BaseEntity {
 public:
-    BaseEntity();
-
+    bool loadTexture(std::string file_path);
     virtual void update();
 
     // TODO Move to constructor?
@@ -20,6 +19,8 @@ public:
 
     void loadFromJson(nlohmann::json j);
     void render(sf::RenderWindow& window);
+
+    void setTextureCoords(std::pair<util::Point, util::Point>);
 
 protected:
     Transform trans_;

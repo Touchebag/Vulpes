@@ -4,6 +4,7 @@
 #include <optional>
 #include <unordered_map>
 #include <climits>
+#include <vector>
 
 #include "utils/state.h"
 #include "json.hpp"
@@ -12,9 +13,13 @@ class State {
   public:
     State(state::InitParams params);
 
+    void update();
+
     static State loadStateFromJson(nlohmann::json j);
 
     std::optional<int> incomingEvent(state::Event event);
+
+    std::string getCurrentSpriteName();
 
     // TODO Add name
     const bool movement_locked_;
@@ -24,5 +29,7 @@ class State {
     const unsigned int frame_timer_;
 
   private:
-    std::unordered_map<state::Event, int> next_state_list_;
+    const std::unordered_map<state::Event, int> next_state_list_;
+    const std::vector<std::string> frame_names_;
+    unsigned int current_frame_ = 0;
 };

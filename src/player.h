@@ -3,10 +3,12 @@
 #include "base_entity.h"
 #include "movable_entity.h"
 #include "stateful_entity.h"
+#include "animated_entity.h"
 
 class Player : public BaseEntity,
                public MovableEntity,
-               public StatefulEntity {
+               public StatefulEntity,
+               public AnimatedEntity {
     public:
         void update() override;
 

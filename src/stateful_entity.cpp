@@ -20,6 +20,10 @@ StatefulEntity::StatefulEntity() {
     current_state_ = &state_list_.at(1);
 }
 
+void StatefulEntity::updateState() {
+    current_state_->update();
+}
+
 void StatefulEntity::incomingEvent(state::Event event) {
     std::optional<int> new_state = current_state_->incomingEvent(event);
 
@@ -27,6 +31,10 @@ void StatefulEntity::incomingEvent(state::Event event) {
         current_state_ = &state_list_.at(new_state.value());
         frame_counter_ = current_state_->frame_timer_;
     }
+}
+
+std::string StatefulEntity::getCurrentSpriteName() {
+    return current_state_->getCurrentSpriteName();
 }
 
 bool StatefulEntity::getProperty(state::Property property) {
