@@ -6,7 +6,7 @@
 
 bool BaseEntity::loadTexture(std::string file_path) {
     LOGV("%s\n", file_path.c_str());
-    if (!texture_.loadFromFile(file_path.c_str())) {
+    if (!texture_.loadFromFile(std::string("assets/") + file_path.c_str())) {
         LOGW("Error loading image %s", file_path.c_str());
         return false;
     }

@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "state_object.h"
+#include "file.h"
 #include "log.h"
 
 std::vector<StateObject> objects;
@@ -10,7 +11,14 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(1000,1000), "State editor");
     window.setKeyRepeatEnabled(false);
 
-    objects.push_back({});
+    auto j = file::loadJson("assets/world.json");
+
+    // TODO Error handling
+    if (j) {
+        for (auto state : j.value()) {
+            objects.push_back({State::loadStateFromJson(state)});
+        }
+    }
 
     while (window.isOpen()) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){

@@ -2,10 +2,14 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "state.h"
+
 constexpr float RECT_SIDE = 100.0;
 
 class StateObject {
   public:
+    StateObject(State state);
+
     void render(sf::RenderWindow& window);
 
     bool isMouseOver(sf::Vector2f pos);
@@ -15,4 +19,6 @@ class StateObject {
   private:
     sf::Vector2f position_ = {0.0, 0.0};
     sf::RectangleShape rect_ = sf::RectangleShape(sf::Vector2f(RECT_SIDE, RECT_SIDE));
+
+    State state_;
 };

@@ -1,5 +1,8 @@
 #include "state_object.h"
 
+StateObject::StateObject(State state) : state_(state) {
+}
+
 void StateObject::render(sf::RenderWindow& window) {
     rect_.setPosition(position_);
     window.draw(rect_);
