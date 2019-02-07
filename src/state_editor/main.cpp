@@ -11,7 +11,7 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(1000,1000), "State editor");
     window.setKeyRepeatEnabled(false);
 
-    auto j = file::loadJson("assets/world.json");
+    auto j = file::loadJson("assets/player_state.json");
 
     // TODO Error handling
     if (j) {
@@ -37,6 +37,17 @@ int main() {
                 case sf::Event::KeyReleased:
                     LOGV("Key released %i\n", event.key.code);
                     break;
+                case sf::Event::MouseButtonPressed:
+                    if (event.mouseButton.button == sf::Mouse::Left) {
+                        for (int i = 0; static_cast<unsigned int>(i) < objects.size(); ++i) {
+                            if (objects.at(i).isMouseOver({static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y)})) {
+                                current_object = i;
+                                break;
+                            }
+
+                            current_object = -1;
+                        }
+                    }
                 default:
                     LOGV("Unknown event %i\n", event.type);
                     break;
@@ -47,15 +58,6 @@ int main() {
 
         // Move objects around with left mouse
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
-            for (int i = 0; static_cast<unsigned int>(i) < objects.size(); ++i) {
-                if (objects.at(i).isMouseOver({static_cast<float>(pos.x), static_cast<float>(pos.y)})) {
-                    current_object = i;
-                    break;
-                }
-
-                current_object = -1;
-            }
-
             if (current_object >= 0) {
                 objects.at(current_object).move({static_cast<float>(pos.x), static_cast<float>(pos.y)});
             }
