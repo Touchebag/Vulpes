@@ -5,7 +5,7 @@
 #include "log.h"
 
 std::vector<StateObject> objects;
-int current_object = -1;
+StateObject* current_object = nullptr;
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(1000,1000), "State editor");
@@ -13,17 +13,17 @@ int main() {
 
     auto j = file::loadJson("assets/player_state.json");
 
-    // TODO Error handling
-    if (j) {
-        for (auto state : j.value()) {
-            objects.push_back({state});
-        }
-    }
-
     sf::Font font;
     if (!font.loadFromFile("assets/arial.ttf")) {
         LOGE("Cannot find font");
         exit(1);
+    }
+
+    // TODO Error handling
+    if (j) {
+        for (auto state : j.value()) {
+            objects.push_back({state, font});
+        }
     }
 
     while (window.isOpen()) {
@@ -44,15 +44,13 @@ int main() {
                     LOGV("Key released %i\n", event.key.code);
                     break;
                 case sf::Event::MouseButtonPressed:
-                    if (event.mouseButton.button == sf::Mouse::Left) {
-                        for (int i = 0; static_cast<unsigned int>(i) < objects.size(); ++i) {
-                            if (objects.at(i).isMouseOver({static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y)})) {
-                                current_object = &objects.at(i);
-                                break;
-                            }
-
-                            current_object = nullptr;
+                    for (int i = 0; static_cast<unsigned int>(i) < objects.size(); ++i) {
+                        if (objects.at(i).isMouseOver({static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y)})) {
+                            current_object = &objects.at(i);
+                            break;
                         }
+
+                        current_object = nullptr;
                     }
                 default:
                     LOGV("Unknown event %i\n", event.type);
@@ -62,14 +60,16 @@ int main() {
 
         sf::Vector2i pos = sf::Mouse::getPosition(window);
 
-        // Move objects around with left mouse
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
-            if (current_object >= 0) {
-                objects.at(current_object).move({static_cast<float>(pos.x), static_cast<float>(pos.y)});
-            }
-        }
-
         window.clear();
+
+        if (current_object) {
+            // Move objects around with left mouse
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+                current_object->move({static_cast<float>(pos.x), static_cast<float>(pos.y)});
+            }
+
+            current_object->renderStateText(window);
+        }
 
         for (auto it : objects) {
             it.render(window);

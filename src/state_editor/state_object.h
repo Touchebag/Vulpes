@@ -8,7 +8,7 @@ constexpr float RECT_SIDE = 100.0;
 
 class StateObject {
   public:
-    StateObject(nlohmann::json state);
+    StateObject(nlohmann::json state, sf::Font& font);
 
     void render(sf::RenderWindow& window);
 
@@ -16,9 +16,12 @@ class StateObject {
 
     void move(sf::Vector2f pos);
 
+    void renderStateText(sf::RenderWindow& window);
+
   private:
     sf::Vector2f position_ = {0.0, 0.0};
     sf::RectangleShape rect_ = sf::RectangleShape(sf::Vector2f(RECT_SIDE, RECT_SIDE));
 
     nlohmann::json state_;
+    sf::Font& font_;
 };
