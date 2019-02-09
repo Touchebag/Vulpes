@@ -7,7 +7,7 @@ set(COMMON_TARGET common)
 set(GAME_TARGET vulpes)
 set(STATE_EDITOR_TARGET state_editor)
 
-set(CC_OPTIONS -std=c++17 -Wall -Wpedantic)
+set(CC_OPTIONS -std=c++17 -Wall -Wpedantic -DLOG_LEVEL=3)
 
 # SFML
 # TODO Change to static

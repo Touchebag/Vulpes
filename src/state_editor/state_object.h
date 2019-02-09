@@ -2,13 +2,13 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "state.h"
+#include "json.hpp"
 
 constexpr float RECT_SIDE = 100.0;
 
 class StateObject {
   public:
-    StateObject(State state);
+    StateObject(nlohmann::json state);
 
     void render(sf::RenderWindow& window);
 
@@ -20,5 +20,5 @@ class StateObject {
     sf::Vector2f position_ = {0.0, 0.0};
     sf::RectangleShape rect_ = sf::RectangleShape(sf::Vector2f(RECT_SIDE, RECT_SIDE));
 
-    State state_;
+    nlohmann::json state_;
 };

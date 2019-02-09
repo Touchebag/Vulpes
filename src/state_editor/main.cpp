@@ -16,8 +16,14 @@ int main() {
     // TODO Error handling
     if (j) {
         for (auto state : j.value()) {
-            objects.push_back({State::loadStateFromJson(state)});
+            objects.push_back({state});
         }
+    }
+
+    sf::Font font;
+    if (!font.loadFromFile("assets/arial.ttf")) {
+        LOGE("Cannot find font");
+        exit(1);
     }
 
     while (window.isOpen()) {
@@ -41,11 +47,11 @@ int main() {
                     if (event.mouseButton.button == sf::Mouse::Left) {
                         for (int i = 0; static_cast<unsigned int>(i) < objects.size(); ++i) {
                             if (objects.at(i).isMouseOver({static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y)})) {
-                                current_object = i;
+                                current_object = &objects.at(i);
                                 break;
                             }
 
-                            current_object = -1;
+                            current_object = nullptr;
                         }
                     }
                 default:

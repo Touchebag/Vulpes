@@ -1,6 +1,8 @@
 #include "state_object.h"
 
-StateObject::StateObject(State state) : state_(state) {
+#include "log.h"
+
+StateObject::StateObject(nlohmann::json state) : state_(state) {
 }
 
 void StateObject::render(sf::RenderWindow& window) {
