@@ -2,9 +2,9 @@
 
 #include "state_object.h"
 #include "file.h"
+#include "state_list.h"
 #include "log.h"
 
-std::vector<StateObject> objects;
 StateObject* current_object = nullptr;
 
 int main() {
@@ -18,6 +18,8 @@ int main() {
         LOGE("Cannot find font");
         exit(1);
     }
+
+    std::vector<StateObject>& objects = StateList::getInstance().getObjects();
 
     // TODO Error handling
     if (j) {

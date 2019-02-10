@@ -18,8 +18,11 @@ class StateObject {
 
     void renderStateText(sf::RenderWindow& window);
 
-  private:
     sf::Vector2f position_ = {0.0, 0.0};
+
+  private:
+    void renderStateTransitions(sf::RenderWindow& window);
+
     sf::RectangleShape rect_ = sf::RectangleShape(sf::Vector2f(RECT_SIDE, RECT_SIDE));
 
     nlohmann::json state_;
