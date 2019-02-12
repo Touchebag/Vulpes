@@ -10,15 +10,12 @@ set(STATE_EDITOR_TARGET state_editor)
 set(CC_OPTIONS -std=c++17 -Wall -Wpedantic -DLOG_LEVEL=3)
 
 # SFML
-# TODO Change to static
+set(BUILD_SHARED_LIBS false)
 find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
 set(SFML_LIBS sfml-graphics sfml-window sfml-system)
 
 # Assets
 file(COPY assets DESTINATION .)
-file(COPY sfml-graphics-d-2.dll DESTINATION .)
-file(COPY sfml-window-d-2.dll DESTINATION .)
-file(COPY sfml-system-d-2.dll DESTINATION .)
 
 # Common library
 file(GLOB_RECURSE COMMON_SOURCES src/common/*.cpp src/common/*.h)
