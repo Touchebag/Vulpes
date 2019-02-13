@@ -27,7 +27,7 @@ int main() {
 
     for (auto it : j) {
         std::string test = StateParser::parseState(it);
-        of << test << std::endl;
+        of << test;
     }
 
     of << "}" << std::endl;
