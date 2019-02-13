@@ -24,6 +24,7 @@ int main() {
     }
 
     of << "digraph " << GRAPH_NAME << " {" << std::endl;
+    of << "node [shape=record];" << std::endl;
 
     for (auto it : j) {
         std::string test = StateParser::parseState(it);
