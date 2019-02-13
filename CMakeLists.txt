@@ -5,7 +5,7 @@ set(CMAKE_INSTALL_PREFIX build)
 
 set(COMMON_TARGET common)
 set(GAME_TARGET vulpes)
-set(STATE_EDITOR_TARGET state_editor)
+set(STATE_GRAPH_TARGET state_graph)
 
 set(CC_OPTIONS -std=c++17 -Wall -Wpedantic -DLOG_LEVEL=3)
 
@@ -32,10 +32,10 @@ target_include_directories(${GAME_TARGET} PUBLIC src/common/ libs/nlohmann)
 target_link_libraries(${GAME_TARGET} ${COMMON_TARGET} ${SFML_LIBS})
 
 # State editor target
-file(GLOB_RECURSE STATE_EDITOR_SOURCES src/state_editor/*.cpp src/state_editor/*.h)
-add_executable(${STATE_EDITOR_TARGET} ${STATE_EDITOR_SOURCES})
-target_compile_options(${STATE_EDITOR_TARGET} PUBLIC ${CC_OPTIONS})
-target_include_directories(${STATE_EDITOR_TARGET} PUBLIC src/common/ libs/nlohmann)
+file(GLOB_RECURSE STATE_GRAPH_SOURCES src/state_graph/*.cpp src/state_graph/*.h)
+add_executable(${STATE_GRAPH_TARGET} ${STATE_GRAPH_SOURCES})
+target_compile_options(${STATE_GRAPH_TARGET} PUBLIC ${CC_OPTIONS})
+target_include_directories(${STATE_GRAPH_TARGET} PUBLIC src/common/ libs/nlohmann)
 
-target_link_libraries(${STATE_EDITOR_TARGET} ${COMMON_TARGET} ${SFML_LIBS})
+target_link_libraries(${STATE_GRAPH_TARGET} ${COMMON_TARGET} ${SFML_LIBS})
 
