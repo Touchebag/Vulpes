@@ -1,21 +1,34 @@
 #include <iostream>
 #include <fstream>
 
+#include "state_parser.h"
+#include "file.h"
+#include "log.h"
+
 #define GRAPH_NAME "state"
 
 int main() {
+    auto jsonObj = file::loadJson("assets/player_state.json");
+
+    if (!jsonObj) {
+        LOGE("Failed to load json");
+    }
+
+    nlohmann::json j = *jsonObj;
+
     std::ofstream of("state.dot");
 
     if (!of.good()) {
-        std::cout << "Failed to open ouput file" << std::endl;
+        LOGE("Failed to open ouput file\n");
         exit(1);
     }
 
-    std::string test("A1 -> A2");
-
     of << "digraph " << GRAPH_NAME << " {" << std::endl;
 
-    of << test << ";" << std::endl;
+    for (auto it : j) {
+        std::string test = StateParser::parseState(it);
+        of << test << std::endl;
+    }
 
     of << "}" << std::endl;
 }
