@@ -17,7 +17,7 @@ class State {
 
     static State loadStateFromJson(nlohmann::json j);
 
-    std::optional<int> incomingEvent(state::Event event);
+    std::optional<std::string> incomingEvent(state::Event event);
 
     std::string getCurrentSpriteName();
 
@@ -29,7 +29,7 @@ class State {
     const unsigned int frame_timer_;
 
   private:
-    const std::unordered_map<state::Event, int> next_state_list_;
+    const std::unordered_map<state::Event, std::string> next_state_list_;
     const std::vector<std::string> frame_names_;
     unsigned int current_frame_ = 0;
 };

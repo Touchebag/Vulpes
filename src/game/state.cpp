@@ -45,7 +45,7 @@ State State::loadStateFromJson(nlohmann::json j) {
         nlohmann::json next_state_array = j["next_states"];
 
         for (auto it : next_state_array) {
-            ips.next_states.insert(std::make_pair(state::Event(it["event"].get<int>()), it["state"].get<int>()));
+            ips.next_states.insert(std::make_pair(state::Event(it["event"].get<int>()), it["state"].get<std::string>()));
         }
 
         nlohmann::json frame_names_array = j["frame_names"];
@@ -58,12 +58,12 @@ State State::loadStateFromJson(nlohmann::json j) {
     return State(ips);
 }
 
-std::optional<int> State::incomingEvent(state::Event event) {
+std::optional<std::string> State::incomingEvent(state::Event event) {
     auto next_state = next_state_list_.find(event);
 
     if (next_state != next_state_list_.end()) {
         // TODO Error handling
-        return std::optional<int>{ next_state->second };
+        return std::optional<std::string>{ next_state->second };
     } else {
         return std::nullopt;
     }

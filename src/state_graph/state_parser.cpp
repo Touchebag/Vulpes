@@ -2,17 +2,17 @@
 
 #include "state_parser.h"
 
-std::string StateParser::parseState(nlohmann::json j) {
+std::string StateParser::parseState(std::string key, nlohmann::json j) {
     std::stringstream str;
-    int current_id = j["id"].get<int>();
+    std::string current_id = key;
 
-    str << current_id << " [ label=\"{ " << j["name"].get<std::string>();
+    str << key <<" [ label=\"{ " << key;
 
     for (auto it = j.begin(); it != j.end(); ++it) {
         auto key = it.key();
 
         // Some fields are handled separately
-        if (key != "name" && key != "id" && key != "frame_names" && key != "next_states") {
+        if (key != "frame_names" && key != "next_states") {
             str << " | { " << key << " | " << it.value().dump() << " } ";
         }
     }
@@ -21,7 +21,7 @@ std::string StateParser::parseState(nlohmann::json j) {
     nlohmann::json next_states = j["next_states"];
 
     for (auto it : next_states) {
-        str << current_id << " -> " << it["state"].get<int>() << ";" << std::endl;
+        str << current_id << " -> " << it["state"].get<std::string>() << ";" << std::endl;
     }
 
     return str.str();

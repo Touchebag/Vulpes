@@ -1,11 +1,7 @@
-[
-    {
-        "id": 1,
-        "name": "idle_ground",
+{
+    "idle": {
         "next_states": [
-            {"event": 2, "state": 2},
-            {"event": 3, "state": 3},
-            {"event": 4, "state": 5}
+            {"event": 1, "state": "running_right"}
         ],
         "frame_names": [
             "Idle0",
@@ -40,61 +36,14 @@
             "Idle9"
         ]
     },
-    {
-        "id": 2,
-        "name": "wall_slide_left",
+    "running_right": {
         "touching_left_wall": true,
         "touching_ground": false,
         "next_states": [
-            {"event": 1, "state": 1},
-            {"event": 2, "state": 2},
-            {"event": 4, "state": 4}
-        ],
-        "frame_names": [
-            "Idle0"
-        ]
-    },
-    {
-        "id": 3,
-        "name": "wall_slide_right",
-        "touching_right_wall": true,
-        "touching_ground": false,
-        "next_states": [
-            {"event": 1, "state": 1},
-            {"event": 3, "state": 3},
-            {"event": 4, "state": 4}
-        ],
-        "frame_names": [
-            "Idle0"
-        ]
-    },
-    {
-        "id": 4,
-        "name": "wall_jumping",
-        "movement_locked": true,
-        "touching_ground": false,
-        "frame_timer": 30,
-        "next_states": [
-            {"event": 1, "state": 1},
-            {"event": 2, "state": 2},
-            {"event": 3, "state": 3},
-            {"event": 5, "state": 5}
-        ],
-        "frame_names": [
-            "Idle0"
-        ]
-    },
-    {
-        "id": 5,
-        "name": "airborne",
-        "touching_ground": false,
-        "next_states": [
-            {"event": 1, "state": 1},
-            {"event": 2, "state": 2},
-            {"event": 3, "state": 3}
+            {"event": 0, "state": "idle"}
         ],
         "frame_names": [
             "Idle0"
         ]
     }
-]
+}

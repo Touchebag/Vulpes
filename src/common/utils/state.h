@@ -25,7 +25,7 @@ struct InitParams {
     bool touching_right_wall = false;
     bool touching_left_wall = false;
     unsigned int frame_timer = UINT_MAX;
-    std::unordered_map<state::Event, int> next_states;
+    std::unordered_map<state::Event, std::string> next_states;
     std::vector<std::string> frame_names;
 };
 

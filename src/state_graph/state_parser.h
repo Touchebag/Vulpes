@@ -2,5 +2,5 @@
 
 class StateParser {
   public:
-    static std::string parseState(nlohmann::json json);
+    static std::string parseState(std::string key, nlohmann::json json);
 };

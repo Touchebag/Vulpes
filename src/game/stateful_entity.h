@@ -19,5 +19,5 @@ class StatefulEntity {
 
   private:
     State* current_state_;
-    std::unordered_map<int, State> state_list_;
+    std::unordered_map<std::string, State> state_list_;
 };
