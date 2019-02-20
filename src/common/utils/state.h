@@ -4,11 +4,14 @@ namespace state {
 
 enum class Event {
     UNKNOWN = 0,
+
+    // Positions
     TOUCHING_FLOOR = 1,
-    TOUCHING_WALL_LEFT = 2,
-    TOUCHING_WALL_RIGHT = 3,
-    JUMP = 4,
-    FRAME_TIMEOUT = 5
+
+    // Movement
+    NO_MOVEMENT = 10,
+    MOVING_RIGHT = 11,
+    MOVING_LEFT = 12,
 };
 
 enum class Property {

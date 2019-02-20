@@ -8,33 +8,25 @@
 void Player::update() {
     // Check before decreasing
     // If previous frame was the last one (i.e. ticked down to 0) then trigger event before this frame
-    if (frame_counter_-- == 0) {
-        incomingEvent(state::Event::FRAME_TIMEOUT);
-    }
+    // if (frame_counter_-- == 0) {
+    //     incomingEvent(state::Event::FRAME_TIMEOUT);
+    // }
 
     double x = 0.0, y = 0.0;
 
     if (Input::getInstance().isButtonHeld(input::button::LEFT)) {
         x = -10.0;
+        incomingEvent(state::Event::MOVING_LEFT);
     } else if (Input::getInstance().isButtonHeld(input::button::RIGHT)) {
         x = 10.0;
+        incomingEvent(state::Event::MOVING_RIGHT);
+    } else {
+        incomingEvent(state::Event::NO_MOVEMENT);
     }
 
     move(util::X(x), util::Y(y));
 
     if (Input::getInstance().isButtonPressed(input::button::JUMP)) {
-        if (getProperty(state::Property::TOUCHING_GROUND) &&
-            !getProperty(state::Property::MOVEMENT_LOCKED)) {
-            velY_ = util::Y(-20.0);
-        } else if (getProperty(state::Property::TOUCHING_RIGHT_WALL)) {
-            velY_ = util::Y(-20.0);
-            velX_ = util::X(-20.0);
-        } else if (getProperty(state::Property::TOUCHING_LEFT_WALL)) {
-            velY_ = util::Y(-20.0);
-            velX_ = util::X(20.0);
-        }
-
-        incomingEvent(state::Event::JUMP);
     }
 
     updateState();
@@ -81,9 +73,9 @@ void Player::moveAndCheckCollision() {
     }
 
     if (x < velX_) {
-        incomingEvent(state::Event::TOUCHING_WALL_RIGHT);
+        // incomingEvent(state::Event::TOUCHING_WALL_RIGHT);
     } else if (x > velX_) {
-        incomingEvent(state::Event::TOUCHING_WALL_LEFT);
+        // incomingEvent(state::Event::TOUCHING_WALL_LEFT);
     }
 
     if (y < velY_) {

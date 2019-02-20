@@ -1,7 +1,8 @@
 {
     "idle": {
         "next_states": [
-            {"event": 1, "state": "running_right"}
+            {"event": 11, "state": "running_right"},
+            {"event": 12, "state": "running_left"}
         ],
         "frame_names": [
             "Idle0",
@@ -37,13 +38,21 @@
         ]
     },
     "running_right": {
-        "touching_left_wall": true,
-        "touching_ground": false,
         "next_states": [
-            {"event": 0, "state": "idle"}
+            {"event": 10, "state": "idle"},
+            {"event": 12, "state": "running_left"}
         ],
         "frame_names": [
-            "Idle0"
+            "Running_right"
+        ]
+    },
+    "running_left": {
+        "next_states": [
+            {"event": 10, "state": "idle"},
+            {"event": 11, "state": "running_right"}
+        ],
+        "frame_names": [
+            "Running_left"
         ]
     }
 }
