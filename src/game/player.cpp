@@ -30,8 +30,9 @@ void Player::update() {
     }
 
     updateState();
-    auto tmp_rect = get_sprite_rect(getCurrentSpriteName());
-    setTextureCoords(tmp_rect);
+    auto sprite_pair = getCurrentSprite();
+    auto tmp_rect = get_sprite_rect(sprite_pair.first);
+    setTextureCoords(tmp_rect, sprite_pair.second);
 }
 
 void Player::move(util::X velX, util::Y velY) {

@@ -33,8 +33,8 @@ void StatefulEntity::incomingEvent(state::Event event) {
     }
 }
 
-std::string StatefulEntity::getCurrentSpriteName() {
-    return current_state_->getCurrentSpriteName();
+std::pair<std::string, bool> StatefulEntity::getCurrentSprite() {
+    return current_state_->getCurrentSprite();
 }
 
 bool StatefulEntity::getProperty(state::Property property) {

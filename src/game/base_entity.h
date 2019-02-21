@@ -20,7 +20,7 @@ public:
     void loadFromJson(nlohmann::json j);
     void render(sf::RenderWindow& window);
 
-    void setTextureCoords(std::pair<util::Point, util::Point>);
+    void setTextureCoords(std::pair<util::Point, util::Point>, bool reversed = false);
 
 protected:
     Transform trans_;

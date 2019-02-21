@@ -51,8 +51,9 @@
             {"event": 10, "state": "idle"},
             {"event": 11, "state": "running_right"}
         ],
+        "sprite_reversed": true,
         "frame_names": [
-            "Running_left"
+            "Running_right"
         ]
     }
 }

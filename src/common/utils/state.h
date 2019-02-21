@@ -29,6 +29,7 @@ struct InitParams {
     bool touching_left_wall = false;
     unsigned int frame_timer = UINT_MAX;
     std::unordered_map<state::Event, std::string> next_states;
+    bool sprite_reversed = false;
     std::vector<std::string> frame_names;
 };
 
