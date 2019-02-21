@@ -1,6 +1,7 @@
 #include "player.h"
 #include "world.h"
 #include "input_event.h"
+#include "log.h"
 
 #include <tuple>
 #include <algorithm>
@@ -24,10 +25,14 @@ void Player::update() {
         incomingEvent(state::Event::NO_MOVEMENT);
     }
 
-    move(util::X(x), util::Y(y));
-
     if (Input::getInstance().isButtonPressed(input::button::JUMP)) {
+        if (getProperty(state::Property::CAN_JUMP)) {
+            velY_ = -20.0;
+            incomingEvent(state::Event::JUMPING);
+        }
     }
+
+    move(util::X(x), util::Y(y));
 
     updateState();
     auto sprite_pair = getCurrentSprite();

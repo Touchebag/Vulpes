@@ -26,6 +26,7 @@ class State {
     const bool touching_ground_;
     const bool touching_right_wall_;
     const bool touching_left_wall_;
+    const bool can_jump_;
     const unsigned int frame_timer_;
 
   private:

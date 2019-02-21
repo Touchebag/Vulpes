@@ -17,7 +17,8 @@ StatefulEntity::StatefulEntity() {
     }
 
     // TODO Error handling
-    current_state_ = &(state_list_.at("idle"));
+    current_state_ = &(state_list_.at("main"));
+    incomingEvent(state::Event::START);
 }
 
 void StatefulEntity::updateState() {
@@ -47,6 +48,8 @@ bool StatefulEntity::getProperty(state::Property property) {
             return current_state_->touching_right_wall_;
         case state::Property::MOVEMENT_LOCKED:
             return current_state_->movement_locked_;
+        case state::Property::CAN_JUMP:
+            return current_state_->can_jump_;
         default:
             throw std::runtime_error("Unknown property");
             return false;
