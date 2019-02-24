@@ -19,7 +19,7 @@ class State {
 
     std::optional<std::string> incomingEvent(state::Event event);
 
-    std::pair<std::string, bool> getCurrentSprite();
+    std::string getCurrentSprite();
 
     // TODO Add name
     const bool movement_locked_;
@@ -31,7 +31,6 @@ class State {
 
   private:
     const std::unordered_map<state::Event, std::string> next_state_list_;
-    const bool sprite_reversed_;
     const std::vector<std::string> frame_names_;
     unsigned int current_frame_ = 0;
 };

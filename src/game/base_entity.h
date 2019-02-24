@@ -20,11 +20,14 @@ public:
     void loadFromJson(nlohmann::json j);
     void render(sf::RenderWindow& window);
 
-    void setTextureCoords(std::pair<util::Point, util::Point>, bool reversed = false);
+    void setTextureCoords(std::pair<util::Point, util::Point>);
 
 protected:
     Transform trans_;
     Hitbox hitbox_;
+
+    // Used for mirroring sprites
+    bool facing_right_ = true;
 
 private:
     sf::Texture texture_;

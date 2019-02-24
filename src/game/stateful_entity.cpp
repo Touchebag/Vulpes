@@ -34,7 +34,7 @@ void StatefulEntity::incomingEvent(state::Event event) {
     }
 }
 
-std::pair<std::string, bool> StatefulEntity::getCurrentSprite() {
+std::string StatefulEntity::getCurrentSprite() {
     return current_state_->getCurrentSprite();
 }
 

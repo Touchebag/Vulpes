@@ -1,14 +1,13 @@
 {
     "main": {
         "next_states": [
-            {"event": 0, "state": "running_right"}
+            {"event": 0, "state": "idle"}
         ]
     },
-    "idle_right": {
+    "idle": {
         "next_states": [
-            {"event": 11, "state": "running_right"},
-            {"event": 12, "state": "running_left"},
-            {"event": 13, "state": "jumping_right"}
+            {"event": 11, "state": "running"},
+            {"event": 12, "state": "jumping"}
         ],
         "frame_names": [
             "Idle0",
@@ -43,84 +42,21 @@
             "Idle9"
         ]
     },
-    "idle_left": {
+    "running": {
         "next_states": [
-            {"event": 11, "state": "running_right"},
-            {"event": 12, "state": "running_left"},
-            {"event": 13, "state": "jumping_left"}
-        ],
-        "sprite_reversed": true,
-        "frame_names": [
-            "Idle0",
-            "Idle0",
-            "Idle0",
-            "Idle1",
-            "Idle1",
-            "Idle1",
-            "Idle2",
-            "Idle2",
-            "Idle2",
-            "Idle3",
-            "Idle3",
-            "Idle3",
-            "Idle4",
-            "Idle4",
-            "Idle4",
-            "Idle5",
-            "Idle5",
-            "Idle5",
-            "Idle6",
-            "Idle6",
-            "Idle6",
-            "Idle7",
-            "Idle7",
-            "Idle7",
-            "Idle8",
-            "Idle8",
-            "Idle8",
-            "Idle9",
-            "Idle9",
-            "Idle9"
-        ]
-    },
-    "running_right": {
-        "next_states": [
-            {"event": 10, "state": "idle_right"},
-            {"event": 12, "state": "running_left"},
-            {"event": 13, "state": "jumping_right"}
+            {"event": 10, "state": "idle"},
+            {"event": 11, "state": "running"},
+            {"event": 12, "state": "jumping"}
         ],
         "frame_names": [
-            "Running_right"
+            "Running"
         ]
     },
-    "running_left": {
-        "next_states": [
-            {"event": 10, "state": "idle_left"},
-            {"event": 11, "state": "running_right"},
-            {"event": 13, "state": "jumping_left"}
-        ],
-        "sprite_reversed": true,
-        "frame_names": [
-            "Running_right"
-        ]
-    },
-    "jumping_right": {
+    "jumping": {
         "can_jump": false,
         "next_states": [
-            {"event": 1, "state": "idle_right"},
-            {"event": 12, "state": "jumping_left"}
+            {"event": 1, "state": "idle"}
         ],
-        "frame_names": [
-            "Jumping"
-        ]
-    },
-    "jumping_left": {
-        "can_jump": false,
-        "next_states": [
-            {"event": 1, "state": "idle_left"},
-            {"event": 11, "state": "jumping_right"}
-        ],
-        "sprite_reversed": true,
         "frame_names": [
             "Jumping"
         ]

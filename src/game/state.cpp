@@ -11,7 +11,6 @@ State::State(state::InitParams ips) :
     can_jump_(ips.can_jump),
     frame_timer_(ips.frame_timer),
     next_state_list_(ips.next_states),
-    sprite_reversed_(ips.sprite_reversed),
     frame_names_(ips.frame_names) {
     // TODO check for at least one following state
 }
@@ -44,9 +43,6 @@ State State::loadStateFromJson(nlohmann::json j) {
     if (j.find("frame_timer") != j.end()) {
         ips.frame_timer = j["frame_timer"].get<unsigned int>();
     }
-    if (j.find("sprite_reversed") != j.end()) {
-        ips.sprite_reversed = j["sprite_reversed"].get<bool>();
-    }
 
     {
         // Exceptions are not recoverable
@@ -78,6 +74,6 @@ std::optional<std::string> State::incomingEvent(state::Event event) {
     }
 }
 
-std::pair<std::string, bool> State::getCurrentSprite() {
-    return {frame_names_.at(current_frame_), sprite_reversed_};
+std::string State::getCurrentSprite() {
+    return frame_names_.at(current_frame_);
 }

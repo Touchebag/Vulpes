@@ -50,12 +50,14 @@ void BaseEntity::loadFromJson(nlohmann::json j) {
     loadTexture(j["sprite"].get<std::string>());
 }
 
-void BaseEntity::setTextureCoords(std::pair<util::Point, util::Point> rect, bool reversed) {
+void BaseEntity::setTextureCoords(std::pair<util::Point, util::Point> rect) {
     sprite_.setTextureRect(sf::IntRect(rect.first.x, rect.first.y, rect.second.x, rect.second.y));
     sprite_.setOrigin(rect.second.x / 2, rect.second.y / 2);
+
+    // Mirror sprites facing left
+    auto mirror_scale = facing_right_ ? 1.0 : -1.0;
     // Scale to 100px, keep aspect ratio
-    auto rev = reversed ? -1.0 : 1.0;
-    sprite_.setScale(rev * (200.0 / rect.second.y), 200.0 / rect.second.y);
+    sprite_.setScale(mirror_scale * (200.0 / rect.second.y), 200.0 / rect.second.y);
 }
 
 void BaseEntity::update() {

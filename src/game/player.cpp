@@ -17,10 +17,12 @@ void Player::update() {
 
     if (Input::getInstance().isButtonHeld(input::button::LEFT)) {
         x = -10.0;
-        incomingEvent(state::Event::MOVING_LEFT);
+        incomingEvent(state::Event::MOVING);
+        facing_right_ = false;
     } else if (Input::getInstance().isButtonHeld(input::button::RIGHT)) {
         x = 10.0;
-        incomingEvent(state::Event::MOVING_RIGHT);
+        incomingEvent(state::Event::MOVING);
+        facing_right_ = true;
     } else {
         incomingEvent(state::Event::NO_MOVEMENT);
     }
@@ -35,9 +37,8 @@ void Player::update() {
     move(util::X(x), util::Y(y));
 
     updateState();
-    auto sprite_pair = getCurrentSprite();
-    auto tmp_rect = get_sprite_rect(sprite_pair.first);
-    setTextureCoords(tmp_rect, sprite_pair.second);
+    auto sprite_rect = get_sprite_rect(getCurrentSprite());
+    setTextureCoords(sprite_rect);
 }
 
 void Player::move(util::X velX, util::Y velY) {

@@ -12,7 +12,7 @@ class StatefulEntity {
 
     bool getProperty(state::Property property);
 
-    std::pair<std::string, bool> getCurrentSprite();
+    std::string getCurrentSprite();
 
   protected:
     unsigned int frame_counter_;
