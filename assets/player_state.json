@@ -46,7 +46,8 @@
         "next_states": [
             {"event": 10, "state": "idle"},
             {"event": 11, "state": "running"},
-            {"event": 12, "state": "jumping"}
+            {"event": 12, "state": "jumping"},
+            {"event": 13, "state": "falling"}
         ],
         "frame_names": [
             "Running"
@@ -55,10 +56,20 @@
     "jumping": {
         "can_jump": false,
         "next_states": [
-            {"event": 1, "state": "idle"}
+            {"event": 1, "state": "idle"},
+            {"event": 13, "state": "falling"}
         ],
         "frame_names": [
             "Jumping"
+        ]
+    },
+    "falling": {
+        "can_jump": false,
+        "next_states": [
+            {"event": 1, "state": "idle"}
+        ],
+        "frame_names": [
+            "Falling"
         ]
     }
 }

@@ -13,6 +13,7 @@ enum class Event {
     NO_MOVEMENT = 10,
     MOVING = 11,
     JUMPING = 12,
+    FALLING = 13,
 };
 
 // TODO Remove
