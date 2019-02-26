@@ -12,8 +12,7 @@ bool BaseEntity::loadTexture(std::string file_path) {
     }
 
     sprite_.setTexture(texture_, true);
-    sf::FloatRect sprite_bounds = sprite_.getLocalBounds();
-    sprite_.setOrigin(sprite_bounds.width / 2, sprite_bounds.height / 2);
+    texture_.setRepeated(true);
 
     return true;
 }
@@ -24,6 +23,8 @@ void BaseEntity::setPosiition(util::X abs_x, util::Y abs_y) {
 
 void BaseEntity::setHitbox(util::Right right, util::Left left, util::Top top, util::Bottom bottom) {
     hitbox_.setHitbox(right, left, top, bottom);
+    sprite_.setOrigin((right - left) / 2.0, (bottom - top) / 2.0);
+    sprite_.setTextureRect(sf::IntRect(0, 0, right - left, bottom - top));
 }
 
 Hitbox BaseEntity::getAbsHitbox() {
@@ -45,9 +46,10 @@ void BaseEntity::loadFromJson(nlohmann::json j) {
     auto left = util::Left(j["hitbox"]["left"].get<double>());
     auto top = util::Top(j["hitbox"]["top"].get<double>());
     auto bottom = util::Bottom(j["hitbox"]["bottom"].get<double>());
-    setHitbox(right, left, top, bottom);
 
     loadTexture(j["sprite"].get<std::string>());
+
+    setHitbox(right, left, top, bottom);
 }
 
 void BaseEntity::setTextureCoords(std::pair<util::Point, util::Point> rect) {
@@ -68,9 +70,9 @@ void BaseEntity::render(sf::RenderWindow& window) {
     window.draw(sprite_);
 
     // TODO Move to debug menu
-    sf::RectangleShape rectangle(sf::Vector2f(hitbox_.right_ - hitbox_.left_, hitbox_.bottom_ - hitbox_.top_));
-    rectangle.setPosition(trans_.getX() + hitbox_.left_, trans_.getY() + hitbox_.top_);
-    rectangle.setFillColor(sf::Color(255, 0, 0, 64));
-    window.draw(rectangle);
+    // sf::RectangleShape rectangle(sf::Vector2f(hitbox_.right_ - hitbox_.left_, hitbox_.bottom_ - hitbox_.top_));
+    // rectangle.setPosition(trans_.getX() + hitbox_.left_, trans_.getY() + hitbox_.top_);
+    // rectangle.setFillColor(sf::Color(255, 0, 0, 64));
+    // window.draw(rectangle);
 }
 
