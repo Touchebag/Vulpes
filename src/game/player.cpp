@@ -45,10 +45,6 @@ void Player::move(util::X velX, util::Y velY) {
     // Gravity
     velY_ = std::min(velY_ + 1.0, 20.0);
 
-    if (velY_ > 0.0) {
-        incomingEvent(state::Event::FALLING);
-    }
-
     if (!getProperty(state::Property::MOVEMENT_LOCKED)) {
         velX_ = velX;
     }
@@ -91,6 +87,8 @@ void Player::moveAndCheckCollision() {
 
     if (y < velY_) {
         incomingEvent(state::Event::TOUCHING_FLOOR);
+    } else if (velY_ > 0.0) {
+        incomingEvent(state::Event::FALLING);
     }
 
     velX_ = util::X(x);
