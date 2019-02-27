@@ -28,7 +28,7 @@ void Player::update() {
     }
 
     if (Input::getInstance().isButtonPressed(input::button::JUMP)) {
-        if (getProperty(state::Property::CAN_JUMP)) {
+        if (getStateProperties().can_jump) {
             velY_ = -20.0;
             incomingEvent(state::Event::JUMPING);
         }
@@ -45,7 +45,7 @@ void Player::move(util::X velX, util::Y velY) {
     // Gravity
     velY_ = std::min(velY_ + 1.0, 20.0);
 
-    if (!getProperty(state::Property::MOVEMENT_LOCKED)) {
+    if (!getStateProperties().movement_locked) {
         velX_ = velX;
     }
 

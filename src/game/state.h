@@ -11,7 +11,7 @@
 
 class State {
   public:
-    State(state::InitParams params);
+    State(state::Properties props);
 
     void update();
 
@@ -21,16 +21,8 @@ class State {
 
     std::string getCurrentSprite();
 
-    // TODO Add name
-    const bool movement_locked_;
-    const bool touching_ground_;
-    const bool touching_right_wall_;
-    const bool touching_left_wall_;
-    const bool can_jump_;
-    const unsigned int frame_timer_;
+    const state::Properties properties_;
 
   private:
-    const std::unordered_map<state::Event, std::string> next_state_list_;
-    const std::vector<std::string> frame_names_;
     unsigned int current_frame_ = 0;
 };

@@ -2,46 +2,38 @@
 
 #include "file.h"
 
-State::State(state::InitParams ips) :
-    // TODO Store actual InitParams struct instead
-    movement_locked_(ips.movement_locked),
-    touching_ground_(ips.touching_ground),
-    touching_right_wall_(ips.touching_right_wall),
-    touching_left_wall_(ips.touching_left_wall),
-    can_jump_(ips.can_jump),
-    frame_timer_(ips.frame_timer),
-    next_state_list_(ips.next_states),
-    frame_names_(ips.frame_names) {
+State::State(state::Properties properties) :
+    properties_(properties) {
     // TODO check for at least one following state
 }
 
 void State::update() {
-    if (++current_frame_ >= frame_names_.size()) {
+    if (++current_frame_ >= properties_.frame_names.size()) {
         current_frame_ = 0;
     }
 }
 
 State State::loadStateFromJson(nlohmann::json j) {
-    state::InitParams ips;
+    state::Properties properties;
 
     // If an option is not found use default
     if (j.find("movement_locked") != j.end()) {
-        ips.movement_locked = j["movement_locked"].get<bool>();
+        properties.movement_locked = j["movement_locked"].get<bool>();
     }
     if (j.find("touching_ground") != j.end()) {
-        ips.touching_ground = j["touching_ground"].get<bool>();
+        properties.touching_ground = j["touching_ground"].get<bool>();
     }
     if (j.find("touching_right_wall") != j.end()) {
-        ips.touching_right_wall = j["touching_right_wall"].get<bool>();
+        properties.touching_right_wall = j["touching_right_wall"].get<bool>();
     }
     if (j.find("touching_left_wall") != j.end()) {
-        ips.touching_left_wall = j["touching_left_wall"].get<bool>();
+        properties.touching_left_wall = j["touching_left_wall"].get<bool>();
     }
     if (j.find("can_jump") != j.end()) {
-        ips.can_jump = j["can_jump"].get<bool>();
+        properties.can_jump = j["can_jump"].get<bool>();
     }
     if (j.find("frame_timer") != j.end()) {
-        ips.frame_timer = j["frame_timer"].get<unsigned int>();
+        properties.frame_timer = j["frame_timer"].get<unsigned int>();
     }
 
     {
@@ -50,23 +42,23 @@ State State::loadStateFromJson(nlohmann::json j) {
         nlohmann::json next_state_array = j["next_states"];
 
         for (auto it : next_state_array) {
-            ips.next_states.insert(std::make_pair(state::Event(it["event"].get<int>()), it["state"].get<std::string>()));
+            properties.next_states.insert(std::make_pair(state::Event(it["event"].get<int>()), it["state"].get<std::string>()));
         }
 
         nlohmann::json frame_names_array = j["frame_names"];
 
         for (auto it : frame_names_array) {
-            ips.frame_names.push_back(it.get<std::string>());
+            properties.frame_names.push_back(it.get<std::string>());
         }
     }
 
-    return State(ips);
+    return State(properties);
 }
 
 std::optional<std::string> State::incomingEvent(state::Event event) {
-    auto next_state = next_state_list_.find(event);
+    auto next_state = properties_.next_states.find(event);
 
-    if (next_state != next_state_list_.end()) {
+    if (next_state != properties_.next_states.end()) {
         // TODO Error handling
         return std::optional<std::string>{ next_state->second };
     } else {
@@ -75,5 +67,5 @@ std::optional<std::string> State::incomingEvent(state::Event event) {
 }
 
 std::string State::getCurrentSprite() {
-    return frame_names_.at(current_frame_);
+    return properties_.frame_names.at(current_frame_);
 }

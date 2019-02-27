@@ -30,7 +30,7 @@ void StatefulEntity::incomingEvent(state::Event event) {
 
     if (new_state) {
         current_state_ = &(state_list_.find(new_state.value())->second);
-        frame_counter_ = current_state_->frame_timer_;
+        frame_counter_ = current_state_->properties_.frame_timer;
     }
 }
 
@@ -38,20 +38,6 @@ std::string StatefulEntity::getCurrentSprite() {
     return current_state_->getCurrentSprite();
 }
 
-bool StatefulEntity::getProperty(state::Property property) {
-    switch(property) {
-        case state::Property::TOUCHING_GROUND:
-            return current_state_->touching_ground_;
-        case state::Property::TOUCHING_LEFT_WALL:
-            return current_state_->touching_left_wall_;
-        case state::Property::TOUCHING_RIGHT_WALL:
-            return current_state_->touching_right_wall_;
-        case state::Property::MOVEMENT_LOCKED:
-            return current_state_->movement_locked_;
-        case state::Property::CAN_JUMP:
-            return current_state_->can_jump_;
-        default:
-            throw std::runtime_error("Unknown property");
-            return false;
-    }
+const state::Properties& StatefulEntity::getStateProperties() {
+    return current_state_->properties_;
 }

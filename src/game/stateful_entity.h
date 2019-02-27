@@ -10,7 +10,7 @@ class StatefulEntity {
 
     void incomingEvent(state::Event event);
 
-    bool getProperty(state::Property property);
+    const state::Properties& getStateProperties();
 
     std::string getCurrentSprite();
 

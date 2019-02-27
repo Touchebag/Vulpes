@@ -16,17 +16,7 @@ enum class Event {
     FALLING = 13,
 };
 
-// TODO Remove
-enum class Property {
-    UNKNOWN,
-    TOUCHING_GROUND,
-    TOUCHING_RIGHT_WALL,
-    TOUCHING_LEFT_WALL,
-    MOVEMENT_LOCKED,
-    CAN_JUMP
-};
-
-struct InitParams {
+struct Properties {
     bool movement_locked = false;
     bool touching_ground = true;
     bool touching_right_wall = false;
