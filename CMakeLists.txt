@@ -9,6 +9,8 @@ set(STATE_GRAPH_TARGET state_graph)
 
 set(CC_OPTIONS -std=c++17 -Wall -Wpedantic -DLOG_LEVEL=3)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # SFML
 set(BUILD_SHARED_LIBS false)
 find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)

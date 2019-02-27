@@ -22,6 +22,8 @@ public:
 
     void setTextureCoords(std::pair<util::Point, util::Point>);
 
+    virtual ~BaseEntity() {};
+
 protected:
     Transform trans_;
     Hitbox hitbox_;
