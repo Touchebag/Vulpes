@@ -13,7 +13,7 @@ void Player::update() {
     //     incomingEvent(state::Event::FRAME_TIMEOUT);
     // }
 
-    double x = 0.0, y = 0.0;
+    double x = velX_, y = velY_;
 
     if (Input::getInstance().isButtonHeld(input::button::LEFT)) {
         x = -10.0;
@@ -24,12 +24,16 @@ void Player::update() {
         incomingEvent(state::Event::MOVING);
         facing_right_ = true;
     } else {
+        x = 0.0;
         incomingEvent(state::Event::NO_MOVEMENT);
     }
 
+    // Gravity
+    y += 1.0;
+
     if (Input::getInstance().isButtonPressed(input::button::JUMP)) {
         if (getStateProperties().can_jump) {
-            velY_ = -20.0;
+            y = -20.0;
             incomingEvent(state::Event::JUMPING);
         }
     }
@@ -42,12 +46,9 @@ void Player::update() {
 }
 
 void Player::move(util::X velX, util::Y velY) {
-    // Gravity
-    velY_ = std::min(velY_ + 1.0, 20.0);
+    velY_ = std::max(std::min((double)velY, 20.0), -20.0);
 
-    if (!getStateProperties().movement_locked) {
-        velX_ = velX;
-    }
+    velX_ = velX;
 
     moveAndCheckCollision();
 }
