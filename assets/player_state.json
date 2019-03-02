@@ -57,6 +57,7 @@
         "can_jump": false,
         "next_states": [
             {"event": 1, "state": "idle"},
+            {"event": 2, "state": "wall_slide"},
             {"event": 13, "state": "falling"}
         ],
         "frame_names": [
@@ -66,10 +67,33 @@
     "falling": {
         "can_jump": false,
         "next_states": [
-            {"event": 1, "state": "idle"}
+            {"event": 1, "state": "idle"},
+            {"event": 2, "state": "wall_slide"}
         ],
         "frame_names": [
             "Falling"
+        ]
+    },
+    "wall_slide": {
+        "touching_wall": true,
+        "next_states": [
+            {"event": 1, "state": "idle"},
+            {"event": 12, "state": "wall_jump"},
+            {"event": 13, "state": "falling"}
+        ],
+        "frame_names": [
+            "Wall_slide"
+        ]
+    },
+    "wall_jump": {
+        "movement_locked": true,
+        "can_jump": false,
+        "frame_timer": 30,
+        "next_states": [
+            {"event": 20, "state": "jumping"}
+        ],
+        "frame_names": [
+            "Jumping"
         ]
     }
 }

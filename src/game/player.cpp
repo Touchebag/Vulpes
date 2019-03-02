@@ -9,30 +9,43 @@
 void Player::update() {
     // Check before decreasing
     // If previous frame was the last one (i.e. ticked down to 0) then trigger event before this frame
-    // if (frame_counter_-- == 0) {
-    //     incomingEvent(state::Event::FRAME_TIMEOUT);
-    // }
+    if (frame_counter_-- == 0) {
+        incomingEvent(state::Event::FRAME_TIMEOUT);
+    }
 
     double x = velX_, y = velY_;
 
-    if (Input::getInstance().isButtonHeld(input::button::LEFT)) {
-        x = -10.0;
-        incomingEvent(state::Event::MOVING);
-        facing_right_ = false;
-    } else if (Input::getInstance().isButtonHeld(input::button::RIGHT)) {
-        x = 10.0;
-        incomingEvent(state::Event::MOVING);
-        facing_right_ = true;
-    } else {
-        x = 0.0;
-        incomingEvent(state::Event::NO_MOVEMENT);
+    if (!getStateProperties().movement_locked) {
+        if (Input::getInstance().isButtonHeld(input::button::LEFT)) {
+            x = -10.0;
+            incomingEvent(state::Event::MOVING);
+            facing_right_ = false;
+        } else if (Input::getInstance().isButtonHeld(input::button::RIGHT)) {
+            x = 10.0;
+            incomingEvent(state::Event::MOVING);
+            facing_right_ = true;
+        } else {
+            x = 0.0;
+            incomingEvent(state::Event::NO_MOVEMENT);
+        }
     }
 
     // Gravity
     y += 1.0;
 
+    if (getStateProperties().touching_wall) {
+        y = std::min(y, 5.0);
+    }
+
     if (Input::getInstance().isButtonPressed(input::button::JUMP)) {
-        if (getStateProperties().can_jump) {
+        if (getStateProperties().touching_wall) {
+            facing_right_ = !facing_right_;
+            float dir = facing_right_ ? 1.0 : -1.0;
+            x = 10.0 * dir;
+            y = -20.0;
+
+            incomingEvent(state::Event::JUMPING);
+        } else if (getStateProperties().can_jump) {
             y = -20.0;
             incomingEvent(state::Event::JUMPING);
         }
@@ -71,24 +84,20 @@ void Player::moveAndCheckCollision() {
             std::tuple<float, float> newMoveValues = getAbsHitbox().getMaximumMovement(util::X(x), util::Y(y), other_hitbox);
             x = std::get<0>(newMoveValues);
             y = std::get<1>(newMoveValues);
+
+            // Readjust abs_hitbox to new values
+            abs_hitbox.left_ += x - velX_;
+            abs_hitbox.right_ += x - velX_;
+            abs_hitbox.top_ += y - velY_;
+            abs_hitbox.bottom_ += y - velY_;
         }
-
-        // Readjust abs_hitbox to new values
-        abs_hitbox.left_ += x - velX_;
-        abs_hitbox.right_ += x - velX_;
-        abs_hitbox.top_ += y - velY_;
-        abs_hitbox.bottom_ += y - velY_;
-    }
-
-    if (x < velX_) {
-        // incomingEvent(state::Event::TOUCHING_WALL_RIGHT);
-    } else if (x > velX_) {
-        // incomingEvent(state::Event::TOUCHING_WALL_LEFT);
     }
 
     if (y < velY_) {
         incomingEvent(state::Event::TOUCHING_FLOOR);
-    } else if (velY_ > 0.0) {
+    } else if (x != velX_) {
+        incomingEvent(state::Event::TOUCHING_WALL);
+    } else if (y > 0.0) {
         incomingEvent(state::Event::FALLING);
     }
 

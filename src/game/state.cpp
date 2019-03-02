@@ -23,11 +23,8 @@ State State::loadStateFromJson(nlohmann::json j) {
     if (j.find("touching_ground") != j.end()) {
         properties.touching_ground = j["touching_ground"].get<bool>();
     }
-    if (j.find("touching_right_wall") != j.end()) {
-        properties.touching_right_wall = j["touching_right_wall"].get<bool>();
-    }
-    if (j.find("touching_left_wall") != j.end()) {
-        properties.touching_left_wall = j["touching_left_wall"].get<bool>();
+    if (j.find("touching_wall") != j.end()) {
+        properties.touching_wall = j["touching_wall"].get<bool>();
     }
     if (j.find("can_jump") != j.end()) {
         properties.can_jump = j["can_jump"].get<bool>();
