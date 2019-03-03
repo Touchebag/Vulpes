@@ -9,7 +9,7 @@ void AnimatedEntity::load_sprite_map(const std::string& path) {
     std::ifstream fs("assets/" + path);
 
     if (!fs) {
-        LOGE("Failed to open file %s\n", path.c_str());
+        LOGE("Failed to open file %s", path.c_str());
         exit(1);
     }
 

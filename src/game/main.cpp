@@ -68,15 +68,15 @@ int main() {
                         window.close();
                         break;
                     case sf::Event::KeyPressed:
-                        LOGV("Key pressed %i\n", event.key.code);
+                        LOGV("Key pressed %i", event.key.code);
                         Input::getInstance().keyEvent(event.key.code, true);
                         break;
                     case sf::Event::KeyReleased:
-                        LOGV("Key released %i\n", event.key.code);
+                        LOGV("Key released %i", event.key.code);
                         Input::getInstance().keyEvent(event.key.code, false);
                         break;
                     default:
-                        LOGD("Unknown event %i\n", event.type);
+                        LOGV("Unknown event %i", event.type);
                         break;
                 }
             }

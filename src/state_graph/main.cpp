@@ -19,7 +19,7 @@ int main() {
     std::ofstream of("state.dot");
 
     if (!of.good()) {
-        LOGE("Failed to open ouput file\n");
+        LOGE("Failed to open ouput file");
         exit(1);
     }
 

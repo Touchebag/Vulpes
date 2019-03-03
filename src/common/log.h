@@ -16,7 +16,7 @@
 // ---- Main log ----
 
 #if LOG_LEVEL > 0
-#define LOG(level, ...) printf(level " : " __VA_ARGS__);
+#define LOG(level, ...) printf(level " : " __VA_ARGS__); printf("\n");
 #else
 #define LOG(...) ((void)0);
 #endif
