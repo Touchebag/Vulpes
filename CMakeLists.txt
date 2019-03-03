@@ -3,6 +3,7 @@ project(vulpes)
 
 set(CMAKE_INSTALL_PREFIX build)
 
+# Targets
 set(COMMON_TARGET common)
 set(GAME_TARGET vulpes)
 set(STATE_GRAPH_TARGET state_graph)
@@ -35,7 +36,7 @@ target_link_libraries(${GAME_TARGET} ${COMMON_TARGET} ${SFML_LIBS})
 
 # State editor target
 file(GLOB_RECURSE STATE_GRAPH_SOURCES src/state_graph/*.cpp src/state_graph/*.h)
-add_executable(${STATE_GRAPH_TARGET} ${STATE_GRAPH_SOURCES})
+add_executable(${STATE_GRAPH_TARGET} EXCLUDE_FROM_ALL ${STATE_GRAPH_SOURCES})
 target_compile_options(${STATE_GRAPH_TARGET} PUBLIC ${CC_OPTIONS})
 target_include_directories(${STATE_GRAPH_TARGET} PUBLIC src/common/ libs/nlohmann)
 
