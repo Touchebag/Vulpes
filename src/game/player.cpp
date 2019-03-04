@@ -13,40 +13,40 @@ void Player::update() {
         incomingEvent(state::Event::FRAME_TIMEOUT);
     }
 
-    double x = velX_, y = velY_;
+    int x = velX_, y = velY_;
 
     if (!getStateProperties().movement_locked) {
         if (Input::getInstance().isButtonHeld(input::button::LEFT)) {
-            x = -10.0;
+            x = -10;
             incomingEvent(state::Event::MOVING);
             facing_right_ = false;
         } else if (Input::getInstance().isButtonHeld(input::button::RIGHT)) {
-            x = 10.0;
+            x = 10;
             incomingEvent(state::Event::MOVING);
             facing_right_ = true;
         } else {
-            x = 0.0;
+            x = 0;
             incomingEvent(state::Event::NO_MOVEMENT);
         }
     }
 
     // Gravity
-    y += 1.0;
+    y += 1;
 
     if (getStateProperties().touching_wall) {
-        y = std::min(y, 5.0);
+        y = std::min(y, 5);
     }
 
     if (Input::getInstance().isButtonPressed(input::button::JUMP)) {
         if (getStateProperties().touching_wall) {
             facing_right_ = !facing_right_;
-            float dir = facing_right_ ? 1.0 : -1.0;
-            x = 10.0 * dir;
-            y = -20.0;
+            int dir = facing_right_ ? 1 : -1;
+            x = 10 * dir;
+            y = -20;
 
             incomingEvent(state::Event::JUMPING);
         } else if (getStateProperties().can_jump) {
-            y = -20.0;
+            y = -20;
             incomingEvent(state::Event::JUMPING);
         }
     }
@@ -59,7 +59,7 @@ void Player::update() {
 }
 
 void Player::move(util::X velX, util::Y velY) {
-    velY_ = std::max(std::min((double)velY, 20.0), -20.0);
+    velY_ = std::max(std::min(static_cast<int>(velY), 20), -20);
 
     velX_ = velX;
 
@@ -67,8 +67,8 @@ void Player::move(util::X velX, util::Y velY) {
 }
 
 void Player::moveAndCheckCollision() {
-    double x = velX_;
-    double y = velY_;
+    int x = velX_;
+    int y = velY_;
     World& worldInst = World::getInstance();
 
     Hitbox abs_hitbox = getAbsHitbox();
@@ -81,7 +81,7 @@ void Player::moveAndCheckCollision() {
         Hitbox other_hitbox = (*it)->getAbsHitbox();
 
         if (other_hitbox.collides(abs_hitbox)) {
-            std::tuple<float, float> newMoveValues = getAbsHitbox().getMaximumMovement(util::X(x), util::Y(y), other_hitbox);
+            std::tuple<int, int> newMoveValues = getAbsHitbox().getMaximumMovement(util::X(x), util::Y(y), other_hitbox);
             x = std::get<0>(newMoveValues);
             y = std::get<1>(newMoveValues);
 
@@ -97,7 +97,7 @@ void Player::moveAndCheckCollision() {
         incomingEvent(state::Event::TOUCHING_FLOOR);
     } else if (x != velX_) {
         incomingEvent(state::Event::TOUCHING_WALL);
-    } else if (y > 0.0) {
+    } else if (y > 0) {
         incomingEvent(state::Event::FALLING);
     }
 

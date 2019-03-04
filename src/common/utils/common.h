@@ -2,74 +2,74 @@
 
 namespace util {
 
-class TypesafeDouble {
+class TypesafeInt {
   public:
-    operator double() {
+    operator int() {
         return d_;
     }
 
-    double operator +(double d) {
+    int operator +(int d) {
         return d_ + d;
     }
 
-    double operator -(double d) {
+    int operator -(int d) {
         return d_ - d;
     }
 
-    double operator +=(double d) {
+    int operator +=(int d) {
         d_ += d;
         return d_;
     }
 
-    double operator -=(double d) {
+    int operator -=(int d) {
         d_ -= d;
         return d_;
     }
 
-    bool operator <(double d) {
+    bool operator <(int d) {
         return d_ < d;
     }
 
-    bool operator >(double d) {
+    bool operator >(int d) {
         return d_ > d;
     }
 
   protected:
-    TypesafeDouble() {};
+    TypesafeInt() {};
 
-    double d_ = 0.0;
+    int d_ = 0;
 };
 
-class X : public TypesafeDouble {
+class X : public TypesafeInt {
   public:
-    explicit X(double x) { d_ = x; };
-    void operator= (double x) { d_ = x; };
+    explicit X(int x) { d_ = x; };
+    void operator= (int x) { d_ = x; };
 };
 
-class Y : public TypesafeDouble{
+class Y : public TypesafeInt{
   public:
-    explicit Y(double y) { d_ = y; };
-    void operator= (double y) { d_ = y; };
+    explicit Y(int y) { d_ = y; };
+    void operator= (int y) { d_ = y; };
 };
 
-class Right : public TypesafeDouble{
+class Right : public TypesafeInt{
   public:
-    explicit Right(double r) { d_ = r; };
+    explicit Right(int r) { d_ = r; };
 };
 
-class Left : public TypesafeDouble{
+class Left : public TypesafeInt{
   public:
-    explicit Left(double l) { d_ = l; };
+    explicit Left(int l) { d_ = l; };
 };
 
-class Top : public TypesafeDouble{
+class Top : public TypesafeInt{
   public:
-    explicit Top(double t) { d_ = t; };
+    explicit Top(int t) { d_ = t; };
 };
 
-class Bottom : public TypesafeDouble{
+class Bottom : public TypesafeInt{
   public:
-    explicit Bottom(double b) { d_ = b; };
+    explicit Bottom(int b) { d_ = b; };
 };
 
 class Point {

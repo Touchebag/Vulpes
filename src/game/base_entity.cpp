@@ -23,7 +23,7 @@ void BaseEntity::setPosiition(util::X abs_x, util::Y abs_y) {
 
 void BaseEntity::setHitbox(util::Right right, util::Left left, util::Top top, util::Bottom bottom) {
     hitbox_.setHitbox(right, left, top, bottom);
-    sprite_.setOrigin((right - left) / 2.0, (bottom - top) / 2.0);
+    sprite_.setOrigin(static_cast<float>((right - left) / 2.0), static_cast<float>((bottom - top) / 2.0));
     sprite_.setTextureRect(sf::IntRect(0, 0, right - left, bottom - top));
 }
 
@@ -39,13 +39,13 @@ Hitbox BaseEntity::getAbsHitbox() {
 
 void BaseEntity::loadFromJson(nlohmann::json j) {
     // TODO Error handling
-    setPosiition(util::X(j["position"]["x"].get<float>()),
-                 util::Y(j["position"]["y"].get<float>()));
+    setPosiition(util::X(j["position"]["x"].get<int>()),
+                 util::Y(j["position"]["y"].get<int>()));
 
-    auto right = util::Right(j["hitbox"]["right"].get<double>());
-    auto left = util::Left(j["hitbox"]["left"].get<double>());
-    auto top = util::Top(j["hitbox"]["top"].get<double>());
-    auto bottom = util::Bottom(j["hitbox"]["bottom"].get<double>());
+    auto right = util::Right(j["hitbox"]["right"].get<int>());
+    auto left = util::Left(j["hitbox"]["left"].get<int>());
+    auto top = util::Top(j["hitbox"]["top"].get<int>());
+    auto bottom = util::Bottom(j["hitbox"]["bottom"].get<int>());
 
     loadTexture(j["sprite"].get<std::string>());
 
@@ -54,19 +54,19 @@ void BaseEntity::loadFromJson(nlohmann::json j) {
 
 void BaseEntity::setTextureCoords(std::pair<util::Point, util::Point> rect) {
     sprite_.setTextureRect(sf::IntRect(rect.first.x, rect.first.y, rect.second.x, rect.second.y));
-    sprite_.setOrigin(rect.second.x / 2, rect.second.y / 2);
+    sprite_.setOrigin(static_cast<float>(rect.second.x / 2.0), static_cast<float>(rect.second.y / 2.0));
 
     // Mirror sprites facing left
     auto mirror_scale = facing_right_ ? 1.0 : -1.0;
     // Scale to 100px, keep aspect ratio
-    sprite_.setScale(mirror_scale * (200.0 / rect.second.y), 200.0 / rect.second.y);
+    sprite_.setScale(static_cast<float>(mirror_scale * (200.0 / rect.second.y)), static_cast<float>(200.0 / rect.second.y));
 }
 
 void BaseEntity::update() {
 }
 
 void BaseEntity::render(sf::RenderWindow& window) {
-    sprite_.setPosition(trans_.getX(), trans_.getY());
+    sprite_.setPosition(static_cast<float>(trans_.getX()), static_cast<float>(trans_.getY()));
     window.draw(sprite_);
 
     // TODO Move to debug menu

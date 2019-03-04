@@ -8,7 +8,7 @@ set(COMMON_TARGET common)
 set(GAME_TARGET vulpes)
 set(STATE_GRAPH_TARGET state_graph)
 
-set(CC_OPTIONS -std=c++17 -Wall -Wpedantic -DLOG_LEVEL=3)
+set(CC_OPTIONS -std=c++17 -Wall -Wpedantic -Wconversion -Wold-style-cast -DLOG_LEVEL=3)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 

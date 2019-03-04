@@ -12,6 +12,7 @@
 #include "input_event.h"
 
 #define PHYSICS_FRAME_RATE 60
+#define MS_PER_FRAME 1000 / PHYSICS_FRAME_RATE
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(1000,1000), "BLAAAAH");
@@ -40,8 +41,8 @@ int main() {
             {sf::Keyboard::Key::Right, input::button::RIGHT}});
 
     std::shared_ptr<Player> player = std::make_shared<Player>();
-    player->setPosiition(util::X(200.0), util::Y(200.0));
-    player->setHitbox(util::Right(25.0), util::Left(-25.0), util::Top(-100.0), util::Bottom(100.0));
+    player->setPosiition(util::X(200), util::Y(200));
+    player->setHitbox(util::Right(25), util::Left(-25), util::Top(-100), util::Bottom(100));
     player->loadTexture("Player.png");
     player->load_sprite_map("Player.txt");
     entities.push_back(player);
@@ -58,7 +59,7 @@ int main() {
         window.clear();
 
         // If we have rendered more than one physics frame then advance physics
-        while (frames.asMilliseconds() >= (1000.0 / PHYSICS_FRAME_RATE)) {
+        while (frames.asMilliseconds() >= (MS_PER_FRAME)) {
             Input::getInstance().update();
 
             sf::Event event;
@@ -89,7 +90,7 @@ int main() {
                 (*it)->update();
             }
 
-            frames -= sf::milliseconds(1000.0 / PHYSICS_FRAME_RATE);
+            frames -= sf::milliseconds(MS_PER_FRAME);
         }
 
         for (auto it = entities.begin(); it != entities.end(); ++it) {
