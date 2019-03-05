@@ -17,5 +17,5 @@ class World {
     std::vector<std::shared_ptr<BaseEntity>>& getWorldObjects();
 
   private:
-    std::vector<std::shared_ptr<BaseEntity>> worldObjects;
+    std::vector<std::shared_ptr<BaseEntity>> world_objects_;
 };

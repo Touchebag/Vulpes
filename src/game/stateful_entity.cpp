@@ -30,7 +30,7 @@ void StatefulEntity::incomingEvent(state::Event event) {
 
     if (new_state) {
         current_state_ = &(state_list_.find(new_state.value())->second);
-        frame_counter_ = current_state_->properties_.frame_timer;
+        frame_counter_ = current_state_->properties_.frame_timer_;
     }
 }
 

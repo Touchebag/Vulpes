@@ -7,6 +7,6 @@ class MovableEntity {
     virtual void move(util::X velX, util::Y velY);
 
   protected:
-    util::X velX_ = util::X(0.0);
-    util::Y velY_ = util::Y(0.0);
+    util::X velx_ = util::X(0.0);
+    util::Y vely_ = util::Y(0.0);
 };

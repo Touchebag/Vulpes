@@ -44,7 +44,7 @@ int main() {
     player->setPosiition(util::X(200), util::Y(200));
     player->setHitbox(util::Right(25), util::Left(-25), util::Top(-100), util::Bottom(100));
     player->loadTexture("Player.png");
-    player->load_sprite_map("Player.txt");
+    player->loadSpriteMap("Player.txt");
     entities.push_back(player);
 
     frame_time.restart();

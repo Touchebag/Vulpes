@@ -74,10 +74,10 @@ class Bottom : public TypesafeInt{
 
 class Point {
   public:
-    Point(int x, int y) : x(x), y(y) {}
+    Point(int x, int y) : x_(x), y_(y) {}
 
-    const int x;
-    const int y;
+    const int x_;
+    const int y_;
 };
 
 } // namespace

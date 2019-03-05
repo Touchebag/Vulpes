@@ -13,9 +13,9 @@ void Player::update() {
         incomingEvent(state::Event::FRAME_TIMEOUT);
     }
 
-    int x = velX_, y = velY_;
+    int x = velx_, y = vely_;
 
-    if (!getStateProperties().movement_locked) {
+    if (!getStateProperties().movement_locked_) {
         if (Input::getInstance().isButtonHeld(input::button::LEFT)) {
             x = -10;
             incomingEvent(state::Event::MOVING);
@@ -33,19 +33,19 @@ void Player::update() {
     // Gravity
     y += 1;
 
-    if (getStateProperties().touching_wall) {
+    if (getStateProperties().touching_wall_) {
         y = std::min(y, 5);
     }
 
     if (Input::getInstance().isButtonPressed(input::button::JUMP)) {
-        if (getStateProperties().touching_wall) {
+        if (getStateProperties().touching_wall_) {
             facing_right_ = !facing_right_;
             int dir = facing_right_ ? 1 : -1;
             x = 10 * dir;
             y = -20;
 
             incomingEvent(state::Event::JUMPING);
-        } else if (getStateProperties().can_jump) {
+        } else if (getStateProperties().can_jump_) {
             y = -20;
             incomingEvent(state::Event::JUMPING);
         }
@@ -54,21 +54,21 @@ void Player::update() {
     move(util::X(x), util::Y(y));
 
     updateState();
-    auto sprite_rect = get_sprite_rect(getCurrentSprite());
+    auto sprite_rect = getSpriteRect(getCurrentSprite());
     setTextureCoords(sprite_rect);
 }
 
-void Player::move(util::X velX, util::Y velY) {
-    velY_ = std::max(std::min(static_cast<int>(velY), 20), -20);
+void Player::move(util::X velx, util::Y vely) {
+    vely_ = std::max(std::min(static_cast<int>(vely), 20), -20);
 
-    velX_ = velX;
+    velx_ = velx;
 
     moveAndCheckCollision();
 }
 
 void Player::moveAndCheckCollision() {
-    int x = velX_;
-    int y = velY_;
+    int x = velx_;
+    int y = vely_;
     World& worldInst = World::getInstance();
 
     Hitbox abs_hitbox = getAbsHitbox();
@@ -86,23 +86,23 @@ void Player::moveAndCheckCollision() {
             y = std::get<1>(newMoveValues);
 
             // Readjust abs_hitbox to new values
-            abs_hitbox.left_ += x - velX_;
-            abs_hitbox.right_ += x - velX_;
-            abs_hitbox.top_ += y - velY_;
-            abs_hitbox.bottom_ += y - velY_;
+            abs_hitbox.left_ += x - velx_;
+            abs_hitbox.right_ += x - velx_;
+            abs_hitbox.top_ += y - vely_;
+            abs_hitbox.bottom_ += y - vely_;
         }
     }
 
-    if (y < velY_) {
+    if (y < vely_) {
         incomingEvent(state::Event::TOUCHING_FLOOR);
-    } else if (x != velX_) {
+    } else if (x != velx_) {
         incomingEvent(state::Event::TOUCHING_WALL);
     } else if (y > 0) {
         incomingEvent(state::Event::FALLING);
     }
 
-    velX_ = util::X(x);
-    velY_ = util::Y(y);
-    trans_.move(velX_, velY_);
+    velx_ = util::X(x);
+    vely_ = util::Y(y);
+    trans_.move(velx_, vely_);
 }
 

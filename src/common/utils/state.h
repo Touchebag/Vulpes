@@ -21,13 +21,13 @@ enum class Event {
 };
 
 struct Properties {
-    bool movement_locked = false;
-    bool touching_ground = true;
-    bool touching_wall = false;
-    bool can_jump = true;
-    unsigned int frame_timer = UINT_MAX;
-    std::unordered_map<state::Event, std::string> next_states;
-    std::vector<std::string> frame_names;
+    bool movement_locked_ = false;
+    bool touching_ground_ = true;
+    bool touching_wall_ = false;
+    bool can_jump_ = true;
+    unsigned int frame_timer_ = UINT_MAX;
+    std::unordered_map<state::Event, std::string> next_states_;
+    std::vector<std::string> frame_names_;
 };
 
 }

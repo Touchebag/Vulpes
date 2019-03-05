@@ -7,5 +7,5 @@ World& World::getInstance() {
 }
 
 std::vector<std::shared_ptr<BaseEntity>>& World::getWorldObjects() {
-    return worldObjects;
+    return world_objects_;
 }

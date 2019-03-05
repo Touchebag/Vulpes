@@ -8,7 +8,7 @@ State::State(state::Properties properties) :
 }
 
 void State::update() {
-    if (++current_frame_ >= properties_.frame_names.size()) {
+    if (++current_frame_ >= properties_.frame_names_.size()) {
         current_frame_ = 0;
     }
 }
@@ -18,19 +18,19 @@ State State::loadStateFromJson(nlohmann::json j) {
 
     // If an option is not found use default
     if (j.find("movement_locked") != j.end()) {
-        properties.movement_locked = j["movement_locked"].get<bool>();
+        properties.movement_locked_ = j["movement_locked"].get<bool>();
     }
     if (j.find("touching_ground") != j.end()) {
-        properties.touching_ground = j["touching_ground"].get<bool>();
+        properties.touching_ground_ = j["touching_ground"].get<bool>();
     }
     if (j.find("touching_wall") != j.end()) {
-        properties.touching_wall = j["touching_wall"].get<bool>();
+        properties.touching_wall_ = j["touching_wall"].get<bool>();
     }
     if (j.find("can_jump") != j.end()) {
-        properties.can_jump = j["can_jump"].get<bool>();
+        properties.can_jump_ = j["can_jump"].get<bool>();
     }
     if (j.find("frame_timer") != j.end()) {
-        properties.frame_timer = j["frame_timer"].get<unsigned int>();
+        properties.frame_timer_ = j["frame_timer"].get<unsigned int>();
     }
 
     {
@@ -39,13 +39,13 @@ State State::loadStateFromJson(nlohmann::json j) {
         nlohmann::json next_state_array = j["next_states"];
 
         for (auto it : next_state_array) {
-            properties.next_states.insert(std::make_pair(state::Event(it["event"].get<int>()), it["state"].get<std::string>()));
+            properties.next_states_.insert(std::make_pair(state::Event(it["event"].get<int>()), it["state"].get<std::string>()));
         }
 
         nlohmann::json frame_names_array = j["frame_names"];
 
         for (auto it : frame_names_array) {
-            properties.frame_names.push_back(it.get<std::string>());
+            properties.frame_names_.push_back(it.get<std::string>());
         }
     }
 
@@ -53,9 +53,9 @@ State State::loadStateFromJson(nlohmann::json j) {
 }
 
 std::optional<std::string> State::incomingEvent(state::Event event) {
-    auto next_state = properties_.next_states.find(event);
+    auto next_state = properties_.next_states_.find(event);
 
-    if (next_state != properties_.next_states.end()) {
+    if (next_state != properties_.next_states_.end()) {
         // TODO Error handling
         return std::optional<std::string>{ next_state->second };
     } else {
@@ -64,5 +64,5 @@ std::optional<std::string> State::incomingEvent(state::Event event) {
 }
 
 std::string State::getCurrentSprite() {
-    return properties_.frame_names.at(current_frame_);
+    return properties_.frame_names_.at(current_frame_);
 }
