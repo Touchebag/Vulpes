@@ -79,6 +79,20 @@
     "wall_slide": {
         "touching_ground": false,
         "touching_wall": true,
+        "movement_locked": true,
+        "frame_timer": 10,
+        "next_states": [
+            {"event": 1, "state": "idle"},
+            {"event": 12, "state": "wall_jump"},
+            {"event": 20, "state": "wall_slide_continuous"}
+        ],
+        "frame_names": [
+            "Wall_slide"
+        ]
+    },
+    "wall_slide_continuous": {
+        "touching_ground": false,
+        "touching_wall": true,
         "next_states": [
             {"event": 1, "state": "idle"},
             {"event": 12, "state": "wall_jump"},
@@ -94,6 +108,7 @@
         "can_jump": false,
         "frame_timer": 30,
         "next_states": [
+            {"event": 2, "state": "wall_slide"},
             {"event": 20, "state": "jumping"}
         ],
         "frame_names": [
