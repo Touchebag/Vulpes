@@ -54,6 +54,7 @@
         ]
     },
     "jumping": {
+        "touching_ground": false,
         "can_jump": false,
         "next_states": [
             {"event": 1, "state": "idle"},
@@ -65,6 +66,7 @@
         ]
     },
     "falling": {
+        "touching_ground": false,
         "can_jump": false,
         "next_states": [
             {"event": 1, "state": "idle"},
@@ -75,6 +77,7 @@
         ]
     },
     "wall_slide": {
+        "touching_ground": false,
         "touching_wall": true,
         "next_states": [
             {"event": 1, "state": "idle"},
@@ -86,6 +89,7 @@
         ]
     },
     "wall_jump": {
+        "touching_ground": false,
         "movement_locked": true,
         "can_jump": false,
         "frame_timer": 30,

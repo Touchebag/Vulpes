@@ -17,15 +17,27 @@ void Player::update() {
 
     if (!getStateProperties().movement_locked_) {
         if (Input::getInstance().isButtonHeld(input::button::LEFT)) {
-            x = -10;
+            if (getStateProperties().touching_ground_) {
+                x = -10;
+            } else {
+                x = std::max(x - 1, -10);
+            }
             incomingEvent(state::Event::MOVING);
             facing_right_ = false;
         } else if (Input::getInstance().isButtonHeld(input::button::RIGHT)) {
-            x = 10;
+            if (getStateProperties().touching_ground_) {
+                x = 10;
+            } else {
+                x = std::min(x + 1, 10);
+            }
             incomingEvent(state::Event::MOVING);
             facing_right_ = true;
         } else {
-            x = 0;
+            if (getStateProperties().touching_ground_) {
+                x /= 5;
+            } else {
+                x = static_cast<int>(x * 0.9);
+            }
             incomingEvent(state::Event::NO_MOVEMENT);
         }
     }
