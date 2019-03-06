@@ -35,8 +35,6 @@ void Player::update() {
         } else {
             if (getStateProperties().touching_ground_) {
                 x /= 5;
-            } else {
-                x = static_cast<int>(x * 0.9);
             }
             incomingEvent(state::Event::NO_MOVEMENT);
         }
