@@ -6,7 +6,8 @@ enum class button {
     UNKNOWN,
     LEFT,
     RIGHT,
-    JUMP
+    JUMP,
+    DASH,
 };
 
 } // namespace

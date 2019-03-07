@@ -7,7 +7,8 @@
     "idle": {
         "next_states": [
             {"event": 11, "state": "running"},
-            {"event": 12, "state": "jumping"}
+            {"event": 12, "state": "jumping"},
+            {"event": 14, "state": "dashing"}
         ],
         "frame_names": [
             "Idle0",
@@ -47,7 +48,8 @@
             {"event": 10, "state": "idle"},
             {"event": 11, "state": "running"},
             {"event": 12, "state": "jumping"},
-            {"event": 13, "state": "falling"}
+            {"event": 13, "state": "falling"},
+            {"event": 14, "state": "dashing"}
         ],
         "frame_names": [
             "Running"
@@ -59,7 +61,8 @@
         "next_states": [
             {"event": 1, "state": "idle"},
             {"event": 2, "state": "wall_slide"},
-            {"event": 13, "state": "falling"}
+            {"event": 13, "state": "falling"},
+            {"event": 14, "state": "dashing"}
         ],
         "frame_names": [
             "Jumping"
@@ -70,7 +73,8 @@
         "can_jump": false,
         "next_states": [
             {"event": 1, "state": "idle"},
-            {"event": 2, "state": "wall_slide"}
+            {"event": 2, "state": "wall_slide"},
+            {"event": 14, "state": "dashing"}
         ],
         "frame_names": [
             "Falling"
@@ -79,7 +83,8 @@
     "wall_slide": {
         "touching_ground": false,
         "touching_wall": true,
-        "movement_locked": true,
+        "movement_locked_x": true,
+        "can_dash": false,
         "frame_timer": 10,
         "next_states": [
             {"event": 1, "state": "idle"},
@@ -93,6 +98,7 @@
     "wall_slide_continuous": {
         "touching_ground": false,
         "touching_wall": true,
+        "can_dash": false,
         "next_states": [
             {"event": 1, "state": "idle"},
             {"event": 12, "state": "wall_jump"},
@@ -104,15 +110,29 @@
     },
     "wall_jump": {
         "touching_ground": false,
-        "movement_locked": true,
+        "movement_locked_x": true,
         "can_jump": false,
         "frame_timer": 30,
         "next_states": [
             {"event": 2, "state": "wall_slide"},
+            {"event": 14, "state": "dashing"},
             {"event": 20, "state": "jumping"}
         ],
         "frame_names": [
             "Jumping"
+        ]
+    },
+    "dashing": {
+        "movement_locked_x": true,
+        "movement_locked_y": true,
+        "can_dash": false,
+        "frame_timer": 10,
+        "next_states": [
+            {"event": 2, "state": "wall_slide"},
+            {"event": 20, "state": "falling"}
+        ],
+        "frame_names": [
+            "Dashing"
         ]
     }
 }

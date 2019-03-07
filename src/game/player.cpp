@@ -15,7 +15,7 @@ void Player::update() {
 
     int x = velx_, y = vely_;
 
-    if (!getStateProperties().movement_locked_) {
+    if (!getStateProperties().movement_locked_x_) {
         if (Input::getInstance().isButtonHeld(input::button::LEFT)) {
             if (getStateProperties().touching_ground_) {
                 x = -10;
@@ -40,11 +40,21 @@ void Player::update() {
         }
     }
 
-    // Gravity
-    y += 1;
+    if (!getStateProperties().movement_locked_y_) {
+        // Gravity
+        y += 1;
+    }
 
     if (getStateProperties().touching_wall_) {
         y = std::min(y, 5);
+    }
+
+    if (Input::getInstance().isButtonPressed(input::button::DASH)) {
+        if (getStateProperties().can_dash_) {
+            x = 50 * (facing_right_ ? 1 : -1);
+            y = 0;
+            incomingEvent(state::Event::DASHING);
+        }
     }
 
     if (Input::getInstance().isButtonPressed(input::button::JUMP)) {

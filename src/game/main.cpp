@@ -38,7 +38,8 @@ int main() {
     Input::getInstance().setKeyboardMap(
             {{sf::Keyboard::Key::Space, input::button::JUMP},
             {sf::Keyboard::Key::Left, input::button::LEFT},
-            {sf::Keyboard::Key::Right, input::button::RIGHT}});
+            {sf::Keyboard::Key::Right, input::button::RIGHT},
+            {sf::Keyboard::Key::LShift, input::button::DASH}});
 
     std::shared_ptr<Player> player = std::make_shared<Player>();
     player->setPosiition(util::X(200), util::Y(200));

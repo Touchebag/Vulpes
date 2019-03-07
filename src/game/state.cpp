@@ -17,8 +17,11 @@ State State::loadStateFromJson(nlohmann::json j) {
     state::Properties properties;
 
     // If an option is not found use default
-    if (j.find("movement_locked") != j.end()) {
-        properties.movement_locked_ = j["movement_locked"].get<bool>();
+    if (j.find("movement_locked_x") != j.end()) {
+        properties.movement_locked_x_ = j["movement_locked_x"].get<bool>();
+    }
+    if (j.find("movement_locked_y") != j.end()) {
+        properties.movement_locked_y_ = j["movement_locked_y"].get<bool>();
     }
     if (j.find("touching_ground") != j.end()) {
         properties.touching_ground_ = j["touching_ground"].get<bool>();
@@ -28,6 +31,9 @@ State State::loadStateFromJson(nlohmann::json j) {
     }
     if (j.find("can_jump") != j.end()) {
         properties.can_jump_ = j["can_jump"].get<bool>();
+    }
+    if (j.find("can_dash") != j.end()) {
+        properties.can_dash_ = j["can_dash"].get<bool>();
     }
     if (j.find("frame_timer") != j.end()) {
         properties.frame_timer_ = j["frame_timer"].get<unsigned int>();
