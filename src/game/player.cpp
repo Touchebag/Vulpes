@@ -23,7 +23,9 @@ void Player::update() {
                 x = std::max(x - 1, -10);
             }
             incomingEvent(state::Event::MOVING);
-            facing_right_ = false;
+
+            // When moving left facing_right_ should be false even when speed is zero
+            facing_right_ = x > 0;
         } else if (Input::getInstance().isButtonHeld(input::button::RIGHT)) {
             if (getStateProperties().touching_ground_) {
                 x = 10;
@@ -31,7 +33,9 @@ void Player::update() {
                 x = std::min(x + 1, 10);
             }
             incomingEvent(state::Event::MOVING);
-            facing_right_ = true;
+
+            // When moving right facing_right_ should be true even when speed is zero
+            facing_right_ = x >= 0;
         } else {
             if (getStateProperties().touching_ground_) {
                 x /= 5;
