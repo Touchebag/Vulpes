@@ -7,6 +7,7 @@ set(CMAKE_INSTALL_PREFIX build)
 set(COMMON_TARGET common)
 set(GAME_TARGET vulpes)
 set(STATE_GRAPH_TARGET state_graph)
+set(LEVEL_EDITOR_TARGET level_editor)
 
 set(CC_OPTIONS -std=c++17 -Wall -Wpedantic -Wconversion -Wold-style-cast -DLOG_LEVEL=3)
 
@@ -41,4 +42,12 @@ target_compile_options(${STATE_GRAPH_TARGET} PUBLIC ${CC_OPTIONS})
 target_include_directories(${STATE_GRAPH_TARGET} PUBLIC src/common/ libs/nlohmann)
 
 target_link_libraries(${STATE_GRAPH_TARGET} ${COMMON_TARGET} ${SFML_LIBS})
+
+# Level editor target
+file(GLOB_RECURSE LEVEL_EDITOR_SOURCES src/level_editor/*.cpp src/level_editor/*.h)
+add_executable(${LEVEL_EDITOR_TARGET} EXCLUDE_FROM_ALL ${LEVEL_EDITOR_SOURCES})
+target_compile_options(${LEVEL_EDITOR_TARGET} PUBLIC ${CC_OPTIONS})
+target_include_directories(${LEVEL_EDITOR_TARGET} PUBLIC src/common/ libs/nlohmann)
+
+target_link_libraries(${LEVEL_EDITOR_TARGET} ${COMMON_TARGET} ${SFML_LIBS})
 
