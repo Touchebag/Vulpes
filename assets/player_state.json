@@ -112,7 +112,7 @@
         "touching_ground": false,
         "movement_locked_x": true,
         "can_jump": false,
-        "frame_timer": 30,
+        "frame_timer": 10,
         "next_states": [
             {"event": 2, "state": "wall_slide"},
             {"event": 14, "state": "dashing"},
@@ -129,6 +129,7 @@
         "frame_timer": 10,
         "next_states": [
             {"event": 2, "state": "wall_slide"},
+            {"event": 12, "state": "jumping"},
             {"event": 20, "state": "falling"}
         ],
         "frame_names": [
