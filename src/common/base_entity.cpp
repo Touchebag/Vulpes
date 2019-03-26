@@ -17,8 +17,12 @@ bool BaseEntity::loadTexture(std::string file_path) {
     return true;
 }
 
-void BaseEntity::setPosiition(util::X abs_x, util::Y abs_y) {
+void BaseEntity::setPosition(util::X abs_x, util::Y abs_y) {
     trans_.setPosition(abs_x, abs_y);
+}
+
+sf::Vector2i BaseEntity::getPosition() {
+    return {trans_.getX(), trans_.getY()};
 }
 
 void BaseEntity::setHitbox(util::Right right, util::Left left, util::Top top, util::Bottom bottom) {
@@ -39,8 +43,8 @@ Hitbox BaseEntity::getAbsHitbox() {
 
 void BaseEntity::loadFromJson(nlohmann::json j) {
     // TODO Error handling
-    setPosiition(util::X(j["position"]["x"].get<int>()),
-                 util::Y(j["position"]["y"].get<int>()));
+    setPosition(util::X(j["position"]["x"].get<int>()),
+                util::Y(j["position"]["y"].get<int>()));
 
     auto right = util::Right(j["hitbox"]["right"].get<int>());
     auto left = util::Left(j["hitbox"]["left"].get<int>());

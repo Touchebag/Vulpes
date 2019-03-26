@@ -42,7 +42,7 @@ int main() {
             {sf::Keyboard::Key::LShift, input::button::DASH}});
 
     std::shared_ptr<Player> player = std::make_shared<Player>();
-    player->setPosiition(util::X(200), util::Y(200));
+    player->setPosition(util::X(200), util::Y(200));
     player->setHitbox(util::Right(25), util::Left(-25), util::Top(-100), util::Bottom(100));
     player->loadTexture("Player.png");
     player->loadSpriteMap("Player.txt");
