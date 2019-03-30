@@ -5,6 +5,10 @@
 #include "base_entity.h"
 #include "action.h"
 
+#define VIEW_POS_X 500.0
+#define VIEW_POS_Y 500.0
+#define VIEW_SIZE 1000.0
+
 int main() {
     sf::RenderWindow window(sf::VideoMode(1000,1000), "BLAAAAH");
 
@@ -21,13 +25,19 @@ int main() {
         }
     }
 
-    float view_pos_x = 500.0;
-    float view_pos_y = 500.0;
-    float view_size = 1000.0;
+    float view_pos_x = VIEW_POS_X;
+    float view_pos_y = VIEW_POS_Y;
+    float view_size = VIEW_SIZE;
 
     sf::Vector2i mouse_pos;
 
     std::shared_ptr<BaseEntity> current_entity;
+
+    sf::Font font;
+    if (!font.loadFromFile("assets/arial.ttf")) {
+        LOGE("Failed to load font");
+        return EXIT_FAILURE;
+    }
 
     while (window.isOpen()) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
@@ -66,7 +76,7 @@ int main() {
                         sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
                         sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos);
 
-                        Hitbox tmp_hbox = {util::Right(worldPos.x), util::Left(worldPos.x), util::Top(worldPos.y), util::Bottom(worldPos.y)};
+                        Hitbox tmp_hbox = {util::Right(static_cast<int>(worldPos.x)), util::Left(static_cast<int>(worldPos.x)), util::Top(static_cast<int>(worldPos.y)), util::Bottom(static_cast<int>(worldPos.y))};
                         for (auto it : world_objects) {
                             if (it->getAbsHitbox().collides(tmp_hbox)) {
                                 current_entity = it;
@@ -98,6 +108,22 @@ int main() {
         }
 
         window.clear();
+
+        if (current_entity) {
+            sf::Text text;
+            text.setFont(font);
+            text.setFillColor(sf::Color::Red);
+
+            // auto hitbox = current_entity->getAbsHitbox();
+            auto pos = current_entity->getPosition();
+
+            sf::View viewport({VIEW_POS_X, VIEW_POS_Y}, {VIEW_SIZE, VIEW_SIZE});
+            window.setView(viewport);
+
+            text.setString(std::string("X:") + std::to_string(pos.x) + std::string(" Y: ") + std::to_string(pos.y));
+            text.setPosition(50, 50);
+            window.draw(text);
+        }
 
         sf::View viewport({view_pos_x, view_pos_y}, {view_size, view_size});
         window.setView(viewport);
