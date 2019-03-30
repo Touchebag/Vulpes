@@ -71,7 +71,7 @@ int main() {
                     }
                 case sf::Event::MouseButtonPressed:
                     if (event.mouseButton.button == sf::Mouse::Button::Right) {
-                        mouse_pos = sf::Mouse::getPosition(window);
+                        mouse_pos = static_cast<sf::Vector2i>(window.mapPixelToCoords(sf::Mouse::getPosition(window)));
                     } else if (event.mouseButton.button == sf::Mouse::Button::Left) {
                         sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
                         sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos);
@@ -80,7 +80,7 @@ int main() {
                         for (auto it : world_objects) {
                             if (it->getAbsHitbox().collides(tmp_hbox)) {
                                 current_entity = it;
-                                mouse_pos = sf::Mouse::getPosition(window);
+                                mouse_pos = static_cast<sf::Vector2i>(window.mapPixelToCoords(sf::Mouse::getPosition(window)));
                                 break;
                             }
                             current_entity = nullptr;
@@ -92,16 +92,15 @@ int main() {
         }
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Right)) {
-            auto mouse_tmp_pos = sf::Mouse::getPosition(window);
+            auto mouse_tmp_pos = static_cast<sf::Vector2i>(window.mapPixelToCoords(sf::Mouse::getPosition(window)));
             view_pos_x += static_cast<float>(mouse_pos.x - mouse_tmp_pos.x);
             view_pos_y += static_cast<float>(mouse_pos.y - mouse_tmp_pos.y);
-            mouse_pos = mouse_tmp_pos;
         }
 
         if (current_action == Action::MOVE) {
             if (current_entity) {
-                auto mouse_tmp_pos = sf::Mouse::getPosition(window);
-                auto current_pos = current_entity->getPosition();
+                sf::Vector2i mouse_tmp_pos = static_cast<sf::Vector2i>(window.mapPixelToCoords(sf::Mouse::getPosition(window)));
+                sf::Vector2i current_pos = current_entity->getPosition();
                 current_entity->setPosition(util::X(current_pos.x - (mouse_pos.x - mouse_tmp_pos.x)), util::Y(current_pos.y - (mouse_pos.y - mouse_tmp_pos.y)));
                 mouse_pos = mouse_tmp_pos;
             }
