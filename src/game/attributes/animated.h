@@ -10,10 +10,10 @@ class AnimatedEntity {
   typedef std::unordered_map<std::string, std::pair<util::Point, util::Point>> point_map;
 
   public:
-    void loadSpriteMap(const std::string& path);
+    virtual void loadSpriteMap(const std::string& path) final;
 
     // Returns a pair of the top-left and bottom-right points of requested texture
-    std::pair<util::Point, util::Point> getSpriteRect(std::string);
+    virtual std::pair<util::Point, util::Point> getSpriteRect(std::string) final;
 
   private:
     point_map sprite_sheet_map_;

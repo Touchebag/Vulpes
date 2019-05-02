@@ -3,7 +3,7 @@
 #include "base_entity.h"
 #include "movable_entity.h"
 #include "stateful_entity.h"
-#include "animated_entity.h"
+#include "attributes/animated.h"
 
 class Player : public BaseEntity,
                public MovableEntity,

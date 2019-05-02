@@ -1,4 +1,4 @@
-#include "animated_entity.h"
+#include "animated.h"
 #include "log.h"
 
 #include <fstream>
