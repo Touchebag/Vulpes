@@ -1,4 +1,4 @@
-#include "stateful_entity.h"
+#include "stateful.h"
 
 #include "file.h"
 #include "json.hpp"

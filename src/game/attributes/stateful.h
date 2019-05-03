@@ -6,13 +6,13 @@ class StatefulEntity {
   public:
     StatefulEntity();
 
-    void updateState();
+    virtual void updateState() final;
 
-    void incomingEvent(state::Event event);
+    virtual void incomingEvent(state::Event event) final;
 
-    const state::Properties& getStateProperties();
+    virtual const state::Properties& getStateProperties() final;
 
-    std::string getCurrentSprite();
+    virtual std::string getCurrentSprite() final;
 
   protected:
     unsigned int frame_counter_;
