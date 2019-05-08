@@ -13,7 +13,4 @@ class Player : public BaseEntity,
         void update() override;
 
         void move(util::X velX, util::Y velY) override;
-
-    private:
-        void moveAndCheckCollision();
 };

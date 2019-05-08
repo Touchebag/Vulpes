@@ -1,7 +1,5 @@
 #include "player.h"
-#include "world.h"
 #include "input_event.h"
-#include "log.h"
 
 #include <tuple>
 #include <algorithm>
@@ -75,7 +73,18 @@ void Player::update() {
         }
     }
 
-    move(util::X(x), util::Y(y));
+    y = std::max(std::min(static_cast<int>(y), 20), -20);
+    auto max_movement = getMaximumMovement(util::X(x), util::Y(y), getAbsHitbox());
+
+    if (max_movement.second < y) {
+        incomingEvent(state::Event::TOUCHING_FLOOR);
+    } else if (max_movement.first != x) {
+        incomingEvent(state::Event::TOUCHING_WALL);
+    } else if (max_movement.second > 0) {
+        incomingEvent(state::Event::FALLING);
+    }
+
+    move(max_movement.first, max_movement.second);
 
     updateState();
     auto sprite_rect = getSpriteRect(getCurrentSprite());
@@ -83,50 +92,9 @@ void Player::update() {
 }
 
 void Player::move(util::X velx, util::Y vely) {
-    vely_ = std::max(std::min(static_cast<int>(vely), 20), -20);
-
+    vely_ = vely;
     velx_ = velx;
 
-    moveAndCheckCollision();
-}
-
-void Player::moveAndCheckCollision() {
-    int x = velx_;
-    int y = vely_;
-    World& worldInst = World::getInstance();
-
-    Hitbox abs_hitbox = getAbsHitbox();
-    abs_hitbox.left_ += x;
-    abs_hitbox.right_ += x;
-    abs_hitbox.top_ += y;
-    abs_hitbox.bottom_ += y;
-
-    for (auto it = worldInst.getWorldObjects().begin(); it != worldInst.getWorldObjects().end(); ++it) {
-        Hitbox other_hitbox = (*it)->getAbsHitbox();
-
-        if (other_hitbox.collides(abs_hitbox)) {
-            std::tuple<int, int> newMoveValues = getAbsHitbox().getMaximumMovement(util::X(x), util::Y(y), other_hitbox);
-            x = std::get<0>(newMoveValues);
-            y = std::get<1>(newMoveValues);
-
-            // Readjust abs_hitbox to new values
-            abs_hitbox.left_ += x - velx_;
-            abs_hitbox.right_ += x - velx_;
-            abs_hitbox.top_ += y - vely_;
-            abs_hitbox.bottom_ += y - vely_;
-        }
-    }
-
-    if (y < vely_) {
-        incomingEvent(state::Event::TOUCHING_FLOOR);
-    } else if (x != velx_) {
-        incomingEvent(state::Event::TOUCHING_WALL);
-    } else if (y > 0) {
-        incomingEvent(state::Event::FALLING);
-    }
-
-    velx_ = util::X(x);
-    vely_ = util::Y(y);
     trans_.move(velx_, vely_);
 }
 
