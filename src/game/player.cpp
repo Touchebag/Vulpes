@@ -84,17 +84,10 @@ void Player::update() {
         incomingEvent(state::Event::FALLING);
     }
 
-    move(max_movement.first, max_movement.second);
+    move(max_movement.first, max_movement.second, trans_);
 
     updateState();
     auto sprite_rect = getSpriteRect(getCurrentSprite());
     setTextureCoords(sprite_rect);
-}
-
-void Player::move(util::X velx, util::Y vely) {
-    vely_ = vely;
-    velx_ = velx;
-
-    trans_.move(velx_, vely_);
 }
 

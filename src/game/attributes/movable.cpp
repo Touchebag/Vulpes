@@ -1,7 +1,11 @@
-#include "movable_entity.h"
+#include "movable.h"
 #include "world.h"
 
-void MovableEntity::move(util::X velX, util::Y velY) {
+void MovableEntity::move(util::X velX, util::Y velY, Transform& trans) {
+    vely_ = velY;
+    velx_ = velX;
+
+    trans.move(velx_, vely_);
 }
 
 std::pair<util::X, util::Y> MovableEntity::getMaximumMovement(util::X velX, util::Y velY, Hitbox abs_hitbox) {
