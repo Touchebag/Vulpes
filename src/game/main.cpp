@@ -43,7 +43,7 @@ int main() {
 
     std::shared_ptr<Player> player = std::make_shared<Player>();
     player->setPosition(util::X(200), util::Y(200));
-    player->setHitbox(util::Right(25), util::Left(-25), util::Top(-100), util::Bottom(100));
+    player->setHitbox(util::X(50), util::Y(200));
     player->loadTexture("Player.png");
     player->loadSpriteMap("Player.txt");
     entities.push_back(player);

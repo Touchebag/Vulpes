@@ -15,7 +15,7 @@ public:
     // TODO Move to constructor?
     void setPosition(util::X abs_x, util::Y abs_y);
     sf::Vector2i getPosition();
-    void setHitbox(util::Right right, util::Left left, util::Top top, util::Bottom bottom);
+    void setHitbox(util::X width, util::Y height);
     Hitbox getAbsHitbox();
 
     void loadFromJson(nlohmann::json j);

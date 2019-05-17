@@ -76,7 +76,8 @@ int main() {
                         sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
                         sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos);
 
-                        Hitbox tmp_hbox = {util::Right(static_cast<int>(worldPos.x)), util::Left(static_cast<int>(worldPos.x)), util::Top(static_cast<int>(worldPos.y)), util::Bottom(static_cast<int>(worldPos.y))};
+                        Hitbox tmp_hbox;
+                        tmp_hbox.setOffset({util::X(static_cast<int>(worldPos.x)), util::Y(static_cast<int>(worldPos.y))});
                         for (auto it : world_objects) {
                             if (it->getAbsHitbox().collides(tmp_hbox)) {
                                 current_entity = it;

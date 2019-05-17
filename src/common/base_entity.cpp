@@ -25,19 +25,16 @@ sf::Vector2i BaseEntity::getPosition() {
     return {trans_.getX(), trans_.getY()};
 }
 
-void BaseEntity::setHitbox(util::Right right, util::Left left, util::Top top, util::Bottom bottom) {
-    hitbox_.setHitbox(right, left, top, bottom);
-    sprite_.setOrigin(static_cast<float>((right - left) / 2.0), static_cast<float>((bottom - top) / 2.0));
-    sprite_.setTextureRect(sf::IntRect(0, 0, right - left, bottom - top));
+void BaseEntity::setHitbox(util::X width, util::Y height) {
+    hitbox_.setHitbox(width, height);
+    sprite_.setOrigin(static_cast<float>(width / 2.0), static_cast<float>(height / 2.0));
+    sprite_.setTextureRect(sf::IntRect(0, 0, width, height));
 }
 
 Hitbox BaseEntity::getAbsHitbox() {
     Hitbox abs_hitbox;
-    auto right = util::Right(hitbox_.right_ + trans_.getX());
-    auto left = util::Left(hitbox_.left_ + trans_.getX());
-    auto top = util::Top(hitbox_.top_ + trans_.getY());
-    auto bottom = util::Bottom(hitbox_.bottom_ + trans_.getY());
-    abs_hitbox.setHitbox(right, left, top, bottom);
+    abs_hitbox.setHitbox(hitbox_.width_, hitbox_.height_);
+    abs_hitbox.setOffset({util::X(trans_.getX()), util::Y(trans_.getY())});
     return abs_hitbox;
 }
 
@@ -46,14 +43,12 @@ void BaseEntity::loadFromJson(nlohmann::json j) {
     setPosition(util::X(j["position"]["x"].get<int>()),
                 util::Y(j["position"]["y"].get<int>()));
 
-    auto right = util::Right(j["hitbox"]["right"].get<int>());
-    auto left = util::Left(j["hitbox"]["left"].get<int>());
-    auto top = util::Top(j["hitbox"]["top"].get<int>());
-    auto bottom = util::Bottom(j["hitbox"]["bottom"].get<int>());
+    auto width = util::X(j["hitbox"]["width"].get<int>());
+    auto height = util::Y(j["hitbox"]["height"].get<int>());
 
     loadTexture(j["sprite"].get<std::string>());
 
-    setHitbox(right, left, top, bottom);
+    setHitbox(width, height);
 }
 
 void BaseEntity::setTextureCoords(std::pair<util::Point, util::Point> rect) {

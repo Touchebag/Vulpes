@@ -1,45 +1,68 @@
 #include "hitbox.h"
 
-void Hitbox::setHitbox(util::Right right, util::Left left, util::Top top, util::Bottom bottom) {
-    right_ = right;
-    left_ = left;
-    top_ = top;
-    bottom_ = bottom;
+void Hitbox::setHitbox(util::X width, util::Y height) {
+    width_ = width;
+    height_ = height;
 }
 
 bool Hitbox::collides(Hitbox& hitbox) {
     return collidesX(hitbox) && collidesY(hitbox);
 }
 
-std::tuple<util::X, util::Y> Hitbox::getMaximumMovement(util::X stepX, util::Y stepY, Hitbox otherHitbox) {
+std::pair<util::X, util::Y> Hitbox::getMaximumMovement(util::X stepX, util::Y stepY, Hitbox otherHitbox) {
     int retX = stepX, retY = stepY;
 
     // If X direction was already colliding last step then we are parallel in this direction
     // I.e. do no change speed
     if (!collidesX(otherHitbox)) {
         if (stepX > 0) {
-            retX -= right_ + stepX - otherHitbox.left_;
+            retX -= getRight() + stepX - otherHitbox.getLeft();
         } else if (stepX < 0) {
-            retX += otherHitbox.right_ - (left_ + stepX);
+            retX += otherHitbox.getRight() - (getLeft() + stepX);
         }
     }
 
     // Same for Y
     if (!collidesY(otherHitbox)) {
         if (stepY > 0) {
-            retY -= bottom_ + stepY - otherHitbox.top_;
+            retY -= getBottom() + stepY - otherHitbox.getTop();
         } else if (stepY < 0) {
-            retY += otherHitbox.bottom_ - (top_ + stepY);
+            retY += otherHitbox.getBottom() - (getTop() + stepY);
         }
     }
 
     return { util::X(retX), util::Y(retY) };
 }
 
+void Hitbox::setOffset(std::pair<util::X, util::Y> offset) {
+    offset_ = offset;
+}
+
+void Hitbox::moveOffset(std::pair<util::X, util::Y> offset) {
+    offset_.first += offset.first;
+    offset_.second += offset.second;
+}
+
 bool Hitbox::collidesX(Hitbox& otherHitbox) {
-    return left_ < otherHitbox.right_ && right_ > otherHitbox.left_;
+    return getLeft() < otherHitbox.getRight() && getRight() > otherHitbox.getLeft();
 }
 
 bool Hitbox::collidesY(Hitbox& otherHitbox) {
-    return top_ < otherHitbox.bottom_ && bottom_ > otherHitbox.top_;
+    return getTop() < otherHitbox.getBottom() && getBottom() > otherHitbox.getTop();
+}
+
+int Hitbox::getRight() {
+    return offset_.first + (width_ / 2);
+}
+
+int Hitbox::getLeft() {
+    return offset_.first - (width_ / 2);
+}
+
+int Hitbox::getTop() {
+    return offset_.second - (height_ / 2);
+}
+
+int Hitbox::getBottom() {
+    return offset_.second + (height_ / 2);
 }

@@ -15,10 +15,7 @@ std::pair<util::X, util::Y> MovableEntity::getMaximumMovement(util::X velX, util
     World& worldInst = World::getInstance();
 
     Hitbox previous_abs = abs_hitbox;
-    abs_hitbox.left_ += x;
-    abs_hitbox.right_ += x;
-    abs_hitbox.top_ += y;
-    abs_hitbox.bottom_ += y;
+    abs_hitbox.moveOffset({util::X(x), util::Y(y)});
 
     for (auto it = worldInst.getWorldObjects().begin(); it != worldInst.getWorldObjects().end(); ++it) {
         Hitbox other_hitbox = (*it)->getAbsHitbox();
@@ -29,10 +26,7 @@ std::pair<util::X, util::Y> MovableEntity::getMaximumMovement(util::X velX, util
             y = std::get<1>(newMoveValues);
 
             // Readjust abs_hitbox to new values
-            abs_hitbox.left_ += x - velx_;
-            abs_hitbox.right_ += x - velx_;
-            abs_hitbox.top_ += y - vely_;
-            abs_hitbox.bottom_ += y - vely_;
+            abs_hitbox.moveOffset({util::X(x - velx_), util::Y(y - vely_)});
         }
     }
 
