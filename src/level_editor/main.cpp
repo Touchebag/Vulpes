@@ -9,6 +9,21 @@
 #define VIEW_POS_Y 500.0
 #define VIEW_SIZE 1000.0
 
+std::pair<int, int> mouse_pos = {0, 0}, mouse_speed = {0, 0};
+std::pair<float, float> world_mouse_pos = {0.0, 0.0}, world_mouse_speed = {0.0, 0.0};
+
+void updateMousePositions(sf::RenderWindow& window) {
+        std::pair<int, int> old_mouse_pos = mouse_pos;
+        sf::Vector2i tmp_pos = sf::Mouse::getPosition(window);
+        mouse_pos = {tmp_pos.x, tmp_pos.y};
+        mouse_speed = {mouse_pos.first - old_mouse_pos.first, mouse_pos.second - old_mouse_pos.second};
+
+        std::pair<float, float> old_world_mouse_pos = world_mouse_pos;
+        sf::Vector2f tmp_world_pos = window.mapPixelToCoords(tmp_pos);
+        world_mouse_pos = {tmp_world_pos.x, tmp_world_pos.y};
+        world_mouse_speed = {world_mouse_pos.first - old_world_mouse_pos.first, world_mouse_pos.second - old_world_mouse_pos.second};
+}
+
 int main() {
     sf::RenderWindow window(sf::VideoMode(1000,1000), "BLAAAAH");
 
@@ -29,8 +44,6 @@ int main() {
     float view_pos_y = VIEW_POS_Y;
     float view_size = VIEW_SIZE;
 
-    sf::Vector2i mouse_pos;
-
     std::shared_ptr<BaseEntity> current_entity;
 
     sf::Font font;
@@ -43,6 +56,8 @@ int main() {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
             window.close();
         }
+
+        updateMousePositions(window);
 
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -71,17 +86,13 @@ int main() {
                     }
                 case sf::Event::MouseButtonPressed:
                     if (event.mouseButton.button == sf::Mouse::Button::Right) {
-                        mouse_pos = static_cast<sf::Vector2i>(window.mapPixelToCoords(sf::Mouse::getPosition(window)));
+                        // mouse_pos = static_cast<sf::Vector2i>(window.mapPixelToCoords(sf::Mouse::getPosition(window)));
                     } else if (event.mouseButton.button == sf::Mouse::Button::Left) {
-                        sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
-                        sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos);
-
                         Hitbox tmp_hbox;
-                        tmp_hbox.setOffset({util::X(static_cast<int>(worldPos.x)), util::Y(static_cast<int>(worldPos.y))});
+                        tmp_hbox.setOffset({util::X(static_cast<int>(world_mouse_pos.first)), util::Y(static_cast<int>(world_mouse_pos.second))});
                         for (auto it : world_objects) {
                             if (it->getAbsHitbox().collides(tmp_hbox)) {
                                 current_entity = it;
-                                mouse_pos = static_cast<sf::Vector2i>(window.mapPixelToCoords(sf::Mouse::getPosition(window)));
                                 break;
                             }
                             current_entity = nullptr;
@@ -94,16 +105,16 @@ int main() {
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Right)) {
             auto mouse_tmp_pos = static_cast<sf::Vector2i>(window.mapPixelToCoords(sf::Mouse::getPosition(window)));
-            view_pos_x += static_cast<float>(mouse_pos.x - mouse_tmp_pos.x);
-            view_pos_y += static_cast<float>(mouse_pos.y - mouse_tmp_pos.y);
+            // view_pos_x += static_cast<float>(mouse_pos.x - mouse_tmp_pos.x);
+            // view_pos_y += static_cast<float>(mouse_pos.y - mouse_tmp_pos.y);
         }
 
         if (current_action == Action::MOVE) {
             if (current_entity) {
                 sf::Vector2i mouse_tmp_pos = static_cast<sf::Vector2i>(window.mapPixelToCoords(sf::Mouse::getPosition(window)));
                 sf::Vector2i current_pos = current_entity->getPosition();
-                current_entity->setPosition(util::X(current_pos.x - (mouse_pos.x - mouse_tmp_pos.x)), util::Y(current_pos.y - (mouse_pos.y - mouse_tmp_pos.y)));
-                mouse_pos = mouse_tmp_pos;
+                // current_entity->setPosition(util::X(current_pos.x - (mouse_pos.x - mouse_tmp_pos.x)), util::Y(current_pos.y - (mouse_pos.y - mouse_tmp_pos.y)));
+                // mouse_pos = mouse_tmp_pos;
             }
         }
 
