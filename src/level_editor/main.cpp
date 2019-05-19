@@ -84,12 +84,12 @@ int main() {
                         default:
                             break;
                     }
+                    break;
                 case sf::Event::MouseButtonPressed:
-                    if (event.mouseButton.button == sf::Mouse::Button::Right) {
-                        // mouse_pos = static_cast<sf::Vector2i>(window.mapPixelToCoords(sf::Mouse::getPosition(window)));
-                    } else if (event.mouseButton.button == sf::Mouse::Button::Left) {
+                    if (event.mouseButton.button == sf::Mouse::Button::Left) {
                         Hitbox tmp_hbox;
                         tmp_hbox.setOffset({util::X(static_cast<int>(world_mouse_pos.first)), util::Y(static_cast<int>(world_mouse_pos.second))});
+
                         for (auto it : world_objects) {
                             if (it->getAbsHitbox().collides(tmp_hbox)) {
                                 current_entity = it;
@@ -97,22 +97,35 @@ int main() {
                             }
                             current_entity = nullptr;
                         }
+
+                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LAlt)) {
+                            current_action = Action::CAMERA_MOVE;
+                        }
+                    } else if (event.mouseButton.button == sf::Mouse::Button::Right) {
+                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LAlt)) {
+                            current_action = Action::CAMERA_ZOOM;
+                        }
                     }
+                    break;
+                case sf::Event::MouseButtonReleased:
+                    current_action = Action::NONE;
+                    break;
                 default:
                     break;
             }
         }
 
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Right)) {
-            auto mouse_tmp_pos = static_cast<sf::Vector2i>(window.mapPixelToCoords(sf::Mouse::getPosition(window)));
-            // view_pos_x += static_cast<float>(mouse_pos.x - mouse_tmp_pos.x);
-            // view_pos_y += static_cast<float>(mouse_pos.y - mouse_tmp_pos.y);
+        if (current_action == Action::CAMERA_MOVE) {
+            view_pos_x -= static_cast<float>(mouse_speed.first);
+            view_pos_y -= static_cast<float>(mouse_speed.second);
         }
 
-        if (current_action == Action::MOVE) {
+        if (current_action == Action::CAMERA_ZOOM) {
+            view_size += static_cast<float>(mouse_speed.second * 5);
+        } else if (current_action == Action::MOVE) {
             if (current_entity) {
-                sf::Vector2i mouse_tmp_pos = static_cast<sf::Vector2i>(window.mapPixelToCoords(sf::Mouse::getPosition(window)));
-                sf::Vector2i current_pos = current_entity->getPosition();
+                // sf::Vector2i mouse_tmp_pos = static_cast<sf::Vector2i>(window.mapPixelToCoords(sf::Mouse::getPosition(window)));
+                // sf::Vector2i current_pos = current_entity->getPosition();
                 // current_entity->setPosition(util::X(current_pos.x - (mouse_pos.x - mouse_tmp_pos.x)), util::Y(current_pos.y - (mouse_pos.y - mouse_tmp_pos.y)));
                 // mouse_pos = mouse_tmp_pos;
             }
