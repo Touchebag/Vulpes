@@ -93,6 +93,9 @@ int main() {
                         for (auto it : world_objects) {
                             if (it->getAbsHitbox().collides(tmp_hbox)) {
                                 current_entity = it;
+                                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
+                                    current_action = Action::MOVE;
+                                }
                                 break;
                             }
                             current_entity = nullptr;
@@ -124,10 +127,8 @@ int main() {
             view_size += static_cast<float>(mouse_speed.second * 5);
         } else if (current_action == Action::MOVE) {
             if (current_entity) {
-                // sf::Vector2i mouse_tmp_pos = static_cast<sf::Vector2i>(window.mapPixelToCoords(sf::Mouse::getPosition(window)));
-                // sf::Vector2i current_pos = current_entity->getPosition();
-                // current_entity->setPosition(util::X(current_pos.x - (mouse_pos.x - mouse_tmp_pos.x)), util::Y(current_pos.y - (mouse_pos.y - mouse_tmp_pos.y)));
-                // mouse_pos = mouse_tmp_pos;
+                sf::Vector2i current_pos = current_entity->getPosition();
+                current_entity->setPosition(util::X(current_pos.x + static_cast<int>(world_mouse_speed.first)), util::Y(current_pos.y + static_cast<int>(world_mouse_speed.second)));
             }
         }
 
