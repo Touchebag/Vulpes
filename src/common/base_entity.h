@@ -19,6 +19,8 @@ public:
     Hitbox getAbsHitbox();
 
     void loadFromJson(nlohmann::json j);
+    std::optional<nlohmann::json> outputToJson();
+
     void render(sf::RenderWindow& window);
 
     void setTextureCoords(std::pair<util::Point, util::Point>);
@@ -35,4 +37,7 @@ protected:
 private:
     sf::Texture texture_;
     sf::Sprite sprite_;
+
+    // Needed for level editor
+    std::string texture_name_;
 };

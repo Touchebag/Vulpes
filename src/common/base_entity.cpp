@@ -46,9 +46,23 @@ void BaseEntity::loadFromJson(nlohmann::json j) {
     auto width = util::X(j["hitbox"]["width"].get<int>());
     auto height = util::Y(j["hitbox"]["height"].get<int>());
 
-    loadTexture(j["sprite"].get<std::string>());
+    texture_name_ = j["sprite"].get<std::string>();
+    loadTexture(texture_name_);
 
     setHitbox(width, height);
+}
+
+std::optional<nlohmann::json> BaseEntity::outputToJson() {
+    nlohmann::json j;
+    j["position"]["x"] = static_cast<int>(trans_.getX());
+    j["position"]["y"] = static_cast<int>(trans_.getY());
+
+    j["hitbox"]["width"] = static_cast<int>(hitbox_.width_);
+    j["hitbox"]["height"] = static_cast<int>(hitbox_.height_);
+
+    j["sprite"] = texture_name_;
+
+    return {j};
 }
 
 void BaseEntity::setTextureCoords(std::pair<util::Point, util::Point> rect) {

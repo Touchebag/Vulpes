@@ -9,6 +9,8 @@
 #define VIEW_POS_Y 500.0
 #define VIEW_SIZE 1000.0
 
+#define LEVEL_FILE_PATH "assets/world.json"
+
 std::pair<int, int> mouse_pos = {0, 0}, mouse_speed = {0, 0};
 std::pair<float, float> world_mouse_pos = {0.0, 0.0}, world_mouse_speed = {0.0, 0.0};
 
@@ -27,7 +29,7 @@ void updateMousePositions(sf::RenderWindow& window) {
 int main() {
     sf::RenderWindow window(sf::VideoMode(1000,1000), "BLAAAAH");
 
-    std::optional<nlohmann::json> j = file::loadJson("assets/world.json");
+    std::optional<nlohmann::json> j = file::loadJson(LEVEL_FILE_PATH);
     std::vector<std::shared_ptr<BaseEntity>> world_objects;
 
     Action current_action = Action::NONE;
@@ -74,11 +76,24 @@ int main() {
                     break;
                 case sf::Event::KeyPressed:
                     switch (event.key.code) {
-                        case sf::Keyboard::Key::A:
-                            if (current_action == Action::MOVE) {
-                                current_action = Action::NONE;
-                            } else {
-                                current_action = Action::MOVE;
+                        case sf::Keyboard::Key::S:
+                            {
+                                nlohmann::json j;
+                                for (long unsigned int i = 0; i < world_objects.size(); i++) {
+                                    auto object = world_objects.at(i)->outputToJson();
+                                    if (object) {
+                                        j.push_back(*object);
+                                    } else {
+                                        LOGE("Failed to parse object");
+                                    }
+                                }
+
+                                if (file::storeJson(LEVEL_FILE_PATH, j)) {
+                                    LOGD("World save successfully");
+                                } else {
+                                    LOGE("Failed to save json to file");
+                                }
+
                             }
                             break;
                         default:
