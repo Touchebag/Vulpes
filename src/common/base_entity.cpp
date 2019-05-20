@@ -31,6 +31,10 @@ void BaseEntity::setHitbox(util::X width, util::Y height) {
     sprite_.setTextureRect(sf::IntRect(0, 0, width, height));
 }
 
+Hitbox BaseEntity::getHitbox() {
+    return hitbox_;
+}
+
 Hitbox BaseEntity::getAbsHitbox() {
     Hitbox abs_hitbox;
     abs_hitbox.setHitbox(hitbox_.width_, hitbox_.height_);

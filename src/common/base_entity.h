@@ -16,6 +16,7 @@ public:
     void setPosition(util::X abs_x, util::Y abs_y);
     sf::Vector2i getPosition();
     void setHitbox(util::X width, util::Y height);
+    Hitbox getHitbox();
     Hitbox getAbsHitbox();
 
     void loadFromJson(nlohmann::json j);

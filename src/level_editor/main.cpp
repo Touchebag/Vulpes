@@ -156,12 +156,17 @@ int main() {
 
             // auto hitbox = current_entity->getAbsHitbox();
             auto pos = current_entity->getPosition();
+            auto hbox = current_entity->getHitbox();
 
             sf::View viewport({VIEW_POS_X, VIEW_POS_Y}, {VIEW_SIZE, VIEW_SIZE});
             window.setView(viewport);
 
             text.setString(std::string("X:") + std::to_string(pos.x) + std::string(" Y: ") + std::to_string(pos.y));
             text.setPosition(50, 50);
+            window.draw(text);
+
+            text.setString(std::string("W:") + std::to_string(hbox.width_) + std::string(" H: ") + std::to_string(hbox.height_));
+            text.setPosition(50, 100);
             window.draw(text);
         }
 
