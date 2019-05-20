@@ -110,6 +110,8 @@ int main() {
                                 current_entity = it;
                                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
                                     current_action = Action::MOVE;
+                                } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
+                                    current_action = Action::RESIZE;
                                 }
                                 break;
                             }
@@ -136,15 +138,17 @@ int main() {
         if (current_action == Action::CAMERA_MOVE) {
             view_pos_x -= static_cast<float>(mouse_speed.first);
             view_pos_y -= static_cast<float>(mouse_speed.second);
-        }
-
-        if (current_action == Action::CAMERA_ZOOM) {
+        } else if (current_action == Action::CAMERA_ZOOM) {
             view_size += static_cast<float>(mouse_speed.second * 5);
         } else if (current_action == Action::MOVE) {
             if (current_entity) {
                 sf::Vector2i current_pos = current_entity->getPosition();
                 current_entity->setPosition(util::X(current_pos.x + static_cast<int>(world_mouse_speed.first)), util::Y(current_pos.y + static_cast<int>(world_mouse_speed.second)));
             }
+        } else if (current_action == Action::RESIZE) {
+            auto hbox = current_entity->getHitbox();
+
+            current_entity->setHitbox(util::X(static_cast<int>(static_cast<float>(hbox.width_) + world_mouse_speed.first)), util::Y(static_cast<int>(static_cast<float>(hbox.height_) + world_mouse_speed.second)));
         }
 
         window.clear();
