@@ -199,7 +199,7 @@ int main() {
         } else if (current_action == Action::RESIZE) {
             auto hbox = current_entity->getHitbox();
 
-            current_entity->setHitbox(util::X(static_cast<int>(static_cast<float>(hbox.width_) + world_mouse_speed.first)), util::Y(static_cast<int>(static_cast<float>(hbox.height_) + world_mouse_speed.second)));
+            current_entity->setHitbox(util::X(static_cast<int>(static_cast<float>(hbox.width_) + world_mouse_speed.first)), util::Y(static_cast<int>(static_cast<float>(hbox.height_) - world_mouse_speed.second)));
         }
 
         window.clear();
