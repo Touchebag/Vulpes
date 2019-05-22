@@ -4,7 +4,7 @@
 
 namespace command {
 
-class Move : public Command {
+class Resize : public Command {
   public:
     void undo() override;
     void redo() override;

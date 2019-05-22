@@ -7,6 +7,7 @@
 #include "action.h"
 
 #include "commands/move.h"
+#include "commands/resize.h"
 
 #define VIEW_POS_X 500.0
 #define VIEW_POS_Y 500.0
@@ -133,6 +134,12 @@ int main() {
 
                                     current_action = Action::MOVE;
                                 } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
+                                    auto hbox = current_entity->getHitbox();
+
+                                    current_command = std::make_shared<command::Resize>(command::Resize());
+                                    current_command->entity_ = current_entity;
+                                    current_command->before_ = {util::X(hbox.width_), util::Y(hbox.height_)};
+
                                     current_action = Action::RESIZE;
                                 }
                                 break;
@@ -156,6 +163,15 @@ int main() {
                                 auto pos = current_entity->getPosition();
 
                                 current_command->after_ = {util::X(pos.x), util::Y(pos.y)};
+
+                                history.addCommand(current_command);
+                                break;
+                            }
+                        case Action::RESIZE:
+                            {
+                                auto hbox = current_entity->getHitbox();
+
+                                current_command->after_ = {util::X(hbox.width_), util::Y(hbox.height_)};
 
                                 history.addCommand(current_command);
                                 break;
