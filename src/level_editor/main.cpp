@@ -3,7 +3,10 @@
 #include "file.h"
 #include "log.h"
 #include "base_entity.h"
+#include "history.h"
 #include "action.h"
+
+#include "commands/move.h"
 
 #define VIEW_POS_X 500.0
 #define VIEW_POS_Y 500.0
@@ -33,6 +36,9 @@ int main() {
     std::vector<std::shared_ptr<BaseEntity>> world_objects;
 
     Action current_action = Action::NONE;
+
+    History history;
+    std::shared_ptr<command::Command> current_command;
 
     if (j) {
         for (auto it : j.value()) {
@@ -96,6 +102,16 @@ int main() {
 
                             }
                             break;
+                        case sf::Keyboard::Key::Z:
+                            if (current_action == Action::NONE) {
+                                history.undo();
+                            }
+                            break;
+                        case sf::Keyboard::Key::R:
+                            if (current_action == Action::NONE) {
+                                history.redo();
+                            }
+                            break;
                         default:
                             break;
                     }
@@ -109,6 +125,12 @@ int main() {
                             if (it->getAbsHitbox().collides(tmp_hbox)) {
                                 current_entity = it;
                                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
+                                    auto pos = current_entity->getPosition();
+
+                                    current_command = std::make_shared<command::Move>(command::Move());
+                                    current_command->entity_ = current_entity;
+                                    current_command->before_ = {util::X(pos.x), util::Y(pos.y)};
+
                                     current_action = Action::MOVE;
                                 } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
                                     current_action = Action::RESIZE;
@@ -128,6 +150,19 @@ int main() {
                     }
                     break;
                 case sf::Event::MouseButtonReleased:
+                    switch (current_action) {
+                        case Action::MOVE:
+                            {
+                                auto pos = current_entity->getPosition();
+
+                                current_command->after_ = {util::X(pos.x), util::Y(pos.y)};
+
+                                history.addCommand(current_command);
+                                break;
+                            }
+                        default:
+                            break;
+                    }
                     current_action = Action::NONE;
                     break;
                 default:
