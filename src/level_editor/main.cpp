@@ -125,7 +125,7 @@ int main() {
                         for (auto it : world_objects) {
                             if (it->getAbsHitbox().collides(tmp_hbox)) {
                                 current_entity = it;
-                                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
+                                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
                                     auto pos = current_entity->getPosition();
 
                                     current_command = std::make_shared<command::Move>(command::Move());
@@ -133,7 +133,7 @@ int main() {
                                     current_command->before_ = {util::X(pos.x), util::Y(pos.y)};
 
                                     current_action = Action::MOVE;
-                                } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
+                                } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
                                     auto hbox = current_entity->getHitbox();
 
                                     current_command = std::make_shared<command::Resize>(command::Resize());
@@ -204,6 +204,13 @@ int main() {
 
         window.clear();
 
+        sf::View viewport({view_pos_x, view_pos_y}, {view_size, view_size});
+        window.setView(viewport);
+
+        for (auto it = world_objects.begin(); it != world_objects.end(); ++it) {
+            (*it)->render(window);
+        }
+
         if (current_entity) {
             sf::Text text;
             text.setFont(font);
@@ -223,13 +230,6 @@ int main() {
             text.setString(std::string("W:") + std::to_string(hbox.width_) + std::string(" H: ") + std::to_string(hbox.height_));
             text.setPosition(50, 100);
             window.draw(text);
-        }
-
-        sf::View viewport({view_pos_x, view_pos_y}, {view_size, view_size});
-        window.setView(viewport);
-
-        for (auto it = world_objects.begin(); it != world_objects.end(); ++it) {
-            (*it)->render(window);
         }
 
         window.display();
