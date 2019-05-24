@@ -5,7 +5,9 @@
 #include "base_entity.h"
 #include "history.h"
 #include "action.h"
+#include "world.h"
 
+#include "commands/delete.h"
 #include "commands/move.h"
 #include "commands/resize.h"
 
@@ -34,7 +36,7 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(1000,1000), "BLAAAAH");
 
     std::optional<nlohmann::json> j = file::loadJson(LEVEL_FILE_PATH);
-    std::vector<std::shared_ptr<BaseEntity>> world_objects;
+    std::vector<std::shared_ptr<BaseEntity>>& world_objects = World::getInstance().getWorldObjects();
 
     Action current_action = Action::NONE;
 
@@ -100,6 +102,17 @@ int main() {
                                 } else {
                                     LOGE("Failed to save json to file");
                                 }
+
+                            }
+                            break;
+                        case sf::Keyboard::Key::D:
+                            if (current_entity) {
+                                current_command = std::make_shared<command::Delete>(command::Delete());
+                                current_command->entity_ = current_entity;
+
+                                history.addCommand(current_command);
+
+                                world_objects.erase(std::remove(world_objects.begin(), world_objects.end(), current_entity), world_objects.end());
 
                             }
                             break;
