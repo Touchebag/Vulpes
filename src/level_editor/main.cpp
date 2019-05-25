@@ -128,7 +128,7 @@ int main() {
                                 history.addCommand(current_command);
 
                                 world_objects.erase(std::remove(world_objects.begin(), world_objects.end(), current_entity), world_objects.end());
-
+                                current_entity = nullptr;
                             }
                             break;
                         case sf::Keyboard::Key::Z:
