@@ -7,6 +7,7 @@
 #include "action.h"
 #include "world.h"
 
+#include "commands/add.h"
 #include "commands/delete.h"
 #include "commands/move.h"
 #include "commands/resize.h"
@@ -103,6 +104,20 @@ int main() {
                                     LOGE("Failed to save json to file");
                                 }
 
+                            }
+                            break;
+                        case sf::Keyboard::Key::A:
+                            {
+                                std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
+                                entity->setHitbox(util::X(50), util::Y(50));
+                                entity->setPosition(util::X(static_cast<int>(world_mouse_pos.first)), util::Y(static_cast<int>(world_mouse_pos.second)));
+                                entity->loadTexture("box.png");
+                                world_objects.push_back(entity);
+
+                                current_command = std::make_shared<command::Add>(command::Add());
+                                current_command->entity_ = entity;
+
+                                history.addCommand(current_command);
                             }
                             break;
                         case sf::Keyboard::Key::D:
