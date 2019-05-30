@@ -13,6 +13,7 @@ bool BaseEntity::loadTexture(std::string file_path) {
 
     sprite_.setTexture(texture_, true);
     texture_.setRepeated(true);
+    texture_name_ = file_path;
 
     return true;
 }
