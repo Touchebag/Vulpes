@@ -181,6 +181,22 @@ int main() {
                     } else if (event.mouseButton.button == sf::Mouse::Button::Right) {
                         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LAlt)) {
                             current_action = Action::CAMERA_ZOOM;
+                        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
+                            if (current_entity) {
+                                auto hbox = current_entity->getHitbox();
+                                int width = static_cast<int>(std::round(static_cast<float>(hbox.width_) / 5.0) * 5.0);
+                                int height = static_cast<int>(std::round(static_cast<float>(hbox.height_) / 5.0) * 5.0);
+
+                                current_entity->setHitbox(util::X(width), util::Y(height));
+                            }
+                        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
+                            if (current_entity) {
+                                auto pos = current_entity->getPosition();
+                                int x = static_cast<int>(std::round(static_cast<float>(pos.x) / 5.0) * 5.0);
+                                int y = static_cast<int>(std::round(static_cast<float>(pos.y) / 5.0) * 5.0);
+
+                                current_entity->setPosition(util::X(x), util::Y(y));
+                            }
                         }
                     }
                     break;
