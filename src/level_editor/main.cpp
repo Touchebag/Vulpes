@@ -131,6 +131,21 @@ int main() {
                                 current_entity = nullptr;
                             }
                             break;
+                        case sf::Keyboard::Key::C:
+                            if (current_entity) {
+                                std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
+                                auto hbox = current_entity->getHitbox();
+                                entity->loadTexture("box.png");
+                                entity->setHitbox(util::X(hbox.width_), util::Y(hbox.height_));
+                                entity->setPosition(util::X(static_cast<int>(world_mouse_pos.first)), util::Y(static_cast<int>(world_mouse_pos.second)));
+                                world_objects.push_back(entity);
+
+                                current_command = std::make_shared<command::Add>(command::Add());
+                                current_command->entity_ = entity;
+
+                                history.addCommand(current_command);
+                            }
+                            break;
                         case sf::Keyboard::Key::Z:
                             if (current_action == Action::NONE) {
                                 history.undo();
