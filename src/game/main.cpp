@@ -102,6 +102,10 @@ int main() {
             (*it)->render(window);
         }
 
+        auto view_pos = player->getPosition();
+        sf::View viewport({static_cast<float>(view_pos.x), static_cast<float>(view_pos.y)}, {1000, 1000});
+        window.setView(viewport);
+
         window.display();
     }
 }
