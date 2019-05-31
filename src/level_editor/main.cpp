@@ -109,9 +109,9 @@ int main() {
                         case sf::Keyboard::Key::A:
                             {
                                 std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
+                                entity->loadTexture("box.png");
                                 entity->setHitbox(util::X(50), util::Y(50));
                                 entity->setPosition(util::X(static_cast<int>(world_mouse_pos.first)), util::Y(static_cast<int>(world_mouse_pos.second)));
-                                entity->loadTexture("box.png");
                                 world_objects.push_back(entity);
 
                                 current_command = std::make_shared<command::Add>(command::Add());
@@ -252,8 +252,7 @@ int main() {
             view_size += static_cast<float>(mouse_speed.second * 5);
         } else if (current_action == Action::MOVE) {
             if (current_entity) {
-                sf::Vector2i current_pos = current_entity->getPosition();
-                current_entity->setPosition(util::X(current_pos.x + static_cast<int>(world_mouse_speed.first)), util::Y(current_pos.y + static_cast<int>(world_mouse_speed.second)));
+                current_entity->setPosition(util::X(static_cast<int>(world_mouse_pos.first)), util::Y(static_cast<int>(world_mouse_pos.second)));
             }
         } else if (current_action == Action::RESIZE) {
             auto hbox = current_entity->getHitbox();
@@ -262,9 +261,6 @@ int main() {
         }
 
         window.clear();
-
-        sf::View viewport({view_pos_x, view_pos_y}, {view_size, view_size});
-        window.setView(viewport);
 
         for (auto it = world_objects.begin(); it != world_objects.end(); ++it) {
             (*it)->render(window);
@@ -292,5 +288,8 @@ int main() {
         }
 
         window.display();
+
+        sf::View viewport({view_pos_x, view_pos_y}, {view_size, view_size});
+        window.setView(viewport);
     }
 }

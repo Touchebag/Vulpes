@@ -16,7 +16,7 @@ std::optional<nlohmann::json> file::loadJson(std::string filepath) {
 bool file::storeJson(std::string filepath, nlohmann::json j) {
     try {
         std::ofstream ofs(filepath);
-        ofs << j.dump();
+        ofs << j.dump(4);
         return true;
     } catch (nlohmann::json::parse_error& e) {
         LOGE("Unable to save file %s: %s", filepath.c_str(), e.what());
