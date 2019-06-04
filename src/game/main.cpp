@@ -10,6 +10,7 @@
 #include "file.h"
 #include "log.h"
 #include "input_event.h"
+#include "render.h"
 
 #define PHYSICS_FRAME_RATE 60
 #define MS_PER_FRAME 1000 / PHYSICS_FRAME_RATE
@@ -31,7 +32,9 @@ int main() {
         for (auto it : j.value()) {
             std::shared_ptr<BaseEntity> ent = std::make_shared<BaseEntity>();
             ent->loadFromJson(it);
-            worldInst.getWorldObjects().push_back(std::move(ent));
+            worldInst.getWorldObjects().push_back(ent);
+            Render::getInstance().addEntity(ent, render_layer::MAIN);
+
         }
     }
 
@@ -49,6 +52,7 @@ int main() {
     entities.push_back(player);
 
     frame_time.restart();
+
     while (window.isOpen()) {
         frames += frame_time.getElapsedTime();
         frame_time.restart();
@@ -98,9 +102,7 @@ int main() {
             (*it)->render(window);
         }
 
-        for (auto it = worldInst.getWorldObjects().begin(); it != worldInst.getWorldObjects().end(); ++it) {
-            (*it)->render(window);
-        }
+        Render::getInstance().render(window);
 
         auto view_pos = player->getPosition();
         sf::View viewport({static_cast<float>(view_pos.x), static_cast<float>(view_pos.y)}, {1000, 1000});
