@@ -26,17 +26,7 @@ int main() {
     sf::Time frames;
     sf::Clock frame_time;
 
-    std::optional<nlohmann::json> j = file::loadJson("assets/world.json");
-
-    if (j) {
-        for (auto it : j.value()) {
-            std::shared_ptr<BaseEntity> ent = std::make_shared<BaseEntity>();
-            ent->loadFromJson(it);
-            worldInst.getWorldObjects().push_back(ent);
-            Render::getInstance().addEntity(ent, render_layer::MAIN);
-
-        }
-    }
+    worldInst.loadWorld("assets/world.json");
 
     Input::getInstance().setKeyboardMap(
             {{sf::Keyboard::Key::Space, input::button::JUMP},
@@ -50,6 +40,7 @@ int main() {
     player->loadTexture("Player.png");
     player->loadSpriteMap("Player.txt");
     entities.push_back(player);
+    Render::getInstance().addEntity(player, Render::Layer::MAIN);
 
     frame_time.restart();
 
@@ -96,10 +87,6 @@ int main() {
             }
 
             frames -= sf::milliseconds(MS_PER_FRAME);
-        }
-
-        for (auto it = entities.begin(); it != entities.end(); ++it) {
-            (*it)->render(window);
         }
 
         Render::getInstance().render(window);
