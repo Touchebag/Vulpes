@@ -89,11 +89,12 @@ int main() {
             frames -= sf::milliseconds(MS_PER_FRAME);
         }
 
-        Render::getInstance().render(window);
+        Render& renderInst = Render::getInstance();
 
         auto view_pos = player->getPosition();
-        sf::View viewport({static_cast<float>(view_pos.x), static_cast<float>(view_pos.y)}, {1000, 1000});
-        window.setView(viewport);
+        renderInst.setView(static_cast<float>(view_pos.x), static_cast<float>(view_pos.y), 1000.0, 1000.0);
+
+        renderInst.render(window);
 
         window.display();
     }

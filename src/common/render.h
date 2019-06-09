@@ -29,10 +29,17 @@ class Render {
     void addEntity(std::shared_ptr<BaseEntity> entity, Layer layer);
     void removeEntity(std::shared_ptr<BaseEntity> entity);
 
+    void setView(float x, float y, float width, float height);
+
     static Render& getInstance();
 
   private:
     void renderLayer(sf::RenderWindow& window, Layer layer);
+
+    float view_x_;
+    float view_y_;
+    float view_width_;
+    float view_height_;
 
     Render() = default;
 
