@@ -13,8 +13,8 @@ class Command {
 
     std::shared_ptr<BaseEntity> entity_;
 
-    std::pair<util::X, util::Y> before_ = {util::X(0), util::Y(0)};
-    std::pair<util::X, util::Y> after_ = {util::X(0), util::Y(0)};
+    std::pair<int, int> before_ = {0, 0};
+    std::pair<int, int> after_ = {0, 0};
 };
 
 } // command

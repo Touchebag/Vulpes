@@ -4,13 +4,13 @@
 
 class Transform {
 public:
-    void setPosition(util::X x, util::Y y);
-    void move(util::X x, util::Y y);
+    void setPosition(int x, int y);
+    void move(int x, int y);
 
-    util::X getX();
-    util::Y getY();
+    int getX();
+    int getY();
 
 private:
-    util::X pos_x_ = util::X(0.0);
-    util::Y pos_y_ = util::Y(0.0);
+    int pos_x_ = 0;
+    int pos_y_ = 0;
 };

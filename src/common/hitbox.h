@@ -6,24 +6,24 @@
 
 class Hitbox {
   public:
-    void setHitbox(util::X width, util::Y height);
+    void setHitbox(int width, int height);
 
     bool collides(Hitbox& hitbox);
 
     // This assumes that the objects have already been checked for rough collision
-    std::pair<util::X, util::Y> getMaximumMovement(util::X stepX, util::Y stepY, Hitbox otherHitbox);
+    std::pair<int, int> getMaximumMovement(int stepX, int stepY, Hitbox otherHitbox);
 
-    void setOffset(std::pair<util::X, util::Y> offset);
-    void moveOffset(std::pair<util::X, util::Y> offset);
+    void setOffset(std::pair<int, int> offset);
+    void moveOffset(std::pair<int, int> offset);
 
-    util::X width_ = util::X(0.0);
-    util::Y height_ = util::Y(0.0);
+    int width_ = 0;
+    int height_ = 0;
 
   private:
     bool collidesX(Hitbox& otherHitbox);
     bool collidesY(Hitbox& otherHitbox);
 
-    std::pair<util::X, util::Y> offset_ = {util::X(0), util::Y(0)};
+    std::pair<int, int> offset_ = {0, 0};
 
     int getRight();
     int getLeft();

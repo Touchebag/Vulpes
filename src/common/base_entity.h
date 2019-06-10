@@ -13,9 +13,9 @@ public:
     virtual void update();
 
     // TODO Move to constructor?
-    void setPosition(util::X abs_x, util::Y abs_y);
+    void setPosition(int abs_x, int abs_y);
     sf::Vector2i getPosition();
-    void setHitbox(util::X width, util::Y height);
+    void setHitbox(int width, int height);
     Hitbox getHitbox();
     Hitbox getAbsHitbox();
 

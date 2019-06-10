@@ -74,7 +74,7 @@ void Player::update() {
     }
 
     y = std::max(std::min(static_cast<int>(y), 20), -20);
-    auto max_movement = getMaximumMovement(util::X(x), util::Y(y), getAbsHitbox());
+    auto max_movement = getMaximumMovement(x, y, getAbsHitbox());
 
     if (max_movement.second < y) {
         incomingEvent(state::Event::TOUCHING_FLOOR);

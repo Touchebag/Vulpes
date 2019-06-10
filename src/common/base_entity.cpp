@@ -18,7 +18,7 @@ bool BaseEntity::loadTexture(std::string file_path) {
     return true;
 }
 
-void BaseEntity::setPosition(util::X abs_x, util::Y abs_y) {
+void BaseEntity::setPosition(int abs_x, int abs_y) {
     trans_.setPosition(abs_x, abs_y);
 }
 
@@ -26,7 +26,7 @@ sf::Vector2i BaseEntity::getPosition() {
     return {trans_.getX(), trans_.getY()};
 }
 
-void BaseEntity::setHitbox(util::X width, util::Y height) {
+void BaseEntity::setHitbox(int width, int height) {
     hitbox_.setHitbox(width, height);
     sprite_.setOrigin(static_cast<float>(width / 2.0), static_cast<float>(height / 2.0));
     sprite_.setTextureRect(sf::IntRect(0, 0, width, height));
@@ -39,17 +39,17 @@ Hitbox BaseEntity::getHitbox() {
 Hitbox BaseEntity::getAbsHitbox() {
     Hitbox abs_hitbox;
     abs_hitbox.setHitbox(hitbox_.width_, hitbox_.height_);
-    abs_hitbox.setOffset({util::X(trans_.getX()), util::Y(trans_.getY())});
+    abs_hitbox.setOffset({trans_.getX(), trans_.getY()});
     return abs_hitbox;
 }
 
 void BaseEntity::loadFromJson(nlohmann::json j) {
     // TODO Error handling
-    setPosition(util::X(j["position"]["x"].get<int>()),
-                util::Y(j["position"]["y"].get<int>()));
+    setPosition(j["position"]["x"].get<int>(),
+                j["position"]["y"].get<int>());
 
-    auto width = util::X(j["hitbox"]["width"].get<int>());
-    auto height = util::Y(j["hitbox"]["height"].get<int>());
+    auto width = j["hitbox"]["width"].get<int>();
+    auto height = j["hitbox"]["height"].get<int>();
 
     texture_name_ = j["sprite"].get<std::string>();
     loadTexture(texture_name_);

@@ -110,8 +110,8 @@ int main() {
                             {
                                 std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
                                 entity->loadTexture("box.png");
-                                entity->setHitbox(util::X(50), util::Y(50));
-                                entity->setPosition(util::X(static_cast<int>(world_mouse_pos.first)), util::Y(static_cast<int>(world_mouse_pos.second)));
+                                entity->setHitbox(50, 50);
+                                entity->setPosition(static_cast<int>(world_mouse_pos.first), static_cast<int>(world_mouse_pos.second));
                                 world_objects.push_back(entity);
 
                                 current_command = std::make_shared<command::Add>(command::Add());
@@ -136,8 +136,8 @@ int main() {
                                 std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
                                 auto hbox = current_entity->getHitbox();
                                 entity->loadTexture("box.png");
-                                entity->setHitbox(util::X(hbox.width_), util::Y(hbox.height_));
-                                entity->setPosition(util::X(static_cast<int>(world_mouse_pos.first)), util::Y(static_cast<int>(world_mouse_pos.second)));
+                                entity->setHitbox(hbox.width_, hbox.height_);
+                                entity->setPosition(static_cast<int>(world_mouse_pos.first), static_cast<int>(world_mouse_pos.second));
                                 world_objects.push_back(entity);
 
                                 current_command = std::make_shared<command::Add>(command::Add());
@@ -163,7 +163,7 @@ int main() {
                 case sf::Event::MouseButtonPressed:
                     if (event.mouseButton.button == sf::Mouse::Button::Left) {
                         Hitbox tmp_hbox;
-                        tmp_hbox.setOffset({util::X(static_cast<int>(world_mouse_pos.first)), util::Y(static_cast<int>(world_mouse_pos.second))});
+                        tmp_hbox.setOffset({static_cast<int>(world_mouse_pos.first), static_cast<int>(world_mouse_pos.second)});
 
                         for (auto it : world_objects) {
                             if (it->getAbsHitbox().collides(tmp_hbox)) {
@@ -173,7 +173,7 @@ int main() {
 
                                     current_command = std::make_shared<command::Move>(command::Move());
                                     current_command->entity_ = current_entity;
-                                    current_command->before_ = {util::X(pos.x), util::Y(pos.y)};
+                                    current_command->before_ = {pos.x, pos.y};
 
                                     current_action = Action::MOVE;
                                 } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
@@ -181,7 +181,7 @@ int main() {
 
                                     current_command = std::make_shared<command::Resize>(command::Resize());
                                     current_command->entity_ = current_entity;
-                                    current_command->before_ = {util::X(hbox.width_), util::Y(hbox.height_)};
+                                    current_command->before_ = {hbox.width_, hbox.height_};
 
                                     current_action = Action::RESIZE;
                                 }
@@ -202,7 +202,7 @@ int main() {
                                 int width = static_cast<int>(std::round(static_cast<float>(hbox.width_) / 5.0) * 5.0);
                                 int height = static_cast<int>(std::round(static_cast<float>(hbox.height_) / 5.0) * 5.0);
 
-                                current_entity->setHitbox(util::X(width), util::Y(height));
+                                current_entity->setHitbox(width, height);
                             }
                         } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
                             if (current_entity) {
@@ -210,7 +210,7 @@ int main() {
                                 int x = static_cast<int>(std::round(static_cast<float>(pos.x) / 5.0) * 5.0);
                                 int y = static_cast<int>(std::round(static_cast<float>(pos.y) / 5.0) * 5.0);
 
-                                current_entity->setPosition(util::X(x), util::Y(y));
+                                current_entity->setPosition(x, y);
                             }
                         }
                     }
@@ -221,7 +221,7 @@ int main() {
                             {
                                 auto pos = current_entity->getPosition();
 
-                                current_command->after_ = {util::X(pos.x), util::Y(pos.y)};
+                                current_command->after_ = {pos.x, pos.y};
 
                                 history.addCommand(current_command);
                                 break;
@@ -230,7 +230,7 @@ int main() {
                             {
                                 auto hbox = current_entity->getHitbox();
 
-                                current_command->after_ = {util::X(hbox.width_), util::Y(hbox.height_)};
+                                current_command->after_ = {hbox.width_, hbox.height_};
 
                                 history.addCommand(current_command);
                                 break;
@@ -252,12 +252,12 @@ int main() {
             view_size += static_cast<float>(mouse_speed.second * 5);
         } else if (current_action == Action::MOVE) {
             if (current_entity) {
-                current_entity->setPosition(util::X(static_cast<int>(world_mouse_pos.first)), util::Y(static_cast<int>(world_mouse_pos.second)));
+                current_entity->setPosition(static_cast<int>(world_mouse_pos.first), static_cast<int>(world_mouse_pos.second));
             }
         } else if (current_action == Action::RESIZE) {
             auto hbox = current_entity->getHitbox();
 
-            current_entity->setHitbox(util::X(static_cast<int>(static_cast<float>(hbox.width_) + world_mouse_speed.first)), util::Y(static_cast<int>(static_cast<float>(hbox.height_) - world_mouse_speed.second)));
+            current_entity->setHitbox(static_cast<int>(static_cast<float>(hbox.width_) + world_mouse_speed.first), static_cast<int>(static_cast<float>(hbox.height_) - world_mouse_speed.second));
         }
 
         window.clear();

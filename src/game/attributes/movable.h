@@ -8,11 +8,11 @@
 
 class MovableEntity {
   public:
-    virtual void move(util::X velX, util::Y velY, Transform& trans) final;
+    virtual void move(int velX, int velY, Transform& trans) final;
 
-    virtual std::pair<util::X, util::Y> getMaximumMovement(util::X velX, util::Y velY, Hitbox abs_hitbox) final;
+    virtual std::pair<int, int> getMaximumMovement(int velX, int velY, Hitbox abs_hitbox) final;
 
   protected:
-    util::X velx_ = util::X(0.0);
-    util::Y vely_ = util::Y(0.0);
+    int velx_ = 0;
+    int vely_ = 0;
 };

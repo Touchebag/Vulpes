@@ -1,6 +1,6 @@
 #include "hitbox.h"
 
-void Hitbox::setHitbox(util::X width, util::Y height) {
+void Hitbox::setHitbox(int width, int height) {
     width_ = width;
     height_ = height;
 }
@@ -9,7 +9,7 @@ bool Hitbox::collides(Hitbox& hitbox) {
     return collidesX(hitbox) && collidesY(hitbox);
 }
 
-std::pair<util::X, util::Y> Hitbox::getMaximumMovement(util::X stepX, util::Y stepY, Hitbox otherHitbox) {
+std::pair<int, int> Hitbox::getMaximumMovement(int stepX, int stepY, Hitbox otherHitbox) {
     int retX = stepX, retY = stepY;
 
     // If X direction was already colliding last step then we are parallel in this direction
@@ -31,14 +31,14 @@ std::pair<util::X, util::Y> Hitbox::getMaximumMovement(util::X stepX, util::Y st
         }
     }
 
-    return { util::X(retX), util::Y(retY) };
+    return {retX, retY};
 }
 
-void Hitbox::setOffset(std::pair<util::X, util::Y> offset) {
+void Hitbox::setOffset(std::pair<int, int> offset) {
     offset_ = offset;
 }
 
-void Hitbox::moveOffset(std::pair<util::X, util::Y> offset) {
+void Hitbox::moveOffset(std::pair<int, int> offset) {
     offset_.first += offset.first;
     offset_.second += offset.second;
 }
