@@ -44,13 +44,7 @@ int main() {
     History history;
     std::shared_ptr<command::Command> current_command;
 
-    if (j) {
-        for (auto it : j.value()) {
-            std::shared_ptr<BaseEntity> ent = std::make_shared<BaseEntity>();
-            ent->loadFromJson(it);
-            world_objects.push_back(std::move(ent));
-        }
-    }
+    World::getInstance().loadWorld("assets/world.json");
 
     float view_pos_x = VIEW_POS_X;
     float view_pos_y = VIEW_POS_Y;
@@ -262,9 +256,11 @@ int main() {
 
         window.clear();
 
-        for (auto it = world_objects.begin(); it != world_objects.end(); ++it) {
-            (*it)->render(window);
-        }
+        Render& renderInst = Render::getInstance();
+
+        renderInst.setView(static_cast<float>(view_pos_x), static_cast<float>(view_pos_y), view_size, view_size);
+
+        renderInst.render(window);
 
         if (current_entity) {
             sf::Text text;
@@ -288,8 +284,5 @@ int main() {
         }
 
         window.display();
-
-        sf::View viewport({view_pos_x, view_pos_y}, {view_size, view_size});
-        window.setView(viewport);
     }
 }
