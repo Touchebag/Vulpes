@@ -2,9 +2,9 @@
 
 namespace {
 std::map<Render::Layer, float> parallax_map = {
-    {Render::Layer::BG_1, 0.85},
+    {Render::Layer::BG_3, 0.85},
     {Render::Layer::BG_2, 0.9},
-    {Render::Layer::BG_3, 0.95},
+    {Render::Layer::BG_1, 0.95},
     {Render::Layer::MAIN, 1.0},
 };
 }
