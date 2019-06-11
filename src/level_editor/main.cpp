@@ -58,6 +58,9 @@ int main() {
         return EXIT_FAILURE;
     }
 
+    bool entering_text = false;
+    sf::String input_text;
+
     while (window.isOpen()) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
             window.close();
@@ -67,178 +70,209 @@ int main() {
 
         sf::Event event;
         while (window.pollEvent(event)) {
-            switch (event.type) {
-                case sf::Event::Closed:
-                    window.close();
-                    break;
-                case sf::Event::MouseWheelScrolled:
-                    if (event.mouseWheelScroll.delta > 0) {
-                        view_size -= 200;
-                    } else {
-                        view_size += 200;
-                    }
-                    break;
-                case sf::Event::KeyPressed:
-                    switch (event.key.code) {
-                        case sf::Keyboard::Key::S:
-                            {
-                                nlohmann::json json_object_list;
-                                for (long unsigned int i = 0; i < world_objects.size(); i++) {
-                                    auto object = world_objects.at(i)->outputToJson();
-                                    if (object) {
-                                        json_object_list.push_back(*object);
+            if (entering_text) {
+                switch (event.type) {
+                    case sf::Event::Closed:
+                        window.close();
+                        break;
+                    case sf::Event::TextEntered:
+                        input_text += event.text.unicode;
+                        break;
+                    case sf::Event::KeyPressed:
+                        switch (event.key.code) {
+                            case sf::Keyboard::Enter:
+                                current_entity->loadTexture(input_text.toAnsiString());
+                                current_entity->setHitbox(current_entity->getHitbox().width_, current_entity->getHitbox().height_);
+
+                                input_text.clear();
+                                entering_text = false;
+                                break;
+                            default:
+                                break;
+                        }
+                    default:
+                        break;
+                }
+            } else {
+                switch (event.type) {
+                    case sf::Event::Closed:
+                        window.close();
+                        break;
+                    case sf::Event::MouseWheelScrolled:
+                        if (event.mouseWheelScroll.delta > 0) {
+                            view_size -= 200;
+                        } else {
+                            view_size += 200;
+                        }
+                        break;
+                    case sf::Event::KeyPressed:
+                        switch (event.key.code) {
+                            case sf::Keyboard::Key::S:
+                                {
+                                    nlohmann::json json_object_list;
+                                    for (long unsigned int i = 0; i < world_objects.size(); i++) {
+                                        auto object = world_objects.at(i)->outputToJson();
+                                        if (object) {
+                                            json_object_list.push_back(*object);
+                                        }
+                                    }
+
+                                    nlohmann::json j;
+                                    j["main"] = json_object_list;
+
+                                    if (file::storeJson(LEVEL_FILE_PATH, j)) {
+                                        LOGD("World save successfully");
                                     } else {
-                                        LOGE("Failed to parse object");
+                                        LOGE("Failed to save json to file");
                                     }
                                 }
+                                break;
+                            case sf::Keyboard::Key::A:
+                                {
+                                    std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
+                                    entity->loadTexture("box.png");
+                                    entity->setHitbox(50, 50);
+                                    entity->setPosition(static_cast<int>(world_mouse_pos.first), static_cast<int>(world_mouse_pos.second));
+                                    world_objects.push_back(entity);
 
-                                nlohmann::json j;
-                                j["main"] = json_object_list;
+                                    current_command = std::make_shared<command::Add>(command::Add());
+                                    current_command->entity_ = entity;
 
-                                if (file::storeJson(LEVEL_FILE_PATH, j)) {
-                                    LOGD("World save successfully");
-                                } else {
-                                    LOGE("Failed to save json to file");
+                                    history.addCommand(current_command);
                                 }
+                                break;
+                            case sf::Keyboard::Key::D:
+                                if (current_entity) {
+                                    current_command = std::make_shared<command::Delete>(command::Delete());
+                                    current_command->entity_ = current_entity;
 
-                            }
-                            break;
-                        case sf::Keyboard::Key::A:
-                            {
-                                std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-                                entity->loadTexture("box.png");
-                                entity->setHitbox(50, 50);
-                                entity->setPosition(static_cast<int>(world_mouse_pos.first), static_cast<int>(world_mouse_pos.second));
-                                world_objects.push_back(entity);
+                                    history.addCommand(current_command);
 
-                                current_command = std::make_shared<command::Add>(command::Add());
-                                current_command->entity_ = entity;
+                                    world_objects.erase(std::remove(world_objects.begin(), world_objects.end(), current_entity), world_objects.end());
+                                    current_entity = nullptr;
+                                }
+                                break;
+                            case sf::Keyboard::Key::C:
+                                // TODO Copy constructor
+                                if (current_entity) {
+                                    std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
+                                    auto hbox = current_entity->getHitbox();
+                                    entity->loadTexture("box.png");
+                                    entity->setHitbox(hbox.width_, hbox.height_);
+                                    entity->setPosition(static_cast<int>(world_mouse_pos.first), static_cast<int>(world_mouse_pos.second));
+                                    world_objects.push_back(entity);
 
-                                history.addCommand(current_command);
-                            }
-                            break;
-                        case sf::Keyboard::Key::D:
-                            if (current_entity) {
-                                current_command = std::make_shared<command::Delete>(command::Delete());
-                                current_command->entity_ = current_entity;
+                                    current_command = std::make_shared<command::Add>(command::Add());
+                                    current_command->entity_ = entity;
 
-                                history.addCommand(current_command);
+                                    history.addCommand(current_command);
+                                }
+                                break;
+                            case sf::Keyboard::Key::T:
+                                if (current_entity) {
+                                    entering_text = true;
+                                    sf::Event tmp_event;
+                                    // Clear event buffer to avoid duplicate characters
+                                    while (window.pollEvent(tmp_event)) {};
+                                }
+                                break;
+                            case sf::Keyboard::Key::Z:
+                                if (current_action == Action::NONE) {
+                                    history.undo();
+                                }
+                                break;
+                            case sf::Keyboard::Key::R:
+                                if (current_action == Action::NONE) {
+                                    history.redo();
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    case sf::Event::MouseButtonPressed:
+                        if (event.mouseButton.button == sf::Mouse::Button::Left) {
+                            Hitbox tmp_hbox;
+                            tmp_hbox.setOffset({static_cast<int>(world_mouse_pos.first), static_cast<int>(world_mouse_pos.second)});
 
-                                world_objects.erase(std::remove(world_objects.begin(), world_objects.end(), current_entity), world_objects.end());
+                            for (auto it : world_objects) {
+                                if (it->getAbsHitbox().collides(tmp_hbox)) {
+                                    current_entity = it;
+                                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
+                                        auto pos = current_entity->getPosition();
+
+                                        current_command = std::make_shared<command::Move>(command::Move());
+                                        current_command->entity_ = current_entity;
+                                        current_command->before_ = {pos.x, pos.y};
+
+                                        current_action = Action::MOVE;
+                                    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
+                                        auto hbox = current_entity->getHitbox();
+
+                                        current_command = std::make_shared<command::Resize>(command::Resize());
+                                        current_command->entity_ = current_entity;
+                                        current_command->before_ = {hbox.width_, hbox.height_};
+
+                                        current_action = Action::RESIZE;
+                                    }
+                                    break;
+                                }
                                 current_entity = nullptr;
                             }
-                            break;
-                        case sf::Keyboard::Key::C:
-                            if (current_entity) {
-                                std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-                                auto hbox = current_entity->getHitbox();
-                                entity->loadTexture("box.png");
-                                entity->setHitbox(hbox.width_, hbox.height_);
-                                entity->setPosition(static_cast<int>(world_mouse_pos.first), static_cast<int>(world_mouse_pos.second));
-                                world_objects.push_back(entity);
 
-                                current_command = std::make_shared<command::Add>(command::Add());
-                                current_command->entity_ = entity;
+                            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LAlt)) {
+                                current_action = Action::CAMERA_MOVE;
+                            }
+                        } else if (event.mouseButton.button == sf::Mouse::Button::Right) {
+                            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LAlt)) {
+                                current_action = Action::CAMERA_ZOOM;
+                            } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
+                                if (current_entity) {
+                                    auto hbox = current_entity->getHitbox();
+                                    int width = static_cast<int>(std::round(static_cast<float>(hbox.width_) / 5.0) * 5.0);
+                                    int height = static_cast<int>(std::round(static_cast<float>(hbox.height_) / 5.0) * 5.0);
 
-                                history.addCommand(current_command);
-                            }
-                            break;
-                        case sf::Keyboard::Key::Z:
-                            if (current_action == Action::NONE) {
-                                history.undo();
-                            }
-                            break;
-                        case sf::Keyboard::Key::R:
-                            if (current_action == Action::NONE) {
-                                history.redo();
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
-                case sf::Event::MouseButtonPressed:
-                    if (event.mouseButton.button == sf::Mouse::Button::Left) {
-                        Hitbox tmp_hbox;
-                        tmp_hbox.setOffset({static_cast<int>(world_mouse_pos.first), static_cast<int>(world_mouse_pos.second)});
+                                    current_entity->setHitbox(width, height);
+                                }
+                            } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
+                                if (current_entity) {
+                                    auto pos = current_entity->getPosition();
+                                    int x = static_cast<int>(std::round(static_cast<float>(pos.x) / 5.0) * 5.0);
+                                    int y = static_cast<int>(std::round(static_cast<float>(pos.y) / 5.0) * 5.0);
 
-                        for (auto it : world_objects) {
-                            if (it->getAbsHitbox().collides(tmp_hbox)) {
-                                current_entity = it;
-                                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
+                                    current_entity->setPosition(x, y);
+                                }
+                            }
+                        }
+                        break;
+                    case sf::Event::MouseButtonReleased:
+                        switch (current_action) {
+                            case Action::MOVE:
+                                {
                                     auto pos = current_entity->getPosition();
 
-                                    current_command = std::make_shared<command::Move>(command::Move());
-                                    current_command->entity_ = current_entity;
-                                    current_command->before_ = {pos.x, pos.y};
+                                    current_command->after_ = {pos.x, pos.y};
 
-                                    current_action = Action::MOVE;
-                                } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
+                                    history.addCommand(current_command);
+                                    break;
+                                }
+                            case Action::RESIZE:
+                                {
                                     auto hbox = current_entity->getHitbox();
 
-                                    current_command = std::make_shared<command::Resize>(command::Resize());
-                                    current_command->entity_ = current_entity;
-                                    current_command->before_ = {hbox.width_, hbox.height_};
+                                    current_command->after_ = {hbox.width_, hbox.height_};
 
-                                    current_action = Action::RESIZE;
+                                    history.addCommand(current_command);
+                                    break;
                                 }
+                            default:
                                 break;
-                            }
-                            current_entity = nullptr;
                         }
-
-                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LAlt)) {
-                            current_action = Action::CAMERA_MOVE;
-                        }
-                    } else if (event.mouseButton.button == sf::Mouse::Button::Right) {
-                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LAlt)) {
-                            current_action = Action::CAMERA_ZOOM;
-                        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
-                            if (current_entity) {
-                                auto hbox = current_entity->getHitbox();
-                                int width = static_cast<int>(std::round(static_cast<float>(hbox.width_) / 5.0) * 5.0);
-                                int height = static_cast<int>(std::round(static_cast<float>(hbox.height_) / 5.0) * 5.0);
-
-                                current_entity->setHitbox(width, height);
-                            }
-                        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
-                            if (current_entity) {
-                                auto pos = current_entity->getPosition();
-                                int x = static_cast<int>(std::round(static_cast<float>(pos.x) / 5.0) * 5.0);
-                                int y = static_cast<int>(std::round(static_cast<float>(pos.y) / 5.0) * 5.0);
-
-                                current_entity->setPosition(x, y);
-                            }
-                        }
-                    }
-                    break;
-                case sf::Event::MouseButtonReleased:
-                    switch (current_action) {
-                        case Action::MOVE:
-                            {
-                                auto pos = current_entity->getPosition();
-
-                                current_command->after_ = {pos.x, pos.y};
-
-                                history.addCommand(current_command);
-                                break;
-                            }
-                        case Action::RESIZE:
-                            {
-                                auto hbox = current_entity->getHitbox();
-
-                                current_command->after_ = {hbox.width_, hbox.height_};
-
-                                history.addCommand(current_command);
-                                break;
-                            }
-                        default:
-                            break;
-                    }
-                    current_action = Action::NONE;
-                    break;
-                default:
-                    break;
+                        current_action = Action::NONE;
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
@@ -283,6 +317,19 @@ int main() {
 
             text.setString(std::string("W:") + std::to_string(hbox.width_) + std::string(" H: ") + std::to_string(hbox.height_));
             text.setPosition(50, 100);
+            window.draw(text);
+        }
+
+        if (entering_text) {
+            sf::Text text;
+            text.setFont(font);
+            text.setFillColor(sf::Color::Red);
+
+            sf::View viewport({VIEW_POS_X, VIEW_POS_Y}, {VIEW_SIZE, VIEW_SIZE});
+            window.setView(viewport);
+
+            text.setString(input_text);
+            text.setPosition(100, 300);
             window.draw(text);
         }
 
