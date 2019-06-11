@@ -82,15 +82,18 @@ int main() {
                     switch (event.key.code) {
                         case sf::Keyboard::Key::S:
                             {
-                                nlohmann::json j;
+                                nlohmann::json json_object_list;
                                 for (long unsigned int i = 0; i < world_objects.size(); i++) {
                                     auto object = world_objects.at(i)->outputToJson();
                                     if (object) {
-                                        j.push_back(*object);
+                                        json_object_list.push_back(*object);
                                     } else {
                                         LOGE("Failed to parse object");
                                     }
                                 }
+
+                                nlohmann::json j;
+                                j["main"] = json_object_list;
 
                                 if (file::storeJson(LEVEL_FILE_PATH, j)) {
                                     LOGD("World save successfully");
