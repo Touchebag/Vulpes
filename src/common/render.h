@@ -33,9 +33,9 @@ class Render {
 
     static Render& getInstance();
 
-  private:
     void renderLayer(sf::RenderWindow& window, Layer layer);
 
+  private:
     float view_x_;
     float view_y_;
     float view_width_;

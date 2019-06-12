@@ -21,6 +21,9 @@
 std::pair<int, int> mouse_pos = {0, 0}, mouse_speed = {0, 0};
 std::pair<float, float> world_mouse_pos = {0.0, 0.0}, world_mouse_speed = {0.0, 0.0};
 
+Render::Layer current_layer = Render::Layer::MAIN;
+bool render_current_layer_only = false;
+
 void updateMousePositions(sf::RenderWindow& window) {
         std::pair<int, int> old_mouse_pos = mouse_pos;
         sf::Vector2i tmp_pos = sf::Mouse::getPosition(window);
@@ -31,6 +34,17 @@ void updateMousePositions(sf::RenderWindow& window) {
         sf::Vector2f tmp_world_pos = window.mapPixelToCoords(tmp_pos);
         world_mouse_pos = {tmp_world_pos.x, tmp_world_pos.y};
         world_mouse_speed = {world_mouse_pos.first - old_world_mouse_pos.first, world_mouse_pos.second - old_world_mouse_pos.second};
+}
+
+Render::Layer change_layer(bool towards_screen) {
+    int layer_int = static_cast<int>(current_layer);
+    if (towards_screen && layer_int > 0) {
+        return static_cast<Render::Layer>(layer_int - 1);
+    } else if (!towards_screen && layer_int < static_cast<int>(Render::Layer::MAX_LAYERS) - 1) {
+        return static_cast<Render::Layer>(layer_int + 1);
+    }
+
+    return current_layer;
 }
 
 int main() {
@@ -99,12 +113,16 @@ int main() {
                         window.close();
                         break;
                     case sf::Event::MouseWheelScrolled:
-                        if (event.mouseWheelScroll.delta > 0) {
-                            view_size -= 200;
+                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
+                            current_layer = change_layer(event.mouseWheelScroll.delta > 0.0);
                         } else {
-                            view_size += 200;
+                            if (event.mouseWheelScroll.delta > 0) {
+                                view_size -= 200;
+                            } else {
+                                view_size += 200;
+                            }
+                            break;
                         }
-                        break;
                     case sf::Event::KeyPressed:
                         switch (event.key.code) {
                             case sf::Keyboard::Key::S:
@@ -167,6 +185,9 @@ int main() {
 
                                     history.addCommand(current_command);
                                 }
+                                break;
+                            case sf::Keyboard::Key::V:
+                                render_current_layer_only = !render_current_layer_only;
                                 break;
                             case sf::Keyboard::Key::T:
                                 if (current_entity) {
@@ -297,7 +318,11 @@ int main() {
 
         renderInst.setView(static_cast<float>(view_pos_x), static_cast<float>(view_pos_y), view_size, view_size);
 
-        renderInst.render(window);
+        if (render_current_layer_only) {
+            renderInst.renderLayer(window, current_layer);
+        } else {
+            renderInst.render(window);
+        }
 
         if (current_entity) {
             sf::Text text;
