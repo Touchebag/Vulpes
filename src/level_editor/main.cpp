@@ -47,6 +47,21 @@ Render::Layer change_layer(bool towards_screen) {
     return current_layer;
 }
 
+nlohmann::json jsonifyLayer(Render::Layer layer) {
+    nlohmann::json json_object_list;
+
+    auto layerList = Render::getInstance().getLayer(static_cast<Render::Layer>(layer));
+
+    for (long unsigned int i = 0; i < layerList.size(); ++i) {
+        auto object = layerList.at(i)->outputToJson();
+        if (object) {
+            json_object_list.push_back(*object);
+        }
+    }
+
+    return json_object_list;
+}
+
 int main() {
     sf::RenderWindow window(sf::VideoMode(1000,1000), "BLAAAAH");
 
@@ -127,16 +142,12 @@ int main() {
                         switch (event.key.code) {
                             case sf::Keyboard::Key::S:
                                 {
-                                    nlohmann::json json_object_list;
-                                    for (long unsigned int i = 0; i < world_objects.size(); i++) {
-                                        auto object = world_objects.at(i)->outputToJson();
-                                        if (object) {
-                                            json_object_list.push_back(*object);
-                                        }
-                                    }
-
                                     nlohmann::json j;
-                                    j["main"] = json_object_list;
+
+                                    j["main"] = jsonifyLayer(static_cast<Render::Layer>(Render::Layer::MAIN));
+                                    j["bg1"] = jsonifyLayer(static_cast<Render::Layer>(Render::Layer::BG_1));
+                                    j["bg2"] = jsonifyLayer(static_cast<Render::Layer>(Render::Layer::BG_2));
+                                    j["bg3"] = jsonifyLayer(static_cast<Render::Layer>(Render::Layer::BG_3));
 
                                     if (file::storeJson(LEVEL_FILE_PATH, j)) {
                                         LOGD("World save successfully");

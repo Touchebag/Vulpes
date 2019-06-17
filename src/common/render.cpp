@@ -18,6 +18,10 @@ void Render::renderLayer(sf::RenderWindow& window, Layer layer) {
     }
 }
 
+std::vector<std::shared_ptr<BaseEntity>> Render::getLayer(Layer layer) {
+    return layers_[static_cast<int>(layer)];
+}
+
 void Render::setView(float x, float y, float width, float height) {
     view_x_ = x;
     view_y_ = y;

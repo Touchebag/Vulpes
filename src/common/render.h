@@ -33,6 +33,9 @@ class Render {
 
     static Render& getInstance();
 
+    // Needed for Level Editor
+    // TODO Conditiionally compile?
+    std::vector<std::shared_ptr<BaseEntity>> getLayer(Layer layer);
     void renderLayer(sf::RenderWindow& window, Layer layer);
 
   private:
