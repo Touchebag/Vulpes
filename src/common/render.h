@@ -24,6 +24,8 @@ class Render {
         MAX_LAYERS
     };
 
+    static std::string getLayerString(Layer layer);
+
     void render(sf::RenderWindow& window);
 
     void addEntity(std::shared_ptr<BaseEntity> entity, Layer layer);

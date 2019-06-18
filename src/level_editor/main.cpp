@@ -24,13 +24,6 @@ std::pair<float, float> world_mouse_pos = {0.0, 0.0}, world_mouse_speed = {0.0, 
 Render::Layer current_layer = Render::Layer::MAIN;
 bool render_current_layer_only = false;
 
-std::map<Render::Layer, std::string> layer_map = {
-    {Render::Layer::BG_3, "bg3"},
-    {Render::Layer::BG_2, "bg2"},
-    {Render::Layer::BG_1, "bg1"},
-    {Render::Layer::MAIN, "main"},
-};
-
 void updateMousePositions(sf::RenderWindow& window) {
         std::pair<int, int> old_mouse_pos = mouse_pos;
         sf::Vector2i tmp_pos = sf::Mouse::getPosition(window);
@@ -150,8 +143,8 @@ int main() {
                                 {
                                     nlohmann::json j;
 
-                                    for (auto const& it : layer_map) {
-                                        j[it.second] = jsonifyLayer(static_cast<Render::Layer>(it.first));
+                                    for (int i = 0; i < static_cast<int>(Render::Layer::MAX_LAYERS); ++i) {
+                                        j[Render::getLayerString(static_cast<Render::Layer>(i))] = jsonifyLayer(static_cast<Render::Layer>(i));
                                     }
 
                                     if (file::storeJson(LEVEL_FILE_PATH, j)) {
@@ -355,7 +348,7 @@ int main() {
             text.setFont(font);
             text.setFillColor(sf::Color::Green);
 
-            text.setString(layer_map[current_layer]);
+            text.setString(Render::getLayerString(current_layer));
             text.setPosition(50, 20);
             window.draw(text);
         }

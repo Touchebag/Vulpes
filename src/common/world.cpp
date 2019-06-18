@@ -17,20 +17,14 @@ void World::loadWorld(std::string path) {
     std::optional<nlohmann::json> j = file::loadJson(path);
 
     if (j) {
-        if (j.value().contains("main")) {
-            loadLayer(j.value()["main"], Render::Layer::MAIN);
-        } else {
+        if (!j.value().contains("main")) {
             LOGE("Main not found, exiting");
             exit(EXIT_FAILURE);
         }
-        if (j.value().contains("bg1")) {
-            loadLayer(j.value()["bg1"], Render::Layer::BG_1);
-        }
-        if (j.value().contains("bg2")) {
-            loadLayer(j.value()["bg2"], Render::Layer::BG_2);
-        }
-        if (j.value().contains("bg3")) {
-            loadLayer(j.value()["bg3"], Render::Layer::BG_3);
+
+        for (int i = 0; i < static_cast<int>(Render::Layer::MAX_LAYERS); ++i) {
+            Render::Layer layer = static_cast<Render::Layer>(i);
+            loadLayer(j.value()[Render::getLayerString(layer)], layer);
         }
     }
 }
