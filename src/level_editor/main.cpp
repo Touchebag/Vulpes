@@ -24,6 +24,13 @@ std::pair<float, float> world_mouse_pos = {0.0, 0.0}, world_mouse_speed = {0.0, 
 Render::Layer current_layer = Render::Layer::MAIN;
 bool render_current_layer_only = false;
 
+std::map<Render::Layer, std::string> layer_map = {
+    {Render::Layer::BG_3, "bg3"},
+    {Render::Layer::BG_2, "bg2"},
+    {Render::Layer::BG_1, "bg1"},
+    {Render::Layer::MAIN, "main"},
+};
+
 void updateMousePositions(sf::RenderWindow& window) {
         std::pair<int, int> old_mouse_pos = mouse_pos;
         sf::Vector2i tmp_pos = sf::Mouse::getPosition(window);
@@ -144,10 +151,9 @@ int main() {
                                 {
                                     nlohmann::json j;
 
-                                    j["main"] = jsonifyLayer(static_cast<Render::Layer>(Render::Layer::MAIN));
-                                    j["bg1"] = jsonifyLayer(static_cast<Render::Layer>(Render::Layer::BG_1));
-                                    j["bg2"] = jsonifyLayer(static_cast<Render::Layer>(Render::Layer::BG_2));
-                                    j["bg3"] = jsonifyLayer(static_cast<Render::Layer>(Render::Layer::BG_3));
+                                    for (auto const& it : layer_map) {
+                                        j[it.second] = jsonifyLayer(static_cast<Render::Layer>(it.first));
+                                    }
 
                                     if (file::storeJson(LEVEL_FILE_PATH, j)) {
                                         LOGD("World save successfully");
@@ -335,6 +341,21 @@ int main() {
             renderInst.render(window);
         }
 
+        sf::View old_viewport = window.getView();
+        sf::View viewport({VIEW_POS_X, VIEW_POS_Y}, {VIEW_SIZE, VIEW_SIZE});
+        window.setView(viewport);
+
+        // Print current layer
+        {
+            sf::Text text;
+            text.setFont(font);
+            text.setFillColor(sf::Color::Green);
+
+            text.setString(layer_map[current_layer]);
+            text.setPosition(50, 20);
+            window.draw(text);
+        }
+
         if (current_entity) {
             sf::Text text;
             text.setFont(font);
@@ -343,9 +364,6 @@ int main() {
             // auto hitbox = current_entity->getAbsHitbox();
             auto pos = current_entity->getPosition();
             auto hbox = current_entity->getHitbox();
-
-            sf::View viewport({VIEW_POS_X, VIEW_POS_Y}, {VIEW_SIZE, VIEW_SIZE});
-            window.setView(viewport);
 
             text.setString(std::string("X:") + std::to_string(pos.x) + std::string(" Y: ") + std::to_string(pos.y));
             text.setPosition(50, 50);
@@ -361,14 +379,14 @@ int main() {
             text.setFont(font);
             text.setFillColor(sf::Color::Red);
 
-            sf::View viewport({VIEW_POS_X, VIEW_POS_Y}, {VIEW_SIZE, VIEW_SIZE});
-            window.setView(viewport);
-
             text.setString(input_text);
             text.setPosition(100, 300);
             window.draw(text);
         }
 
+        // Needed for cursor positions to map correctly when zoomed
+        // TODO Move text to be drawn by HUD layer in Render
+        window.setView(old_viewport);
         window.display();
     }
 }
