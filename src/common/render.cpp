@@ -40,7 +40,9 @@ void Render::addEntity(std::shared_ptr<BaseEntity> entity, Layer layer) {
     layers_[static_cast<int>(layer)].push_back(entity);
 }
 
-void Render::removeEntity(std::shared_ptr<BaseEntity> entity) {
+void Render::removeEntity(std::shared_ptr<BaseEntity> entity, Layer layer) {
+    auto& layer_list = layers_[static_cast<int>(layer)];
+    layer_list.erase(std::remove(layer_list.begin(), layer_list.end(), entity), layer_list.end());
 }
 
 Render& Render::getInstance() {

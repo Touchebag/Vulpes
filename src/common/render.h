@@ -27,7 +27,7 @@ class Render {
     void render(sf::RenderWindow& window);
 
     void addEntity(std::shared_ptr<BaseEntity> entity, Layer layer);
-    void removeEntity(std::shared_ptr<BaseEntity> entity);
+    void removeEntity(std::shared_ptr<BaseEntity> entity, Layer layer);
 
     void setView(float x, float y, float width, float height);
 

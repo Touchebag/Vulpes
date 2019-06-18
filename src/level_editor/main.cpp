@@ -73,7 +73,6 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(1000,1000), "BLAAAAH");
 
     std::optional<nlohmann::json> j = file::loadJson(LEVEL_FILE_PATH);
-    std::vector<std::shared_ptr<BaseEntity>>& world_objects = World::getInstance().getWorldObjects();
 
     Action current_action = Action::NONE;
 
@@ -163,15 +162,18 @@ int main() {
                                 }
                                 break;
                             case sf::Keyboard::Key::A:
-                                {
+                                // Ctrl + mouse wheel scroll generates and extra key corresponding to A
+                                // for some reason
+                                if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
                                     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
                                     entity->loadTexture("box.png");
                                     entity->setHitbox(50, 50);
                                     entity->setPosition(static_cast<int>(world_mouse_pos.first), static_cast<int>(world_mouse_pos.second));
-                                    world_objects.push_back(entity);
+                                    Render::getInstance().addEntity(entity, current_layer);
 
                                     current_command = std::make_shared<command::Add>(command::Add());
                                     current_command->entity_ = entity;
+                                    current_command->layer_ = current_layer;
 
                                     history.addCommand(current_command);
                                 }
@@ -180,10 +182,11 @@ int main() {
                                 if (current_entity) {
                                     current_command = std::make_shared<command::Delete>(command::Delete());
                                     current_command->entity_ = current_entity;
+                                    current_command->layer_ = current_layer;
 
                                     history.addCommand(current_command);
 
-                                    world_objects.erase(std::remove(world_objects.begin(), world_objects.end(), current_entity), world_objects.end());
+                                    Render::getInstance().removeEntity(current_entity, current_layer);
                                     current_entity = nullptr;
                                 }
                                 break;
@@ -195,10 +198,11 @@ int main() {
                                     entity->loadTexture("box.png");
                                     entity->setHitbox(hbox.width_, hbox.height_);
                                     entity->setPosition(static_cast<int>(world_mouse_pos.first), static_cast<int>(world_mouse_pos.second));
-                                    world_objects.push_back(entity);
+                                    Render::getInstance().addEntity(entity, current_layer);
 
                                     current_command = std::make_shared<command::Add>(command::Add());
                                     current_command->entity_ = entity;
+                                    current_command->layer_ = current_layer;
 
                                     history.addCommand(current_command);
                                 }
@@ -233,7 +237,7 @@ int main() {
                             Hitbox tmp_hbox;
                             tmp_hbox.setOffset({static_cast<int>(world_mouse_pos.first), static_cast<int>(world_mouse_pos.second)});
 
-                            for (auto it : world_objects) {
+                            for (auto it : Render::getInstance().getLayer(current_layer)) {
                                 if (it->getAbsHitbox().collides(tmp_hbox)) {
                                     current_entity = it;
                                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
