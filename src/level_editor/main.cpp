@@ -351,6 +351,13 @@ int main() {
             text.setString(Render::getLayerString(current_layer));
             text.setPosition(50, 20);
             window.draw(text);
+
+            text.setString(std::string("Mouse X: ") + std::to_string(world_mouse_pos.first));
+            text.setPosition(500, 20);
+            window.draw(text);
+            text.setString(std::string("Mouse Y: ") + std::to_string(world_mouse_pos.second));
+            text.setPosition(500, 50);
+            window.draw(text);
         }
 
         if (current_entity) {
