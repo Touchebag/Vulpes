@@ -187,9 +187,7 @@ int main() {
                                 // TODO Copy constructor
                                 if (current_entity) {
                                     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-                                    auto hbox = current_entity->getHitbox();
-                                    entity->loadTexture("box.png");
-                                    entity->setHitbox(hbox.width_, hbox.height_);
+                                    entity->loadFromJson(current_entity->outputToJson().value());
                                     entity->setPosition(static_cast<int>(world_mouse_pos.first), static_cast<int>(world_mouse_pos.second));
                                     Render::getInstance().addEntity(entity, current_layer);
 
