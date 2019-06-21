@@ -39,6 +39,7 @@ class Render {
     // TODO Conditiionally compile?
     std::vector<std::shared_ptr<BaseEntity>> getLayer(Layer layer);
     void renderLayer(sf::RenderWindow& window, Layer layer);
+    bool parallax_enabled_ = true;
 
   private:
     float view_x_;

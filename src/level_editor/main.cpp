@@ -202,6 +202,7 @@ int main() {
                                 break;
                             case sf::Keyboard::Key::V:
                                 render_current_layer_only = !render_current_layer_only;
+                                Render::getInstance().parallax_enabled_ = !Render::getInstance().parallax_enabled_;
                                 break;
                             case sf::Keyboard::Key::T:
                                 if (current_entity) {

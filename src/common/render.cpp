@@ -23,7 +23,12 @@ std::string Render::getLayerString(Layer layer) {
 }
 
 void Render::renderLayer(sf::RenderWindow& window, Layer layer) {
-    float parallax_mulitiplier = parallax_map[layer];
+    float parallax_mulitiplier = 1;
+
+    if (parallax_enabled_) {
+        parallax_mulitiplier = parallax_map[layer];
+    }
+
     sf::View viewport({view_x_ * parallax_mulitiplier, view_y_ * parallax_mulitiplier}, {view_width_, view_height_});
     window.setView(viewport);
     for (auto it = layers_[static_cast<int>(layer)].begin(); it != layers_[static_cast<int>(layer)].end(); ++it) {
