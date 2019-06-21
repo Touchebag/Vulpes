@@ -7,6 +7,8 @@
 class Render {
   public:
     enum class Layer {
+        BACKGROUND,
+
         // Counting outwards from MAIN
         BG_3,
         BG_2,
