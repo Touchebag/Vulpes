@@ -1,16 +1,16 @@
 #include "movable.h"
 #include "world.h"
 
-void MovableEntity::move(int velX, int velY, Transform& trans) {
+void MovableEntity::move(double velX, double velY, Transform& trans) {
     vely_ = velY;
     velx_ = velX;
 
-    trans.move(velx_, vely_);
+    trans.move(static_cast<int>(velx_), static_cast<int>(vely_));
 }
 
-std::pair<int, int> MovableEntity::getMaximumMovement(int velX, int velY, Hitbox abs_hitbox) {
-    int x = velX;
-    int y = velY;
+std::pair<double, double> MovableEntity::getMaximumMovement(double velX, double velY, Hitbox abs_hitbox) {
+    double x = static_cast<double>(velX);
+    double y = static_cast<double>(velY);
 
     World& worldInst = World::getInstance();
 
@@ -21,12 +21,12 @@ std::pair<int, int> MovableEntity::getMaximumMovement(int velX, int velY, Hitbox
         Hitbox other_hitbox = (*it)->getAbsHitbox();
 
         if (other_hitbox.collides(abs_hitbox)) {
-            std::tuple<int, int> newMoveValues = previous_abs.getMaximumMovement(x, y, other_hitbox);
+            std::tuple<double, double> newMoveValues = previous_abs.getMaximumMovement(x, y, other_hitbox);
             x = std::get<0>(newMoveValues);
             y = std::get<1>(newMoveValues);
 
             // Readjust abs_hitbox to new values
-            abs_hitbox.moveOffset({x - velx_, y - vely_});
+            abs_hitbox.moveOffset({x - static_cast<double>(velx_), y - static_cast<double>(vely_)});
         }
     }
 

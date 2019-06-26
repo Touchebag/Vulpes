@@ -11,7 +11,7 @@ class Hitbox {
     bool collides(Hitbox& hitbox);
 
     // This assumes that the objects have already been checked for rough collision
-    std::pair<int, int> getMaximumMovement(int stepX, int stepY, Hitbox otherHitbox);
+    std::pair<double, double> getMaximumMovement(double stepX, double stepY, Hitbox otherHitbox);
 
     void setOffset(std::pair<int, int> offset);
     void moveOffset(std::pair<int, int> offset);

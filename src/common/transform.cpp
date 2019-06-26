@@ -10,6 +10,10 @@ void Transform::move(int x, int y) {
     pos_y_ += y;
 }
 
+void Transform::move(double x, double y) {
+    move(static_cast<int>(x), static_cast<int>(y));
+}
+
 int Transform::getX() {
     return pos_x_;
 }

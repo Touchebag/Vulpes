@@ -9,8 +9,8 @@ bool Hitbox::collides(Hitbox& hitbox) {
     return collidesX(hitbox) && collidesY(hitbox);
 }
 
-std::pair<int, int> Hitbox::getMaximumMovement(int stepX, int stepY, Hitbox otherHitbox) {
-    int retX = stepX, retY = stepY;
+std::pair<double, double> Hitbox::getMaximumMovement(double stepX, double stepY, Hitbox otherHitbox) {
+    double retX = stepX, retY = stepY;
 
     // If X direction was already colliding last step then we are parallel in this direction
     // I.e. do no change speed
