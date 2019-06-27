@@ -76,11 +76,11 @@ void Player::update() {
     y = std::max(std::min(y, 20.0), -20.0);
     auto max_movement = getMaximumMovement(x, y, getAbsHitbox());
 
-    if (max_movement.second < y) {
+    if (static_cast<int>(max_movement.second) < y) {
         incomingEvent(state::Event::TOUCHING_FLOOR);
-    } else if (max_movement.first != x) {
+    } else if (static_cast<int>(max_movement.first) != static_cast<int>(x)) {
         incomingEvent(state::Event::TOUCHING_WALL);
-    } else if (max_movement.second > 0.0) {
+    } else if (static_cast<int>(max_movement.second) > 0.0) {
         incomingEvent(state::Event::FALLING);
     }
 
