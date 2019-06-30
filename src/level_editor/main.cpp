@@ -382,8 +382,12 @@ int main() {
             text.setFont(font);
             text.setFillColor(sf::Color::Red);
 
+            text.setString("Sprite: ");
+            text.setPosition(20, 300);
+            window.draw(text);
+
             text.setString(input_text);
-            text.setPosition(100, 300);
+            text.setPosition(130, 300);
             window.draw(text);
         }
 
