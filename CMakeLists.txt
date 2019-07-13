@@ -23,7 +23,7 @@ file(COPY assets DESTINATION .)
 
 # Export game files as lib for editors
 file(GLOB_RECURSE COMMON_SOURCES src/game/*.cpp src/game/*.h)
-add_library(${COMMON_TARGET} STATIC ${COMMON_SOURCES})
+add_library(${COMMON_TARGET} EXCLUDE_FROM_ALL STATIC ${COMMON_SOURCES})
 target_compile_options(${COMMON_TARGET} PUBLIC ${CC_OPTIONS})
 target_include_directories(${COMMON_TARGET} PUBLIC src/game/ libs/nlohmann)
 
@@ -31,9 +31,9 @@ target_include_directories(${COMMON_TARGET} PUBLIC src/game/ libs/nlohmann)
 file(GLOB_RECURSE GAME_SOURCES src/game/*.cpp src/game/*.h)
 add_executable(${GAME_TARGET} ${GAME_SOURCES})
 target_compile_options(${GAME_TARGET} PUBLIC ${CC_OPTIONS})
-target_include_directories(${GAME_TARGET} PUBLIC libs/nlohmann)
+target_include_directories(${GAME_TARGET} PUBLIC src/game/ libs/nlohmann)
 
-target_link_libraries(${GAME_TARGET} ${COMMON_TARGET} ${SFML_LIBS})
+target_link_libraries(${GAME_TARGET} ${SFML_LIBS})
 
 # State editor target
 file(GLOB_RECURSE STATE_GRAPH_SOURCES src/state_graph/*.cpp src/state_graph/*.h)

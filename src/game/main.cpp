@@ -4,7 +4,6 @@
 #include <json.hpp>
 
 #include "base_entity.h"
-#include "player.h"
 #include "world.h"
 #include "utils/common.h"
 #include "file.h"
@@ -19,8 +18,6 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(1000,1000), "BLAAAAH");
     window.setKeyRepeatEnabled(false);
 
-    std::vector<std::shared_ptr<BaseEntity>> entities;
-
     World& worldInst = World::getInstance();
 
     sf::Time frames;
@@ -33,14 +30,6 @@ int main() {
             {sf::Keyboard::Key::Left, input::button::LEFT},
             {sf::Keyboard::Key::Right, input::button::RIGHT},
             {sf::Keyboard::Key::LShift, input::button::DASH}});
-
-    std::shared_ptr<Player> player = std::make_shared<Player>();
-    player->setPosition(350, 10);
-    player->setHitbox(50, 200);
-    player->loadTexture("Player.png");
-    player->loadSpriteMap("Player.txt");
-    entities.push_back(player);
-    Render::getInstance().addEntity(player, Render::Layer::MAIN);
 
     frame_time.restart();
 
@@ -78,20 +67,14 @@ int main() {
                 }
             }
 
-            for (auto it = entities.begin(); it != entities.end(); ++it) {
-                (*it)->update();
-            }
-
-            for (auto it = worldInst.getWorldObjects().begin(); it != worldInst.getWorldObjects().end(); ++it) {
-                (*it)->update();
-            }
+            worldInst.update();
 
             frames -= sf::milliseconds(MS_PER_FRAME);
         }
 
         Render& renderInst = Render::getInstance();
 
-        auto view_pos = player->getPosition();
+        auto view_pos = worldInst.getPlayerPosition();
         renderInst.setView(static_cast<float>(view_pos.x), static_cast<float>(view_pos.y), 1000.0, 1000.0);
 
         renderInst.render(window);

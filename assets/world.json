@@ -1,4 +1,8 @@
 {
+    "player" : {
+        "xpos" : 350,
+        "ypos" : 100
+    },
     "main": [
         {
             "hitbox": {

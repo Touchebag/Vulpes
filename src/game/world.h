@@ -5,6 +5,7 @@
 
 #include "base_entity.h"
 #include "render.h"
+#include "player.h"
 
 class World {
 /* This class is intended to store all world objects like walls.
@@ -17,6 +18,10 @@ class World {
 
     void loadWorld(std::string file);
 
+    void update();
+
+    sf::Vector2i getPlayerPosition();
+
     std::vector<std::shared_ptr<BaseEntity>>& getWorldObjects();
 
     World(const World&) = delete;
@@ -26,6 +31,8 @@ class World {
 
   private:
     World() = default;
+
+    std::shared_ptr<Player> player_;
 
     void loadLayer(nlohmann::json json, Render::Layer layer);
 
