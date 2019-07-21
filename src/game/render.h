@@ -1,37 +1,16 @@
 #pragma once
 
 #include "base_entity.h"
+#include "world.h"
 
 #include <SFML/Graphics.hpp>
 
 class Render {
   public:
-    enum class Layer {
-        BACKGROUND,
-
-        // Counting outwards from MAIN
-        BG_3,
-        BG_2,
-        BG_1,
-
-        MAIN_BG,
-        MAIN,
-        MAIN_FG,
-
-        // Counting outwards from MAIN
-        FG_1,
-        FG_2,
-        FG_3,
-
-        MAX_LAYERS
-    };
-
-    static std::string getLayerString(Layer layer);
-
     void render(sf::RenderWindow& window);
 
-    void addEntity(std::shared_ptr<BaseEntity> entity, Layer layer);
-    void removeEntity(std::shared_ptr<BaseEntity> entity, Layer layer);
+    void addEntity(std::shared_ptr<BaseEntity> entity, World::Layer layer);
+    void removeEntity(std::shared_ptr<BaseEntity> entity, World::Layer layer);
 
     void setView(float x, float y, float width, float height);
 
@@ -39,8 +18,7 @@ class Render {
 
     // Needed for Level Editor
     // TODO Conditiionally compile?
-    std::vector<std::shared_ptr<BaseEntity>> getLayer(Layer layer);
-    void renderLayer(sf::RenderWindow& window, Layer layer);
+    void renderLayer(sf::RenderWindow& window, World::Layer layer);
     bool parallax_enabled_ = true;
 
   private:
@@ -51,5 +29,5 @@ class Render {
 
     Render() = default;
 
-    std::array<std::vector<std::shared_ptr<BaseEntity>>, static_cast<int>(Layer::MAX_LAYERS)> layers_;
+    std::array<std::vector<std::shared_ptr<BaseEntity>>, static_cast<int>(World::Layer::MAX_LAYERS)> layers_;
 };

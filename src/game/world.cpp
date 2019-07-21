@@ -2,6 +2,28 @@
 
 #include "log.h"
 #include "file.h"
+#include "render.h"
+
+namespace {
+
+std::map<World::Layer, std::string> LayerStringMap = {
+    {World::Layer::BACKGROUND, "background"},
+    {World::Layer::BG_3, "bg3"},
+    {World::Layer::BG_2, "bg2"},
+    {World::Layer::BG_1, "bg1"},
+    {World::Layer::MAIN_BG, "main_bg"},
+    {World::Layer::MAIN, "main"},
+    {World::Layer::MAIN_FG, "main_fg"},
+    {World::Layer::FG_1, "fg1"},
+    {World::Layer::FG_2, "fg2"},
+    {World::Layer::FG_3, "fg3"},
+};
+
+}
+
+std::string World::getLayerString(Layer layer) {
+    return LayerStringMap[layer];
+}
 
 World& World::getInstance() {
     static World world;
@@ -9,14 +31,16 @@ World& World::getInstance() {
     return world;
 }
 
-std::vector<std::shared_ptr<BaseEntity>>& World::getWorldObjects() {
-    return world_objects_;
+std::vector<std::shared_ptr<BaseEntity>>& World::getWorldObjects(Layer layer) {
+    return world_objects_[static_cast<int>(layer)];
 }
 
 void World::update() {
     player_->update();
 
-    for (auto it = world_objects_.begin(); it != world_objects_.end(); ++it) {
+    for (auto it = world_objects_[static_cast<int>(Layer::MAIN)].begin();
+              it != world_objects_[static_cast<int>(Layer::MAIN)].end();
+              ++it) {
         (*it)->update();
     }
 }
@@ -40,9 +64,9 @@ void World::loadWorld(std::string path) {
         exit(EXIT_FAILURE);
     }
 
-    for (int i = 0; i < static_cast<int>(Render::Layer::MAX_LAYERS); ++i) {
-        Render::Layer layer = static_cast<Render::Layer>(i);
-        loadLayer(j[Render::getLayerString(layer)], layer);
+    for (int i = 0; i < static_cast<int>(Layer::MAX_LAYERS); ++i) {
+        Layer layer = static_cast<Layer>(i);
+        loadLayer(j[getLayerString(layer)], layer);
     }
 
     player_ = std::make_shared<Player>();
@@ -64,20 +88,27 @@ void World::loadWorld(std::string path) {
     player_->loadTexture("Player.png");
     player_->loadSpriteMap("Player.txt");
 
-    Render::getInstance().addEntity(player_, Render::Layer::MAIN);
+    Render::getInstance().addEntity(player_, Layer::MAIN);
 }
 
-void World::loadLayer(nlohmann::json json, Render::Layer layer) {
+void World::loadLayer(nlohmann::json json, Layer layer) {
     for (auto it : json) {
         std::shared_ptr<BaseEntity> ent = std::make_shared<BaseEntity>();
         ent->loadFromJson(it);
 
-        // Only objects from main layer are interactable
-        if (layer == Render::Layer::MAIN) {
-            world_objects_.push_back(ent);
-        }
-
-        Render::getInstance().addEntity(ent, layer);
+        addEntity(ent, layer);
     }
 }
 
+void World::addEntity(std::shared_ptr<BaseEntity> entity, World::Layer layer) {
+    world_objects_[static_cast<int>(layer)].push_back(entity);
+
+    Render::getInstance().addEntity(entity, layer);
+}
+
+void World::removeEntity(std::shared_ptr<BaseEntity> entity, World::Layer layer) {
+    auto& layer_list = world_objects_[static_cast<int>(layer)];
+    layer_list.erase(std::remove(layer_list.begin(), layer_list.end(), entity), layer_list.end());
+
+    Render::getInstance().removeEntity(entity, layer);
+}

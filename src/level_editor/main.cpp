@@ -6,6 +6,7 @@
 #include "history.h"
 #include "action.h"
 #include "world.h"
+#include "render.h"
 
 #include "commands/add.h"
 #include "commands/delete.h"
@@ -21,7 +22,7 @@
 std::pair<int, int> mouse_pos = {0, 0}, mouse_speed = {0, 0};
 std::pair<float, float> world_mouse_pos = {0.0, 0.0}, world_mouse_speed = {0.0, 0.0};
 
-Render::Layer current_layer = Render::Layer::MAIN;
+World::Layer current_layer = World::Layer::MAIN;
 bool render_current_layer_only = false;
 
 void updateMousePositions(sf::RenderWindow& window) {
@@ -36,21 +37,21 @@ void updateMousePositions(sf::RenderWindow& window) {
         world_mouse_speed = {world_mouse_pos.first - old_world_mouse_pos.first, world_mouse_pos.second - old_world_mouse_pos.second};
 }
 
-Render::Layer change_layer(bool towards_screen) {
+World::Layer change_layer(bool towards_screen) {
     int layer_int = static_cast<int>(current_layer);
     if (towards_screen && layer_int > 0) {
-        return static_cast<Render::Layer>(layer_int - 1);
-    } else if (!towards_screen && layer_int < static_cast<int>(Render::Layer::MAX_LAYERS) - 1) {
-        return static_cast<Render::Layer>(layer_int + 1);
+        return static_cast<World::Layer>(layer_int - 1);
+    } else if (!towards_screen && layer_int < static_cast<int>(World::Layer::MAX_LAYERS) - 1) {
+        return static_cast<World::Layer>(layer_int + 1);
     }
 
     return current_layer;
 }
 
-nlohmann::json jsonifyLayer(Render::Layer layer) {
+nlohmann::json jsonifyLayer(World::Layer layer) {
     nlohmann::json json_object_list;
 
-    auto layerList = Render::getInstance().getLayer(static_cast<Render::Layer>(layer));
+    auto layerList = World::getInstance().getWorldObjects(static_cast<World::Layer>(layer));
 
     for (long unsigned int i = 0; i < layerList.size(); ++i) {
         auto object = layerList.at(i)->outputToJson();
@@ -64,6 +65,8 @@ nlohmann::json jsonifyLayer(Render::Layer layer) {
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(1000,1000), "BLAAAAH");
+
+    Render& renderInst = Render::getInstance();
 
     std::optional<nlohmann::json> j = file::loadJson(LEVEL_FILE_PATH);
 
@@ -143,8 +146,8 @@ int main() {
                                 {
                                     nlohmann::json j;
 
-                                    for (int i = 0; i < static_cast<int>(Render::Layer::MAX_LAYERS); ++i) {
-                                        j[Render::getLayerString(static_cast<Render::Layer>(i))] = jsonifyLayer(static_cast<Render::Layer>(i));
+                                    for (int i = 0; i < static_cast<int>(World::Layer::MAX_LAYERS); ++i) {
+                                        j[World::getLayerString(static_cast<World::Layer>(i))] = jsonifyLayer(static_cast<World::Layer>(i));
                                     }
 
                                     if (file::storeJson(LEVEL_FILE_PATH, j)) {
@@ -162,7 +165,7 @@ int main() {
                                     entity->loadTexture("box.png");
                                     entity->setHitbox(50, 50);
                                     entity->setPosition(static_cast<int>(world_mouse_pos.first), static_cast<int>(world_mouse_pos.second));
-                                    Render::getInstance().addEntity(entity, current_layer);
+                                    World::getInstance().addEntity(entity, current_layer);
 
                                     current_command = std::make_shared<command::Add>(command::Add());
                                     current_command->entity_ = entity;
@@ -179,7 +182,7 @@ int main() {
 
                                     history.addCommand(current_command);
 
-                                    Render::getInstance().removeEntity(current_entity, current_layer);
+                                    World::getInstance().removeEntity(current_entity, current_layer);
                                     current_entity = nullptr;
                                 }
                                 break;
@@ -189,7 +192,7 @@ int main() {
                                     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
                                     entity->loadFromJson(current_entity->outputToJson().value());
                                     entity->setPosition(static_cast<int>(world_mouse_pos.first), static_cast<int>(world_mouse_pos.second));
-                                    Render::getInstance().addEntity(entity, current_layer);
+                                    World::getInstance().addEntity(entity, current_layer);
 
                                     current_command = std::make_shared<command::Add>(command::Add());
                                     current_command->entity_ = entity;
@@ -200,7 +203,7 @@ int main() {
                                 break;
                             case sf::Keyboard::Key::V:
                                 render_current_layer_only = !render_current_layer_only;
-                                Render::getInstance().parallax_enabled_ = !Render::getInstance().parallax_enabled_;
+                                renderInst.parallax_enabled_ = !renderInst.parallax_enabled_;
                                 break;
                             case sf::Keyboard::Key::T:
                                 if (current_entity) {
@@ -229,7 +232,7 @@ int main() {
                             Hitbox tmp_hbox;
                             tmp_hbox.setOffset({static_cast<int>(world_mouse_pos.first), static_cast<int>(world_mouse_pos.second)});
 
-                            for (auto it : Render::getInstance().getLayer(current_layer)) {
+                            for (auto it : World::getInstance().getWorldObjects(current_layer)) {
                                 if (it->getAbsHitbox().collides(tmp_hbox)) {
                                     current_entity = it;
                                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
@@ -327,8 +330,6 @@ int main() {
 
         window.clear();
 
-        Render& renderInst = Render::getInstance();
-
         renderInst.setView(static_cast<float>(view_pos_x), static_cast<float>(view_pos_y), view_size, view_size);
 
         if (render_current_layer_only) {
@@ -347,7 +348,7 @@ int main() {
             text.setFont(font);
             text.setFillColor(sf::Color::Green);
 
-            text.setString(Render::getLayerString(current_layer));
+            text.setString(World::getLayerString(current_layer));
             text.setPosition(50, 20);
             window.draw(text);
 

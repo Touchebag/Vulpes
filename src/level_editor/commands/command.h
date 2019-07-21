@@ -1,7 +1,7 @@
 #pragma once
 
 #include "base_entity.h"
-#include "render.h"
+#include "world.h"
 
 namespace command {
 
@@ -14,7 +14,7 @@ class Command {
 
     std::shared_ptr<BaseEntity> entity_;
 
-    Render::Layer layer_;
+    World::Layer layer_;
 
     std::pair<int, int> before_ = {0, 0};
     std::pair<int, int> after_ = {0, 0};
