@@ -26,8 +26,13 @@ void Render::renderLayer(sf::RenderWindow& window, World::Layer layer) {
 
     sf::View viewport({view_x_ * parallax_mulitiplier, view_y_ * parallax_mulitiplier}, {view_width_, view_height_});
     window.setView(viewport);
-    for (auto it = layers_[static_cast<int>(layer)].begin(); it != layers_[static_cast<int>(layer)].end(); ++it) {
-        (*it)->render(window);
+    for (auto it = layers_[static_cast<int>(layer)].begin(); it != layers_[static_cast<int>(layer)].end(); ) {
+        if (auto ptr = it->lock()) {
+            ptr->render(window);
+            ++it;
+        } else {
+            it = layers_[static_cast<int>(layer)].erase(it);
+        }
     }
 }
 
@@ -44,13 +49,23 @@ void Render::render(sf::RenderWindow& window) {
     }
 }
 
-void Render::addEntity(std::shared_ptr<BaseEntity> entity, World::Layer layer) {
+void Render::addEntity(std::weak_ptr<BaseEntity> entity, World::Layer layer) {
     layers_[static_cast<int>(layer)].push_back(entity);
 }
 
-void Render::removeEntity(std::shared_ptr<BaseEntity> entity, World::Layer layer) {
+void Render::removeEntity(std::weak_ptr<BaseEntity> entity, World::Layer layer) {
     auto& layer_list = layers_[static_cast<int>(layer)];
-    layer_list.erase(std::remove(layer_list.begin(), layer_list.end(), entity), layer_list.end());
+    layer_list.erase(std::remove_if(layer_list.begin(), layer_list.end(),
+                                       [entity] (std::weak_ptr<BaseEntity> list_entity){
+                                           auto e1 = entity.lock();
+                                           auto e2 = list_entity.lock();
+                                           if (e1 && e2) {
+                                               return e1 == e2;
+                                           }
+
+                                           return false;
+                                       }
+                                   ), layer_list.end());
 }
 
 Render& Render::getInstance() {
