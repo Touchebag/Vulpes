@@ -51,6 +51,8 @@ class World {
     World operator=(const World&) = delete;
     World operator=(World&&) = delete;
 
+    // For level editor
+    // TODO Conditionally compile?
     static std::string getLayerString(Layer layer);
 
   private:

@@ -150,6 +150,11 @@ int main() {
                                         j[World::getLayerString(static_cast<World::Layer>(i))] = jsonifyLayer(static_cast<World::Layer>(i));
                                     }
 
+                                    auto player_position = World::getInstance().getPlayerPosition();
+
+                                    j["player"]["xpos"] = player_position.x;
+                                    j["player"]["ypos"] = player_position.y;
+
                                     if (file::storeJson(LEVEL_FILE_PATH, j)) {
                                         LOGD("World save successfully");
                                     } else {
