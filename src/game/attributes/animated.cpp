@@ -34,6 +34,8 @@ void AnimatedEntity::loadSpriteMap(const std::string& path) {
 
         sprite_sheet_map_.insert({name, {{x_pos, y_pos}, {width, height}}});
     }
+
+    sprite_map_ = path;
 }
 
 std::pair<util::Point, util::Point> AnimatedEntity::getSpriteRect(std::string sprite) {

@@ -36,6 +36,7 @@ class World {
     static World& getInstance();
 
     void loadWorld(std::string file);
+    void saveWorld(std::string file);
 
     void update();
 
@@ -61,6 +62,7 @@ class World {
     std::shared_ptr<Player> player_;
 
     void loadLayer(nlohmann::json json, Layer layer);
+    nlohmann::json jsonifyLayer(Layer layer);
 
     std::array<std::vector<std::shared_ptr<BaseEntity>>, static_cast<int>(Layer::MAX_LAYERS)> world_objects_;
 };

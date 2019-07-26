@@ -18,7 +18,6 @@ StatefulEntity::StatefulEntity() {
 
     // TODO Error handling
     current_state_ = &(state_list_.at("main"));
-    incomingEvent(state::Event::START);
 }
 
 void StatefulEntity::updateState() {

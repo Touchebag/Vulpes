@@ -2,6 +2,9 @@
     "main": {
         "next_states": [
             {"event": 0, "state": "idle"}
+        ],
+        "frame_names": [
+            "Idle0"
         ]
     },
     "idle": {

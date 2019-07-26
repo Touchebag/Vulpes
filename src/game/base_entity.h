@@ -19,8 +19,8 @@ public:
     Hitbox getHitbox();
     Hitbox getAbsHitbox();
 
-    void loadFromJson(nlohmann::json j);
-    std::optional<nlohmann::json> outputToJson();
+    virtual void loadFromJson(nlohmann::json j);
+    virtual std::optional<nlohmann::json> outputToJson();
 
     void render(sf::RenderWindow& window);
 

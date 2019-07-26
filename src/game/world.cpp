@@ -70,23 +70,7 @@ void World::loadWorld(std::string path) {
     }
 
     player_ = std::make_shared<Player>();
-    auto j_player = j["player"];
-
-    int xpos;
-    int ypos;
-    try {
-        xpos = j_player["xpos"].get<int>();
-        ypos = j_player["ypos"].get<int>();
-    } catch (nlohmann::json::type_error& e) {
-        LOGW("Player position not found, using default values");
-        xpos = 0;
-        ypos = 0;
-    }
-
-    player_->setPosition(xpos, ypos);
-    player_->setHitbox(50, 200);
-    player_->loadTexture("Player.png");
-    player_->loadSpriteMap("Player.txt");
+    player_->loadFromJson(j["player"]);
 
     Render::getInstance().addEntity(player_, Layer::MAIN);
 }
@@ -97,6 +81,44 @@ void World::loadLayer(nlohmann::json json, Layer layer) {
         ent->loadFromJson(it);
 
         addEntity(ent, layer);
+    }
+}
+
+nlohmann::json World::jsonifyLayer(Layer layer) {
+    nlohmann::json json_object_list;
+
+    auto layerList = world_objects_[static_cast<int>(layer)];
+
+    for (long unsigned int i = 0; i < layerList.size(); ++i) {
+        auto object = layerList.at(i)->outputToJson();
+        if (object) {
+            json_object_list.push_back(*object);
+        }
+    }
+
+    return json_object_list;
+}
+
+void World::saveWorld(std::string file) {
+    nlohmann::json j;
+
+    for (int i = 0; i < static_cast<int>(Layer::MAX_LAYERS); ++i) {
+        j[getLayerString(static_cast<Layer>(i))] = jsonifyLayer(static_cast<Layer>(i));
+    }
+
+    auto player_json = player_->outputToJson();
+
+    if (!player_json) {
+        LOGE("Failed to store player");
+        return;
+    }
+
+    j["player"] = player_json.value();
+
+    if (file::storeJson(file, j)) {
+        LOGD("World save successfully");
+    } else {
+        LOGE("Failed to save json to file");
     }
 }
 

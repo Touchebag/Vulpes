@@ -91,3 +91,23 @@ void Player::update() {
     setTextureCoords(sprite_rect);
 }
 
+void Player::loadFromJson(nlohmann::json j) {
+    BaseEntity::loadFromJson(j);
+
+    loadSpriteMap(j["sprite_map"].get<std::string>());
+
+    auto sprite_rect = getSpriteRect(getCurrentSprite());
+    setTextureCoords(sprite_rect);
+
+    incomingEvent(state::Event::START);
+}
+
+std::optional<nlohmann::json> Player::outputToJson() {
+    auto j = BaseEntity::outputToJson();
+
+    if (j) {
+        j.value()["sprite_map"] = sprite_map_;
+    }
+
+    return j;
+}

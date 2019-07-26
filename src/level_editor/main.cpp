@@ -48,21 +48,6 @@ World::Layer change_layer(bool towards_screen) {
     return current_layer;
 }
 
-nlohmann::json jsonifyLayer(World::Layer layer) {
-    nlohmann::json json_object_list;
-
-    auto layerList = World::getInstance().getWorldObjects(static_cast<World::Layer>(layer));
-
-    for (long unsigned int i = 0; i < layerList.size(); ++i) {
-        auto object = layerList.at(i)->outputToJson();
-        if (object) {
-            json_object_list.push_back(*object);
-        }
-    }
-
-    return json_object_list;
-}
-
 int main() {
     sf::RenderWindow window(sf::VideoMode(1000,1000), "BLAAAAH");
 
@@ -143,24 +128,7 @@ int main() {
                     case sf::Event::KeyPressed:
                         switch (event.key.code) {
                             case sf::Keyboard::Key::S:
-                                {
-                                    nlohmann::json j;
-
-                                    for (int i = 0; i < static_cast<int>(World::Layer::MAX_LAYERS); ++i) {
-                                        j[World::getLayerString(static_cast<World::Layer>(i))] = jsonifyLayer(static_cast<World::Layer>(i));
-                                    }
-
-                                    auto player_position = World::getInstance().getPlayerPosition();
-
-                                    j["player"]["xpos"] = player_position.x;
-                                    j["player"]["ypos"] = player_position.y;
-
-                                    if (file::storeJson(LEVEL_FILE_PATH, j)) {
-                                        LOGD("World save successfully");
-                                    } else {
-                                        LOGE("Failed to save json to file");
-                                    }
-                                }
+                                World::getInstance().saveWorld(LEVEL_FILE_PATH);
                                 break;
                             case sf::Keyboard::Key::A:
                                 // Ctrl + mouse wheel scroll generates and extra key corresponding to A
