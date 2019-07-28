@@ -134,3 +134,7 @@ void World::removeEntity(std::shared_ptr<BaseEntity> entity, World::Layer layer)
 
     Render::getInstance().removeEntity(entity, layer);
 }
+
+std::weak_ptr<Player> World::getPlayer() {
+    return player_;
+}

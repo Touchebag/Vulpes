@@ -131,7 +131,7 @@ int main() {
                                 World::getInstance().saveWorld(LEVEL_FILE_PATH);
                                 break;
                             case sf::Keyboard::Key::A:
-                                // Ctrl + mouse wheel scroll generates and extra key corresponding to A
+                                // Ctrl + mouse wheel scroll generates an extra key corresponding to A
                                 // for some reason
                                 if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
                                     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
@@ -202,32 +202,43 @@ int main() {
                         break;
                     case sf::Event::MouseButtonPressed:
                         if (event.mouseButton.button == sf::Mouse::Button::Left) {
+                            current_entity = nullptr;
+
                             Hitbox tmp_hbox;
                             tmp_hbox.setOffset({static_cast<int>(world_mouse_pos.first), static_cast<int>(world_mouse_pos.second)});
+                            auto player = World::getInstance().getPlayer().lock();
+                            if (player && player->getAbsHitbox().collides(tmp_hbox)) {
+                                current_entity = player;
+                            } else {
+                                for (auto it : World::getInstance().getWorldObjects(current_layer)) {
+                                    if (it->getAbsHitbox().collides(tmp_hbox)) {
+                                        current_entity = it;
+                                        // Only static objects' hitboxes should be adjustable
+                                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
+                                            auto hbox = current_entity->getHitbox();
 
-                            for (auto it : World::getInstance().getWorldObjects(current_layer)) {
-                                if (it->getAbsHitbox().collides(tmp_hbox)) {
-                                    current_entity = it;
-                                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
-                                        auto pos = current_entity->getPosition();
+                                            current_command = std::make_shared<command::Resize>(command::Resize());
+                                            current_command->entity_ = current_entity;
+                                            current_command->before_ = {hbox.width_, hbox.height_};
 
-                                        current_command = std::make_shared<command::Move>(command::Move());
-                                        current_command->entity_ = current_entity;
-                                        current_command->before_ = {pos.x, pos.y};
-
-                                        current_action = Action::MOVE;
-                                    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
-                                        auto hbox = current_entity->getHitbox();
-
-                                        current_command = std::make_shared<command::Resize>(command::Resize());
-                                        current_command->entity_ = current_entity;
-                                        current_command->before_ = {hbox.width_, hbox.height_};
-
-                                        current_action = Action::RESIZE;
+                                            current_action = Action::RESIZE;
+                                        }
+                                        break;
                                     }
-                                    break;
                                 }
-                                current_entity = nullptr;
+                            }
+
+                            if (current_entity) {
+                                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl) &&
+                                   !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
+                                    auto pos = current_entity->getPosition();
+
+                                    current_command = std::make_shared<command::Move>(command::Move());
+                                    current_command->entity_ = current_entity;
+                                    current_command->before_ = {pos.x, pos.y};
+
+                                    current_action = Action::MOVE;
+                                }
                             }
 
                             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LAlt)) {

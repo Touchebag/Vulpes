@@ -55,6 +55,7 @@ class World {
     // For level editor
     // TODO Conditionally compile?
     static std::string getLayerString(Layer layer);
+    std::weak_ptr<Player> getPlayer();
 
   private:
     World() = default;
