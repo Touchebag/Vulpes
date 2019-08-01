@@ -43,6 +43,10 @@ void Render::setView(float x, float y, float width, float height) {
     view_height_ = height;
 }
 
+sf::View Render::getView() {
+    return {{view_x_, view_y_}, {view_width_, view_height_}};
+}
+
 void Render::render(sf::RenderWindow& window) {
     for (int i = 0; i < static_cast<int>(World::Layer::MAX_LAYERS); ++i) {
         renderLayer(window, static_cast<World::Layer>(i));

@@ -322,7 +322,7 @@ int main() {
             renderInst.render(window);
         }
 
-        sf::View old_viewport = window.getView();
+        sf::View old_viewport = renderInst.getView();
         sf::View viewport({VIEW_POS_X, VIEW_POS_Y}, {VIEW_SIZE, VIEW_SIZE});
         window.setView(viewport);
 

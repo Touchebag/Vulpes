@@ -13,6 +13,7 @@ class Render {
     void removeEntity(std::weak_ptr<BaseEntity> entity, World::Layer layer);
 
     void setView(float x, float y, float width, float height);
+    sf::View getView();
 
     static Render& getInstance();
 
