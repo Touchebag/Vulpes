@@ -5,7 +5,9 @@ void MovableEntity::move(double velX, double velY, Transform& trans) {
     vely_ = velY;
     velx_ = velX;
 
-    trans.move(static_cast<int>(velx_), static_cast<int>(vely_));
+    int x = trans.getX();
+    int y = trans.getY();
+    trans.setPosition(static_cast<int>(x + velx_), static_cast<int>(y + vely_));
 }
 
 std::pair<double, double> MovableEntity::getMaximumMovement(double velX, double velY, Hitbox abs_hitbox) {

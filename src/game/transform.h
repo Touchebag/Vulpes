@@ -5,8 +5,6 @@
 class Transform {
 public:
     void setPosition(int x, int y);
-    void move(int x, int y);
-    void move(double x, double y);
 
     int getX();
     int getY();
