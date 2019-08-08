@@ -19,31 +19,35 @@ bool BaseEntity::loadTexture(std::string file_path) {
 }
 
 void BaseEntity::setPosition(int abs_x, int abs_y) {
-    trans_.setPosition(abs_x, abs_y);
+    trans_->setPosition(abs_x, abs_y);
 }
 
 sf::Vector2i BaseEntity::getPosition() {
-    return {trans_.getX(), trans_.getY()};
+    return {trans_->getX(), trans_->getY()};
 }
 
 void BaseEntity::setHitbox(int width, int height) {
-    hitbox_.setHitbox(width, height);
+    hitbox_->setHitbox(width, height);
     sprite_.setOrigin(static_cast<float>(width / 2.0), static_cast<float>(height / 2.0));
     sprite_.setTextureRect(sf::IntRect(0, 0, width, height));
 }
 
-Hitbox BaseEntity::getHitbox() {
-    return hitbox_;
+const Hitbox BaseEntity::getHitbox() {
+    return *hitbox_;
 }
 
 Hitbox BaseEntity::getAbsHitbox() {
     Hitbox abs_hitbox;
-    abs_hitbox.setHitbox(hitbox_.width_, hitbox_.height_);
-    abs_hitbox.setOffset({trans_.getX(), trans_.getY()});
+    abs_hitbox.setHitbox(hitbox_->width_, hitbox_->height_);
+    abs_hitbox.setOffset({trans_->getX(), trans_->getY()});
     return abs_hitbox;
 }
 
 void BaseEntity::loadFromJson(nlohmann::json j) {
+    // TODO Transform and Hitbox should be conditionally initialised here
+    hitbox_ = std::make_shared<Hitbox>();
+    trans_ = std::make_shared<Transform>();
+
     // TODO Error handling
     setPosition(j["position"]["x"].get<int>(),
                 j["position"]["y"].get<int>());
@@ -59,11 +63,11 @@ void BaseEntity::loadFromJson(nlohmann::json j) {
 
 std::optional<nlohmann::json> BaseEntity::outputToJson() {
     nlohmann::json j;
-    j["position"]["x"] = static_cast<int>(trans_.getX());
-    j["position"]["y"] = static_cast<int>(trans_.getY());
+    j["position"]["x"] = static_cast<int>(trans_->getX());
+    j["position"]["y"] = static_cast<int>(trans_->getY());
 
-    j["hitbox"]["width"] = static_cast<int>(hitbox_.width_);
-    j["hitbox"]["height"] = static_cast<int>(hitbox_.height_);
+    j["hitbox"]["width"] = static_cast<int>(hitbox_->width_);
+    j["hitbox"]["height"] = static_cast<int>(hitbox_->height_);
 
     j["sprite"] = texture_name_;
 
@@ -84,12 +88,12 @@ void BaseEntity::update() {
 }
 
 void BaseEntity::render(sf::RenderWindow& window) {
-    sprite_.setPosition(static_cast<float>(trans_.getX()), static_cast<float>(trans_.getY()));
+    sprite_.setPosition(static_cast<float>(trans_->getX()), static_cast<float>(trans_->getY()));
     window.draw(sprite_);
 
     // TODO Move to debug menu
-    // sf::RectangleShape rectangle(sf::Vector2f(hitbox_.right_ - hitbox_.left_, hitbox_.bottom_ - hitbox_.top_));
-    // rectangle.setPosition(trans_.getX() + hitbox_.left_, trans_.getY() + hitbox_.top_);
+    // sf::RectangleShape rectangle(sf::Vector2f(hitbox_->right_ - hitbox_->left_, hitbox_->bottom_ - hitbox_->top_));
+    // rectangle.setPosition(trans_->getX() + hitbox_->left_, trans_->getY() + hitbox_->top_);
     // rectangle.setFillColor(sf::Color(255, 0, 0, 64));
     // window.draw(rectangle);
 }

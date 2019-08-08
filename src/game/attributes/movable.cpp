@@ -1,13 +1,20 @@
 #include "movable.h"
 #include "world.h"
 
-void MovableEntity::move(double velX, double velY, Transform& trans) {
-    vely_ = velY;
-    velx_ = velX;
+MovableEntity::MovableEntity(std::weak_ptr<Transform> trans, std::weak_ptr<Hitbox> hbox) :
+    trans_(trans),
+    hbox_(hbox) {
+}
 
-    int x = trans.getX();
-    int y = trans.getY();
-    trans.setPosition(static_cast<int>(x + velx_), static_cast<int>(y + vely_));
+void MovableEntity::move(double velX, double velY) {
+    if (auto trans = trans_.lock()) {
+        vely_ = velY;
+        velx_ = velX;
+
+        int x = trans->getX();
+        int y = trans->getY();
+        trans->setPosition(x + static_cast<int>(velx_), y + static_cast<int>(vely_));
+    }
 }
 
 std::pair<double, double> MovableEntity::getMaximumMovement(double velX, double velY, Hitbox abs_hitbox) {
@@ -33,4 +40,12 @@ std::pair<double, double> MovableEntity::getMaximumMovement(double velX, double 
     }
 
     return {x, y};
+}
+
+double MovableEntity::getVelX() {
+    return velx_;
+}
+
+double MovableEntity::getVelY() {
+    return vely_;
 }

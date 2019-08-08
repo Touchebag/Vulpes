@@ -5,14 +5,23 @@
 #include "transform.h"
 
 #include <utility>
+#include <memory>
 
 class MovableEntity {
   public:
-    virtual void move(double velX, double velY, Transform& trans) final;
+    MovableEntity(std::weak_ptr<Transform> trans, std::weak_ptr<Hitbox> hbox);
 
-    virtual std::pair<double, double> getMaximumMovement(double velX, double velY, Hitbox abs_hitbox) final;
+    void move(double velX, double velY);
 
-  protected:
+    std::pair<double, double> getMaximumMovement(double velX, double velY, Hitbox abs_hitbox);
+
+    double getVelX();
+    double getVelY();
+
+  private:
     double velx_ = 0.0;
     double vely_ = 0.0;
+
+    std::weak_ptr<Transform> trans_;
+    std::weak_ptr<Hitbox> hbox_;
 };

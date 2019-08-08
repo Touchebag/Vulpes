@@ -13,7 +13,7 @@ std::pair<double, double> Hitbox::getMaximumMovement(double stepX, double stepY,
     double retX = stepX, retY = stepY;
 
     // If X direction was already colliding last step then we are parallel in this direction
-    // I.e. do no change speed
+    // I.e. do not change speed
     if (!collidesX(otherHitbox)) {
         if (stepX > 0) {
             retX -= getRight() + stepX - otherHitbox.getLeft();
