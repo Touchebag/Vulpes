@@ -9,8 +9,8 @@ class Render {
   public:
     void render(sf::RenderWindow& window);
 
-    void addEntity(std::weak_ptr<BaseEntity> entity, World::Layer layer);
-    void removeEntity(std::weak_ptr<BaseEntity> entity, World::Layer layer);
+    void addEntity(std::weak_ptr<RenderableEntity> entity, World::Layer layer);
+    void removeEntity(std::weak_ptr<RenderableEntity> entity, World::Layer layer);
 
     void setView(float x, float y, float width, float height);
     sf::View getView();
@@ -30,5 +30,5 @@ class Render {
 
     Render() = default;
 
-    std::array<std::vector<std::weak_ptr<BaseEntity>>, static_cast<int>(World::Layer::MAX_LAYERS)> layers_;
+    std::array<std::vector<std::weak_ptr<RenderableEntity>>, static_cast<int>(World::Layer::MAX_LAYERS)> layers_;
 };

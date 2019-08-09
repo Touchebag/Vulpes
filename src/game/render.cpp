@@ -53,14 +53,14 @@ void Render::render(sf::RenderWindow& window) {
     }
 }
 
-void Render::addEntity(std::weak_ptr<BaseEntity> entity, World::Layer layer) {
+void Render::addEntity(std::weak_ptr<RenderableEntity> entity, World::Layer layer) {
     layers_[static_cast<int>(layer)].push_back(entity);
 }
 
-void Render::removeEntity(std::weak_ptr<BaseEntity> entity, World::Layer layer) {
+void Render::removeEntity(std::weak_ptr<RenderableEntity> entity, World::Layer layer) {
     auto& layer_list = layers_[static_cast<int>(layer)];
     layer_list.erase(std::remove_if(layer_list.begin(), layer_list.end(),
-                                       [entity] (std::weak_ptr<BaseEntity> list_entity){
+                                       [entity] (std::weak_ptr<RenderableEntity> list_entity){
                                            auto e1 = entity.lock();
                                            auto e2 = list_entity.lock();
                                            if (e1 && e2) {

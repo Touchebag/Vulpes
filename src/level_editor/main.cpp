@@ -101,7 +101,9 @@ int main() {
                     case sf::Event::KeyPressed:
                         switch (event.key.code) {
                             case sf::Keyboard::Enter:
-                                current_entity->loadTexture(input_text.toAnsiString());
+                                if (auto tmp = current_entity->getRenderable().lock()) {
+                                    tmp->loadTexture(input_text.toAnsiString());
+                                }
                                 current_entity->setHitbox(current_entity->getHitbox().width_, current_entity->getHitbox().height_);
 
                                 input_text.clear();
@@ -139,7 +141,9 @@ int main() {
                                 // for some reason
                                 if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
                                     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-                                    entity->loadTexture("box.png");
+                                    if (auto tmp = current_entity->getRenderable().lock()) {
+                                        tmp->loadTexture("box.png");
+                                    }
                                     entity->setHitbox(50, 50);
                                     entity->setPosition(static_cast<int>(world_mouse_pos.first), static_cast<int>(world_mouse_pos.second));
                                     World::getInstance().addEntity(entity, current_layer);

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
 #include <json.hpp>
 
 #include "transform.h"
@@ -8,10 +7,10 @@
 #include "utils/common.h"
 
 #include "attributes/movable.h"
+#include "attributes/renderable.h"
 
 class BaseEntity {
 public:
-    bool loadTexture(std::string file_path);
     virtual void update();
 
     // TODO Move to constructor?
@@ -24,9 +23,11 @@ public:
     virtual void loadFromJson(nlohmann::json j);
     virtual std::optional<nlohmann::json> outputToJson();
 
-    void render(sf::RenderWindow& window);
-
     void setTextureCoords(std::pair<util::Point, util::Point>);
+
+    // TODO Store layer in Transform object?
+    // That way Renderable can handle all interaction with Render
+    std::weak_ptr<RenderableEntity> getRenderable();
 
     virtual ~BaseEntity() {};
 
@@ -34,16 +35,7 @@ protected:
     std::shared_ptr<Transform> trans_;
     std::shared_ptr<Hitbox> hitbox_;
 
-    // Used for mirroring sprites
-    bool facing_right_ = true;
-
     // Attributes
     std::shared_ptr<MovableEntity> movableEntity_ = nullptr;
-
-private:
-    sf::Texture texture_;
-    sf::Sprite sprite_;
-
-    // Needed for level editor
-    std::string texture_name_;
+    std::shared_ptr<RenderableEntity> renderableEntity_ = nullptr;
 };

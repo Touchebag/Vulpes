@@ -1,5 +1,289 @@
 {
-    "player" : {
+    "background": null,
+    "bg1": [
+        {
+            "Renderable": {
+                "scale": 1.0,
+                "texture": "box_bg1.png"
+            },
+            "hitbox": {
+                "height": 50,
+                "width": 300
+            },
+            "position": {
+                "x": 790,
+                "y": 800
+            }
+        }
+    ],
+    "bg2": [
+        {
+            "Renderable": {
+                "scale": 1.0,
+                "texture": "box_bg2.png"
+            },
+            "hitbox": {
+                "height": 100,
+                "width": 300
+            },
+            "position": {
+                "x": 790,
+                "y": 800
+            }
+        }
+    ],
+    "bg3": [
+        {
+            "Renderable": {
+                "scale": 1.0,
+                "texture": "box_bg3.png"
+            },
+            "hitbox": {
+                "height": 200,
+                "width": 400
+            },
+            "position": {
+                "x": 790,
+                "y": 800
+            }
+        }
+    ],
+    "fg1": null,
+    "fg2": null,
+    "fg3": null,
+    "main": [
+        {
+            "Renderable": {
+                "scale": 1.0,
+                "texture": "box.png"
+            },
+            "hitbox": {
+                "height": 73,
+                "width": 2667
+            },
+            "position": {
+                "x": 490,
+                "y": 1800
+            }
+        },
+        {
+            "Renderable": {
+                "scale": 1.0,
+                "texture": "box.png"
+            },
+            "hitbox": {
+                "height": 2650,
+                "width": 100
+            },
+            "position": {
+                "x": 1785,
+                "y": 510
+            }
+        },
+        {
+            "Renderable": {
+                "scale": 1.0,
+                "texture": "box.png"
+            },
+            "hitbox": {
+                "height": 59,
+                "width": 2661
+            },
+            "position": {
+                "x": 505,
+                "y": -782
+            }
+        },
+        {
+            "Renderable": {
+                "scale": 1.0,
+                "texture": "box.png"
+            },
+            "hitbox": {
+                "height": 2583,
+                "width": 111
+            },
+            "position": {
+                "x": -790,
+                "y": 480
+            }
+        },
+        {
+            "Renderable": {
+                "scale": 1.0,
+                "texture": "box.png"
+            },
+            "hitbox": {
+                "height": 1595,
+                "width": 55
+            },
+            "position": {
+                "x": 1431,
+                "y": 758
+            }
+        },
+        {
+            "Renderable": {
+                "scale": 1.0,
+                "texture": "box.png"
+            },
+            "hitbox": {
+                "height": 44,
+                "width": 505
+            },
+            "position": {
+                "x": 1205,
+                "y": -20
+            }
+        },
+        {
+            "Renderable": {
+                "scale": 1.0,
+                "texture": "box.png"
+            },
+            "hitbox": {
+                "height": 440,
+                "width": 56
+            },
+            "position": {
+                "x": 1140,
+                "y": -547
+            }
+        },
+        {
+            "Renderable": {
+                "scale": 1.0,
+                "texture": "box.png"
+            },
+            "hitbox": {
+                "height": 1194,
+                "width": 60
+            },
+            "position": {
+                "x": 610,
+                "y": -149
+            }
+        },
+        {
+            "Renderable": {
+                "scale": 1.0,
+                "texture": "box.png"
+            },
+            "hitbox": {
+                "height": 1120,
+                "width": 60
+            },
+            "position": {
+                "x": 978,
+                "y": 522
+            }
+        },
+        {
+            "Renderable": {
+                "scale": 1.0,
+                "texture": "box.png"
+            },
+            "hitbox": {
+                "height": 1194,
+                "width": 60
+            },
+            "position": {
+                "x": 235,
+                "y": 490
+            }
+        },
+        {
+            "Renderable": {
+                "scale": 1.0,
+                "texture": "box.png"
+            },
+            "hitbox": {
+                "height": 65,
+                "width": 655
+            },
+            "position": {
+                "x": -425,
+                "y": 210
+            }
+        },
+        {
+            "Renderable": {
+                "scale": 1.0,
+                "texture": "box.png"
+            },
+            "hitbox": {
+                "height": 65,
+                "width": 655
+            },
+            "position": {
+                "x": -104,
+                "y": -77
+            }
+        },
+        {
+            "Renderable": {
+                "scale": 1.0,
+                "texture": "box.png"
+            },
+            "hitbox": {
+                "height": 65,
+                "width": 655
+            },
+            "position": {
+                "x": -81,
+                "y": 454
+            }
+        },
+        {
+            "Renderable": {
+                "scale": 1.0,
+                "texture": "box.png"
+            },
+            "hitbox": {
+                "height": 65,
+                "width": 655
+            },
+            "position": {
+                "x": -480,
+                "y": 731
+            }
+        },
+        {
+            "Renderable": {
+                "scale": 1.0,
+                "texture": "box.png"
+            },
+            "hitbox": {
+                "height": 65,
+                "width": 655
+            },
+            "position": {
+                "x": -89,
+                "y": 986
+            }
+        },
+        {
+            "Renderable": {
+                "scale": 1.0,
+                "texture": "box.png"
+            },
+            "hitbox": {
+                "height": 62,
+                "width": 1294
+            },
+            "position": {
+                "x": 154,
+                "y": 1529
+            }
+        }
+    ],
+    "main_bg": null,
+    "main_fg": null,
+    "player": {
+        "Renderable": {
+            "scale": 0.4,
+            "texture": "Player.png"
+        },
         "hitbox": {
             "height": 200,
             "width": 50
@@ -8,224 +292,6 @@
             "x": 350,
             "y": 1300
         },
-        "sprite": "Player.png",
         "sprite_map": "Player.txt"
-    },
-    "main": [
-        {
-            "hitbox": {
-                "height": 73,
-                "width": 2667
-            },
-            "position": {
-                "x": 490,
-                "y": 1800
-            },
-            "sprite": "box.png"
-        },
-        {
-            "hitbox": {
-                "height": 2650,
-                "width": 100
-            },
-            "position": {
-                "x": 1785,
-                "y": 510
-            },
-            "sprite": "box.png"
-        },
-        {
-            "hitbox": {
-                "height": 59,
-                "width": 2661
-            },
-            "position": {
-                "x": 505,
-                "y": -782
-            },
-            "sprite": "box.png"
-        },
-        {
-            "hitbox": {
-                "height": 2583,
-                "width": 111
-            },
-            "position": {
-                "x": -790,
-                "y": 480
-            },
-            "sprite": "box.png"
-        },
-        {
-            "hitbox": {
-                "height": 1595,
-                "width": 55
-            },
-            "position": {
-                "x": 1431,
-                "y": 758
-            },
-            "sprite": "box.png"
-        },
-        {
-            "hitbox": {
-                "height": 44,
-                "width": 505
-            },
-            "position": {
-                "x": 1205,
-                "y": -20
-            },
-            "sprite": "box.png"
-        },
-        {
-            "hitbox": {
-                "height": 440,
-                "width": 56
-            },
-            "position": {
-                "x": 1140,
-                "y": -547
-            },
-            "sprite": "box.png"
-        },
-        {
-            "hitbox": {
-                "height": 1194,
-                "width": 60
-            },
-            "position": {
-                "x": 610,
-                "y": -149
-            },
-            "sprite": "box.png"
-        },
-        {
-            "hitbox": {
-                "height": 1120,
-                "width": 60
-            },
-            "position": {
-                "x": 978,
-                "y": 522
-            },
-            "sprite": "box.png"
-        },
-        {
-            "hitbox": {
-                "height": 1194,
-                "width": 60
-            },
-            "position": {
-                "x": 235,
-                "y": 490
-            },
-            "sprite": "box.png"
-        },
-        {
-            "hitbox": {
-                "height": 65,
-                "width": 655
-            },
-            "position": {
-                "x": -425,
-                "y": 210
-            },
-            "sprite": "box.png"
-        },
-        {
-            "hitbox": {
-                "height": 65,
-                "width": 655
-            },
-            "position": {
-                "x": -104,
-                "y": -77
-            },
-            "sprite": "box.png"
-        },
-        {
-            "hitbox": {
-                "height": 65,
-                "width": 655
-            },
-            "position": {
-                "x": -81,
-                "y": 454
-            },
-            "sprite": "box.png"
-        },
-        {
-            "hitbox": {
-                "height": 65,
-                "width": 655
-            },
-            "position": {
-                "x": -480,
-                "y": 731
-            },
-            "sprite": "box.png"
-        },
-        {
-            "hitbox": {
-                "height": 65,
-                "width": 655
-            },
-            "position": {
-                "x": -89,
-                "y": 986
-            },
-            "sprite": "box.png"
-        },
-        {
-            "hitbox": {
-                "height": 62,
-                "width": 1294
-            },
-            "position": {
-                "x": 154,
-                "y": 1529
-            },
-            "sprite": "box.png"
-        }
-    ],
-    "bg1": [
-        {
-            "hitbox": {
-                "height": 50,
-                "width": 300
-            },
-            "position": {
-                "x": 790,
-                "y": 800
-            },
-            "sprite": "box_bg1.png"
-        }
-    ],
-    "bg2": [
-        {
-            "hitbox": {
-                "height": 100,
-                "width": 300
-            },
-            "position": {
-                "x": 790,
-                "y": 800
-            },
-            "sprite": "box_bg2.png"
-        }
-    ],
-    "bg3": [
-        {
-            "hitbox": {
-                "height": 200,
-                "width": 400
-            },
-            "position": {
-                "x": 790,
-                "y": 800
-            },
-            "sprite": "box_bg3.png"
-        }
-    ]
+    }
 }

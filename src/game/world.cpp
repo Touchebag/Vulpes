@@ -72,7 +72,7 @@ void World::loadWorld(std::string path) {
     player_ = std::make_shared<Player>();
     player_->loadFromJson(j["player"]);
 
-    Render::getInstance().addEntity(player_, Layer::MAIN);
+    Render::getInstance().addEntity(player_->getRenderable(), Layer::MAIN);
 }
 
 void World::loadLayer(nlohmann::json json, Layer layer) {
@@ -125,14 +125,14 @@ void World::saveWorld(std::string file) {
 void World::addEntity(std::shared_ptr<BaseEntity> entity, World::Layer layer) {
     world_objects_[static_cast<int>(layer)].push_back(entity);
 
-    Render::getInstance().addEntity(entity, layer);
+    Render::getInstance().addEntity(entity->getRenderable(), layer);
 }
 
 void World::removeEntity(std::shared_ptr<BaseEntity> entity, World::Layer layer) {
     auto& layer_list = world_objects_[static_cast<int>(layer)];
     layer_list.erase(std::remove(layer_list.begin(), layer_list.end(), entity), layer_list.end());
 
-    Render::getInstance().removeEntity(entity, layer);
+    Render::getInstance().removeEntity(entity->getRenderable(), layer);
 }
 
 std::weak_ptr<Player> World::getPlayer() {

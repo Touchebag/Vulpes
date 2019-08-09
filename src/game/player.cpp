@@ -11,6 +11,8 @@ void Player::update() {
         incomingEvent(state::Event::FRAME_TIMEOUT);
     }
 
+    bool facing_right = renderableEntity_ ? renderableEntity_->facing_right_ : true;
+
     if (movableEntity_) {
         double x = movableEntity_->getVelX();
         double y = movableEntity_->getVelY();
@@ -24,8 +26,8 @@ void Player::update() {
                 }
                 incomingEvent(state::Event::MOVING);
 
-                // When moving left facing_right_ should be false even when speed is zero
-                facing_right_ = x > 0.0;
+                // When moving left facing_right should be false even when speed is zero
+                facing_right = x > 0.0;
             } else if (Input::getInstance().isButtonHeld(input::button::RIGHT)) {
                 if (getStateProperties().touching_ground_) {
                     x = 10.0;
@@ -34,8 +36,8 @@ void Player::update() {
                 }
                 incomingEvent(state::Event::MOVING);
 
-                // When moving right facing_right_ should be true even when speed is zero
-                facing_right_ = x >= 0.0;
+                // When moving right facing_right should be true even when speed is zero
+                facing_right = x >= 0.0;
             } else {
                 if (getStateProperties().touching_ground_) {
                     x /= 5.0;
@@ -55,7 +57,7 @@ void Player::update() {
 
         if (Input::getInstance().isButtonPressed(input::button::DASH)) {
             if (getStateProperties().can_dash_) {
-                x = 50.0 * (facing_right_ ? 1.0 : -1.0);
+                x = 50.0 * (facing_right ? 1.0 : -1.0);
                 y = 0.0;
                 incomingEvent(state::Event::DASHING);
             }
@@ -63,8 +65,8 @@ void Player::update() {
 
         if (Input::getInstance().isButtonPressed(input::button::JUMP)) {
             if (getStateProperties().touching_wall_) {
-                facing_right_ = !facing_right_;
-                int dir = facing_right_ ? 1.0 : -1.0;
+                facing_right = !facing_right;
+                int dir = facing_right ? 1.0 : -1.0;
                 x = 10.0 * dir;
                 y = -20.0;
 
@@ -90,8 +92,13 @@ void Player::update() {
     }
 
     updateState();
-    auto sprite_rect = getSpriteRect(getCurrentSprite());
-    setTextureCoords(sprite_rect);
+
+    if (renderableEntity_) {
+        renderableEntity_->facing_right_ = facing_right;
+
+        auto sprite_rect = getSpriteRect(getCurrentSprite());
+        renderableEntity_->setTextureCoords(sprite_rect.first.x_, sprite_rect.first.y_, sprite_rect.second.x_, sprite_rect.second.y_);
+    }
 }
 
 void Player::loadFromJson(nlohmann::json j) {
@@ -102,7 +109,7 @@ void Player::loadFromJson(nlohmann::json j) {
     loadSpriteMap(j["sprite_map"].get<std::string>());
 
     auto sprite_rect = getSpriteRect(getCurrentSprite());
-    setTextureCoords(sprite_rect);
+    renderableEntity_->setTextureCoords(sprite_rect.first.x_, sprite_rect.first.y_, sprite_rect.second.x_, sprite_rect.second.y_);
 
     incomingEvent(state::Event::START);
 }
