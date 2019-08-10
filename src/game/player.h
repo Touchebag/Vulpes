@@ -5,8 +5,7 @@
 #include "attributes/stateful.h"
 #include "attributes/animated.h"
 
-class Player : public BaseEntity,
-               public StatefulEntity {
+class Player : public BaseEntity {
   public:
     void update() override;
     void loadFromJson(nlohmann::json j) override;

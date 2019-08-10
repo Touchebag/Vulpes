@@ -9,6 +9,7 @@
 #include "attributes/movable.h"
 #include "attributes/renderable.h"
 #include "attributes/animated.h"
+#include "attributes/stateful.h"
 
 class BaseEntity {
 public:
@@ -40,4 +41,5 @@ protected:
     std::shared_ptr<MovableEntity> movableEntity_ = nullptr;
     std::shared_ptr<RenderableEntity> renderableEntity_ = nullptr;
     std::shared_ptr<AnimatedEntity> animatedEntity_ = nullptr;
+    std::shared_ptr<StatefulEntity> statefulEntity_ = nullptr;
 };

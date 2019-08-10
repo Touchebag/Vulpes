@@ -319,6 +319,9 @@
             "scale": 0.4000000059604645,
             "texture": "Player.png"
         },
+        "Stateful": {
+            "states": "player_state.json"
+        },
         "hitbox": {
             "height": 200,
             "width": 50

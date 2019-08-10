@@ -4,6 +4,7 @@
 #include <fstream>
 
 std::optional<nlohmann::json> file::loadJson(std::string filepath) {
+    // TODO Move "assets" prefix in here
     try {
         std::ifstream ifs(filepath);
         return nlohmann::json::parse(ifs);
