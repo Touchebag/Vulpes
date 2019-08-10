@@ -280,8 +280,43 @@
     "main_bg": null,
     "main_fg": null,
     "player": {
+        "Animated": {
+            "frame_list": [
+                "Idle0",
+                "Idle0",
+                "Idle0",
+                "Idle1",
+                "Idle1",
+                "Idle1",
+                "Idle2",
+                "Idle2",
+                "Idle2",
+                "Idle3",
+                "Idle3",
+                "Idle3",
+                "Idle4",
+                "Idle4",
+                "Idle4",
+                "Idle5",
+                "Idle5",
+                "Idle5",
+                "Idle6",
+                "Idle6",
+                "Idle6",
+                "Idle7",
+                "Idle7",
+                "Idle7",
+                "Idle8",
+                "Idle8",
+                "Idle8",
+                "Idle9",
+                "Idle9",
+                "Idle9"
+            ],
+            "sprite_map": "Player.txt"
+        },
         "Renderable": {
-            "scale": 0.4,
+            "scale": 0.4000000059604645,
             "texture": "Player.png"
         },
         "hitbox": {
@@ -291,7 +326,6 @@
         "position": {
             "x": 350,
             "y": 1300
-        },
-        "sprite_map": "Player.txt"
+        }
     }
 }

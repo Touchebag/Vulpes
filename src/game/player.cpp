@@ -1,5 +1,6 @@
 #include "player.h"
 #include "input_event.h"
+#include "log.h"
 
 #include <tuple>
 #include <algorithm>
@@ -8,7 +9,7 @@ void Player::update() {
     // Check before decreasing
     // If previous frame was the last one (i.e. ticked down to 0) then trigger event before this frame
     if (frame_counter_-- == 0) {
-        incomingEvent(state::Event::FRAME_TIMEOUT);
+        incomingEvent(state::Event::FRAME_TIMEOUT, animatedEntity_);
     }
 
     bool facing_right = renderableEntity_ ? renderableEntity_->facing_right_ : true;
@@ -24,7 +25,7 @@ void Player::update() {
                 } else {
                     x = std::max(x - 1.0, -10.0);
                 }
-                incomingEvent(state::Event::MOVING);
+                incomingEvent(state::Event::MOVING, animatedEntity_);
 
                 // When moving left facing_right should be false even when speed is zero
                 facing_right = x > 0.0;
@@ -34,7 +35,7 @@ void Player::update() {
                 } else {
                     x = std::min(x + 1.0, 10.0);
                 }
-                incomingEvent(state::Event::MOVING);
+                incomingEvent(state::Event::MOVING, animatedEntity_);
 
                 // When moving right facing_right should be true even when speed is zero
                 facing_right = x >= 0.0;
@@ -42,7 +43,7 @@ void Player::update() {
                 if (getStateProperties().touching_ground_) {
                     x /= 5.0;
                 }
-                incomingEvent(state::Event::NO_MOVEMENT);
+                incomingEvent(state::Event::NO_MOVEMENT, animatedEntity_);
             }
         }
 
@@ -59,7 +60,7 @@ void Player::update() {
             if (getStateProperties().can_dash_) {
                 x = 50.0 * (facing_right ? 1.0 : -1.0);
                 y = 0.0;
-                incomingEvent(state::Event::DASHING);
+                incomingEvent(state::Event::DASHING, animatedEntity_);
             }
         }
 
@@ -70,10 +71,10 @@ void Player::update() {
                 x = 10.0 * dir;
                 y = -20.0;
 
-                incomingEvent(state::Event::JUMPING);
+                incomingEvent(state::Event::JUMPING, animatedEntity_);
             } else if (getStateProperties().can_jump_) {
                 y = -20.0;
-                incomingEvent(state::Event::JUMPING);
+                incomingEvent(state::Event::JUMPING, animatedEntity_);
             }
         }
 
@@ -81,45 +82,30 @@ void Player::update() {
         auto max_movement = movableEntity_->getMaximumMovement(x, y, getAbsHitbox());
 
         if (static_cast<int>(max_movement.second) < y) {
-            incomingEvent(state::Event::TOUCHING_FLOOR);
+            incomingEvent(state::Event::TOUCHING_FLOOR, animatedEntity_);
         } else if (static_cast<int>(max_movement.first) != static_cast<int>(x)) {
-            incomingEvent(state::Event::TOUCHING_WALL);
+            incomingEvent(state::Event::TOUCHING_WALL, animatedEntity_);
         } else if (static_cast<int>(max_movement.second) > 0.0) {
-            incomingEvent(state::Event::FALLING);
+            incomingEvent(state::Event::FALLING, animatedEntity_);
         }
 
         movableEntity_->move(max_movement.first, max_movement.second);
     }
 
-    updateState();
-
     if (renderableEntity_) {
         renderableEntity_->facing_right_ = facing_right;
+    }
 
-        auto sprite_rect = getSpriteRect(getCurrentSprite());
-        renderableEntity_->setTextureCoords(sprite_rect.first.x_, sprite_rect.first.y_, sprite_rect.second.x_, sprite_rect.second.y_);
+    if (animatedEntity_) {
+        animatedEntity_->update();
     }
 }
 
 void Player::loadFromJson(nlohmann::json j) {
     BaseEntity::loadFromJson(j);
 
+    // TODO Move to base constructor
     movableEntity_ = std::make_shared<MovableEntity>(trans_, hitbox_);
 
-    loadSpriteMap(j["sprite_map"].get<std::string>());
-
-    auto sprite_rect = getSpriteRect(getCurrentSprite());
-    renderableEntity_->setTextureCoords(sprite_rect.first.x_, sprite_rect.first.y_, sprite_rect.second.x_, sprite_rect.second.y_);
-
-    incomingEvent(state::Event::START);
-}
-
-std::optional<nlohmann::json> Player::outputToJson() {
-    auto j = BaseEntity::outputToJson();
-
-    if (j) {
-        j.value()["sprite_map"] = sprite_map_;
-    }
-
-    return j;
+    incomingEvent(state::Event::START, animatedEntity_);
 }

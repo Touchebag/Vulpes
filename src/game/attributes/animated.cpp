@@ -3,7 +3,9 @@
 
 #include <fstream>
 
-typedef std::unordered_map<std::string, std::pair<util::Point, util::Point>> point_map;
+AnimatedEntity::AnimatedEntity(std::weak_ptr<RenderableEntity> renderableEntity) :
+    renderableEntity_(renderableEntity) {
+}
 
 void AnimatedEntity::loadSpriteMap(const std::string& path) {
     std::ifstream fs("assets/" + path);
@@ -32,14 +34,56 @@ void AnimatedEntity::loadSpriteMap(const std::string& path) {
         ++it;
         int height = std::stoi(*it);
 
-        sprite_sheet_map_.insert({name, {{x_pos, y_pos}, {width, height}}});
+        sprite_sheet_map_.insert({name, {x_pos, y_pos, width, height}});
     }
 
     sprite_map_ = path;
 }
 
-std::pair<util::Point, util::Point> AnimatedEntity::getSpriteRect(std::string sprite) {
-    // TODO This is origin and size, not two coordinates
-    // Change type to reflect that
+void AnimatedEntity::setFrameList(std::vector<std::string> frame_list) {
+    frame_list_ = frame_list;
+}
+
+util::Rectangle AnimatedEntity::getSpriteRect() {
+    auto sprite = frame_list_.at(current_frame_);
     return sprite_sheet_map_.at(sprite);
 }
+
+void AnimatedEntity::loadFromJson(nlohmann::json j) {
+    sprite_map_ = j["sprite_map"].get<std::string>();
+
+    loadSpriteMap(sprite_map_);
+
+    nlohmann::json frame_names_array = j["frame_list"];
+
+    for (auto it : frame_names_array) {
+        frame_list_.push_back(it.get<std::string>());
+    }
+
+    setRenderTexture();
+}
+
+std::optional<nlohmann::json> AnimatedEntity::outputToJson() {
+    nlohmann::json j;
+
+    j["sprite_map"] = sprite_map_;
+    j["frame_list"] = frame_list_;
+
+    return j;
+}
+
+void AnimatedEntity::update() {
+    if (++current_frame_ >= static_cast<int>(frame_list_.size())) {
+        current_frame_ = 0;
+    }
+
+    setRenderTexture();
+}
+
+void AnimatedEntity::setRenderTexture() {
+    if (auto renderable = renderableEntity_.lock()) {
+        auto sprite_rect = getSpriteRect();
+        renderable->setTextureCoords(sprite_rect.x, sprite_rect.y, sprite_rect.width, sprite_rect.height);
+    }
+}
+

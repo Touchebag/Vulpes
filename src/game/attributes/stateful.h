@@ -1,18 +1,16 @@
 #pragma once
 
 #include "state.h"
+#include "attributes/animated.h"
 
 class StatefulEntity {
   public:
     StatefulEntity();
 
-    virtual void updateState() final;
-
-    virtual void incomingEvent(state::Event event) final;
+    // TODO Make "anim" member
+    virtual void incomingEvent(state::Event event, std::weak_ptr<AnimatedEntity> anim) final;
 
     virtual const state::Properties& getStateProperties() final;
-
-    virtual std::string getCurrentSprite() final;
 
   protected:
     unsigned int frame_counter_;

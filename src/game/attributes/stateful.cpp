@@ -20,21 +20,16 @@ StatefulEntity::StatefulEntity() {
     current_state_ = &(state_list_.at("main"));
 }
 
-void StatefulEntity::updateState() {
-    current_state_->update();
-}
-
-void StatefulEntity::incomingEvent(state::Event event) {
+void StatefulEntity::incomingEvent(state::Event event, std::weak_ptr<AnimatedEntity> anim) {
     std::optional<std::string> new_state = current_state_->incomingEvent(event);
 
     if (new_state) {
         current_state_ = &(state_list_.find(new_state.value())->second);
         frame_counter_ = current_state_->properties_.frame_timer_;
+        if (auto tmp = anim.lock()) {
+            tmp->setFrameList(current_state_->properties_.frame_names_);
+        }
     }
-}
-
-std::string StatefulEntity::getCurrentSprite() {
-    return current_state_->getCurrentSprite();
 }
 
 const state::Properties& StatefulEntity::getStateProperties() {

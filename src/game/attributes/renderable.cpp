@@ -31,6 +31,7 @@ std::optional<nlohmann::json> RenderableEntity::outputToJson() {
     nlohmann::json j;
 
     j["texture"] = texture_name_;
+    // TODO Rounding to some number of digits (2?)
     j["scale"] = scale_;
 
     return {j};

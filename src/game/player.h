@@ -6,10 +6,8 @@
 #include "attributes/animated.h"
 
 class Player : public BaseEntity,
-               public StatefulEntity,
-               public AnimatedEntity {
+               public StatefulEntity {
   public:
     void update() override;
     void loadFromJson(nlohmann::json j) override;
-    std::optional<nlohmann::json> outputToJson() override;
 };

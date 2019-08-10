@@ -48,6 +48,11 @@ void BaseEntity::loadFromJson(nlohmann::json j) {
         renderableEntity_->loadFromJson(j["Renderable"]);
         setHitbox(width, height);
     }
+
+    if (j.contains("Animated")) {
+        animatedEntity_ = std::make_shared<AnimatedEntity>(renderableEntity_);
+        animatedEntity_->loadFromJson(j["Animated"]);
+    }
 }
 
 std::optional<nlohmann::json> BaseEntity::outputToJson() {
@@ -61,6 +66,12 @@ std::optional<nlohmann::json> BaseEntity::outputToJson() {
     if (renderableEntity_) {
         if (auto opt = renderableEntity_->outputToJson()) {
             j["Renderable"] = opt.value();
+        }
+    }
+
+    if (animatedEntity_) {
+        if (auto opt = animatedEntity_->outputToJson()) {
+            j["Animated"] = opt.value();
         }
     }
 

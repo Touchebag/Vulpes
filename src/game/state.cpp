@@ -7,12 +7,6 @@ State::State(state::Properties properties) :
     // TODO check for at least one following state
 }
 
-void State::update() {
-    if (++current_frame_ >= properties_.frame_names_.size()) {
-        current_frame_ = 0;
-    }
-}
-
 State State::loadStateFromJson(nlohmann::json j) {
     state::Properties properties;
 
@@ -69,6 +63,3 @@ std::optional<std::string> State::incomingEvent(state::Event event) {
     }
 }
 
-std::string State::getCurrentSprite() {
-    return properties_.frame_names_.at(current_frame_);
-}
