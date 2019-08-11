@@ -17,7 +17,7 @@ public:
 
     // TODO Move to constructor?
     void setPosition(int abs_x, int abs_y);
-    sf::Vector2i getPosition();
+    util::Point getPosition();
     void setHitbox(int width, int height);
     const Hitbox getHitbox();
     Hitbox getAbsHitbox();

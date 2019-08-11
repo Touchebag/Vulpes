@@ -45,7 +45,7 @@ void World::update() {
     }
 }
 
-sf::Vector2i World::getPlayerPosition() {
+util::Point World::getPlayerPosition() {
     return player_->getPosition();
 }
 

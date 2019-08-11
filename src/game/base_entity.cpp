@@ -8,7 +8,7 @@ void BaseEntity::setPosition(int abs_x, int abs_y) {
     trans_->setPosition(abs_x, abs_y);
 }
 
-sf::Vector2i BaseEntity::getPosition() {
+util::Point BaseEntity::getPosition() {
     return {trans_->getX(), trans_->getY()};
 }
 

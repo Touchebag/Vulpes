@@ -40,7 +40,7 @@ class World {
 
     void update();
 
-    sf::Vector2i getPlayerPosition();
+    util::Point getPlayerPosition();
 
     std::vector<std::shared_ptr<BaseEntity>>& getWorldObjects(Layer layer = Layer::MAIN);
 
