@@ -2,49 +2,49 @@
     "background": null,
     "bg1": [
         {
+            "Hitbox": {
+                "height": 50,
+                "width": 300
+            },
             "Renderable": {
                 "scale": 1.0,
                 "texture": "box_bg1.png"
             },
-            "hitbox": {
-                "height": 50,
-                "width": 300
-            },
-            "position": {
-                "x": 790,
-                "y": 800
+            "Transform": {
+                "pos_x": 790,
+                "pos_y": 800
             }
         }
     ],
     "bg2": [
         {
+            "Hitbox": {
+                "height": 100,
+                "width": 300
+            },
             "Renderable": {
                 "scale": 1.0,
                 "texture": "box_bg2.png"
             },
-            "hitbox": {
-                "height": 100,
-                "width": 300
-            },
-            "position": {
-                "x": 790,
-                "y": 800
+            "Transform": {
+                "pos_x": 790,
+                "pos_y": 800
             }
         }
     ],
     "bg3": [
         {
+            "Hitbox": {
+                "height": 200,
+                "width": 400
+            },
             "Renderable": {
                 "scale": 1.0,
                 "texture": "box_bg3.png"
             },
-            "hitbox": {
-                "height": 200,
-                "width": 400
-            },
-            "position": {
-                "x": 790,
-                "y": 800
+            "Transform": {
+                "pos_x": 790,
+                "pos_y": 800
             }
         }
     ],
@@ -53,227 +53,227 @@
     "fg3": null,
     "main": [
         {
-            "Renderable": {
-                "scale": 1.0,
-                "texture": "box.png"
-            },
-            "hitbox": {
+            "Hitbox": {
                 "height": 73,
                 "width": 2667
             },
-            "position": {
-                "x": 490,
-                "y": 1800
-            }
-        },
-        {
             "Renderable": {
                 "scale": 1.0,
                 "texture": "box.png"
             },
-            "hitbox": {
+            "Transform": {
+                "pos_x": 490,
+                "pos_y": 1800
+            }
+        },
+        {
+            "Hitbox": {
                 "height": 2650,
                 "width": 100
             },
-            "position": {
-                "x": 1785,
-                "y": 510
-            }
-        },
-        {
             "Renderable": {
                 "scale": 1.0,
                 "texture": "box.png"
             },
-            "hitbox": {
+            "Transform": {
+                "pos_x": 1785,
+                "pos_y": 510
+            }
+        },
+        {
+            "Hitbox": {
                 "height": 59,
                 "width": 2661
             },
-            "position": {
-                "x": 505,
-                "y": -782
-            }
-        },
-        {
             "Renderable": {
                 "scale": 1.0,
                 "texture": "box.png"
             },
-            "hitbox": {
+            "Transform": {
+                "pos_x": 505,
+                "pos_y": -782
+            }
+        },
+        {
+            "Hitbox": {
                 "height": 2583,
                 "width": 111
             },
-            "position": {
-                "x": -790,
-                "y": 480
-            }
-        },
-        {
             "Renderable": {
                 "scale": 1.0,
                 "texture": "box.png"
             },
-            "hitbox": {
+            "Transform": {
+                "pos_x": -790,
+                "pos_y": 480
+            }
+        },
+        {
+            "Hitbox": {
                 "height": 1595,
                 "width": 55
             },
-            "position": {
-                "x": 1431,
-                "y": 758
-            }
-        },
-        {
             "Renderable": {
                 "scale": 1.0,
                 "texture": "box.png"
             },
-            "hitbox": {
+            "Transform": {
+                "pos_x": 1431,
+                "pos_y": 758
+            }
+        },
+        {
+            "Hitbox": {
                 "height": 44,
                 "width": 505
             },
-            "position": {
-                "x": 1205,
-                "y": -20
-            }
-        },
-        {
             "Renderable": {
                 "scale": 1.0,
                 "texture": "box.png"
             },
-            "hitbox": {
+            "Transform": {
+                "pos_x": 1205,
+                "pos_y": -20
+            }
+        },
+        {
+            "Hitbox": {
                 "height": 440,
                 "width": 56
             },
-            "position": {
-                "x": 1140,
-                "y": -547
-            }
-        },
-        {
             "Renderable": {
                 "scale": 1.0,
                 "texture": "box.png"
             },
-            "hitbox": {
+            "Transform": {
+                "pos_x": 1140,
+                "pos_y": -547
+            }
+        },
+        {
+            "Hitbox": {
                 "height": 1194,
                 "width": 60
             },
-            "position": {
-                "x": 610,
-                "y": -149
-            }
-        },
-        {
             "Renderable": {
                 "scale": 1.0,
                 "texture": "box.png"
             },
-            "hitbox": {
+            "Transform": {
+                "pos_x": 610,
+                "pos_y": -149
+            }
+        },
+        {
+            "Hitbox": {
                 "height": 1120,
                 "width": 60
             },
-            "position": {
-                "x": 978,
-                "y": 522
-            }
-        },
-        {
             "Renderable": {
                 "scale": 1.0,
                 "texture": "box.png"
             },
-            "hitbox": {
+            "Transform": {
+                "pos_x": 978,
+                "pos_y": 522
+            }
+        },
+        {
+            "Hitbox": {
                 "height": 1194,
                 "width": 60
             },
-            "position": {
-                "x": 235,
-                "y": 490
-            }
-        },
-        {
             "Renderable": {
                 "scale": 1.0,
                 "texture": "box.png"
             },
-            "hitbox": {
+            "Transform": {
+                "pos_x": 235,
+                "pos_y": 490
+            }
+        },
+        {
+            "Hitbox": {
                 "height": 65,
                 "width": 655
             },
-            "position": {
-                "x": -425,
-                "y": 210
-            }
-        },
-        {
             "Renderable": {
                 "scale": 1.0,
                 "texture": "box.png"
             },
-            "hitbox": {
+            "Transform": {
+                "pos_x": -425,
+                "pos_y": 210
+            }
+        },
+        {
+            "Hitbox": {
                 "height": 65,
                 "width": 655
             },
-            "position": {
-                "x": -104,
-                "y": -77
-            }
-        },
-        {
             "Renderable": {
                 "scale": 1.0,
                 "texture": "box.png"
             },
-            "hitbox": {
+            "Transform": {
+                "pos_x": -104,
+                "pos_y": -77
+            }
+        },
+        {
+            "Hitbox": {
                 "height": 65,
                 "width": 655
             },
-            "position": {
-                "x": -81,
-                "y": 454
-            }
-        },
-        {
             "Renderable": {
                 "scale": 1.0,
                 "texture": "box.png"
             },
-            "hitbox": {
+            "Transform": {
+                "pos_x": -81,
+                "pos_y": 454
+            }
+        },
+        {
+            "Hitbox": {
                 "height": 65,
                 "width": 655
             },
-            "position": {
-                "x": -480,
-                "y": 731
-            }
-        },
-        {
             "Renderable": {
                 "scale": 1.0,
                 "texture": "box.png"
             },
-            "hitbox": {
+            "Transform": {
+                "pos_x": -480,
+                "pos_y": 731
+            }
+        },
+        {
+            "Hitbox": {
                 "height": 65,
                 "width": 655
             },
-            "position": {
-                "x": -89,
-                "y": 986
-            }
-        },
-        {
             "Renderable": {
                 "scale": 1.0,
                 "texture": "box.png"
             },
-            "hitbox": {
+            "Transform": {
+                "pos_x": -89,
+                "pos_y": 986
+            }
+        },
+        {
+            "Hitbox": {
                 "height": 62,
                 "width": 1294
             },
-            "position": {
-                "x": 154,
-                "y": 1529
+            "Renderable": {
+                "scale": 1.0,
+                "texture": "box.png"
+            },
+            "Transform": {
+                "pos_x": 154,
+                "pos_y": 1529
             }
         }
     ],
@@ -315,6 +315,10 @@
             ],
             "sprite_map": "Player.txt"
         },
+        "Hitbox": {
+            "height": 200,
+            "width": 50
+        },
         "Renderable": {
             "scale": 0.4000000059604645,
             "texture": "Player.png"
@@ -322,13 +326,9 @@
         "Stateful": {
             "states": "player_state.json"
         },
-        "hitbox": {
-            "height": 200,
-            "width": 50
-        },
-        "position": {
-            "x": 350,
-            "y": 1300
+        "Transform": {
+            "pos_x": 350,
+            "pos_y": 1300
         }
     }
 }

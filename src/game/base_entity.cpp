@@ -5,44 +5,57 @@
 #include <unistd.h>
 
 void BaseEntity::setPosition(int abs_x, int abs_y) {
-    trans_->setPosition(abs_x, abs_y);
+    if (trans_) {
+        trans_->setPosition(abs_x, abs_y);
+    }
 }
 
 util::Point BaseEntity::getPosition() {
-    return {trans_->getX(), trans_->getY()};
+    if (trans_) {
+        return {trans_->getX(), trans_->getY()};
+    }
+
+    return {0, 0};
 }
 
 void BaseEntity::setHitbox(int width, int height) {
-    hitbox_->setHitbox(width, height);
+    if (hitbox_) {
+        hitbox_->setHitbox(width, height);
+    }
 
     if (renderableEntity_) {
         renderableEntity_->setTextureCoords(0, 0, width, height);
     }
 }
 
+// TODO Change level editor commands to store all components
+// and remove this
 const Hitbox BaseEntity::getHitbox() {
     return *hitbox_;
 }
 
+// TODO Remove when change phusics to component
 Hitbox BaseEntity::getAbsHitbox() {
     Hitbox abs_hitbox;
-    abs_hitbox.setHitbox(hitbox_->width_, hitbox_->height_);
-    abs_hitbox.setOffset({trans_->getX(), trans_->getY()});
+
+    if (hitbox_ && trans_) {
+        abs_hitbox.setHitbox(hitbox_->width_, hitbox_->height_);
+        abs_hitbox.setOffset({trans_->getX(), trans_->getY()});
+    }
+
     return abs_hitbox;
 }
 
 void BaseEntity::loadFromJson(nlohmann::json j) {
-    // TODO Transform and Hitbox should be conditionally initialised here
-    hitbox_ = std::make_shared<Hitbox>();
-    trans_ = std::make_shared<Transform>();
-
     // TODO Error handling
-    setPosition(j["position"]["x"].get<int>(),
-                j["position"]["y"].get<int>());
-
     if (j.contains("Hitbox")) {
         hitbox_ = std::make_shared<Hitbox>();
         hitbox_->loadFromJson(j["Hitbox"]);
+    }
+
+    if (j.contains("Transform")) {
+        trans_ = std::make_shared<Transform>();
+        trans_->loadFromJson(j["Transform"]);
     }
 
     if (j.contains("Renderable")) {
@@ -67,12 +80,16 @@ void BaseEntity::loadFromJson(nlohmann::json j) {
 
 std::optional<nlohmann::json> BaseEntity::outputToJson() {
     nlohmann::json j;
-    j["position"]["x"] = static_cast<int>(trans_->getX());
-    j["position"]["y"] = static_cast<int>(trans_->getY());
 
     if (hitbox_) {
         if (auto opt = hitbox_->outputToJson()) {
             j["Hitbox"] = opt.value();
+        }
+    }
+
+    if (trans_) {
+        if (auto opt = trans_->outputToJson()) {
+            j["Transform"] = opt.value();
         }
     }
 

@@ -2,10 +2,10 @@
 
 #include <json.hpp>
 
-#include "transform.h"
 #include "utils/common.h"
 
 #include "attributes/hitbox.h"
+#include "attributes/transform.h"
 #include "attributes/movable.h"
 #include "attributes/renderable.h"
 #include "attributes/animated.h"
@@ -34,9 +34,8 @@ public:
     virtual ~BaseEntity() {};
 
 protected:
-    std::shared_ptr<Transform> trans_;
-
     // Attributes
+    std::shared_ptr<Transform> trans_ = nullptr;
     std::shared_ptr<Hitbox> hitbox_ = nullptr;
     std::shared_ptr<MovableEntity> movableEntity_ = nullptr;
     std::shared_ptr<RenderableEntity> renderableEntity_ = nullptr;
