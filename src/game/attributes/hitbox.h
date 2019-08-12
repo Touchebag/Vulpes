@@ -3,10 +3,15 @@
 #include <tuple>
 
 #include "utils/common.h"
+#include "json.hpp"
 
 class Hitbox {
   public:
     void setHitbox(int width, int height);
+
+    void loadFromJson(nlohmann::json& j);
+
+    std::optional<nlohmann::json> outputToJson();
 
     bool collides(Hitbox& hitbox);
 

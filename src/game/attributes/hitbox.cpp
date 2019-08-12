@@ -5,6 +5,20 @@ void Hitbox::setHitbox(int width, int height) {
     height_ = height;
 }
 
+void Hitbox::loadFromJson(nlohmann::json& j) {
+    width_ = j["width"].get<int>();
+    height_= j["height"].get<int>();
+}
+
+std::optional<nlohmann::json> Hitbox::outputToJson() {
+    nlohmann::json j;
+
+    j["width"] = static_cast<int>(width_);
+    j["height"] = static_cast<int>(height_);
+
+    return {j};
+}
+
 bool Hitbox::collides(Hitbox& hitbox) {
     return collidesX(hitbox) && collidesY(hitbox);
 }

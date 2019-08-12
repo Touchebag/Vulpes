@@ -40,13 +40,18 @@ void BaseEntity::loadFromJson(nlohmann::json j) {
     setPosition(j["position"]["x"].get<int>(),
                 j["position"]["y"].get<int>());
 
-    auto width = j["hitbox"]["width"].get<int>();
-    auto height = j["hitbox"]["height"].get<int>();
+    if (j.contains("Hitbox")) {
+        hitbox_ = std::make_shared<Hitbox>();
+        hitbox_->loadFromJson(j["Hitbox"]);
+    }
 
     if (j.contains("Renderable")) {
         renderableEntity_ = std::make_shared<RenderableEntity>(trans_);
         renderableEntity_->loadFromJson(j["Renderable"]);
-        setHitbox(width, height);
+        // TODO Fix
+        if (hitbox_) {
+            setHitbox(hitbox_->width_, hitbox_->height_);
+        }
     }
 
     if (j.contains("Animated")) {
@@ -65,8 +70,11 @@ std::optional<nlohmann::json> BaseEntity::outputToJson() {
     j["position"]["x"] = static_cast<int>(trans_->getX());
     j["position"]["y"] = static_cast<int>(trans_->getY());
 
-    j["hitbox"]["width"] = static_cast<int>(hitbox_->width_);
-    j["hitbox"]["height"] = static_cast<int>(hitbox_->height_);
+    if (hitbox_) {
+        if (auto opt = hitbox_->outputToJson()) {
+            j["Hitbox"] = opt.value();
+        }
+    }
 
     if (renderableEntity_) {
         if (auto opt = renderableEntity_->outputToJson()) {
