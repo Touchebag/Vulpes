@@ -26,10 +26,10 @@ int main() {
     worldInst.loadWorld("assets/world.json");
 
     Input::getInstance().setKeyboardMap(
-            {{sf::Keyboard::Key::Space, input::button::JUMP},
-            {sf::Keyboard::Key::Left, input::button::LEFT},
-            {sf::Keyboard::Key::Right, input::button::RIGHT},
-            {sf::Keyboard::Key::LShift, input::button::DASH}});
+            {{sf::Keyboard::Key::Space, Actions::Action::JUMP},
+            {sf::Keyboard::Key::Left, Actions::Action::MOVE_LEFT},
+            {sf::Keyboard::Key::Right, Actions::Action::MOVE_RIGHT},
+            {sf::Keyboard::Key::LShift, Actions::Action::DASH}});
 
     frame_time.restart();
 
@@ -45,8 +45,6 @@ int main() {
 
         // If we have rendered more than one physics frame then advance physics
         while (frames.asMilliseconds() >= (MS_PER_FRAME)) {
-            Input::getInstance().update();
-
             sf::Event event;
             while (window.pollEvent(event)) {
                 switch (event.type) {

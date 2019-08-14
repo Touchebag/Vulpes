@@ -6,6 +6,7 @@
 #include <algorithm>
 
 void Player::update() {
+    // TODO Should be part of movable?
     bool facing_right = renderableEntity_ ? renderableEntity_->facing_right_ : true;
 
     if (auto stateEnt = statefulEntity_) {
@@ -13,12 +14,12 @@ void Player::update() {
         // If previous frame was the last one (i.e. ticked down to 0) then trigger event before this frame
         stateEnt->update();
 
-        if (movableEntity_) {
+        if (movableEntity_ && actions_) {
             double x = movableEntity_->getVelX();
             double y = movableEntity_->getVelY();
 
             if (!stateEnt->getStateProperties().movement_locked_x_) {
-                if (Input::getInstance().isButtonHeld(input::button::LEFT)) {
+                if (actions_->getActionState(Actions::Action::MOVE_LEFT)) {
                     if (stateEnt->getStateProperties().touching_ground_) {
                         x = -10.0;
                     } else {
@@ -28,7 +29,7 @@ void Player::update() {
 
                     // When moving left facing_right should be false even when speed is zero
                     facing_right = x > 0.0;
-                } else if (Input::getInstance().isButtonHeld(input::button::RIGHT)) {
+                } else if (actions_->getActionState(Actions::Action::MOVE_RIGHT)) {
                     if (stateEnt->getStateProperties().touching_ground_) {
                         x = 10.0;
                     } else {
@@ -55,7 +56,7 @@ void Player::update() {
                 y = std::min(y, 5.0);
             }
 
-            if (Input::getInstance().isButtonPressed(input::button::DASH)) {
+            if (actions_->getActionState(Actions::Action::DASH, true)) {
                 if (stateEnt->getStateProperties().can_dash_) {
                     x = 50.0 * (facing_right ? 1.0 : -1.0);
                     y = 0.0;
@@ -63,7 +64,7 @@ void Player::update() {
                 }
             }
 
-            if (Input::getInstance().isButtonPressed(input::button::JUMP)) {
+            if (actions_->getActionState(Actions::Action::JUMP, true)) {
                 if (stateEnt->getStateProperties().touching_wall_) {
                     facing_right = !facing_right;
                     int dir = facing_right ? 1.0 : -1.0;
@@ -99,14 +100,23 @@ void Player::update() {
     if (animatedEntity_) {
         animatedEntity_->update();
     }
+
+    if (actions_) {
+        actions_->update();
+    }
 }
 
 void Player::loadFromJson(nlohmann::json j) {
     BaseEntity::loadFromJson(j);
 
+    if (actions_) {
+        Input::getInstance().setActionsInstance(actions_);
+    }
+
     // TODO Move to base constructor
     movableEntity_ = std::make_shared<MovableEntity>(trans_, hitbox_);
 
+    // TODO Move to somehwere relevant
     if (auto stateEnt = statefulEntity_) {
         stateEnt->incomingEvent(state::Event::START);
     }

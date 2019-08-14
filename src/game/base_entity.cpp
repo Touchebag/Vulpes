@@ -76,6 +76,11 @@ void BaseEntity::loadFromJson(nlohmann::json j) {
         statefulEntity_ = std::make_shared<StatefulEntity>(animatedEntity_);
         statefulEntity_->loadFromJson(j["Stateful"]);
     }
+
+    if (j.contains("Actions")) {
+        actions_ = std::make_shared<Actions>();
+        actions_->loadFromJson(j["Actions"]);
+    }
 }
 
 std::optional<nlohmann::json> BaseEntity::outputToJson() {
@@ -108,6 +113,12 @@ std::optional<nlohmann::json> BaseEntity::outputToJson() {
     if (statefulEntity_) {
         if (auto opt = statefulEntity_->outputToJson()) {
             j["Stateful"] = opt.value();
+        }
+    }
+
+    if (actions_) {
+        if (auto opt = actions_->outputToJson()) {
+            j["Actions"] = opt.value();
         }
     }
 

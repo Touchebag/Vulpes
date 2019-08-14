@@ -2,34 +2,25 @@
 
 #include "log.h"
 
-void Input::update() {
-    for (auto &it : current_buttons_) {
-        it.second = false;
-    }
-}
-
 void Input::keyEvent(sf::Keyboard::Key key, bool pressed) {
-    auto it = key_map_.find(key);
+    if (auto a_inst = actions_instance_.lock()) {
+        auto it = key_map_.find(key);
 
-    if (it != key_map_.end()) {
-        if (pressed) {
-            current_buttons_.insert_or_assign(it->second, true);
-        } else {
-            current_buttons_.erase(it->second);
+        if (it != key_map_.end()) {
+            if (pressed) {
+                a_inst->addAction(it->second);
+            } else {
+                a_inst->removeAction(it->second);
+            }
         }
     }
 }
 
-bool Input::isButtonHeld(input::button button) {
-    return (current_buttons_.find(button) != current_buttons_.end());
+void Input::setActionsInstance(std::weak_ptr<Actions> actions) {
+    actions_instance_ = actions;
 }
 
-bool Input::isButtonPressed(input::button button) {
-    auto it = current_buttons_.find(button);
-    return (it != current_buttons_.end() && it->second);
-}
-
-void Input::setKeyboardMap(std::unordered_map<sf::Keyboard::Key, input::button> key_map) {
+void Input::setKeyboardMap(std::unordered_map<sf::Keyboard::Key, Actions::Action> key_map) {
     key_map_ = key_map;
 }
 

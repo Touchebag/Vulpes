@@ -280,6 +280,7 @@
     "main_bg": null,
     "main_fg": null,
     "player": {
+        "Actions": null,
         "Animated": {
             "frame_list": [
                 "Idle0",
