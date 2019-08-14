@@ -8,6 +8,7 @@ set(COMMON_TARGET common)
 set(GAME_TARGET vulpes)
 set(STATE_GRAPH_TARGET state_graph)
 set(LEVEL_EDITOR_TARGET level_editor)
+set(TEST_TARGET tests)
 
 set(CC_OPTIONS -std=c++17 -Wall -Wpedantic -Wconversion -Wold-style-cast -DLOG_LEVEL=3)
 
@@ -17,6 +18,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(BUILD_SHARED_LIBS false)
 find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
 set(SFML_LIBS sfml-graphics sfml-window sfml-system)
+
+# GTest
+find_package(GTest REQUIRED)
 
 # Assets
 file(COPY assets DESTINATION .)
@@ -50,4 +54,12 @@ target_compile_options(${LEVEL_EDITOR_TARGET} PUBLIC ${CC_OPTIONS})
 target_include_directories(${LEVEL_EDITOR_TARGET} PUBLIC src/game/ libs/nlohmann)
 
 target_link_libraries(${LEVEL_EDITOR_TARGET} ${COMMON_TARGET} ${SFML_LIBS})
+
+# Test target
+file(GLOB_RECURSE TEST_SOURCES test/*.cpp test/*.h)
+add_executable(${TEST_TARGET} ${TEST_SOURCES})
+target_compile_options(${TEST_TARGET} PUBLIC ${CC_OPTIONS})
+target_include_directories(${TEST_TARGET} PUBLIC src/game/ libs/nlohmann ${GTEST_INCLUDE_DIRS})
+
+target_link_libraries(${TEST_TARGET} ${COMMON_TARGET} ${SFML_LIBS} ${GTEST_BOTH_LIBRARIES})
 
