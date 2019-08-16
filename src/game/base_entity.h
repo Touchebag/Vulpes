@@ -34,7 +34,7 @@ public:
 
     virtual ~BaseEntity() {};
 
-protected:
+    // TODO Components
     // Attributes
     std::shared_ptr<Transform> trans_ = nullptr;
     std::shared_ptr<Hitbox> hitbox_ = nullptr;

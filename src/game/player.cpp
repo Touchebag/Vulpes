@@ -113,9 +113,6 @@ void Player::loadFromJson(nlohmann::json j) {
         Input::getInstance().setActionsInstance(actions_);
     }
 
-    // TODO Move to base constructor
-    movableEntity_ = std::make_shared<MovableEntity>(trans_, hitbox_);
-
     // TODO Move to somehwere relevant
     if (auto stateEnt = statefulEntity_) {
         stateEnt->incomingEvent(state::Event::START);
