@@ -58,6 +58,11 @@ void BaseEntity::loadFromJson(nlohmann::json j) {
         trans_->loadFromJson(j["Transform"]);
     }
 
+    if (j.contains("Movable")) {
+        movableEntity_ = std::make_shared<MovableEntity>(trans_, hitbox_);
+        movableEntity_->loadFromJson(j["Movable"]);
+    }
+
     if (j.contains("Renderable")) {
         renderableEntity_ = std::make_shared<RenderableEntity>(trans_);
         renderableEntity_->loadFromJson(j["Renderable"]);
@@ -95,6 +100,12 @@ std::optional<nlohmann::json> BaseEntity::outputToJson() {
     if (trans_) {
         if (auto opt = trans_->outputToJson()) {
             j["Transform"] = opt.value();
+        }
+    }
+
+    if (movableEntity_) {
+        if (auto opt = movableEntity_->outputToJson()) {
+            j["Movable"] = opt.value();
         }
     }
 

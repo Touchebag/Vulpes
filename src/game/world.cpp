@@ -49,6 +49,14 @@ util::Point World::getPlayerPosition() {
     return player_->getPosition();
 }
 
+void World::clearCurrentWorld() {
+    for (auto& it : world_objects_) {
+        it.clear();
+    }
+
+    player_ = nullptr;
+}
+
 void World::loadWorldFromFile(std::string path) {
     std::optional<nlohmann::json> j = file::loadJson(path);
 
@@ -66,9 +74,14 @@ void World::loadWorldFromJson(nlohmann::json j) {
         exit(EXIT_FAILURE);
     }
 
+    clearCurrentWorld();
+
     for (int i = 0; i < static_cast<int>(Layer::MAX_LAYERS); ++i) {
         Layer layer = static_cast<Layer>(i);
-        loadLayer(j[getLayerString(layer)], layer);
+        auto layer_string = getLayerString(layer);
+        if (j.contains(layer_string)) {
+            loadLayer(j[layer_string], layer);
+        }
     }
 
     player_ = std::make_shared<Player>();
@@ -115,17 +128,20 @@ nlohmann::json World::saveWorldToJson() {
     nlohmann::json j;
 
     for (int i = 0; i < static_cast<int>(Layer::MAX_LAYERS); ++i) {
-        j[getLayerString(static_cast<Layer>(i))] = jsonifyLayer(static_cast<Layer>(i));
+        auto layer_string = getLayerString(static_cast<Layer>(i));
+        j[layer_string] = jsonifyLayer(static_cast<Layer>(i));
     }
 
-    auto player_json = player_->outputToJson();
+    if (player_) {
+        auto player_json = player_->outputToJson();
 
-    if (!player_json) {
-        LOGE("Failed to store player");
-        return {};
+        if (!player_json) {
+            LOGE("Failed to store player");
+            return {};
+        }
+
+        j["player"] = player_json.value();
     }
-
-    j["player"] = player_json.value();
 
     return j;
 }

@@ -36,6 +36,8 @@ class World {
 
     static World& getInstance();
 
+    void clearCurrentWorld();
+
     void loadWorldFromJson(nlohmann::json j);
     void loadWorldFromFile(std::string file);
 

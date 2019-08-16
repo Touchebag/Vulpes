@@ -13,6 +13,9 @@ class MovableEntity {
 
     void move(double velX, double velY);
 
+    void loadFromJson(nlohmann::json j);
+    std::optional<nlohmann::json> outputToJson();
+
     std::pair<double, double> getMaximumMovement(double velX, double velY, Hitbox abs_hitbox);
 
     double getVelX();
