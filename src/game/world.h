@@ -5,6 +5,7 @@
 
 #include "base_entity.h"
 #include "player.h"
+#include "json.hpp"
 
 class World {
 /* This class is intended to store all world objects like walls.
@@ -35,8 +36,11 @@ class World {
 
     static World& getInstance();
 
-    void loadWorld(std::string file);
-    void saveWorld(std::string file);
+    void loadWorldFromJson(nlohmann::json j);
+    void loadWorldFromFile(std::string file);
+
+    nlohmann::json saveWorldToJson();
+    void saveWorldToFile(std::string file);
 
     void update();
 

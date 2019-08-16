@@ -23,7 +23,7 @@ int main() {
     sf::Time frames;
     sf::Clock frame_time;
 
-    worldInst.loadWorld("assets/world.json");
+    worldInst.loadWorldFromFile("assets/world.json");
 
     Input::getInstance().setKeyboardMap(
             {{sf::Keyboard::Key::Space, Actions::Action::JUMP},

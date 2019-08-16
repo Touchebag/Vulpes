@@ -8,7 +8,7 @@ set(COMMON_TARGET common)
 set(GAME_TARGET vulpes)
 set(STATE_GRAPH_TARGET state_graph)
 set(LEVEL_EDITOR_TARGET level_editor)
-set(TEST_TARGET tests)
+set(TEST_TARGET run_tests)
 
 set(CC_OPTIONS -std=c++17 -Wall -Wpedantic -Wconversion -Wold-style-cast -DLOG_LEVEL=3)
 
@@ -24,6 +24,7 @@ find_package(GTest REQUIRED)
 
 # Assets
 file(COPY assets DESTINATION .)
+file(COPY test/data DESTINATION .)
 
 # Export game files as lib for editors
 file(GLOB_RECURSE COMMON_SOURCES src/game/*.cpp src/game/*.h)
@@ -56,8 +57,8 @@ target_include_directories(${LEVEL_EDITOR_TARGET} PUBLIC src/game/ libs/nlohmann
 target_link_libraries(${LEVEL_EDITOR_TARGET} ${COMMON_TARGET} ${SFML_LIBS})
 
 # Test target
-file(GLOB_RECURSE TEST_SOURCES test/*.cpp test/*.h)
-add_executable(${TEST_TARGET} ${TEST_SOURCES})
+file(GLOB_RECURSE TEST_SOURCES test/src/*.cpp test/src/*.h)
+add_executable(${TEST_TARGET} EXCLUDE_FROM_ALL ${TEST_SOURCES})
 target_compile_options(${TEST_TARGET} PUBLIC ${CC_OPTIONS})
 target_include_directories(${TEST_TARGET} PUBLIC src/game/ libs/nlohmann ${GTEST_INCLUDE_DIRS})
 

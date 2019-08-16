@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "move.cpp"
+#include "move.h"
+#include "hitbox.h"
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

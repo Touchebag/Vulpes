@@ -66,7 +66,7 @@ int main() {
     History history;
     std::shared_ptr<command::Command> current_command;
 
-    World::getInstance().loadWorld("assets/world.json");
+    World::getInstance().loadWorldFromFile("assets/world.json");
 
     float view_pos_x = VIEW_POS_X;
     float view_pos_y = VIEW_POS_Y;
@@ -134,7 +134,7 @@ int main() {
                     case sf::Event::KeyPressed:
                         switch (event.key.code) {
                             case sf::Keyboard::Key::S:
-                                World::getInstance().saveWorld(LEVEL_FILE_PATH);
+                                World::getInstance().saveWorldToFile(LEVEL_FILE_PATH);
                                 break;
                             case sf::Keyboard::Key::A:
                                 // Ctrl + mouse wheel scroll generates an extra key corresponding to A

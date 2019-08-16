@@ -49,16 +49,18 @@ util::Point World::getPlayerPosition() {
     return player_->getPosition();
 }
 
-void World::loadWorld(std::string path) {
-    std::optional<nlohmann::json> json_file = file::loadJson(path);
+void World::loadWorldFromFile(std::string path) {
+    std::optional<nlohmann::json> j = file::loadJson(path);
 
-    if (!json_file) {
+    if (!j) {
         LOGE("Unable to load json from file %s", path.c_str());
         exit(EXIT_FAILURE);
     }
 
-    nlohmann::json j = json_file.value();
+    loadWorldFromJson(j.value());
+}
 
+void World::loadWorldFromJson(nlohmann::json j) {
     if (!j.contains("main")) {
         LOGE("Main not found, exiting");
         exit(EXIT_FAILURE);
@@ -99,7 +101,17 @@ nlohmann::json World::jsonifyLayer(Layer layer) {
     return json_object_list;
 }
 
-void World::saveWorld(std::string file) {
+void World::saveWorldToFile(std::string file) {
+    nlohmann::json j = saveWorldToJson();
+
+    if (file::storeJson(file, j)) {
+        LOGD("World save successfully");
+    } else {
+        LOGE("Failed to save json to file");
+    }
+}
+
+nlohmann::json World::saveWorldToJson() {
     nlohmann::json j;
 
     for (int i = 0; i < static_cast<int>(Layer::MAX_LAYERS); ++i) {
@@ -110,16 +122,12 @@ void World::saveWorld(std::string file) {
 
     if (!player_json) {
         LOGE("Failed to store player");
-        return;
+        return {};
     }
 
     j["player"] = player_json.value();
 
-    if (file::storeJson(file, j)) {
-        LOGD("World save successfully");
-    } else {
-        LOGE("Failed to save json to file");
-    }
+    return j;
 }
 
 void World::addEntity(std::shared_ptr<BaseEntity> entity, World::Layer layer) {
