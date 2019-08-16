@@ -320,6 +320,7 @@
             "height": 200,
             "width": 50
         },
+        "Movable": null,
         "Renderable": {
             "scale": 0.4000000059604645,
             "texture": "Player.png"

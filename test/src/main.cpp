@@ -2,6 +2,7 @@
 
 #include "move.h"
 #include "hitbox.h"
+#include "collision.h"
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

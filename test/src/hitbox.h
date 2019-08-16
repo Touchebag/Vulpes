@@ -1,19 +1,8 @@
 #include <gtest/gtest.h>
 
 #include "attributes/hitbox.h"
-#include "world.h"
 
-class HitboxTestFixture : public ::testing::Test {
-  public:
-    HitboxTestFixture() {
-    }
-
-    void setUp() {
-        World::getInstance().loadWorldFromFile("tests/test_world.json");
-    }
-};
-
-TEST_F(HitboxTestFixture, CollideAtOrigin) {
+TEST(HitboxTests, CollideAtOrigin) {
     Hitbox h1, h2;
 
     h1.setHitbox(10, 20);
@@ -22,7 +11,7 @@ TEST_F(HitboxTestFixture, CollideAtOrigin) {
     EXPECT_TRUE(h1.collides(h2));
 }
 
-TEST_F(HitboxTestFixture, CollideAtOffset) {
+TEST(HitboxTests, CollideAtOffset) {
     Hitbox h1, h2;
 
     h1.setHitbox(10, 20);
@@ -33,7 +22,7 @@ TEST_F(HitboxTestFixture, CollideAtOffset) {
     EXPECT_TRUE(h1.collides(h2));
 }
 
-TEST_F(HitboxTestFixture, NotColliding) {
+TEST(HitboxTests, NotColliding) {
     Hitbox h1, h2;
 
     h1.setHitbox(10, 10);
@@ -44,7 +33,7 @@ TEST_F(HitboxTestFixture, NotColliding) {
     EXPECT_FALSE(h1.collides(h2));
 }
 
-TEST_F(HitboxTestFixture, NotCollidingTouching) {
+TEST(HitboxTests, NotCollidingTouching) {
     Hitbox h1, h2;
 
     h1.setHitbox(10, 10);

@@ -24,7 +24,7 @@ find_package(GTest REQUIRED)
 
 # Assets
 file(COPY assets DESTINATION .)
-file(COPY test/data DESTINATION .)
+file(COPY test/test_data DESTINATION .)
 
 # Export game files as lib for editors
 file(GLOB_RECURSE COMMON_SOURCES src/game/*.cpp src/game/*.h)

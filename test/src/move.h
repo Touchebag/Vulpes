@@ -10,7 +10,7 @@ class MovableTestFixture : public ::testing::Test {
         move_ = std::make_shared<MovableEntity>(trans_, hitbox_);
     }
 
-    void setUp() {
+    void SetUp() {
         trans_->setPosition(0, 0);
     }
 
