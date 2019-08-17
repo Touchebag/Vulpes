@@ -19,10 +19,10 @@ std::optional<nlohmann::json> Transform::outputToJson() {
     return {j};
 }
 
-int Transform::getX() {
+int Transform::getX() const {
     return pos_x_;
 }
 
-int Transform::getY() {
+int Transform::getY() const {
     return pos_y_;
 }

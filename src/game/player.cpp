@@ -79,7 +79,7 @@ void Player::update() {
             }
 
             y = std::max(std::min(y, 20.0), -20.0);
-            auto max_movement = movableEntity_->getMaximumMovement(x, y, getAbsHitbox());
+            auto max_movement = movableEntity_->getMaximumMovement(x, y);
 
             if (static_cast<int>(max_movement.second) < y) {
                 stateEnt->incomingEvent(state::Event::TOUCHING_FLOOR);

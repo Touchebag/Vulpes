@@ -1,12 +1,14 @@
 #include "movable.h"
 #include "world.h"
 
-MovableEntity::MovableEntity(std::weak_ptr<Transform> trans, std::weak_ptr<Hitbox> hbox) :
+MovableEntity::MovableEntity(std::weak_ptr<Transform> trans, std::weak_ptr<Hitbox> hbox, std::weak_ptr<Collision> collision) :
     trans_(trans),
-    hbox_(hbox) {
+    hbox_(hbox),
+    collision_(collision) {
 }
 
 void MovableEntity::move(double velX, double velY) {
+    // TODO Move getMaximumMovement check in here
     if (auto trans = trans_.lock()) {
         vely_ = velY;
         velx_ = velX;
@@ -25,25 +27,20 @@ std::optional<nlohmann::json> MovableEntity::outputToJson() {
     return j;
 }
 
-std::pair<double, double> MovableEntity::getMaximumMovement(double velX, double velY, Hitbox abs_hitbox) {
-    double x = static_cast<double>(velX);
-    double y = static_cast<double>(velY);
+// TODO Store collidables separately in world
+std::pair<double, double> MovableEntity::getMaximumMovement(double velX, double velY) {
+    double x = velX;
+    double y = velY;
 
     World& worldInst = World::getInstance();
+    if (auto coll = collision_.lock()) {
+        for (auto it = worldInst.getWorldObjects().begin(); it != worldInst.getWorldObjects().end(); ++it) {
+            auto other_trans = (*it)->trans_;
+            auto other_hitbox = (*it)->hitbox_;
 
-    Hitbox previous_abs = abs_hitbox;
-    abs_hitbox.moveOffset({x, y});
-
-    for (auto it = worldInst.getWorldObjects().begin(); it != worldInst.getWorldObjects().end(); ++it) {
-        Hitbox other_hitbox = (*it)->getAbsHitbox();
-
-        if (other_hitbox.collides(abs_hitbox)) {
-            std::tuple<double, double> newMoveValues = previous_abs.getMaximumMovement(x, y, other_hitbox);
-            x = std::get<0>(newMoveValues);
-            y = std::get<1>(newMoveValues);
-
-            // Readjust abs_hitbox to new values
-            abs_hitbox.moveOffset({x - static_cast<double>(velx_), y - static_cast<double>(vely_)});
+            std::pair<double, double> newMoveValues = coll->getMaximumMovement(x, y, other_trans, other_hitbox);
+            x = newMoveValues.first;
+            y = newMoveValues.second;
         }
     }
 

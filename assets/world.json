@@ -316,6 +316,7 @@
             ],
             "sprite_map": "Player.txt"
         },
+        "Collision": null,
         "Hitbox": {
             "height": 200,
             "width": 50

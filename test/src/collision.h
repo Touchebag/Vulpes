@@ -24,7 +24,8 @@ class CollisionTestFixture : public ::testing::Test {
         "pos_x": 100,
         "pos_y": 100
     },
-    "Movable": null
+    "Movable": null,
+    "Collision": null
 }
         )--";
 
@@ -34,7 +35,8 @@ class CollisionTestFixture : public ::testing::Test {
 TEST_F(CollisionTestFixture, MoveSingleDirectionNoCollision) {
     World::getInstance().addEntity(entity_, World::Layer::MAIN);
 
-    auto max_mvmnt = entity_->movableEntity_->getMaximumMovement(10, 0, entity_->getAbsHitbox());
+    auto max_mvmnt = entity_->movableEntity_->getMaximumMovement(10, 0);
+
     entity_->movableEntity_->move(max_mvmnt.first, max_mvmnt.second);
     auto pos_x = entity_->trans_->getX();
     auto pos_y = entity_->trans_->getY();
@@ -46,7 +48,7 @@ TEST_F(CollisionTestFixture, MoveSingleDirectionNoCollision) {
 TEST_F(CollisionTestFixture, MoveSingleDirectionCollision) {
     World::getInstance().addEntity(entity_, World::Layer::MAIN);
 
-    auto max_mvmnt = entity_->movableEntity_->getMaximumMovement(60, 0, entity_->getAbsHitbox());
+    auto max_mvmnt = entity_->movableEntity_->getMaximumMovement(60, 0);
     entity_->movableEntity_->move(max_mvmnt.first, max_mvmnt.second);
     auto pos_x = entity_->trans_->getX();
     auto pos_y = entity_->trans_->getY();
@@ -58,7 +60,7 @@ TEST_F(CollisionTestFixture, MoveSingleDirectionCollision) {
 TEST_F(CollisionTestFixture, MoveSingleDirectionNegativeCollision) {
     World::getInstance().addEntity(entity_, World::Layer::MAIN);
 
-    auto max_mvmnt = entity_->movableEntity_->getMaximumMovement(0, -70, entity_->getAbsHitbox());
+    auto max_mvmnt = entity_->movableEntity_->getMaximumMovement(0, -70);
     entity_->movableEntity_->move(max_mvmnt.first, max_mvmnt.second);
     auto pos_x = entity_->trans_->getX();
     auto pos_y = entity_->trans_->getY();
@@ -70,7 +72,7 @@ TEST_F(CollisionTestFixture, MoveSingleDirectionNegativeCollision) {
 TEST_F(CollisionTestFixture, MoveMultipleDirectionCollisionInOne) {
     World::getInstance().addEntity(entity_, World::Layer::MAIN);
 
-    auto max_mvmnt = entity_->movableEntity_->getMaximumMovement(80, 20, entity_->getAbsHitbox());
+    auto max_mvmnt = entity_->movableEntity_->getMaximumMovement(80, 20);
     entity_->movableEntity_->move(max_mvmnt.first, max_mvmnt.second);
     auto pos_x = entity_->trans_->getX();
     auto pos_y = entity_->trans_->getY();

@@ -34,18 +34,6 @@ const Hitbox BaseEntity::getHitbox() {
     return *hitbox_;
 }
 
-// TODO Remove when change phusics to component
-Hitbox BaseEntity::getAbsHitbox() {
-    Hitbox abs_hitbox;
-
-    if (hitbox_ && trans_) {
-        abs_hitbox.setHitbox(hitbox_->width_, hitbox_->height_);
-        abs_hitbox.setOffset({trans_->getX(), trans_->getY()});
-    }
-
-    return abs_hitbox;
-}
-
 void BaseEntity::loadFromJson(nlohmann::json j) {
     // TODO Error handling
     if (j.contains("Hitbox")) {
@@ -58,8 +46,13 @@ void BaseEntity::loadFromJson(nlohmann::json j) {
         trans_->loadFromJson(j["Transform"]);
     }
 
+    if (j.contains("Collision")) {
+        collision_ = std::make_shared<Collision>(trans_, hitbox_);
+        collision_->loadFromJson(j["Collision"]);
+    }
+
     if (j.contains("Movable")) {
-        movableEntity_ = std::make_shared<MovableEntity>(trans_, hitbox_);
+        movableEntity_ = std::make_shared<MovableEntity>(trans_, hitbox_, collision_);
         movableEntity_->loadFromJson(j["Movable"]);
     }
 
@@ -103,6 +96,12 @@ std::optional<nlohmann::json> BaseEntity::outputToJson() {
         }
     }
 
+    if (collision_) {
+        if (auto opt = collision_->outputToJson()) {
+            j["Collision"] = opt.value();
+        }
+    }
+
     if (movableEntity_) {
         if (auto opt = movableEntity_->outputToJson()) {
             j["Movable"] = opt.value();
@@ -134,10 +133,6 @@ std::optional<nlohmann::json> BaseEntity::outputToJson() {
     }
 
     return {j};
-}
-
-std::weak_ptr<RenderableEntity> BaseEntity::getRenderable() {
-    return renderableEntity_;
 }
 
 void BaseEntity::update() {

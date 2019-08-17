@@ -11,8 +11,8 @@ public:
     void loadFromJson(nlohmann::json j);
     std::optional<nlohmann::json> outputToJson();
 
-    int getX();
-    int getY();
+    int getX() const;
+    int getY() const;
 
 private:
     int pos_x_ = 0;

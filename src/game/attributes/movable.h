@@ -1,22 +1,23 @@
 #pragma once
 
 #include "utils/common.h"
-#include "hitbox.h"
-#include "transform.h"
+#include "attributes/hitbox.h"
+#include "attributes/transform.h"
+#include "attributes/collision.h"
 
 #include <utility>
 #include <memory>
 
 class MovableEntity {
   public:
-    MovableEntity(std::weak_ptr<Transform> trans, std::weak_ptr<Hitbox> hbox);
+    MovableEntity(std::weak_ptr<Transform> trans, std::weak_ptr<Hitbox> hbox, std::weak_ptr<Collision> collision);
 
     void move(double velX, double velY);
 
     void loadFromJson(nlohmann::json j);
     std::optional<nlohmann::json> outputToJson();
 
-    std::pair<double, double> getMaximumMovement(double velX, double velY, Hitbox abs_hitbox);
+    std::pair<double, double> getMaximumMovement(double velX, double velY);
 
     double getVelX();
     double getVelY();
@@ -27,4 +28,5 @@ class MovableEntity {
 
     std::weak_ptr<Transform> trans_;
     std::weak_ptr<Hitbox> hbox_;
+    std::weak_ptr<Collision> collision_;
 };

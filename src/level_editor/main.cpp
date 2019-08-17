@@ -101,7 +101,7 @@ int main() {
                     case sf::Event::KeyPressed:
                         switch (event.key.code) {
                             case sf::Keyboard::Enter:
-                                if (auto tmp = current_entity->getRenderable().lock()) {
+                                if (auto tmp = current_entity->renderableEntity_) {
                                     tmp->loadTexture(input_text.toAnsiString());
                                 }
                                 current_entity->setHitbox(current_entity->getHitbox().width_, current_entity->getHitbox().height_);
@@ -141,7 +141,7 @@ int main() {
                                 // for some reason
                                 if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
                                     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-                                    if (auto tmp = current_entity->getRenderable().lock()) {
+                                    if (auto tmp = current_entity->renderableEntity_) {
                                         tmp->loadTexture("box.png");
                                     }
                                     entity->setHitbox(50, 50);
@@ -215,14 +215,14 @@ int main() {
 
                             current_entity = nullptr;
 
-                            Hitbox tmp_hbox;
-                            tmp_hbox.setOffset({static_cast<int>(world_mouse_pos.first), static_cast<int>(world_mouse_pos.second)});
+                            std::shared_ptr<Transform> tmp_trans = std::make_shared<Transform>();
+                            tmp_trans->setPosition(static_cast<int>(world_mouse_pos.first), static_cast<int>(world_mouse_pos.second));
                             auto player = World::getInstance().getPlayer().lock();
-                            if (player && player->getAbsHitbox().collides(tmp_hbox)) {
+                            if (player && player->collision_ && player->collision_->collides(tmp_trans, std::make_shared<Hitbox>())) {
                                 current_entity = player;
                             } else {
                                 for (auto it : World::getInstance().getWorldObjects(current_layer)) {
-                                    if (it->getAbsHitbox().collides(tmp_hbox)) {
+                                    if (it->collision_ && it->collision_->collides(tmp_trans, std::make_shared<Hitbox>())) {
                                         current_entity = it;
                                         // Only static objects' hitboxes should be adjustable
                                         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
