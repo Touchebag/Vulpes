@@ -12,6 +12,7 @@
 #include "attributes/stateful.h"
 #include "attributes/actions.h"
 #include "attributes/collision.h"
+#include "attributes/physics.h"
 
 class BaseEntity {
 public:
@@ -40,4 +41,5 @@ public:
     std::shared_ptr<AnimatedEntity> animatedEntity_ = nullptr;
     std::shared_ptr<StatefulEntity> statefulEntity_ = nullptr;
     std::shared_ptr<Actions> actions_ = nullptr;
+    std::shared_ptr<Physics> physics_ = nullptr;
 };

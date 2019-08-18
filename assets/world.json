@@ -322,6 +322,7 @@
             "width": 50
         },
         "Movable": null,
+        "Physics": null,
         "Renderable": {
             "scale": 0.4000000059604645,
             "texture": "Player.png"

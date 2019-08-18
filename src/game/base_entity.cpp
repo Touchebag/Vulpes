@@ -79,6 +79,11 @@ void BaseEntity::loadFromJson(nlohmann::json j) {
         actions_ = std::make_shared<Actions>();
         actions_->loadFromJson(j["Actions"]);
     }
+
+    if (j.contains("Physics")) {
+        physics_ = std::make_shared<Physics>(statefulEntity_, renderableEntity_, movableEntity_, animatedEntity_, actions_, collision_);
+        physics_->loadFromJson(j["Physics"]);
+    }
 }
 
 std::optional<nlohmann::json> BaseEntity::outputToJson() {
@@ -132,9 +137,32 @@ std::optional<nlohmann::json> BaseEntity::outputToJson() {
         }
     }
 
+    if (physics_) {
+        if (auto opt = physics_->outputToJson()) {
+            j["Physics"] = opt.value();
+        }
+    }
+
     return {j};
 }
 
 void BaseEntity::update() {
+    // Check before decreasing
+    // If previous frame was the last one (i.e. ticked down to 0) then trigger event before this frame
+    if (statefulEntity_) {
+        statefulEntity_->update();
+    }
+
+    if (physics_) {
+        physics_->update();
+    }
+
+    if (animatedEntity_) {
+        animatedEntity_->update();
+    }
+
+    if (actions_) {
+        actions_->update();
+    }
 }
 
