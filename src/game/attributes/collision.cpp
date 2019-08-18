@@ -47,12 +47,20 @@ std::optional<nlohmann::json> Collision::outputToJson() {
     return j;
 }
 
-bool Collision::collides(std::shared_ptr<Transform> other_trans, std::shared_ptr<Hitbox> other_hbox) {
-    auto this_trans = trans_.lock();
-    auto this_hbox = hbox_.lock();
+bool Collision::collides(std::weak_ptr<Collision> other_entity) {
+    if (auto other_ent = other_entity.lock()) {
+        auto this_trans = trans_.lock();
+        auto this_hbox = hbox_.lock();
+        auto other_trans = other_ent->trans_.lock();
+        auto other_hbox = other_ent->hbox_.lock();
 
-    return collidesX(this_trans, this_hbox, other_trans, other_hbox)
-        && collidesY(this_trans, this_hbox, other_trans, other_hbox);
+        if (this_trans && this_hbox && other_trans && other_hbox) {
+            return collidesX(this_trans, this_hbox, other_trans, other_hbox)
+                && collidesY(this_trans, this_hbox, other_trans, other_hbox);
+        }
+    }
+
+    return false;
 }
 
 std::pair<double, double> Collision::getMaximumMovement(double stepX, double stepY, std::shared_ptr<Transform> other_trans, std::shared_ptr<Hitbox> other_hbox) {

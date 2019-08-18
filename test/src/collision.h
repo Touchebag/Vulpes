@@ -3,9 +3,9 @@
 #include "attributes/hitbox.h"
 #include "attributes/transform.h"
 
-class CollisionTestFixture : public ::testing::Test {
+class DynamicCollisionTestFixture : public ::testing::Test {
   public:
-    CollisionTestFixture() {
+    DynamicCollisionTestFixture() {
         entity_ = std::make_shared<BaseEntity>();
         entity_->loadFromJson(nlohmann::json::parse(entity_json_));
     }
@@ -32,7 +32,7 @@ class CollisionTestFixture : public ::testing::Test {
     std::shared_ptr<BaseEntity> entity_;
 };
 
-TEST_F(CollisionTestFixture, MoveSingleDirectionNoCollision) {
+TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionNoCollision) {
     World::getInstance().addEntity(entity_, World::Layer::MAIN);
 
     auto max_mvmnt = entity_->movableEntity_->getMaximumMovement(10, 0);
@@ -45,7 +45,7 @@ TEST_F(CollisionTestFixture, MoveSingleDirectionNoCollision) {
     EXPECT_EQ(100, pos_y);
 }
 
-TEST_F(CollisionTestFixture, MoveSingleDirectionCollision) {
+TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionCollision) {
     World::getInstance().addEntity(entity_, World::Layer::MAIN);
 
     auto max_mvmnt = entity_->movableEntity_->getMaximumMovement(60, 0);
@@ -57,7 +57,7 @@ TEST_F(CollisionTestFixture, MoveSingleDirectionCollision) {
     EXPECT_EQ(100, pos_y);
 }
 
-TEST_F(CollisionTestFixture, MoveSingleDirectionNegativeCollision) {
+TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionNegativeCollision) {
     World::getInstance().addEntity(entity_, World::Layer::MAIN);
 
     auto max_mvmnt = entity_->movableEntity_->getMaximumMovement(0, -70);
@@ -69,7 +69,7 @@ TEST_F(CollisionTestFixture, MoveSingleDirectionNegativeCollision) {
     EXPECT_EQ(50, pos_y);
 }
 
-TEST_F(CollisionTestFixture, MoveMultipleDirectionCollisionInOne) {
+TEST_F(DynamicCollisionTestFixture, MoveMultipleDirectionCollisionInOne) {
     World::getInstance().addEntity(entity_, World::Layer::MAIN);
 
     auto max_mvmnt = entity_->movableEntity_->getMaximumMovement(80, 20);

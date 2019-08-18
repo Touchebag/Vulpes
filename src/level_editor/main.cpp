@@ -217,12 +217,14 @@ int main() {
 
                             std::shared_ptr<Transform> tmp_trans = std::make_shared<Transform>();
                             tmp_trans->setPosition(static_cast<int>(world_mouse_pos.first), static_cast<int>(world_mouse_pos.second));
+                            std::shared_ptr<Hitbox> tmp_hbox = std::make_shared<Hitbox>();
+                            std::shared_ptr<Collision> tmp_coll = std::make_shared<Collision>(tmp_trans, tmp_hbox);
                             auto player = World::getInstance().getPlayer().lock();
-                            if (player && player->collision_ && player->collision_->collides(tmp_trans, std::make_shared<Hitbox>())) {
+                            if (player && player->collision_ && player->collision_->collides(tmp_coll)) {
                                 current_entity = player;
                             } else {
                                 for (auto it : World::getInstance().getWorldObjects(current_layer)) {
-                                    if (it->collision_ && it->collision_->collides(tmp_trans, std::make_shared<Hitbox>())) {
+                                    if (it->collision_ && it->collision_->collides(tmp_coll)) {
                                         current_entity = it;
                                         // Only static objects' hitboxes should be adjustable
                                         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
