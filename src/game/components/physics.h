@@ -3,12 +3,12 @@
 #include <memory>
 #include <json.hpp>
 
-#include "attributes/stateful.h"
-#include "attributes/renderable.h"
-#include "attributes/actions.h"
-#include "attributes/animated.h"
-#include "attributes/movable.h"
-#include "attributes/collision.h"
+#include "components/stateful.h"
+#include "components/rendering.h"
+#include "components/actions.h"
+#include "components/animation.h"
+#include "components/movement.h"
+#include "components/collision.h"
 
 class Physics {
   public:

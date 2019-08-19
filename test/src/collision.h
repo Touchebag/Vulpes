@@ -1,7 +1,7 @@
 #include "world.h"
 
-#include "attributes/hitbox.h"
-#include "attributes/transform.h"
+#include "components/hitbox.h"
+#include "components/transform.h"
 
 class DynamicCollisionTestFixture : public ::testing::Test {
   public:

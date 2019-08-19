@@ -1,4 +1,4 @@
-#include "attributes/renderable.h"
+#include "components/rendering.h"
 #include "log.h"
 
 RenderableEntity::RenderableEntity(std::weak_ptr<Transform> trans) :

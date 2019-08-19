@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "attributes/hitbox.h"
+#include "components/hitbox.h"
 
 class StaticCollisionTestFixture : public ::testing::Test {
   public:

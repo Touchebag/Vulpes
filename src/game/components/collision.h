@@ -2,8 +2,8 @@
 
 #include <memory>
 
-#include "attributes/transform.h"
-#include "attributes/hitbox.h"
+#include "components/transform.h"
+#include "components/hitbox.h"
 
 class Collision {
   public:

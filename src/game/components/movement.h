@@ -1,9 +1,9 @@
 #pragma once
 
 #include "utils/common.h"
-#include "attributes/hitbox.h"
-#include "attributes/transform.h"
-#include "attributes/collision.h"
+#include "components/hitbox.h"
+#include "components/transform.h"
+#include "components/collision.h"
 
 #include <utility>
 #include <memory>

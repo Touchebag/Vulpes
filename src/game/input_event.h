@@ -4,7 +4,7 @@
 #include <memory>
 #include <SFML/Window.hpp>
 
-#include "attributes/actions.h"
+#include "components/actions.h"
 
 class Input {
   public:

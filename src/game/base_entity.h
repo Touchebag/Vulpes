@@ -4,15 +4,15 @@
 
 #include "utils/common.h"
 
-#include "attributes/hitbox.h"
-#include "attributes/transform.h"
-#include "attributes/movable.h"
-#include "attributes/renderable.h"
-#include "attributes/animated.h"
-#include "attributes/stateful.h"
-#include "attributes/actions.h"
-#include "attributes/collision.h"
-#include "attributes/physics.h"
+#include "components/hitbox.h"
+#include "components/transform.h"
+#include "components/movement.h"
+#include "components/rendering.h"
+#include "components/animation.h"
+#include "components/stateful.h"
+#include "components/actions.h"
+#include "components/collision.h"
+#include "components/physics.h"
 
 class BaseEntity {
 public:

@@ -3,7 +3,7 @@
 #include <json.hpp>
 
 #include "state.h"
-#include "attributes/animated.h"
+#include "components/animation.h"
 
 class StatefulEntity {
   public:

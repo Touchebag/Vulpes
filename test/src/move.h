@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "attributes/movable.h"
+#include "components/movement.h"
 
 class MovableTestFixture : public ::testing::Test {
   public:

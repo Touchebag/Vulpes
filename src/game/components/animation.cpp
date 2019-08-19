@@ -1,4 +1,4 @@
-#include "animated.h"
+#include "animation.h"
 #include "log.h"
 
 #include <fstream>

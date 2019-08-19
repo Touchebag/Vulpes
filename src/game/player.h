@@ -1,9 +1,9 @@
 #pragma once
 
 #include "base_entity.h"
-#include "attributes/movable.h"
-#include "attributes/stateful.h"
-#include "attributes/animated.h"
+#include "components/movement.h"
+#include "components/stateful.h"
+#include "components/animation.h"
 
 class Player : public BaseEntity {
   public:
