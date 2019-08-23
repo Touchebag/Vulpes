@@ -141,7 +141,16 @@ int main() {
                                 // for some reason
                                 if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
                                     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-                                    if (auto tmp = current_entity->renderableEntity_) {
+
+                                    std::shared_ptr<Hitbox> hitbox = std::make_shared<Hitbox>();
+                                    std::shared_ptr<Transform> trans = std::make_shared<Transform>();
+                                    std::shared_ptr<RenderableEntity> render = std::make_shared<RenderableEntity>(trans);
+
+                                    entity->hitbox_ = hitbox;
+                                    entity->trans_ = trans;
+                                    entity->renderableEntity_ = render;
+
+                                    if (auto tmp = entity->renderableEntity_) {
                                         tmp->loadTexture("box.png");
                                     }
                                     entity->setHitbox(50, 50);

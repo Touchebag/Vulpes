@@ -27,6 +27,7 @@ class StatefulEntity {
 
     std::weak_ptr<AnimatedEntity> animatedEntity_;
 
+    // TODO Make smart pointer
     State* current_state_;
     std::unordered_map<std::string, State> state_list_;
 };
