@@ -8,10 +8,10 @@
 #include "world.h"
 #include "render.h"
 
-#include "commands/add.h"
-#include "commands/delete.h"
-#include "commands/move.h"
-#include "commands/resize.h"
+#include "operations/add.h"
+#include "operations/delete.h"
+#include "operations/move.h"
+#include "operations/resize.h"
 
 #define VIEW_POS_X 500.0
 #define VIEW_POS_Y 500.0
@@ -64,7 +64,7 @@ int main() {
     Action current_action = Action::NONE;
 
     History history;
-    std::shared_ptr<command::Command> current_command;
+    std::shared_ptr<Operation> current_operation;
 
     World::getInstance().loadWorldFromFile("assets/world.json");
 
@@ -157,20 +157,20 @@ int main() {
                                     entity->setPosition(static_cast<int>(world_mouse_pos.first), static_cast<int>(world_mouse_pos.second));
                                     World::getInstance().addEntity(entity, current_layer);
 
-                                    current_command = std::make_shared<command::Add>(command::Add());
-                                    current_command->entity_ = entity;
-                                    current_command->layer_ = current_layer;
+                                    current_operation = std::make_shared<operation::Add>(operation::Add());
+                                    current_operation->entity_ = entity;
+                                    current_operation->layer_ = current_layer;
 
-                                    history.addCommand(current_command);
+                                    history.addOperation(current_operation);
                                 }
                                 break;
                             case sf::Keyboard::Key::D:
                                 if (current_entity) {
-                                    current_command = std::make_shared<command::Delete>(command::Delete());
-                                    current_command->entity_ = current_entity;
-                                    current_command->layer_ = current_layer;
+                                    current_operation = std::make_shared<operation::Delete>(operation::Delete());
+                                    current_operation->entity_ = current_entity;
+                                    current_operation->layer_ = current_layer;
 
-                                    history.addCommand(current_command);
+                                    history.addOperation(current_operation);
 
                                     World::getInstance().removeEntity(current_entity, current_layer);
                                     current_entity = nullptr;
@@ -184,11 +184,11 @@ int main() {
                                     entity->setPosition(static_cast<int>(world_mouse_pos.first), static_cast<int>(world_mouse_pos.second));
                                     World::getInstance().addEntity(entity, current_layer);
 
-                                    current_command = std::make_shared<command::Add>(command::Add());
-                                    current_command->entity_ = entity;
-                                    current_command->layer_ = current_layer;
+                                    current_operation = std::make_shared<operation::Add>(operation::Add());
+                                    current_operation->entity_ = entity;
+                                    current_operation->layer_ = current_layer;
 
-                                    history.addCommand(current_command);
+                                    history.addOperation(current_operation);
                                 }
                                 break;
                             case sf::Keyboard::Key::V:
@@ -239,9 +239,9 @@ int main() {
                                         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
                                             auto hbox = current_entity->getHitbox();
 
-                                            current_command = std::make_shared<command::Resize>(command::Resize());
-                                            current_command->entity_ = current_entity;
-                                            current_command->before_ = {hbox.width_, hbox.height_};
+                                            current_operation = std::make_shared<operation::Resize>(operation::Resize());
+                                            current_operation->entity_ = current_entity;
+                                            current_operation->before_ = {hbox.width_, hbox.height_};
 
                                             current_action = Action::RESIZE;
                                         }
@@ -255,9 +255,9 @@ int main() {
                                    !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
                                     auto pos = current_entity->getPosition();
 
-                                    current_command = std::make_shared<command::Move>(command::Move());
-                                    current_command->entity_ = current_entity;
-                                    current_command->before_ = {pos.x, pos.y};
+                                    current_operation = std::make_shared<operation::Move>(operation::Move());
+                                    current_operation->entity_ = current_entity;
+                                    current_operation->before_ = {pos.x, pos.y};
 
                                     current_action = Action::MOVE;
                                 }
@@ -298,18 +298,18 @@ int main() {
                                 {
                                     auto pos = current_entity->getPosition();
 
-                                    current_command->after_ = {pos.x, pos.y};
+                                    current_operation->after_ = {pos.x, pos.y};
 
-                                    history.addCommand(current_command);
+                                    history.addOperation(current_operation);
                                     break;
                                 }
                             case Action::RESIZE:
                                 {
                                     auto hbox = current_entity->getHitbox();
 
-                                    current_command->after_ = {hbox.width_, hbox.height_};
+                                    current_operation->after_ = {hbox.width_, hbox.height_};
 
-                                    history.addCommand(current_command);
+                                    history.addOperation(current_operation);
                                     break;
                                 }
                             default:
@@ -334,12 +334,12 @@ int main() {
             resetMouseDistances(window);
         } else if (current_action == Action::MOVE) {
             auto mouse_dist = getMouseDistances(window);
-            auto pos = current_command->before_;
+            auto pos = current_operation->before_;
 
             current_entity->setPosition(static_cast<int>(static_cast<float>(pos.first) + mouse_dist.second.first), static_cast<int>(static_cast<float>(pos.second) + mouse_dist.second.second));
         } else if (current_action == Action::RESIZE) {
             auto mouse_dist = getMouseDistances(window);
-            auto hbox = current_command->before_;
+            auto hbox = current_operation->before_;
 
             current_entity->setHitbox(static_cast<int>(static_cast<float>(hbox.first) + (mouse_dist.second.first * 2.0)), static_cast<int>(static_cast<float>(hbox.second) + (mouse_dist.second.second * 2.0)));
         }

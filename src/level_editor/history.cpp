@@ -22,7 +22,7 @@ void History::redo() {
     }
 }
 
-void History::addCommand(std::shared_ptr<command::Command> command) {
+void History::addOperation(std::shared_ptr<Operation> command) {
     undo_history_.push(command);
 
     while (!redo_history_.empty()) {

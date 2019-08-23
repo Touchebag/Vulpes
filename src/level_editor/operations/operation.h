@@ -3,14 +3,12 @@
 #include "base_entity.h"
 #include "world.h"
 
-namespace command {
-
-class Command {
+class Operation {
   public:
     virtual void undo() {};
     virtual void redo() {};
 
-    virtual ~Command() {};
+    virtual ~Operation() {};
 
     std::shared_ptr<BaseEntity> entity_;
 
@@ -19,5 +17,3 @@ class Command {
     std::pair<int, int> before_ = {0, 0};
     std::pair<int, int> after_ = {0, 0};
 };
-
-} // command

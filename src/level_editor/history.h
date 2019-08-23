@@ -2,16 +2,16 @@
 
 #include <stack>
 
-#include "commands/command.h"
+#include "operations/operation.h"
 
 class History {
   public:
     void undo();
     void redo();
 
-    void addCommand(std::shared_ptr<command::Command> command);
+    void addOperation(std::shared_ptr<Operation> command);
 
   private:
-    std::stack<std::shared_ptr<command::Command>> undo_history_;
-    std::stack<std::shared_ptr<command::Command>> redo_history_;
+    std::stack<std::shared_ptr<Operation>> undo_history_;
+    std::stack<std::shared_ptr<Operation>> redo_history_;
 };
