@@ -56,11 +56,19 @@ target_include_directories(${LEVEL_EDITOR_TARGET} PUBLIC src/game/ libs/nlohmann
 
 target_link_libraries(${LEVEL_EDITOR_TARGET} ${COMMON_TARGET} ${SFML_LIBS})
 
+# Level editor lib for tests
+# TODO Remove when editor integrated into main
+file(GLOB_RECURSE LEVEL_EDITOR_LIB_SOURCES src/level_editor/*.cpp src/level_editor/*.h)
+add_library(level_editor_lib STATIC EXCLUDE_FROM_ALL ${LEVEL_EDITOR_SOURCES})
+target_compile_options(level_editor_lib PUBLIC ${CC_OPTIONS})
+target_include_directories(level_editor_lib PUBLIC src/game/ libs/nlohmann)
+target_link_libraries(level_editor_lib ${SFML_LIBS})
+
 # Test target
 file(GLOB_RECURSE TEST_SOURCES test/src/*.cpp test/src/*.h)
 add_executable(${TEST_TARGET} EXCLUDE_FROM_ALL ${TEST_SOURCES})
 target_compile_options(${TEST_TARGET} PUBLIC ${CC_OPTIONS})
-target_include_directories(${TEST_TARGET} PUBLIC src/game/ libs/nlohmann ${GTEST_INCLUDE_DIRS})
+target_include_directories(${TEST_TARGET} PUBLIC src/game/ src/level_editor/ libs/nlohmann ${GTEST_INCLUDE_DIRS})
 
-target_link_libraries(${TEST_TARGET} ${COMMON_TARGET} ${SFML_LIBS} ${GTEST_BOTH_LIBRARIES})
+target_link_libraries(${TEST_TARGET} ${COMMON_TARGET} ${SFML_LIBS} ${GTEST_BOTH_LIBRARIES} level_editor_lib)
 

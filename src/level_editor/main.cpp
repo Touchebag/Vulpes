@@ -7,6 +7,8 @@
 #include "action.h"
 #include "world.h"
 #include "render.h"
+#include "command.h"
+#include "mouse.h"
 
 #include "operations/add.h"
 #include "operations/delete.h"
@@ -19,29 +21,8 @@
 
 #define LEVEL_FILE_PATH "assets/world.json"
 
-std::pair<int, int> mouse_pos = {0, 0};
-std::pair<float, float> world_mouse_pos = {0.0, 0.0};
-
 World::Layer current_layer = World::Layer::MAIN;
 bool render_current_layer_only = false;
-
-void resetMouseDistances(sf::RenderWindow& window) {
-    sf::Vector2i tmp_pos = sf::Mouse::getPosition(window);
-    mouse_pos = {tmp_pos.x, tmp_pos.y};
-
-    sf::Vector2f tmp_world_pos = window.mapPixelToCoords(tmp_pos);
-    world_mouse_pos = {tmp_world_pos.x, tmp_world_pos.y};
-}
-
-std::pair<std::pair<int, int>, std::pair<float, float>> getMouseDistances(sf::RenderWindow& window) {
-        sf::Vector2i tmp_pos = sf::Mouse::getPosition(window);
-        std::pair<int, int> mouse_distance = {tmp_pos.x - mouse_pos.first, tmp_pos.y - mouse_pos.second};
-
-        sf::Vector2f tmp_world_pos = window.mapPixelToCoords(tmp_pos);
-        std::pair<float, float> world_mouse_distance = {tmp_world_pos.x - world_mouse_pos.first, tmp_world_pos.y - world_mouse_pos.second};
-
-        return {mouse_distance, world_mouse_distance};
-}
 
 World::Layer change_layer(bool towards_screen) {
     int layer_int = static_cast<int>(current_layer);
@@ -63,8 +44,10 @@ int main() {
 
     Action current_action = Action::NONE;
 
-    History history;
+    std::shared_ptr<History> history = std::make_shared<History>();
     std::shared_ptr<Operation> current_operation;
+
+    std::shared_ptr<Mouse> mouse = std::make_shared<Mouse>(window);
 
     World::getInstance().loadWorldFromFile("assets/world.json");
 
@@ -73,6 +56,8 @@ int main() {
     float view_size = VIEW_SIZE;
 
     std::shared_ptr<BaseEntity> current_entity;
+
+    Command command{history, current_entity, current_operation, mouse};
 
     sf::Font font;
     if (!font.loadFromFile("assets/arial.ttf")) {
@@ -123,6 +108,7 @@ int main() {
                     case sf::Event::MouseWheelScrolled:
                         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
                             current_layer = change_layer(event.mouseWheelScroll.delta > 0.0);
+                            command.current_layer_ = current_layer;
                         } else {
                             if (event.mouseWheelScroll.delta > 0) {
                                 view_size -= 200;
@@ -140,28 +126,7 @@ int main() {
                                 // Ctrl + mouse wheel scroll generates an extra key corresponding to A
                                 // for some reason
                                 if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
-                                    std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-
-                                    std::shared_ptr<Hitbox> hitbox = std::make_shared<Hitbox>();
-                                    std::shared_ptr<Transform> trans = std::make_shared<Transform>();
-                                    std::shared_ptr<RenderableEntity> render = std::make_shared<RenderableEntity>(trans);
-
-                                    entity->hitbox_ = hitbox;
-                                    entity->trans_ = trans;
-                                    entity->renderableEntity_ = render;
-
-                                    if (auto tmp = entity->renderableEntity_) {
-                                        tmp->loadTexture("box.png");
-                                    }
-                                    entity->setHitbox(50, 50);
-                                    entity->setPosition(static_cast<int>(world_mouse_pos.first), static_cast<int>(world_mouse_pos.second));
-                                    World::getInstance().addEntity(entity, current_layer);
-
-                                    current_operation = std::make_shared<operation::Add>(operation::Add());
-                                    current_operation->entity_ = entity;
-                                    current_operation->layer_ = current_layer;
-
-                                    history.addOperation(current_operation);
+                                    command.add();
                                 }
                                 break;
                             case sf::Keyboard::Key::D:
@@ -170,7 +135,7 @@ int main() {
                                     current_operation->entity_ = current_entity;
                                     current_operation->layer_ = current_layer;
 
-                                    history.addOperation(current_operation);
+                                    history->addOperation(current_operation);
 
                                     World::getInstance().removeEntity(current_entity, current_layer);
                                     current_entity = nullptr;
@@ -181,14 +146,15 @@ int main() {
                                 if (current_entity) {
                                     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
                                     entity->loadFromJson(current_entity->outputToJson().value());
-                                    entity->setPosition(static_cast<int>(world_mouse_pos.first), static_cast<int>(world_mouse_pos.second));
+                                    auto mouse_world_pos = mouse->getMouseWorldPosition();
+                                    entity->setPosition(static_cast<int>(mouse_world_pos.first), static_cast<int>(mouse_world_pos.second));
                                     World::getInstance().addEntity(entity, current_layer);
 
                                     current_operation = std::make_shared<operation::Add>(operation::Add());
                                     current_operation->entity_ = entity;
                                     current_operation->layer_ = current_layer;
 
-                                    history.addOperation(current_operation);
+                                    history->addOperation(current_operation);
                                 }
                                 break;
                             case sf::Keyboard::Key::V:
@@ -205,12 +171,12 @@ int main() {
                                 break;
                             case sf::Keyboard::Key::Z:
                                 if (current_action == Action::NONE) {
-                                    history.undo();
+                                    history->undo();
                                 }
                                 break;
                             case sf::Keyboard::Key::R:
                                 if (current_action == Action::NONE) {
-                                    history.redo();
+                                    history->redo();
                                 }
                                 break;
                             default:
@@ -220,12 +186,13 @@ int main() {
                     case sf::Event::MouseButtonPressed:
                         if (event.mouseButton.button == sf::Mouse::Button::Left) {
                             // Store current mouse position
-                            resetMouseDistances(window);
+                            mouse->saveMousePosition();
 
                             current_entity = nullptr;
 
                             std::shared_ptr<Transform> tmp_trans = std::make_shared<Transform>();
-                            tmp_trans->setPosition(static_cast<int>(world_mouse_pos.first), static_cast<int>(world_mouse_pos.second));
+                            auto mouse_world_pos = mouse->getMouseWorldPosition();
+                            tmp_trans->setPosition(static_cast<int>(mouse_world_pos.first), static_cast<int>(mouse_world_pos.second));
                             std::shared_ptr<Hitbox> tmp_hbox = std::make_shared<Hitbox>();
                             std::shared_ptr<Collision> tmp_coll = std::make_shared<Collision>(tmp_trans, tmp_hbox);
                             auto player = World::getInstance().getPlayer().lock();
@@ -268,7 +235,7 @@ int main() {
                             }
                         } else if (event.mouseButton.button == sf::Mouse::Button::Right) {
                             // Store current mouse position
-                            resetMouseDistances(window);
+                            mouse->saveMousePosition();
 
                             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LAlt)) {
                                 current_action = Action::CAMERA_ZOOM;
@@ -292,7 +259,7 @@ int main() {
                         }
                         break;
                     case sf::Event::MouseButtonReleased:
-                        resetMouseDistances(window);
+                        mouse->saveMousePosition();
                         switch (current_action) {
                             case Action::MOVE:
                                 {
@@ -300,7 +267,7 @@ int main() {
 
                                     current_operation->after_ = {pos.x, pos.y};
 
-                                    history.addOperation(current_operation);
+                                    history->addOperation(current_operation);
                                     break;
                                 }
                             case Action::RESIZE:
@@ -309,7 +276,7 @@ int main() {
 
                                     current_operation->after_ = {hbox.width_, hbox.height_};
 
-                                    history.addOperation(current_operation);
+                                    history->addOperation(current_operation);
                                     break;
                                 }
                             default:
@@ -324,24 +291,24 @@ int main() {
         }
 
         if (current_action == Action::CAMERA_MOVE) {
-            auto mouse_dist = getMouseDistances(window);
-            view_pos_x -= static_cast<float>(mouse_dist.first.first);
-            view_pos_y -= static_cast<float>(mouse_dist.first.second);
-            resetMouseDistances(window);
+            auto mouse_dist = mouse->getMouseDistance();
+            view_pos_x -= static_cast<float>(mouse_dist.first);
+            view_pos_y -= static_cast<float>(mouse_dist.second);
+            mouse->saveMousePosition();
         } else if (current_action == Action::CAMERA_ZOOM) {
-            auto mouse_dist = getMouseDistances(window);
-            view_size += static_cast<float>(mouse_dist.first.second * 5);
-            resetMouseDistances(window);
+            auto mouse_dist = mouse->getMouseDistance();
+            view_size += static_cast<float>(mouse_dist.second * 5);
+            mouse->saveMousePosition();
         } else if (current_action == Action::MOVE) {
-            auto mouse_dist = getMouseDistances(window);
+            auto mouse_world_dist = mouse->getMouseWorldDistance();
             auto pos = current_operation->before_;
 
-            current_entity->setPosition(static_cast<int>(static_cast<float>(pos.first) + mouse_dist.second.first), static_cast<int>(static_cast<float>(pos.second) + mouse_dist.second.second));
+            current_entity->setPosition(static_cast<int>(static_cast<float>(pos.first) + mouse_world_dist.first), static_cast<int>(static_cast<float>(pos.second) + mouse_world_dist.second));
         } else if (current_action == Action::RESIZE) {
-            auto mouse_dist = getMouseDistances(window);
+            auto mouse_world_dist = mouse->getMouseWorldDistance();
             auto hbox = current_operation->before_;
 
-            current_entity->setHitbox(static_cast<int>(static_cast<float>(hbox.first) + (mouse_dist.second.first * 2.0)), static_cast<int>(static_cast<float>(hbox.second) + (mouse_dist.second.second * 2.0)));
+            current_entity->setHitbox(static_cast<int>(static_cast<float>(hbox.first) + (mouse_world_dist.first * 2.0)), static_cast<int>(static_cast<float>(hbox.second) + (mouse_world_dist.second * 2.0)));
         }
 
         window.clear();
@@ -368,10 +335,11 @@ int main() {
             text.setPosition(50, 20);
             window.draw(text);
 
-            text.setString(std::string("Mouse X: ") + std::to_string(world_mouse_pos.first));
+            auto mouse_world_pos = mouse->getMouseWorldPosition();
+            text.setString(std::string("Mouse X: ") + std::to_string(mouse_world_pos.first));
             text.setPosition(500, 20);
             window.draw(text);
-            text.setString(std::string("Mouse Y: ") + std::to_string(world_mouse_pos.second));
+            text.setString(std::string("Mouse Y: ") + std::to_string(mouse_world_pos.second));
             text.setPosition(500, 50);
             window.draw(text);
         }
