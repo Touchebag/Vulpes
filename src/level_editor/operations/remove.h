@@ -4,7 +4,7 @@
 
 namespace operation {
 
-class Delete : public Operation {
+class Remove : public Operation {
   public:
     void undo() override;
     void redo() override;

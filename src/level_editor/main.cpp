@@ -11,7 +11,7 @@
 #include "mouse.h"
 
 #include "operations/add.h"
-#include "operations/delete.h"
+#include "operations/remove.h"
 #include "operations/move.h"
 #include "operations/resize.h"
 
@@ -130,16 +130,7 @@ int main() {
                                 }
                                 break;
                             case sf::Keyboard::Key::D:
-                                if (current_entity) {
-                                    current_operation = std::make_shared<operation::Delete>(operation::Delete());
-                                    current_operation->entity_ = current_entity;
-                                    current_operation->layer_ = current_layer;
-
-                                    history->addOperation(current_operation);
-
-                                    World::getInstance().removeEntity(current_entity, current_layer);
-                                    current_entity = nullptr;
-                                }
+                                command.remove(current_entity);
                                 break;
                             case sf::Keyboard::Key::C:
                                 // TODO Copy constructor

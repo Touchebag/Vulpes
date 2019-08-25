@@ -3,6 +3,7 @@
 #include "command.h"
 
 #include "operations/add.h"
+#include "operations/remove.h"
 
 Command::Command(std::shared_ptr<History> history,
         std::shared_ptr<BaseEntity> current_entity,
@@ -16,7 +17,10 @@ Command::Command(std::shared_ptr<History> history,
 
 void Command::add() {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
+    add(entity);
+}
 
+void Command::add(std::shared_ptr<BaseEntity> entity) {
     std::shared_ptr<Hitbox> hitbox = std::make_shared<Hitbox>();
     std::shared_ptr<Transform> trans = std::make_shared<Transform>();
     std::shared_ptr<RenderableEntity> render = std::make_shared<RenderableEntity>(trans);
@@ -38,4 +42,19 @@ void Command::add() {
     current_operation_->layer_ = current_layer_;
 
     history_->addOperation(current_operation_);
+}
+
+void Command::remove(std::shared_ptr<BaseEntity> entity) {
+    if (!entity) {
+        return;
+    }
+
+    current_operation_ = std::make_shared<operation::Remove>(operation::Remove());
+    current_operation_->entity_ = entity;
+    current_operation_->layer_ = current_layer_;
+
+    history_->addOperation(current_operation_);
+
+    World::getInstance().removeEntity(entity, current_layer_);
+    current_entity_ = nullptr;
 }

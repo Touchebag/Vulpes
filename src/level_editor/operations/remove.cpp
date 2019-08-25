@@ -1,12 +1,12 @@
-#include "delete.h"
+#include "remove.h"
 
 namespace operation {
 
-void Delete::undo() {
+void Remove::undo() {
     World::getInstance().addEntity(entity_, layer_);
 }
 
-void Delete::redo() {
+void Remove::redo() {
     World::getInstance().removeEntity(entity_, layer_);
 }
 

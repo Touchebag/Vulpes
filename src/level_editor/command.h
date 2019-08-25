@@ -17,6 +17,8 @@ class Command {
     void setLayer(World::Layer layer);
 
     void add();
+    void add(std::shared_ptr<BaseEntity> entity);
+    void remove(std::shared_ptr<BaseEntity> entity);
 
     World::Layer current_layer_ = World::Layer::MAIN;
 

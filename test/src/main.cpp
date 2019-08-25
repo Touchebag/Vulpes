@@ -4,7 +4,7 @@
 #include "hitbox.h"
 #include "collision.h"
 
-#include "add.h"
+#include "command_test.h"
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
