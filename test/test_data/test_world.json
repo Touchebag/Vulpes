@@ -1,6 +1,7 @@
 {
     "main": [
         {
+            "Collision": null,
             "Hitbox": {
                 "height": 200,
                 "width": 50
@@ -15,6 +16,7 @@
             }
         },
         {
+            "Collision": null,
             "Hitbox": {
                 "height": 200,
                 "width": 50
@@ -29,6 +31,7 @@
             }
         },
         {
+            "Collision": null,
             "Hitbox": {
                 "height": 50,
                 "width": 200
@@ -43,6 +46,7 @@
             }
         },
         {
+            "Collision": null,
             "Hitbox": {
                 "height": 50,
                 "width": 200

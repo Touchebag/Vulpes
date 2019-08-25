@@ -14,10 +14,12 @@ class Collision {
 
     bool collides(std::weak_ptr<Collision> other_entity);
 
+    std::pair<double, double> getMaximumMovement(double stepX, double stepY, std::shared_ptr<Collision> other_coll);
+
+  private:
     std::pair<double, double> getMaximumMovement(double stepX, double stepY,
             std::shared_ptr<Transform> other_trans, std::shared_ptr<Hitbox> other_hbox);
 
-  private:
     std::weak_ptr<Transform> trans_;
     std::weak_ptr<Hitbox> hbox_;
 };

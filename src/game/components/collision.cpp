@@ -63,6 +63,14 @@ bool Collision::collides(std::weak_ptr<Collision> other_entity) {
     return false;
 }
 
+std::pair<double, double> Collision::getMaximumMovement(double stepX, double stepY,
+        std::shared_ptr<Collision> other_coll) {
+    auto other_trans = other_coll->trans_.lock();
+    auto other_hbox = other_coll->hbox_.lock();
+
+    return getMaximumMovement(stepX, stepY, other_trans, other_hbox);
+}
+
 std::pair<double, double> Collision::getMaximumMovement(double stepX, double stepY, std::shared_ptr<Transform> other_trans, std::shared_ptr<Hitbox> other_hbox) {
     double retX = stepX, retY = stepY;
 

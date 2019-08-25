@@ -191,7 +191,14 @@ int main() {
                                 current_entity = player;
                             } else {
                                 for (auto it : World::getInstance().getWorldObjects(current_layer)) {
-                                    if (it->collision_ && it->collision_->collides(tmp_coll)) {
+                                    std::shared_ptr<Collision> other_coll = nullptr;
+                                    if (it->collision_) {
+                                        other_coll = it->collision_;
+                                    } else if (it->hitbox_ && it->trans_) {
+                                        other_coll = std::make_shared<Collision>(it->trans_, it->hitbox_);
+                                    }
+
+                                    if (other_coll->collides(tmp_coll)) {
                                         current_entity = it;
                                         // Only static objects' hitboxes should be adjustable
                                         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {

@@ -35,12 +35,13 @@ std::pair<double, double> MovableEntity::getMaximumMovement(double velX, double 
     World& worldInst = World::getInstance();
     if (auto coll = collision_.lock()) {
         for (auto it = worldInst.getWorldObjects().begin(); it != worldInst.getWorldObjects().end(); ++it) {
-            auto other_trans = (*it)->trans_;
-            auto other_hitbox = (*it)->hitbox_;
+            auto other_coll = (*it)->collision_;
 
-            std::pair<double, double> newMoveValues = coll->getMaximumMovement(x, y, other_trans, other_hitbox);
-            x = newMoveValues.first;
-            y = newMoveValues.second;
+            if (other_coll) {
+                std::pair<double, double> newMoveValues = coll->getMaximumMovement(x, y, other_coll);
+                x = newMoveValues.first;
+                y = newMoveValues.second;
+            }
         }
     }
 
