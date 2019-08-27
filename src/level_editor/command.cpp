@@ -58,3 +58,20 @@ void Command::remove(std::shared_ptr<BaseEntity> entity) {
     World::getInstance().removeEntity(entity, current_layer_);
     current_entity_ = nullptr;
 }
+
+void Command::copy(std::shared_ptr<BaseEntity> entity) {
+    if (entity) {
+        std::shared_ptr<BaseEntity> cp_entity = std::make_shared<BaseEntity>();
+        cp_entity->loadFromJson(entity->outputToJson().value());
+
+        auto mouse_world_pos = mouse_->getMouseWorldPosition();
+        cp_entity->setPosition(static_cast<int>(mouse_world_pos.first), static_cast<int>(mouse_world_pos.second));
+        World::getInstance().addEntity(cp_entity, current_layer_);
+
+        current_operation_ = std::make_shared<operation::Add>(operation::Add());
+        current_operation_->entity_ = cp_entity;
+        current_operation_->layer_ = current_layer_;
+
+        history_->addOperation(current_operation_);
+    }
+}

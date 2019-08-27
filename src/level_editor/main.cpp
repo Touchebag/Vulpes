@@ -133,20 +133,7 @@ int main() {
                                 command.remove(current_entity);
                                 break;
                             case sf::Keyboard::Key::C:
-                                // TODO Copy constructor
-                                if (current_entity) {
-                                    std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-                                    entity->loadFromJson(current_entity->outputToJson().value());
-                                    auto mouse_world_pos = mouse->getMouseWorldPosition();
-                                    entity->setPosition(static_cast<int>(mouse_world_pos.first), static_cast<int>(mouse_world_pos.second));
-                                    World::getInstance().addEntity(entity, current_layer);
-
-                                    current_operation = std::make_shared<operation::Add>(operation::Add());
-                                    current_operation->entity_ = entity;
-                                    current_operation->layer_ = current_layer;
-
-                                    history->addOperation(current_operation);
-                                }
+                                command.copy(current_entity);
                                 break;
                             case sf::Keyboard::Key::V:
                                 render_current_layer_only = !render_current_layer_only;
