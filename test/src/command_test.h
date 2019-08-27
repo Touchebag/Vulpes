@@ -90,7 +90,7 @@ TEST_F(CommandTestFixture, RemoveObject) {
     assertCorrectNumberOfEntities(0, 1, 0, 0, 0, 2, 0, 0, 0, 0);
 }
 
-TEST_F(CommandTestFixture, CopyObject) {
+TEST_F(CommandTestFixture, CopyObjectRemoveOriginal) {
     assertWorldEmpty();
 
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
@@ -106,4 +106,24 @@ TEST_F(CommandTestFixture, CopyObject) {
     command_.remove(entity);
 
     assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
+}
+
+TEST_F(CommandTestFixture, CopyObjectCheckEqual) {
+    assertWorldEmpty();
+
+    std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
+
+    command_.add(entity);
+
+    assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
+
+    command_.copy(entity);
+
+    assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 2, 0, 0, 0, 0);
+
+    nlohmann::json j = World::getInstance().saveWorldToJson();
+
+    ASSERT_EQ(2, j["main"].size());
+
+    EXPECT_TRUE(j["main"][0] == j["main"][1]);
 }
