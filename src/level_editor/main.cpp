@@ -4,7 +4,6 @@
 #include "log.h"
 #include "base_entity.h"
 #include "history.h"
-#include "action.h"
 #include "world.h"
 #include "render.h"
 #include "command.h"
@@ -42,7 +41,7 @@ int main() {
 
     std::optional<nlohmann::json> j = file::loadJson(LEVEL_FILE_PATH);
 
-    Action current_action = Action::NONE;
+    Command::Commands current_action = Command::Commands::NONE;
 
     std::shared_ptr<History> history = std::make_shared<History>();
     std::shared_ptr<Operation> current_operation;
@@ -57,7 +56,7 @@ int main() {
 
     std::shared_ptr<BaseEntity> current_entity;
 
-    Command command{history, current_entity, current_operation, mouse};
+    Command command{history, current_operation, mouse};
 
     sf::Font font;
     if (!font.loadFromFile("assets/arial.ttf")) {
@@ -89,6 +88,7 @@ int main() {
                                 if (auto tmp = current_entity->renderableEntity_) {
                                     tmp->loadTexture(input_text.toAnsiString());
                                 }
+                                // TODO Remove when tiling issue fixed
                                 current_entity->setHitbox(current_entity->getHitbox().width_, current_entity->getHitbox().height_);
 
                                 input_text.clear();
@@ -148,12 +148,12 @@ int main() {
                                 }
                                 break;
                             case sf::Keyboard::Key::Z:
-                                if (current_action == Action::NONE) {
+                                if (current_action == Command::Commands::NONE) {
                                     history->undo();
                                 }
                                 break;
                             case sf::Keyboard::Key::R:
-                                if (current_action == Action::NONE) {
+                                if (current_action == Command::Commands::NONE) {
                                     history->redo();
                                 }
                                 break;
@@ -168,11 +168,14 @@ int main() {
 
                             current_entity = nullptr;
 
-                            std::shared_ptr<Transform> tmp_trans = std::make_shared<Transform>();
                             auto mouse_world_pos = mouse->getMouseWorldPosition();
+
+                            std::shared_ptr<Transform> tmp_trans = std::make_shared<Transform>();
                             tmp_trans->setPosition(static_cast<int>(mouse_world_pos.first), static_cast<int>(mouse_world_pos.second));
+
                             std::shared_ptr<Hitbox> tmp_hbox = std::make_shared<Hitbox>();
                             std::shared_ptr<Collision> tmp_coll = std::make_shared<Collision>(tmp_trans, tmp_hbox);
+
                             auto player = World::getInstance().getPlayer().lock();
                             if (player && player->collision_ && player->collision_->collides(tmp_coll)) {
                                 current_entity = player;
@@ -187,43 +190,35 @@ int main() {
 
                                     if (other_coll->collides(tmp_coll)) {
                                         current_entity = it;
-                                        // Only static objects' hitboxes should be adjustable
-                                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
-                                            auto hbox = current_entity->getHitbox();
-
-                                            current_operation = std::make_shared<operation::Resize>(operation::Resize());
-                                            current_operation->entity_ = current_entity;
-                                            current_operation->before_ = {hbox.width_, hbox.height_};
-
-                                            current_action = Action::RESIZE;
-                                        }
+                                        command.current_entity_ = current_entity;
                                         break;
                                     }
                                 }
                             }
 
                             if (current_entity) {
-                                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl) &&
-                                   !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
+                                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
+                                    command.startCommand(Command::Commands::RESIZE);
+                                } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
                                     auto pos = current_entity->getPosition();
 
                                     current_operation = std::make_shared<operation::Move>(operation::Move());
                                     current_operation->entity_ = current_entity;
                                     current_operation->before_ = {pos.x, pos.y};
 
-                                    current_action = Action::MOVE;
+                                    current_action = Command::Commands::MOVE;
                                 }
                             }
 
                             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LAlt)) {
-                                current_action = Action::CAMERA_MOVE;
+                                current_action = Command::Commands::CAMERA_MOVE;
                             }
                         } else if (event.mouseButton.button == sf::Mouse::Button::Right) {
                             // Store current mouse position
                             mouse->saveMousePosition();
 
                             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LAlt)) {
-                                current_action = Action::CAMERA_ZOOM;
+                                current_action = Command::Commands::CAMERA_ZOOM;
                             } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
                                 if (current_entity) {
                                     auto hbox = current_entity->getHitbox();
@@ -245,8 +240,10 @@ int main() {
                         break;
                     case sf::Event::MouseButtonReleased:
                         mouse->saveMousePosition();
+
+                        command.stopCommand();
                         switch (current_action) {
-                            case Action::MOVE:
+                            case Command::Commands::MOVE:
                                 {
                                     auto pos = current_entity->getPosition();
 
@@ -255,19 +252,10 @@ int main() {
                                     history->addOperation(current_operation);
                                     break;
                                 }
-                            case Action::RESIZE:
-                                {
-                                    auto hbox = current_entity->getHitbox();
-
-                                    current_operation->after_ = {hbox.width_, hbox.height_};
-
-                                    history->addOperation(current_operation);
-                                    break;
-                                }
                             default:
                                 break;
                         }
-                        current_action = Action::NONE;
+                        current_action = Command::Commands::NONE;
                         break;
                     default:
                         break;
@@ -275,25 +263,22 @@ int main() {
             }
         }
 
-        if (current_action == Action::CAMERA_MOVE) {
+        command.update();
+
+        if (current_action == Command::Commands::CAMERA_MOVE) {
             auto mouse_dist = mouse->getMouseDistance();
             view_pos_x -= static_cast<float>(mouse_dist.first);
             view_pos_y -= static_cast<float>(mouse_dist.second);
             mouse->saveMousePosition();
-        } else if (current_action == Action::CAMERA_ZOOM) {
+        } else if (current_action == Command::Commands::CAMERA_ZOOM) {
             auto mouse_dist = mouse->getMouseDistance();
             view_size += static_cast<float>(mouse_dist.second * 5);
             mouse->saveMousePosition();
-        } else if (current_action == Action::MOVE) {
+        } else if (current_action == Command::Commands::MOVE) {
             auto mouse_world_dist = mouse->getMouseWorldDistance();
             auto pos = current_operation->before_;
 
             current_entity->setPosition(static_cast<int>(static_cast<float>(pos.first) + mouse_world_dist.first), static_cast<int>(static_cast<float>(pos.second) + mouse_world_dist.second));
-        } else if (current_action == Action::RESIZE) {
-            auto mouse_world_dist = mouse->getMouseWorldDistance();
-            auto hbox = current_operation->before_;
-
-            current_entity->setHitbox(static_cast<int>(static_cast<float>(hbox.first) + (mouse_world_dist.first * 2.0)), static_cast<int>(static_cast<float>(hbox.second) + (mouse_world_dist.second * 2.0)));
         }
 
         window.clear();

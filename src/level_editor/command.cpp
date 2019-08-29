@@ -2,17 +2,34 @@
 
 #include "command.h"
 
+#include "log.h"
+
 #include "operations/add.h"
 #include "operations/remove.h"
+#include "operations/resize.h"
 
 Command::Command(std::shared_ptr<History> history,
-        std::shared_ptr<BaseEntity> current_entity,
         std::shared_ptr<Operation> current_operation,
         std::shared_ptr<Mouse> mouse) :
     history_(history),
-    current_entity_(current_entity),
     current_operation_(current_operation),
-    mouse_(mouse) {
+    mouse_(mouse),
+    current_command_(Commands::NONE) {
+}
+
+void Command::update() {
+    switch (current_command_) {
+        case Commands::RESIZE:
+            {
+                auto mouse_world_dist = mouse_->getMouseWorldDistance();
+                auto hbox = current_operation_->before_;
+
+                current_entity_->setHitbox(static_cast<int>(static_cast<float>(hbox.first) + (mouse_world_dist.first * 2.0)), static_cast<int>(static_cast<float>(hbox.second) + (mouse_world_dist.second * 2.0)));
+            }
+            break;
+        default:
+            break;
+    }
 }
 
 void Command::add() {
@@ -74,4 +91,44 @@ void Command::copy(std::shared_ptr<BaseEntity> entity) {
 
         history_->addOperation(current_operation_);
     }
+}
+
+void Command::startCommand(Commands command) {
+    if (!current_entity_) {
+        return;
+    }
+
+    switch (command) {
+        case (Commands::RESIZE) :
+            {
+                auto hbox = current_entity_->getHitbox();
+
+                current_operation_ = std::make_shared<operation::Resize>(operation::Resize());
+                current_operation_->entity_ = current_entity_;
+                current_operation_->before_ = {hbox.width_, hbox.height_};
+
+                current_command_ = Commands::RESIZE;
+            }
+            break;
+        default:
+            LOGW("Unknown command");
+            break;
+    }
+}
+
+void Command::stopCommand() {
+    switch (current_command_) {
+        case Command::Commands::RESIZE:
+            {
+                auto hbox = current_entity_->getHitbox();
+
+                current_operation_->after_ = {hbox.width_, hbox.height_};
+
+                history_->addOperation(current_operation_);
+                break;
+            }
+        default:
+            break;
+    }
+    current_command_ = Commands::NONE;
 }

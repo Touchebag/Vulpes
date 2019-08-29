@@ -10,23 +10,21 @@ class CommandTestFixture : public ::testing::Test {
     void SetUp() {
         std::shared_ptr<History> history = std::make_shared<History>();
         std::shared_ptr<Operation> operation = std::make_shared<Operation>();
-        std::shared_ptr<Mouse> mouse = std::make_shared<Mouse>(window);
+
+        mouse_ = std::make_shared<Mouse>(window_);
 
         entity_ = std::make_shared<BaseEntity>();
-        command_ = {history, entity_, operation, mouse};
+        command_ = {history, operation, mouse_};
 
         World::getInstance().loadWorldFromJson(nlohmann::json::parse("{\"main\": null}"));
     }
 
   protected:
-    sf::RenderWindow window;
+    sf::RenderWindow window_;
     std::shared_ptr<BaseEntity> entity_;
-    Command command_ = {nullptr, nullptr, nullptr, nullptr};
+    std::shared_ptr<Mouse> mouse_;
+    Command command_ = {nullptr, nullptr, nullptr};
 };
-
-void test() {
-    ASSERT_TRUE(false);
-}
 
 void assertCorrectNumberOfEntities(
         long long unsigned background,
@@ -126,4 +124,29 @@ TEST_F(CommandTestFixture, CopyObjectCheckEqual) {
     ASSERT_EQ(2, j["main"].size());
 
     EXPECT_TRUE(j["main"][0] == j["main"][1]);
+}
+
+TEST_F(CommandTestFixture, ResizeObjectl) {
+    assertWorldEmpty();
+    window_.create(sf::VideoMode(100,100), "TEST");
+
+    sf::Mouse::setPosition({0, 0});
+
+    std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
+    command_.add(entity);
+    entity->trans_->setPosition(0, 0);
+    mouse_->saveMousePosition();
+
+    assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
+
+    command_.current_entity_ = entity;
+    command_.startCommand(Command::Commands::RESIZE);
+    sf::Mouse::setPosition({10, 9});
+    command_.update();
+    command_.stopCommand();
+
+    window_.close();
+
+    ASSERT_EQ(entity->hitbox_->width_, 70);
+    ASSERT_EQ(entity->hitbox_->height_, 68);
 }
