@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "command.h"
+#include "mocks/mock_mouse.h"
 
 class CommandTestFixture : public ::testing::Test {
   public:
@@ -128,9 +129,8 @@ TEST_F(CommandTestFixture, CopyObjectCheckEqual) {
 
 TEST_F(CommandTestFixture, ResizeObjectl) {
     assertWorldEmpty();
-    window_.create(sf::VideoMode(100,100), "TEST");
 
-    sf::Mouse::setPosition({0, 0});
+    MockMouse::setMouseWorldPosition({0, 0});
 
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
     command_.add(entity);
@@ -141,7 +141,8 @@ TEST_F(CommandTestFixture, ResizeObjectl) {
 
     command_.current_entity_ = entity;
     command_.startCommand(Command::Commands::RESIZE);
-    sf::Mouse::setPosition({10, 9});
+
+    MockMouse::setMouseWorldPosition({10, 9});
     command_.update();
     command_.stopCommand();
 
