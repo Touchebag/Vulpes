@@ -18,6 +18,8 @@ class CommandTestFixture : public ::testing::Test {
         command_ = {history, operation, mouse_};
 
         World::getInstance().loadWorldFromJson(nlohmann::json::parse("{\"main\": null}"));
+
+        MockMouse::setMouseWorldPosition({0, 0});
     }
 
   protected:
@@ -150,4 +152,29 @@ TEST_F(CommandTestFixture, ResizeObjectl) {
 
     ASSERT_EQ(entity->hitbox_->width_, 70);
     ASSERT_EQ(entity->hitbox_->height_, 68);
+}
+
+TEST_F(CommandTestFixture, MoveObjectl) {
+    assertWorldEmpty();
+
+    std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
+    command_.add(entity);
+
+    MockMouse::setMouseWorldPosition({10, 10});
+
+    mouse_->saveMousePosition();
+
+    assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
+
+    command_.current_entity_ = entity;
+    command_.startCommand(Command::Commands::MOVE);
+
+    MockMouse::setMouseWorldPosition({15, 27});
+    command_.update();
+    command_.stopCommand();
+
+    window_.close();
+
+    ASSERT_EQ(entity->trans_->getX(), 5);
+    ASSERT_EQ(entity->trans_->getY(), 17);
 }

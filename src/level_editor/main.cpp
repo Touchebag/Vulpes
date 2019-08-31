@@ -200,13 +200,7 @@ int main() {
                                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
                                     command.startCommand(Command::Commands::RESIZE);
                                 } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
-                                    auto pos = current_entity->getPosition();
-
-                                    current_operation = std::make_shared<operation::Move>(operation::Move());
-                                    current_operation->entity_ = current_entity;
-                                    current_operation->before_ = {pos.x, pos.y};
-
-                                    current_action = Command::Commands::MOVE;
+                                    command.startCommand(Command::Commands::MOVE);
                                 }
                             }
 
@@ -242,20 +236,6 @@ int main() {
                         mouse->saveMousePosition();
 
                         command.stopCommand();
-                        switch (current_action) {
-                            case Command::Commands::MOVE:
-                                {
-                                    auto pos = current_entity->getPosition();
-
-                                    current_operation->after_ = {pos.x, pos.y};
-
-                                    history->addOperation(current_operation);
-                                    break;
-                                }
-                            default:
-                                break;
-                        }
-                        current_action = Command::Commands::NONE;
                         break;
                     default:
                         break;
@@ -274,11 +254,6 @@ int main() {
             auto mouse_dist = mouse->getMouseDistance();
             view_size += static_cast<float>(mouse_dist.second * 5);
             mouse->saveMousePosition();
-        } else if (current_action == Command::Commands::MOVE) {
-            auto mouse_world_dist = mouse->getMouseWorldDistance();
-            auto pos = current_operation->before_;
-
-            current_entity->setPosition(static_cast<int>(static_cast<float>(pos.first) + mouse_world_dist.first), static_cast<int>(static_cast<float>(pos.second) + mouse_world_dist.second));
         }
 
         window.clear();

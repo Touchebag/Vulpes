@@ -7,6 +7,7 @@
 #include "operations/add.h"
 #include "operations/remove.h"
 #include "operations/resize.h"
+#include "operations/move.h"
 
 Command::Command(std::shared_ptr<History> history,
         std::shared_ptr<Operation> current_operation,
@@ -27,6 +28,13 @@ void Command::update() {
                 current_entity_->setHitbox(static_cast<int>(static_cast<float>(hbox.first) + (mouse_world_dist.first * 2.0)), static_cast<int>(static_cast<float>(hbox.second) + (mouse_world_dist.second * 2.0)));
             }
             break;
+        case (Command::Commands::MOVE):
+            {
+                auto mouse_world_dist = mouse_->getMouseWorldDistance();
+                auto pos = current_operation_->before_;
+
+                current_entity_->setPosition(static_cast<int>(static_cast<float>(pos.first) + mouse_world_dist.first), static_cast<int>(static_cast<float>(pos.second) + mouse_world_dist.second));
+            }
         default:
             break;
     }
@@ -110,6 +118,17 @@ void Command::startCommand(Commands command) {
                 current_command_ = Commands::RESIZE;
             }
             break;
+        case (Commands::MOVE):
+            {
+                auto pos = current_entity_->getPosition();
+
+                current_operation_ = std::make_shared<operation::Move>(operation::Move());
+                current_operation_->entity_ = current_entity_;
+                current_operation_->before_ = {pos.x, pos.y};
+
+                current_command_ = Command::Commands::MOVE;
+            }
+            break;
         default:
             LOGW("Unknown command");
             break;
@@ -123,6 +142,15 @@ void Command::stopCommand() {
                 auto hbox = current_entity_->getHitbox();
 
                 current_operation_->after_ = {hbox.width_, hbox.height_};
+
+                history_->addOperation(current_operation_);
+                break;
+            }
+        case Command::Commands::MOVE:
+            {
+                auto pos = current_entity_->getPosition();
+
+                current_operation_->after_ = {pos.x, pos.y};
 
                 history_->addOperation(current_operation_);
                 break;
