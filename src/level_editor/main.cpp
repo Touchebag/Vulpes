@@ -9,10 +9,7 @@
 #include "command.h"
 #include "mouse.h"
 
-#include "operations/add.h"
-#include "operations/remove.h"
-#include "operations/move.h"
-#include "operations/resize.h"
+#include "operation.h"
 
 #define VIEW_POS_X 500.0
 #define VIEW_POS_Y 500.0

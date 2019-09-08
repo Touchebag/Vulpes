@@ -5,7 +5,7 @@
 #include "history.h"
 #include "mouse.h"
 
-#include "operations/operation.h"
+#include "operation.h"
 
 class Command {
   public:

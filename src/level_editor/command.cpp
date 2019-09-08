@@ -4,10 +4,7 @@
 
 #include "log.h"
 
-#include "operations/add.h"
-#include "operations/remove.h"
-#include "operations/resize.h"
-#include "operations/move.h"
+#include "operation.h"
 
 Command::Command(std::shared_ptr<History> history,
         std::shared_ptr<Operation> current_operation,
@@ -23,17 +20,31 @@ void Command::update() {
         case Commands::RESIZE:
             {
                 auto mouse_world_dist = mouse_->getMouseWorldDistance();
-                auto hbox = current_operation_->before_;
 
-                current_entity_->setHitbox(static_cast<int>(static_cast<float>(hbox.first) + (mouse_world_dist.first * 2.0)), static_cast<int>(static_cast<float>(hbox.second) + (mouse_world_dist.second * 2.0)));
+                if (current_operation_->before_) {
+                    auto j = current_operation_->before_.value();
+                    if (j.contains("Hitbox")) {
+                        auto hbox = j["Hitbox"];
+                        current_entity_->setHitbox(
+                                static_cast<int>(static_cast<float>(hbox["width"].get<int>()) + (mouse_world_dist.first * 2.0)),
+                                static_cast<int>(static_cast<float>(hbox["height"].get<int>()) + (mouse_world_dist.second * 2.0)));
+                    }
+                }
             }
             break;
         case (Command::Commands::MOVE):
             {
                 auto mouse_world_dist = mouse_->getMouseWorldDistance();
-                auto pos = current_operation_->before_;
 
-                current_entity_->setPosition(static_cast<int>(static_cast<float>(pos.first) + mouse_world_dist.first), static_cast<int>(static_cast<float>(pos.second) + mouse_world_dist.second));
+                if (current_operation_->before_) {
+                    auto j = current_operation_->before_.value();
+                    if (j.contains("Transform")) {
+                        auto trans = j["Transform"];
+                        current_entity_->setPosition(
+                                static_cast<int>(static_cast<float>(trans["pos_x"]) + mouse_world_dist.first),
+                                static_cast<int>(static_cast<float>(trans["pos_y"]) + mouse_world_dist.second));
+                    }
+                }
             }
         default:
             break;
@@ -62,7 +73,7 @@ void Command::add(std::shared_ptr<BaseEntity> entity) {
 
     World::getInstance().addEntity(entity, current_layer_);
 
-    current_operation_ = std::make_shared<operation::Add>(operation::Add());
+    current_operation_ = std::make_shared<Operation>();
     current_operation_->entity_ = entity;
     current_operation_->layer_ = current_layer_;
 
@@ -74,9 +85,10 @@ void Command::remove(std::shared_ptr<BaseEntity> entity) {
         return;
     }
 
-    current_operation_ = std::make_shared<operation::Remove>(operation::Remove());
+    current_operation_ = std::make_shared<Operation>();
     current_operation_->entity_ = entity;
     current_operation_->layer_ = current_layer_;
+    current_operation_->before_ = entity->outputToJson();
 
     history_->addOperation(current_operation_);
 
@@ -93,7 +105,7 @@ void Command::copy(std::shared_ptr<BaseEntity> entity) {
         cp_entity->setPosition(static_cast<int>(mouse_world_pos.first), static_cast<int>(mouse_world_pos.second));
         World::getInstance().addEntity(cp_entity, current_layer_);
 
-        current_operation_ = std::make_shared<operation::Add>(operation::Add());
+        current_operation_ = std::make_shared<Operation>();
         current_operation_->entity_ = cp_entity;
         current_operation_->layer_ = current_layer_;
 
@@ -109,22 +121,20 @@ void Command::startCommand(Commands command) {
     switch (command) {
         case (Commands::RESIZE) :
             {
-                auto hbox = current_entity_->getHitbox();
-
-                current_operation_ = std::make_shared<operation::Resize>(operation::Resize());
+                current_operation_ = std::make_shared<Operation>();
                 current_operation_->entity_ = current_entity_;
-                current_operation_->before_ = {hbox.width_, hbox.height_};
+                current_operation_->before_ = current_entity_->outputToJson();
+                current_operation_->layer_ = current_layer_;
 
                 current_command_ = Commands::RESIZE;
             }
             break;
         case (Commands::MOVE):
             {
-                auto pos = current_entity_->getPosition();
-
-                current_operation_ = std::make_shared<operation::Move>(operation::Move());
+                current_operation_ = std::make_shared<Operation>();
                 current_operation_->entity_ = current_entity_;
-                current_operation_->before_ = {pos.x, pos.y};
+                current_operation_->before_ = current_entity_->outputToJson();
+                current_operation_->layer_ = current_layer_;
 
                 current_command_ = Command::Commands::MOVE;
             }
@@ -139,18 +149,14 @@ void Command::stopCommand() {
     switch (current_command_) {
         case Command::Commands::RESIZE:
             {
-                auto hbox = current_entity_->getHitbox();
-
-                current_operation_->after_ = {hbox.width_, hbox.height_};
+                current_operation_->after_ = current_entity_->outputToJson();
 
                 history_->addOperation(current_operation_);
                 break;
             }
         case Command::Commands::MOVE:
             {
-                auto pos = current_entity_->getPosition();
-
-                current_operation_->after_ = {pos.x, pos.y};
+                current_operation_->after_ = current_entity_->outputToJson();
 
                 history_->addOperation(current_operation_);
                 break;

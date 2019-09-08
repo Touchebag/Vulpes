@@ -2,7 +2,7 @@
 
 #include <stack>
 
-#include "operations/operation.h"
+#include "operation.h"
 
 class History {
   public:
