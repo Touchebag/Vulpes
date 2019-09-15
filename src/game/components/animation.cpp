@@ -56,9 +56,12 @@ void AnimatedEntity::loadFromJson(nlohmann::json j) {
 
     nlohmann::json frame_names_array = j["frame_list"];
 
+    frame_list_.clear();
     for (auto it : frame_names_array) {
         frame_list_.push_back(it.get<std::string>());
     }
+
+    original_frame_list_ = frame_list_;
 
     setRenderTexture();
 }
@@ -67,7 +70,7 @@ std::optional<nlohmann::json> AnimatedEntity::outputToJson() {
     nlohmann::json j;
 
     j["sprite_map"] = sprite_map_;
-    j["frame_list"] = frame_list_;
+    j["frame_list"] = original_frame_list_;
 
     return j;
 }

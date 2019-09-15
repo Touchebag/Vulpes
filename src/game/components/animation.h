@@ -34,6 +34,9 @@ class AnimatedEntity {
     std::unordered_map<std::string, util::Rectangle> sprite_sheet_map_;
 
     std::vector<std::string> frame_list_;
+    // Needed to be able to keep original values when saving entity
+    // States will overwrite active frame list
+    std::vector<std::string> original_frame_list_;
 
     int current_frame_ = 0;
 
