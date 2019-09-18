@@ -15,6 +15,17 @@ std::map<World::Layer, float> parallax_map = {
     {World::Layer::FG_3, 1.15},
 };
 
+void renderAllEntitesInVector(std::vector<std::weak_ptr<RenderableEntity>>& layer, sf::RenderWindow& window) {
+    for (auto it = layer.begin(); it != layer.end(); ) {
+        if (auto ptr = it->lock()) {
+            ptr->render(window);
+            ++it;
+        } else {
+            it = layer.erase(it);
+        }
+    }
+}
+
 }
 
 void Render::renderLayer(sf::RenderWindow& window, World::Layer layer) {
@@ -26,14 +37,8 @@ void Render::renderLayer(sf::RenderWindow& window, World::Layer layer) {
 
     sf::View viewport({view_x_ * parallax_mulitiplier, view_y_ * parallax_mulitiplier}, {view_width_, view_height_});
     window.setView(viewport);
-    for (auto it = layers_[static_cast<int>(layer)].begin(); it != layers_[static_cast<int>(layer)].end(); ) {
-        if (auto ptr = it->lock()) {
-            ptr->render(window);
-            ++it;
-        } else {
-            it = layers_[static_cast<int>(layer)].erase(it);
-        }
-    }
+
+    renderAllEntitesInVector(layers_[static_cast<int>(layer)], window);
 }
 
 void Render::setView(float x, float y, float width, float height) {
@@ -47,16 +52,32 @@ sf::View Render::getView() {
     return {{view_x_, view_y_}, {view_width_, view_height_}};
 }
 
+void Render::drawHud(sf::RenderWindow& window) {
+    auto view = getView().getViewport();
+    window.setView({{500, 500}, {1000, 1000}});
+
+    renderAllEntitesInVector(hud_layer_, window);
+
+    setView(view.top, view.left, view.width, view.height);
+}
+
 void Render::render(sf::RenderWindow& window) {
     for (int i = 0; i < static_cast<int>(World::Layer::MAX_LAYERS); ++i) {
         renderLayer(window, static_cast<World::Layer>(i));
     }
+
+    drawHud(window);
 }
 
 void Render::addEntity(std::weak_ptr<RenderableEntity> entity, World::Layer layer) {
-    layers_[static_cast<int>(layer)].push_back(entity);
+    if (layer == World::Layer::HUD) {
+        hud_layer_.push_back(entity);
+    } else {
+        layers_[static_cast<int>(layer)].push_back(entity);
+    }
 }
 
+// TODO Remove? Weak_ptrs should expire automatically
 void Render::removeEntity(std::weak_ptr<RenderableEntity> entity, World::Layer layer) {
     auto& layer_list = layers_[static_cast<int>(layer)];
     layer_list.erase(std::remove_if(layer_list.begin(), layer_list.end(),

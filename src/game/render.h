@@ -23,6 +23,8 @@ class Render {
     bool parallax_enabled_ = true;
 
   private:
+    void drawHud(sf::RenderWindow& window);
+
     float view_x_;
     float view_y_;
     float view_width_;
@@ -31,4 +33,5 @@ class Render {
     Render() = default;
 
     std::array<std::vector<std::weak_ptr<RenderableEntity>>, static_cast<int>(World::Layer::MAX_LAYERS)> layers_;
+    std::vector<std::weak_ptr<RenderableEntity>> hud_layer_;
 };

@@ -31,7 +31,9 @@ class World {
         FG_2,
         FG_3,
 
-        MAX_LAYERS
+        // HUD is treated differently
+        HUD,
+        MAX_LAYERS = HUD
     };
 
     static World& getInstance();
@@ -71,5 +73,5 @@ class World {
     void loadLayer(nlohmann::json json, Layer layer);
     nlohmann::json jsonifyLayer(Layer layer);
 
-    std::array<std::vector<std::shared_ptr<BaseEntity>>, static_cast<int>(Layer::MAX_LAYERS)> world_objects_;
+    std::array<std::vector<std::shared_ptr<BaseEntity>>, static_cast<int>(Layer::MAX_LAYERS) + 1> world_objects_;
 };
