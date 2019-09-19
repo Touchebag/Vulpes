@@ -7,7 +7,7 @@
 #include "components/hitbox.h"
 #include "components/transform.h"
 #include "components/movement.h"
-#include "components/rendering.h"
+#include "components/rendering/rendering.h"
 #include "components/animation.h"
 #include "components/stateful.h"
 #include "components/actions.h"

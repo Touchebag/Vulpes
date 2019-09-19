@@ -10,7 +10,6 @@ class Render {
     void render(sf::RenderWindow& window);
 
     void addEntity(std::weak_ptr<RenderableEntity> entity, World::Layer layer);
-    void removeEntity(std::weak_ptr<RenderableEntity> entity, World::Layer layer);
 
     void setView(float x, float y, float width, float height);
     sf::View getView();
@@ -19,6 +18,7 @@ class Render {
 
     // Needed for Level Editor
     // TODO Delete renderableEntity in history instead and let Render weak_ptr expire
+    void removeEntity(std::weak_ptr<RenderableEntity> entity, World::Layer layer);
     void renderLayer(sf::RenderWindow& window, World::Layer layer);
     bool parallax_enabled_ = true;
 

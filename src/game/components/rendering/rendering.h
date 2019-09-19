@@ -4,27 +4,29 @@
 #include <json.hpp>
 #include <SFML/Graphics.hpp>
 
-#include "transform.h"
+#include "components/transform.h"
 
 class RenderableEntity {
   public:
     RenderableEntity(std::weak_ptr<Transform> trans);
+    virtual ~RenderableEntity() = default;
 
-    bool loadTexture(std::string file_path);
+    virtual bool loadTexture(std::string file_path);
 
-    void loadFromJson(nlohmann::json j);
-    std::optional<nlohmann::json> outputToJson();
+    virtual void loadFromJson(nlohmann::json j);
+    virtual std::optional<nlohmann::json> outputToJson();
 
-    void setTextureCoords(int pos_x, int pos_y, int width, int height);
+    virtual void setTextureCoords(int pos_x, int pos_y, int width, int height);
 
-    void render(sf::RenderWindow& window);
+    virtual void render(sf::RenderWindow& window);
 
     // Used for mirroring sprites
     bool facing_right_ = true;
 
-  private:
+  protected:
     std::weak_ptr<Transform> trans_;
 
+  private:
     sf::Texture texture_;
     sf::Sprite sprite_;
 

@@ -5,7 +5,7 @@
 #include <json.hpp>
 
 #include "utils/common.h"
-#include "components/rendering.h"
+#include "components/rendering/rendering.h"
 
 // This class keeps the sprite sheet coordinates of the currently loaded texture
 class AnimatedEntity {

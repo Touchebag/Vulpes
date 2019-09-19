@@ -8,6 +8,7 @@
 #include "render.h"
 #include "command.h"
 #include "mouse.h"
+#include "components/rendering/rendering_text.h"
 
 #include "operation.h"
 
@@ -29,6 +30,22 @@ World::Layer change_layer(bool towards_screen) {
     }
 
     return current_layer;
+}
+
+std::shared_ptr<BaseEntity> makeHudText(std::pair<int, int> position = {0, 0}) {
+    std::shared_ptr<BaseEntity> text_element = std::make_shared<BaseEntity>();
+
+    std::shared_ptr<Transform> trans = std::make_shared<Transform>();
+    std::shared_ptr<RenderableText> text = std::make_shared<RenderableText>(trans);
+    text->setColor(sf::Color::Green);
+
+    trans->setPosition(position.first, position.second);
+
+    text_element->trans_ = trans;
+    text_element->renderableEntity_ = text;
+    World::getInstance().addEntity(text_element, World::Layer::HUD);
+
+    return text_element;
 }
 
 int main() {
@@ -55,14 +72,12 @@ int main() {
 
     Command command{history, current_operation, mouse};
 
-    sf::Font font;
-    if (!font.loadFromFile("assets/arial.ttf")) {
-        LOGE("Failed to load font");
-        return EXIT_FAILURE;
-    }
-
     bool entering_text = false;
     sf::String input_text;
+
+    auto layer_hud_text = makeHudText({50, 20});
+    auto mouse_hud_text = makeHudText({500, 20});
+    auto current_entity_hud_text = makeHudText({50, 50});
 
     while (window.isOpen()) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
@@ -193,12 +208,24 @@ int main() {
                                 }
                             }
 
+                            World::getInstance().removeEntity(current_entity_hud_text, World::Layer::HUD);
+
                             if (current_entity) {
                                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
                                     command.startCommand(Command::Commands::RESIZE);
                                 } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
                                     command.startCommand(Command::Commands::MOVE);
                                 }
+                                current_entity_hud_text = makeHudText({50, 50});
+
+                                auto pos = current_entity->getPosition();
+                                auto hbox = current_entity->getHitbox();
+
+                                std::static_pointer_cast<RenderableText>(current_entity_hud_text->renderableEntity_)
+                                    ->setText(std::string("X:") + std::to_string(pos.x) +
+                                              " Y: " + std::to_string(pos.y) +
+                                              "\nW:" + std::to_string(hbox.width_) +
+                                              " H: " + std::to_string(hbox.height_));
                             }
 
                             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LAlt)) {
@@ -268,43 +295,23 @@ int main() {
         window.setView(viewport);
 
         // Print current layer
+        std::static_pointer_cast<RenderableText>(layer_hud_text->renderableEntity_)->setText(World::getLayerString(current_layer));
+
         {
-            sf::Text text;
-            text.setFont(font);
-            text.setFillColor(sf::Color::Green);
-
-            text.setString(World::getLayerString(current_layer));
-            text.setPosition(50, 20);
-            window.draw(text);
-
             auto mouse_world_pos = mouse->getMouseWorldPosition();
-            text.setString(std::string("Mouse X: ") + std::to_string(mouse_world_pos.first));
-            text.setPosition(500, 20);
-            window.draw(text);
-            text.setString(std::string("Mouse Y: ") + std::to_string(mouse_world_pos.second));
-            text.setPosition(500, 50);
-            window.draw(text);
+            std::static_pointer_cast<RenderableText>(mouse_hud_text->renderableEntity_)->setText(
+                    std::string("Mouse X: ") + std::to_string(mouse_world_pos.first) +
+                    "\nMouse Y: " + std::to_string(mouse_world_pos.second));
         }
 
-        if (current_entity) {
-            sf::Text text;
-            text.setFont(font);
-            text.setFillColor(sf::Color::Red);
-
-            // auto hitbox = current_entity->getAbsHitbox();
-            auto pos = current_entity->getPosition();
-            auto hbox = current_entity->getHitbox();
-
-            text.setString(std::string("X:") + std::to_string(pos.x) + std::string(" Y: ") + std::to_string(pos.y));
-            text.setPosition(50, 50);
-            window.draw(text);
-
-            text.setString(std::string("W:") + std::to_string(hbox.width_) + std::string(" H: ") + std::to_string(hbox.height_));
-            text.setPosition(50, 100);
-            window.draw(text);
-        }
-
+        // TODO Move this into menu class
         if (entering_text) {
+            sf::Font font;
+            if (!font.loadFromFile("assets/arial.ttf")) {
+                LOGE("Failed to load font");
+                return EXIT_FAILURE;
+            }
+
             sf::Text text;
             text.setFont(font);
             text.setFillColor(sf::Color::Red);

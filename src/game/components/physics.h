@@ -4,7 +4,7 @@
 #include <json.hpp>
 
 #include "components/stateful.h"
-#include "components/rendering.h"
+#include "components/rendering/rendering.h"
 #include "components/actions.h"
 #include "components/animation.h"
 #include "components/movement.h"
