@@ -8,6 +8,7 @@
 #include "render.h"
 #include "command.h"
 #include "mouse.h"
+#include "menu.h"
 #include "components/rendering/rendering_text.h"
 
 #include "operation.h"
