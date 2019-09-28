@@ -10,10 +10,11 @@ class Menu {
   public:
     Menu();
 
-    void addEntry(std::shared_ptr<MenuEntry> entry);
-
+    void selectOption(int option);
   private:
     void draw();
+
+    void addEntry(std::shared_ptr<MenuEntry> entry);
 
     std::shared_ptr<MenuEntry> current_entry;
     std::vector<std::shared_ptr<MenuEntry>> entries_;

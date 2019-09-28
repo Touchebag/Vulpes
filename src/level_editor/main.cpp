@@ -76,6 +76,8 @@ int main() {
     bool entering_text = false;
     sf::String input_text;
 
+    std::shared_ptr<Menu> menu;
+
     auto layer_hud_text = makeHudText({50, 20});
     auto mouse_hud_text = makeHudText({500, 20});
     auto current_entity_hud_text = makeHudText({50, 50});
@@ -87,7 +89,19 @@ int main() {
 
         sf::Event event;
         while (window.pollEvent(event)) {
-            if (entering_text) {
+            if (menu) {
+                if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::E) {
+                    menu.reset();
+                } else if (event.type == sf::Event::TextEntered) {
+                    try {
+                        char key = static_cast<char>(event.text.unicode);
+                        int option = std::stoi(std::string(&key));
+                        menu->selectOption(option);
+                    } catch (std::invalid_argument& e) {
+                        LOGV("Invalid menu option, ignoring");
+                    }
+                }
+            } else if (entering_text) {
                 switch (event.type) {
                     case sf::Event::Closed:
                         window.close();
@@ -168,6 +182,11 @@ int main() {
                             case sf::Keyboard::Key::R:
                                 if (current_action == Command::Commands::NONE) {
                                     history->redo();
+                                }
+                                break;
+                            case sf::Keyboard::Key::E:
+                                if (!menu) {
+                                    menu = std::make_shared<Menu>();
                                 }
                                 break;
                             default:

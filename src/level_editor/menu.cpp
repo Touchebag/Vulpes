@@ -1,17 +1,47 @@
 #include "menu.h"
 
-#include "render.h"
-#include "components/rendering/rendering_text.h"
-
 Menu::Menu() {
-    auto ent = std::make_shared<MenuEntry>("A");
-    addEntry(ent);
-    current_entry = ent;
+    // TODO Break out to separate file?
+    auto main_entry = std::make_shared<MenuEntry>("Main");
+    current_entry = main_entry;
 
-    ent = std::make_shared<MenuEntry>("B");
-    addEntry(ent);
+    auto ent1 = std::make_shared<MenuEntry>("A");
+
+    auto ent2 = std::make_shared<MenuEntry>("AA");
+    ent1->addEntry(ent2);
+    addEntry(ent2);
+    ent2 = std::make_shared<MenuEntry>("AB");
+    ent1->addEntry(ent2);
+    addEntry(ent2);
+
+    addEntry(ent1);
+    main_entry->addEntry(ent1);
+
+    ent1 = std::make_shared<MenuEntry>("B");
+
+    ent2 = std::make_shared<MenuEntry>("BA");
+    ent1->addEntry(ent2);
+    addEntry(ent2);
+    ent2 = std::make_shared<MenuEntry>("BB");
+    ent1->addEntry(ent2);
+    addEntry(ent2);
+    ent2 = std::make_shared<MenuEntry>("BC");
+    ent1->addEntry(ent2);
+    addEntry(ent2);
+
+    addEntry(ent1);
+    main_entry->addEntry(ent1);
 
     draw();
+}
+
+void Menu::selectOption(int option) {
+    auto new_entry = current_entry->selectOption(option);
+
+    if (new_entry) {
+        current_entry = new_entry;
+        draw();
+    }
 }
 
 void Menu::addEntry(std::shared_ptr<MenuEntry> entry) {
@@ -19,22 +49,5 @@ void Menu::addEntry(std::shared_ptr<MenuEntry> entry) {
 }
 
 void Menu::draw() {
-    for (long long unsigned int i = 0; i < entries_.size(); ++i) {
-        std::shared_ptr<BaseEntity> text_element = std::make_shared<BaseEntity>();
-
-        std::shared_ptr<Transform> trans = std::make_shared<Transform>();
-        std::shared_ptr<RenderableText> text = std::make_shared<RenderableText>(trans);
-        text->setColor(sf::Color::Green);
-
-        text->setText(std::to_string(i + 1) + ": " + entries_.at(i)->getText());
-
-        // Move each extra entry down one row
-        trans->setPosition(100, static_cast<int>(100 + (50 * i)));
-
-        text_element->trans_ = trans;
-        text_element->renderableEntity_ = text;
-
-        menu_text_.push_back(text_element);
-        Render::getInstance().addEntity(text_element->renderableEntity_, World::Layer::HUD);
-    }
+    menu_text_ = current_entry->draw();
 }

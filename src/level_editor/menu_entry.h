@@ -5,6 +5,8 @@
 #include <memory>
 #include <vector>
 
+#include "base_entity.h"
+
 class MenuEntry {
   public:
     MenuEntry(const std::string& text);
@@ -12,8 +14,10 @@ class MenuEntry {
     std::string getText();
     void setText(const std::string& text);
 
-    void selectOption(int option);
+    std::shared_ptr<MenuEntry> selectOption(int option);
     void addEntry(std::weak_ptr<MenuEntry> entry);
+
+    std::vector<std::shared_ptr<BaseEntity>> draw();
 
   private:
     std::string text_;
