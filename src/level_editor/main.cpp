@@ -96,7 +96,14 @@ int main() {
                     try {
                         char key = static_cast<char>(event.text.unicode);
                         int option = std::stoi(std::string(&key));
-                        menu->selectOption(option);
+                        if (auto cmd = menu->selectOption(option)) {
+                            if (current_entity) {
+                                command.startCommand(cmd.value());
+                            }
+
+                            // Close menu if we take an action
+                            menu.reset();
+                        }
                     } catch (std::invalid_argument& e) {
                         LOGV("Invalid menu option, ignoring");
                     }
@@ -186,7 +193,7 @@ int main() {
                                 break;
                             case sf::Keyboard::Key::E:
                                 if (!menu) {
-                                    menu = std::make_shared<Menu>();
+                                    menu = std::make_shared<Menu>(current_entity);
                                 }
                                 break;
                             default:

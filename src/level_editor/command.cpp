@@ -1,10 +1,9 @@
-#include <memory>
-
 #include "command.h"
 
-#include "log.h"
+#include <memory>
 
 #include "operation.h"
+#include "log.h"
 
 Command::Command(std::shared_ptr<History> history,
         std::shared_ptr<Operation> current_operation,
@@ -113,6 +112,7 @@ void Command::copy(std::shared_ptr<BaseEntity> entity) {
     }
 }
 
+// TODO No longer only start command. Also handling. Rename
 void Command::startCommand(Commands command) {
     if (!current_entity_) {
         return;
@@ -139,6 +139,27 @@ void Command::startCommand(Commands command) {
                 current_command_ = Command::Commands::MOVE;
             }
             break;
+        case (Commands::TOGGLE_RENDERABLE):
+            {
+                current_operation_ = std::make_shared<Operation>();
+                current_operation_->entity_ = current_entity_;
+                current_operation_->before_ = current_entity_->outputToJson();
+                current_operation_->layer_ = current_layer_;
+
+                World::getInstance().removeEntity(current_entity_, World::Layer::MAIN);
+                if (current_entity_->renderableEntity_) {
+                    current_entity_->renderableEntity_ = {};
+                } else {
+                    auto renderable = std::make_shared<RenderableEntity>(current_entity_->trans_);
+                    renderable->loadTexture("box.png");
+                    current_entity_->renderableEntity_ = renderable;
+                }
+                World::getInstance().addEntity(current_entity_, World::Layer::MAIN);
+                current_operation_->after_ = current_entity_->outputToJson();
+
+                history_->addOperation(current_operation_);
+                break;
+            }
         default:
             LOGW("Unknown command");
             break;

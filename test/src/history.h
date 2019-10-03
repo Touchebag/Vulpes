@@ -171,3 +171,24 @@ TEST_F(HistoryTestFixture, MoveObjectOtherLayer) {
     ASSERT_TRUE(j1 == j3);
     ASSERT_TRUE(j2 == j4);
 }
+
+TEST_F(HistoryTestFixture, ToggleRenderable) {
+    std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
+    command_.add(entity);
+
+    auto j1 = World::getInstance().saveWorldToJson();
+
+    command_.current_entity_ = entity;
+    command_.startCommand(Command::Commands::TOGGLE_RENDERABLE);
+
+    auto j2 = World::getInstance().saveWorldToJson();
+
+    history_->undo();
+    auto j3 = World::getInstance().saveWorldToJson();
+
+    history_->redo();
+    auto j4 = World::getInstance().saveWorldToJson();
+
+    ASSERT_TRUE(j1 == j3);
+    ASSERT_TRUE(j2 == j4);
+}

@@ -178,3 +178,20 @@ TEST_F(CommandTestFixture, MoveObjectl) {
     ASSERT_EQ(entity->trans_->getX(), 5);
     ASSERT_EQ(entity->trans_->getY(), 17);
 }
+
+TEST_F(CommandTestFixture, ToggleRenderable) {
+    assertWorldEmpty();
+
+    std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
+    command_.add(entity);
+
+    assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
+
+    command_.current_entity_ = entity;
+    command_.startCommand(Command::Commands::TOGGLE_RENDERABLE);
+
+    ASSERT_FALSE(entity->renderableEntity_);
+
+    command_.startCommand(Command::Commands::TOGGLE_RENDERABLE);
+    ASSERT_TRUE(entity->renderableEntity_);
+}

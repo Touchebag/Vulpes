@@ -15,6 +15,8 @@ class Command {
         CAMERA_ZOOM,
         MOVE,
         RESIZE,
+
+        TOGGLE_RENDERABLE,
     };
 
     Command(std::shared_ptr<History> history,

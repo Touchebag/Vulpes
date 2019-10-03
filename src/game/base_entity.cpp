@@ -4,6 +4,23 @@
 
 #include <unistd.h>
 
+namespace {
+
+template <class T>
+std::shared_ptr<T> loadComponentFromJson(nlohmann::json j,
+        const std::string& component_name, std::shared_ptr<T> component) {
+    // TODO Error handling
+    if (j.contains(component_name) && component) {
+        component->loadFromJson(j[component_name]);
+    } else {
+        component.reset();
+    }
+
+    return component;
+}
+
+}
+
 void BaseEntity::setPosition(int abs_x, int abs_y) {
     if (trans_) {
         trans_->setPosition(abs_x, abs_y);
@@ -35,7 +52,6 @@ const Hitbox BaseEntity::getHitbox() {
 }
 
 void BaseEntity::loadFromJson(nlohmann::json j) {
-    // TODO Error handling
     if (j.contains("Hitbox")) {
         hitbox_ = std::make_shared<Hitbox>();
         hitbox_->loadFromJson(j["Hitbox"]);
@@ -56,13 +72,10 @@ void BaseEntity::loadFromJson(nlohmann::json j) {
         movableEntity_->loadFromJson(j["Movable"]);
     }
 
-    if (j.contains("Renderable")) {
-        renderableEntity_ = std::make_shared<RenderableEntity>(trans_);
-        renderableEntity_->loadFromJson(j["Renderable"]);
-        // TODO Fix
-        if (hitbox_) {
-            setHitbox(hitbox_->width_, hitbox_->height_);
-        }
+    renderableEntity_ = loadComponentFromJson<RenderableEntity>(j, "Renderable", std::make_shared<RenderableEntity>(trans_));
+    // TODO Fix tiling
+    if (hitbox_) {
+        setHitbox(hitbox_->width_, hitbox_->height_);
     }
 
     if (j.contains("Animated")) {

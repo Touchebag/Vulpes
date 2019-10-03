@@ -25,6 +25,7 @@ void History::redo() {
 void History::addOperation(std::shared_ptr<Operation> command) {
     undo_history_.push(command);
 
+    // Clear redo history if new command is added
     while (!redo_history_.empty()) {
         redo_history_.pop();
     }

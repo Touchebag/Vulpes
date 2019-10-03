@@ -8,13 +8,15 @@
 
 class Menu {
   public:
-    Menu();
+    Menu(std::shared_ptr<BaseEntity> current_entity);
 
-    void selectOption(int option);
+    std::optional<Command::Commands> selectOption(int option);
   private:
     void draw();
 
     void addEntry(std::shared_ptr<MenuEntry> entry);
+
+    std::shared_ptr<BaseEntity> current_entity;
 
     std::shared_ptr<MenuEntry> current_entry;
     std::vector<std::shared_ptr<MenuEntry>> entries_;
