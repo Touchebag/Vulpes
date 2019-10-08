@@ -53,12 +53,12 @@ sf::View Render::getView() {
 }
 
 void Render::drawHud(sf::RenderWindow& window) {
-    auto view = getView().getViewport();
-    window.setView({{500, 500}, {1000, 1000}});
+    auto view = window.getView();
 
+    window.setView({{500, 500}, {1000, 1000}});
     renderAllEntitesInVector(hud_layer_, window);
 
-    setView(view.top, view.left, view.width, view.height);
+    window.setView(view);
 }
 
 void Render::render(sf::RenderWindow& window) {
