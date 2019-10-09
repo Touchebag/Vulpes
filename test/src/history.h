@@ -192,3 +192,25 @@ TEST_F(HistoryTestFixture, ToggleRenderable) {
     ASSERT_TRUE(j1 == j3);
     ASSERT_TRUE(j2 == j4);
 }
+
+TEST_F(HistoryTestFixture, ToggleCollision) {
+    std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
+    entity->collision_ = std::make_shared<Collision>(entity->trans_, entity->hitbox_);
+    command_.add(entity);
+
+    auto j1 = World::getInstance().saveWorldToJson();
+
+    command_.current_entity_ = entity;
+    command_.startCommand(Command::Commands::TOGGLE_COLLISION);
+
+    auto j2 = World::getInstance().saveWorldToJson();
+
+    history_->undo();
+    auto j3 = World::getInstance().saveWorldToJson();
+
+    history_->redo();
+    auto j4 = World::getInstance().saveWorldToJson();
+
+    ASSERT_TRUE(j1 == j3);
+    ASSERT_TRUE(j2 == j4);
+}

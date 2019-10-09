@@ -17,6 +17,7 @@ class Command {
         RESIZE,
 
         TOGGLE_RENDERABLE,
+        TOGGLE_COLLISION,
     };
 
     Command(std::shared_ptr<History> history,

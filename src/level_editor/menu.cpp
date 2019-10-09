@@ -1,27 +1,24 @@
 #include "menu.h"
 
+#include "menu_entries.h"
+
 Menu::Menu(std::shared_ptr<BaseEntity> current_entity) {
     // TODO Break out to separate file?
     if (current_entity) {
         auto main_entry = std::make_shared<MenuEntry>("Main");
         current_entry = main_entry;
 
-        auto ent1 = std::make_shared<MenuEntry>("Renderable");
-        ent1->setColor(current_entity->renderableEntity_ ? sf::Color::Green : sf::Color::Red);
+        for (auto it : menu_entries::makeRenderableEntry(current_entity, main_entry)) {
+            addEntry(it);
+        }
 
-        auto ent2 = std::make_shared<MenuEntry>(
-                "Enable/Disable",
-                std::optional<Command::Commands>(Command::Commands::TOGGLE_RENDERABLE));
-        ent2->setColor(current_entity->renderableEntity_ ? sf::Color::Green : sf::Color::Red);
-        ent1->addEntry(ent2);
-        addEntry(ent2);
+        for (auto it : menu_entries::makeCollisionEntry(current_entity, main_entry)) {
+            addEntry(it);
+        }
 
-        addEntry(ent1);
-        main_entry->addEntry(ent1);
+        auto ent1 = std::make_shared<MenuEntry>("B");
 
-        ent1 = std::make_shared<MenuEntry>("B");
-
-        ent2 = std::make_shared<MenuEntry>("BA");
+        auto ent2 = std::make_shared<MenuEntry>("BA");
         ent1->addEntry(ent2);
         addEntry(ent2);
         ent2 = std::make_shared<MenuEntry>("BB");

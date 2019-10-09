@@ -62,10 +62,7 @@ void BaseEntity::loadFromJson(nlohmann::json j) {
         trans_->loadFromJson(j["Transform"]);
     }
 
-    if (j.contains("Collision")) {
-        collision_ = std::make_shared<Collision>(trans_, hitbox_);
-        collision_->loadFromJson(j["Collision"]);
-    }
+    collision_ = loadComponentFromJson<Collision>(j, "Collision", std::make_shared<Collision>(trans_, hitbox_));
 
     if (j.contains("Movable")) {
         movableEntity_ = std::make_shared<MovableEntity>(trans_, hitbox_, collision_);

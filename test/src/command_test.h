@@ -195,3 +195,21 @@ TEST_F(CommandTestFixture, ToggleRenderable) {
     command_.startCommand(Command::Commands::TOGGLE_RENDERABLE);
     ASSERT_TRUE(entity->renderableEntity_);
 }
+
+TEST_F(CommandTestFixture, ToggleCollision) {
+    assertWorldEmpty();
+
+    std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
+    entity->collision_ = std::make_shared<Collision>(entity->trans_, entity->hitbox_);
+    command_.add(entity);
+
+    assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
+
+    command_.current_entity_ = entity;
+    command_.startCommand(Command::Commands::TOGGLE_COLLISION);
+
+    ASSERT_FALSE(entity->collision_);
+
+    command_.startCommand(Command::Commands::TOGGLE_COLLISION);
+    ASSERT_TRUE(entity->collision_);
+}

@@ -160,6 +160,26 @@ void Command::startCommand(Commands command) {
                 history_->addOperation(current_operation_);
                 break;
             }
+        case (Commands::TOGGLE_COLLISION):
+            {
+                current_operation_ = std::make_shared<Operation>();
+                current_operation_->entity_ = current_entity_;
+                current_operation_->before_ = current_entity_->outputToJson();
+                current_operation_->layer_ = current_layer_;
+
+                World::getInstance().removeEntity(current_entity_, World::Layer::MAIN);
+                if (current_entity_->collision_) {
+                    current_entity_->collision_ = {};
+                } else {
+                    auto collision = std::make_shared<Collision>(current_entity_->trans_, current_entity_->hitbox_);
+                    current_entity_->collision_ = collision;
+                }
+                World::getInstance().addEntity(current_entity_, World::Layer::MAIN);
+                current_operation_->after_ = current_entity_->outputToJson();
+
+                history_->addOperation(current_operation_);
+                break;
+            }
         default:
             LOGW("Unknown command");
             break;
