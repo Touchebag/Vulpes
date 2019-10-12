@@ -55,13 +55,13 @@ std::shared_ptr<MenuEntry> MenuEntry::selectOption(int option) {
     }
 
     if (option < static_cast<int>(entries_.size()) + 1) {
-        return entries_.at(option - 1).lock();
+        return entries_.at(option - 1);
     }
 
     return {};
 }
 
-void MenuEntry::addEntry(std::weak_ptr<MenuEntry> entry) {
+void MenuEntry::addEntry(std::shared_ptr<MenuEntry> entry) {
     entries_.push_back(entry);
 }
 
@@ -75,13 +75,13 @@ std::vector<std::shared_ptr<BaseEntity>> MenuEntry::draw() {
 
     int i = 0;
     for (auto& it : entries_) {
-        if (auto it_ptr = it.lock()) {
-            std::string entry_text = std::to_string(i + 1) + ": " + it_ptr->getText();
+        if (it) {
+            std::string entry_text = std::to_string(i + 1) + ": " + it->getText();
 
             // Move each extra entry down one row
             util::Point position = {120, static_cast<int>(150 + (50 * i))};
 
-            auto text_element = createTextEntity(entry_text, position, it_ptr->getColor());
+            auto text_element = createTextEntity(entry_text, position, it->getColor());
 
             menu_text_.push_back(text_element);
             Render::getInstance().addEntity(text_element->renderableEntity_, World::Layer::HUD);

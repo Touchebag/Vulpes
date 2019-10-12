@@ -19,7 +19,7 @@ class MenuEntry {
     sf::Color getColor();
 
     std::shared_ptr<MenuEntry> selectOption(int option);
-    void addEntry(std::weak_ptr<MenuEntry> entry);
+    void addEntry(std::shared_ptr<MenuEntry> entry);
 
     std::vector<std::shared_ptr<BaseEntity>> draw();
 
@@ -31,5 +31,5 @@ class MenuEntry {
 
     std::optional<Command::Commands> action_;
 
-    std::vector<std::weak_ptr<MenuEntry>> entries_;
+    std::vector<std::shared_ptr<MenuEntry>> entries_;
 };

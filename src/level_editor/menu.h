@@ -14,12 +14,10 @@ class Menu {
   private:
     void draw();
 
-    void addEntry(std::shared_ptr<MenuEntry> entry);
-
     std::shared_ptr<BaseEntity> current_entity;
 
     std::shared_ptr<MenuEntry> current_entry;
-    std::vector<std::shared_ptr<MenuEntry>> entries_;
+    std::shared_ptr<MenuEntry> main_entry_;
 
     std::vector<std::shared_ptr<BaseEntity>> menu_text_;
 };
