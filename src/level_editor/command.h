@@ -18,6 +18,9 @@ class Command {
 
         TOGGLE_RENDERABLE,
         TOGGLE_COLLISION,
+        TOGGLE_MOVABLE,
+        TOGGLE_PHYSICS,
+        TOGGLE_ACTIONS,
     };
 
     Command(std::shared_ptr<History> history,

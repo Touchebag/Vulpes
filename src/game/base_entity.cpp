@@ -64,10 +64,7 @@ void BaseEntity::loadFromJson(nlohmann::json j) {
 
     collision_ = loadComponentFromJson<Collision>(j, "Collision", std::make_shared<Collision>(trans_, hitbox_));
 
-    if (j.contains("Movable")) {
-        movableEntity_ = std::make_shared<MovableEntity>(trans_, hitbox_, collision_);
-        movableEntity_->loadFromJson(j["Movable"]);
-    }
+    movableEntity_ = loadComponentFromJson(j, "Movable", std::make_shared<MovableEntity>(trans_, hitbox_, collision_));
 
     renderableEntity_ = loadComponentFromJson<RenderableEntity>(j, "Renderable", std::make_shared<RenderableEntity>(trans_));
     // TODO Fix tiling
@@ -85,15 +82,9 @@ void BaseEntity::loadFromJson(nlohmann::json j) {
         statefulEntity_->loadFromJson(j["Stateful"]);
     }
 
-    if (j.contains("Actions")) {
-        actions_ = std::make_shared<Actions>();
-        actions_->loadFromJson(j["Actions"]);
-    }
+    actions_ = loadComponentFromJson(j, "Actions", std::make_shared<Actions>());
 
-    if (j.contains("Physics")) {
-        physics_ = std::make_shared<Physics>(statefulEntity_, renderableEntity_, movableEntity_, animatedEntity_, actions_, collision_);
-        physics_->loadFromJson(j["Physics"]);
-    }
+    physics_ = loadComponentFromJson(j, "Physics", std::make_shared<Physics>(statefulEntity_, renderableEntity_, movableEntity_, animatedEntity_, actions_, collision_));
 }
 
 std::optional<nlohmann::json> BaseEntity::outputToJson() {

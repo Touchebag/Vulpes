@@ -213,3 +213,63 @@ TEST_F(CommandTestFixture, ToggleCollision) {
     command_.startCommand(Command::Commands::TOGGLE_COLLISION);
     ASSERT_TRUE(entity->collision_);
 }
+
+TEST_F(CommandTestFixture, ToggleMovable) {
+    assertWorldEmpty();
+
+    std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
+    entity->movableEntity_ = std::make_shared<MovableEntity>(entity->trans_, entity->hitbox_, entity->collision_);
+    command_.add(entity);
+
+    assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
+
+    command_.current_entity_ = entity;
+    command_.startCommand(Command::Commands::TOGGLE_MOVABLE);
+
+    ASSERT_FALSE(entity->movableEntity_);
+
+    command_.startCommand(Command::Commands::TOGGLE_MOVABLE);
+    ASSERT_TRUE(entity->movableEntity_);
+}
+
+TEST_F(CommandTestFixture, TogglePhysics) {
+    assertWorldEmpty();
+
+    std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
+    entity->physics_ = std::make_shared<Physics>(
+                           entity->statefulEntity_,
+                           entity->renderableEntity_,
+                           entity->movableEntity_,
+                           entity->animatedEntity_,
+                           entity->actions_,
+                           entity->collision_);
+    command_.add(entity);
+
+    assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
+
+    command_.current_entity_ = entity;
+    command_.startCommand(Command::Commands::TOGGLE_PHYSICS);
+
+    ASSERT_FALSE(entity->physics_);
+
+    command_.startCommand(Command::Commands::TOGGLE_PHYSICS);
+    ASSERT_TRUE(entity->physics_);
+}
+
+TEST_F(CommandTestFixture, ToggleActions) {
+    assertWorldEmpty();
+
+    std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
+    entity->actions_ = std::make_shared<Actions>();
+    command_.add(entity);
+
+    assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
+
+    command_.current_entity_ = entity;
+    command_.startCommand(Command::Commands::TOGGLE_ACTIONS);
+
+    ASSERT_FALSE(entity->actions_);
+
+    command_.startCommand(Command::Commands::TOGGLE_ACTIONS);
+    ASSERT_TRUE(entity->actions_);
+}

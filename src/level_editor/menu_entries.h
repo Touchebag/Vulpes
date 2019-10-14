@@ -30,5 +30,32 @@ std::shared_ptr<MenuEntry> makeCollisionEntry(std::shared_ptr<BaseEntity> curren
     return entity;
 }
 
+std::shared_ptr<MenuEntry> makeMovableEntry(std::shared_ptr<BaseEntity> current_entity) {
+    auto color = current_entity->movableEntity_ ? sf::Color::Green : sf::Color::Red;
+    auto entity = makeMenuEntry(current_entity, "Movable", color, std::nullopt);
+
+    entity->addEntry(makeMenuEntry(current_entity, "Enable/Disable", color, {Command::Commands::TOGGLE_MOVABLE}));
+
+    return entity;
+}
+
+std::shared_ptr<MenuEntry> makePhysicsEntry(std::shared_ptr<BaseEntity> current_entity) {
+    auto color = current_entity->physics_ ? sf::Color::Green : sf::Color::Red;
+    auto entity = makeMenuEntry(current_entity, "Physics", color, std::nullopt);
+
+    entity->addEntry(makeMenuEntry(current_entity, "Enable/Disable", color, {Command::Commands::TOGGLE_PHYSICS}));
+
+    return entity;
+}
+
+std::shared_ptr<MenuEntry> makeActionsEntry(std::shared_ptr<BaseEntity> current_entity) {
+    auto color = current_entity->actions_ ? sf::Color::Green : sf::Color::Red;
+    auto entity = makeMenuEntry(current_entity, "Actions", color, std::nullopt);
+
+    entity->addEntry(makeMenuEntry(current_entity, "Enable/Disable", color, {Command::Commands::TOGGLE_ACTIONS}));
+
+    return entity;
+}
+
 } // namespace
 

@@ -214,3 +214,75 @@ TEST_F(HistoryTestFixture, ToggleCollision) {
     ASSERT_TRUE(j1 == j3);
     ASSERT_TRUE(j2 == j4);
 }
+
+TEST_F(HistoryTestFixture, ToggleMovable) {
+    std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
+    entity->movableEntity_ = std::make_shared<MovableEntity>(entity->trans_, entity->hitbox_, entity->collision_);
+    command_.add(entity);
+
+    auto j1 = World::getInstance().saveWorldToJson();
+
+    command_.current_entity_ = entity;
+    command_.startCommand(Command::Commands::TOGGLE_MOVABLE);
+
+    auto j2 = World::getInstance().saveWorldToJson();
+
+    history_->undo();
+    auto j3 = World::getInstance().saveWorldToJson();
+
+    history_->redo();
+    auto j4 = World::getInstance().saveWorldToJson();
+
+    ASSERT_TRUE(j1 == j3);
+    ASSERT_TRUE(j2 == j4);
+}
+
+TEST_F(HistoryTestFixture, TogglePhysics) {
+    std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
+    entity->physics_ = std::make_shared<Physics>(
+                           entity->statefulEntity_,
+                           entity->renderableEntity_,
+                           entity->movableEntity_,
+                           entity->animatedEntity_,
+                           entity->actions_,
+                           entity->collision_);
+    command_.add(entity);
+
+    auto j1 = World::getInstance().saveWorldToJson();
+
+    command_.current_entity_ = entity;
+    command_.startCommand(Command::Commands::TOGGLE_PHYSICS);
+
+    auto j2 = World::getInstance().saveWorldToJson();
+
+    history_->undo();
+    auto j3 = World::getInstance().saveWorldToJson();
+
+    history_->redo();
+    auto j4 = World::getInstance().saveWorldToJson();
+
+    ASSERT_TRUE(j1 == j3);
+    ASSERT_TRUE(j2 == j4);
+}
+
+TEST_F(HistoryTestFixture, ToggleActions) {
+    std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
+    entity->actions_ = std::make_shared<Actions>();
+    command_.add(entity);
+
+    auto j1 = World::getInstance().saveWorldToJson();
+
+    command_.current_entity_ = entity;
+    command_.startCommand(Command::Commands::TOGGLE_ACTIONS);
+
+    auto j2 = World::getInstance().saveWorldToJson();
+
+    history_->undo();
+    auto j3 = World::getInstance().saveWorldToJson();
+
+    history_->redo();
+    auto j4 = World::getInstance().saveWorldToJson();
+
+    ASSERT_TRUE(j1 == j3);
+    ASSERT_TRUE(j2 == j4);
+}

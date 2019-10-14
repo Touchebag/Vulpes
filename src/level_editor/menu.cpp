@@ -12,6 +12,12 @@ Menu::Menu(std::shared_ptr<BaseEntity> current_entity) {
 
         main_entry->addEntry(menu_entries::makeCollisionEntry(current_entity));
 
+        main_entry->addEntry(menu_entries::makeMovableEntry(current_entity));
+
+        main_entry->addEntry(menu_entries::makePhysicsEntry(current_entity));
+
+        main_entry->addEntry(menu_entries::makeActionsEntry(current_entity));
+
         draw();
     }
 }
