@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 
+#include "components/collision.h"
 #include "components/hitbox.h"
+#include "components/transform.h"
 
 class StaticCollisionTestFixture : public ::testing::Test {
   public:
