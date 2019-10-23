@@ -9,6 +9,7 @@
 #include "command.h"
 #include "mouse.h"
 #include "menu.h"
+#include "text_input.h"
 #include "components/rendering/rendering_text.h"
 
 #include "operation.h"
@@ -73,10 +74,8 @@ int main() {
 
     Command command{history, current_operation, mouse};
 
-    bool entering_text = false;
-    sf::String input_text;
-
     std::shared_ptr<Menu> menu;
+    std::shared_ptr<TextInput> text_input;
 
     auto layer_hud_text = makeHudText({50, 20});
     auto mouse_hud_text = makeHudText({500, 20});
@@ -108,25 +107,26 @@ int main() {
                         LOGV("Invalid menu option, ignoring");
                     }
                 }
-            } else if (entering_text) {
+            } else if (text_input) {
                 switch (event.type) {
                     case sf::Event::Closed:
                         window.close();
                         break;
                     case sf::Event::TextEntered:
-                        input_text += event.text.unicode;
+                        text_input->enterText(sf::String(event.text.unicode).toAnsiString());
                         break;
                     case sf::Event::KeyPressed:
                         switch (event.key.code) {
                             case sf::Keyboard::Enter:
-                                if (auto tmp = current_entity->renderableEntity_) {
-                                    tmp->loadTexture(input_text.toAnsiString());
-                                }
-                                // TODO Remove when tiling issue fixed
-                                current_entity->setHitbox(current_entity->getHitbox().width_, current_entity->getHitbox().height_);
+                                if (text_input) {
+                                    if (auto tmp = current_entity->renderableEntity_) {
+                                        tmp->loadTexture(text_input->getString());
+                                    }
+                                    // TODO Remove when tiling issue fixed
+                                    current_entity->setHitbox(current_entity->getHitbox().width_, current_entity->getHitbox().height_);
 
-                                input_text.clear();
-                                entering_text = false;
+                                    text_input.reset();
+                                }
                                 break;
                             default:
                                 break;
@@ -175,7 +175,7 @@ int main() {
                                 break;
                             case sf::Keyboard::Key::T:
                                 if (current_entity) {
-                                    entering_text = true;
+                                    text_input = std::make_shared<TextInput>();
                                     sf::Event tmp_event;
                                     // Clear event buffer to avoid duplicate characters
                                     while (window.pollEvent(tmp_event)) {};
@@ -329,27 +329,6 @@ int main() {
             std::static_pointer_cast<RenderableText>(mouse_hud_text->renderableEntity_)->setText(
                     std::string("Mouse X: ") + std::to_string(mouse_world_pos.first) +
                     "\nMouse Y: " + std::to_string(mouse_world_pos.second));
-        }
-
-        // TODO Move this into menu class
-        if (entering_text) {
-            sf::Font font;
-            if (!font.loadFromFile("assets/arial.ttf")) {
-                LOGE("Failed to load font");
-                return EXIT_FAILURE;
-            }
-
-            sf::Text text;
-            text.setFont(font);
-            text.setFillColor(sf::Color::Red);
-
-            text.setString("Sprite: ");
-            text.setPosition(20, 300);
-            window.draw(text);
-
-            text.setString(input_text);
-            text.setPosition(130, 300);
-            window.draw(text);
         }
 
         // Needed for cursor positions to map correctly when zoomed
