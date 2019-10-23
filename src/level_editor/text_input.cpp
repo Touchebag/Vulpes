@@ -9,7 +9,12 @@ TextInput::TextInput() {
 }
 
 void TextInput::enterText(const std::string& text) {
-    text_ += text;
+    if (text == "\b") {
+        text_.erase(text_.size() - 1, 1);
+    } else {
+        text_ += text;
+    }
+
     text_renderable_->setText(text_);
 }
 
