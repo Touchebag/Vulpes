@@ -246,6 +246,35 @@ void Command::startCommand(Commands command) {
                 history_->addOperation(current_operation_);
                 break;
             }
+        case (Commands::RENDERABLE_TILING_NONE):
+            if (current_entity_->renderableEntity_) {
+                if (auto hbox = current_entity_->hitbox_) {
+                    current_entity_->renderableEntity_->setTiling(false, false, hbox->width_, hbox->height_);
+                }
+            }
+            break;
+        case (Commands::RENDERABLE_TILING_X):
+            if (current_entity_->renderableEntity_) {
+                if (auto hbox = current_entity_->hitbox_) {
+                    current_entity_->renderableEntity_->setTiling(true, false, hbox->width_, hbox->height_);
+                }
+            }
+            break;
+        case (Commands::RENDERABLE_TILING_Y):
+            if (current_entity_->renderableEntity_) {
+                if (auto hbox = current_entity_->hitbox_) {
+                    current_entity_->renderableEntity_->setTiling(false, true, hbox->width_, hbox->height_);
+                }
+            }
+            break;
+        case (Commands::RENDERABLE_TILING_XY):
+            if (current_entity_->renderableEntity_) {
+                if (auto hbox = current_entity_->hitbox_) {
+                    current_entity_->renderableEntity_->setTiling(true, true, hbox->width_, hbox->height_);
+                }
+            }
+            break;
+
         default:
             LOGW("Unknown command");
             break;

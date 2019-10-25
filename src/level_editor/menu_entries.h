@@ -14,47 +14,56 @@ std::shared_ptr<MenuEntry> makeMenuEntry(
 
 std::shared_ptr<MenuEntry> makeRenderableEntry(std::shared_ptr<BaseEntity> current_entity) {
     auto color = current_entity->renderableEntity_ ? sf::Color::Green : sf::Color::Red;
-    auto entity = makeMenuEntry(current_entity, "Renderable", color, std::nullopt);
+    auto entry = makeMenuEntry(current_entity, "Renderable", color, std::nullopt);
 
-    entity->addEntry(makeMenuEntry(current_entity, "Enable/Disable", color, {Command::Commands::TOGGLE_RENDERABLE}));
+    entry->addEntry(makeMenuEntry(current_entity, "Enable/Disable", color, {Command::Commands::TOGGLE_RENDERABLE}));
 
-    return entity;
+    auto tiling_entry = makeMenuEntry(current_entity, "Tiling", color, std::nullopt);
+
+    tiling_entry->addEntry(makeMenuEntry(current_entity, "No tiling", color, {Command::Commands::RENDERABLE_TILING_NONE}));
+    tiling_entry->addEntry(makeMenuEntry(current_entity, "Tile X", color, {Command::Commands::RENDERABLE_TILING_X}));
+    tiling_entry->addEntry(makeMenuEntry(current_entity, "Tile Y", color, {Command::Commands::RENDERABLE_TILING_Y}));
+    tiling_entry->addEntry(makeMenuEntry(current_entity, "Tile X & Y", color, {Command::Commands::RENDERABLE_TILING_XY}));
+
+    entry->addEntry(tiling_entry);
+
+    return entry;
 }
 
 std::shared_ptr<MenuEntry> makeCollisionEntry(std::shared_ptr<BaseEntity> current_entity) {
     auto color = current_entity->collision_ ? sf::Color::Green : sf::Color::Red;
-    auto entity = makeMenuEntry(current_entity, "Collision", color, std::nullopt);
+    auto entry = makeMenuEntry(current_entity, "Collision", color, std::nullopt);
 
-    entity->addEntry(makeMenuEntry(current_entity, "Enable/Disable", color, {Command::Commands::TOGGLE_COLLISION}));
+    entry->addEntry(makeMenuEntry(current_entity, "Enable/Disable", color, {Command::Commands::TOGGLE_COLLISION}));
 
-    return entity;
+    return entry;
 }
 
 std::shared_ptr<MenuEntry> makeMovableEntry(std::shared_ptr<BaseEntity> current_entity) {
     auto color = current_entity->movableEntity_ ? sf::Color::Green : sf::Color::Red;
-    auto entity = makeMenuEntry(current_entity, "Movable", color, std::nullopt);
+    auto entry = makeMenuEntry(current_entity, "Movable", color, std::nullopt);
 
-    entity->addEntry(makeMenuEntry(current_entity, "Enable/Disable", color, {Command::Commands::TOGGLE_MOVABLE}));
+    entry->addEntry(makeMenuEntry(current_entity, "Enable/Disable", color, {Command::Commands::TOGGLE_MOVABLE}));
 
-    return entity;
+    return entry;
 }
 
 std::shared_ptr<MenuEntry> makePhysicsEntry(std::shared_ptr<BaseEntity> current_entity) {
     auto color = current_entity->physics_ ? sf::Color::Green : sf::Color::Red;
-    auto entity = makeMenuEntry(current_entity, "Physics", color, std::nullopt);
+    auto entry = makeMenuEntry(current_entity, "Physics", color, std::nullopt);
 
-    entity->addEntry(makeMenuEntry(current_entity, "Enable/Disable", color, {Command::Commands::TOGGLE_PHYSICS}));
+    entry->addEntry(makeMenuEntry(current_entity, "Enable/Disable", color, {Command::Commands::TOGGLE_PHYSICS}));
 
-    return entity;
+    return entry;
 }
 
 std::shared_ptr<MenuEntry> makeActionsEntry(std::shared_ptr<BaseEntity> current_entity) {
     auto color = current_entity->actions_ ? sf::Color::Green : sf::Color::Red;
-    auto entity = makeMenuEntry(current_entity, "Actions", color, std::nullopt);
+    auto entry = makeMenuEntry(current_entity, "Actions", color, std::nullopt);
 
-    entity->addEntry(makeMenuEntry(current_entity, "Enable/Disable", color, {Command::Commands::TOGGLE_ACTIONS}));
+    entry->addEntry(makeMenuEntry(current_entity, "Enable/Disable", color, {Command::Commands::TOGGLE_ACTIONS}));
 
-    return entity;
+    return entry;
 }
 
 } // namespace

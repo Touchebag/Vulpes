@@ -41,7 +41,7 @@ void BaseEntity::setHitbox(int width, int height) {
     }
 
     if (renderableEntity_) {
-        renderableEntity_->setTextureCoords(0, 0, width, height);
+        renderableEntity_->recalculateTextureRect(width, height);
     }
 }
 

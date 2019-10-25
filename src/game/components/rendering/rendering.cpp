@@ -13,6 +13,7 @@ bool RenderableEntity::loadTexture(std::string file_path) {
     }
 
     sprite_.setTexture(texture_, true);
+    original_texture_rect_ = sprite_.getTextureRect();
     texture_.setRepeated(true);
     texture_name_ = file_path;
 
@@ -25,6 +26,23 @@ void RenderableEntity::loadFromJson(nlohmann::json j) {
     if (j.contains("scale")) {
         scale_ = j["scale"];
     }
+}
+
+void RenderableEntity::recalculateTextureRect(int width, int height) {
+    int texture_rect_x;
+    int texture_rect_y;
+
+    texture_rect_x = tiling_x_ ? width : original_texture_rect_.width;
+    texture_rect_y = tiling_y_ ? height : original_texture_rect_.height;
+
+    setTextureCoords(0, 0, texture_rect_x, texture_rect_y);
+}
+
+void RenderableEntity::setTiling(bool tiling_x, bool tiling_y, int width, int height) {
+    tiling_x_ = tiling_x;
+    tiling_y_ = tiling_y;
+
+    recalculateTextureRect(width, height);
 }
 
 std::optional<nlohmann::json> RenderableEntity::outputToJson() {

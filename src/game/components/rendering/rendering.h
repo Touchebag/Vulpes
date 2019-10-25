@@ -16,6 +16,9 @@ class RenderableEntity {
     virtual void loadFromJson(nlohmann::json j);
     virtual std::optional<nlohmann::json> outputToJson();
 
+    virtual void recalculateTextureRect(int width, int height);
+    virtual void setTiling(bool tiling_x, bool tiling_y, int width, int height);
+
     virtual void setTextureCoords(int pos_x, int pos_y, int width, int height);
 
     virtual void render(sf::RenderWindow& window);
@@ -34,4 +37,8 @@ class RenderableEntity {
 
     // Needed for level editor
     std::string texture_name_;
+
+    sf::IntRect original_texture_rect_;
+    bool tiling_x_ = true;
+    bool tiling_y_ = true;
 };

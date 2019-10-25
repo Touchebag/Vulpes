@@ -21,6 +21,11 @@ class Command {
         TOGGLE_MOVABLE,
         TOGGLE_PHYSICS,
         TOGGLE_ACTIONS,
+
+        RENDERABLE_TILING_NONE,
+        RENDERABLE_TILING_X,
+        RENDERABLE_TILING_Y,
+        RENDERABLE_TILING_XY,
     };
 
     Command(std::shared_ptr<History> history,
