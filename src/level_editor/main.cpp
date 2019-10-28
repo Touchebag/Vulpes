@@ -149,19 +149,15 @@ int main() {
                             } else {
                                 view_size += 200;
                             }
-                            break;
                         }
+                        break;
                     case sf::Event::KeyPressed:
                         switch (event.key.code) {
                             case sf::Keyboard::Key::S:
                                 World::getInstance().saveWorldToFile(LEVEL_FILE_PATH);
                                 break;
                             case sf::Keyboard::Key::A:
-                                // Ctrl + mouse wheel scroll generates an extra key corresponding to A
-                                // for some reason
-                                if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
-                                    command.add();
-                                }
+                                command.add();
                                 break;
                             case sf::Keyboard::Key::D:
                                 command.remove(current_entity);
