@@ -4,6 +4,7 @@
 
 #include "history.h"
 #include "mouse.h"
+#include "text_input.h"
 
 #include "operation.h"
 
@@ -22,6 +23,7 @@ class Command {
         TOGGLE_PHYSICS,
         TOGGLE_ACTIONS,
 
+        RENDERABLE_SPRITE_CHANGE,
         RENDERABLE_TILING_NONE,
         RENDERABLE_TILING_X,
         RENDERABLE_TILING_Y,
@@ -44,9 +46,12 @@ class Command {
     void startCommand(Commands action);
     void stopCommand();
 
+    void closeTextInput();
+
     World::Layer current_layer_ = World::Layer::MAIN;
 
     std::shared_ptr<BaseEntity> current_entity_;
+    std::shared_ptr<TextInput> text_input_;
 
   private:
     std::shared_ptr<History> history_;

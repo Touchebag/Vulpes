@@ -26,6 +26,14 @@ void RenderableEntity::loadFromJson(nlohmann::json j) {
     if (j.contains("scale")) {
         scale_ = j["scale"];
     }
+
+    if (j.contains("tile_x")) {
+        tiling_x_ = j["tile_x"].get<bool>();
+    }
+
+    if (j.contains("tile_y")) {
+        tiling_y_ = j["tile_y"].get<bool>();
+    }
 }
 
 void RenderableEntity::recalculateTextureRect(int width, int height) {
@@ -51,6 +59,9 @@ std::optional<nlohmann::json> RenderableEntity::outputToJson() {
     j["texture"] = texture_name_;
     // TODO Rounding to some number of digits (2?)
     j["scale"] = scale_;
+
+    j["tile_x"] = tiling_x_;
+    j["tile_y"] = tiling_y_;
 
     return {j};
 }

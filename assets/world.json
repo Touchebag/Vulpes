@@ -9,7 +9,9 @@
             },
             "Renderable": {
                 "scale": 1.0,
-                "texture": "box_bg1.png"
+                "texture": "box_bg1.png",
+                "tile_x": true,
+                "tile_y": true
             },
             "Transform": {
                 "pos_x": 790,
@@ -26,7 +28,9 @@
             },
             "Renderable": {
                 "scale": 1.0,
-                "texture": "box_bg2.png"
+                "texture": "box_bg2.png",
+                "tile_x": true,
+                "tile_y": true
             },
             "Transform": {
                 "pos_x": 790,
@@ -43,7 +47,9 @@
             },
             "Renderable": {
                 "scale": 1.0,
-                "texture": "box_bg3.png"
+                "texture": "box_bg3.png",
+                "tile_x": true,
+                "tile_y": true
             },
             "Transform": {
                 "pos_x": 790,
@@ -63,7 +69,9 @@
             },
             "Renderable": {
                 "scale": 1.0,
-                "texture": "box.png"
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true
             },
             "Transform": {
                 "pos_x": 490,
@@ -78,7 +86,9 @@
             },
             "Renderable": {
                 "scale": 1.0,
-                "texture": "box.png"
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true
             },
             "Transform": {
                 "pos_x": 1785,
@@ -93,7 +103,9 @@
             },
             "Renderable": {
                 "scale": 1.0,
-                "texture": "box.png"
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true
             },
             "Transform": {
                 "pos_x": 505,
@@ -108,7 +120,9 @@
             },
             "Renderable": {
                 "scale": 1.0,
-                "texture": "box.png"
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true
             },
             "Transform": {
                 "pos_x": -790,
@@ -123,7 +137,9 @@
             },
             "Renderable": {
                 "scale": 1.0,
-                "texture": "box.png"
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true
             },
             "Transform": {
                 "pos_x": 1431,
@@ -138,7 +154,9 @@
             },
             "Renderable": {
                 "scale": 1.0,
-                "texture": "box.png"
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true
             },
             "Transform": {
                 "pos_x": 1205,
@@ -153,7 +171,9 @@
             },
             "Renderable": {
                 "scale": 1.0,
-                "texture": "box.png"
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true
             },
             "Transform": {
                 "pos_x": 1140,
@@ -168,7 +188,9 @@
             },
             "Renderable": {
                 "scale": 1.0,
-                "texture": "box.png"
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true
             },
             "Transform": {
                 "pos_x": 610,
@@ -183,7 +205,9 @@
             },
             "Renderable": {
                 "scale": 1.0,
-                "texture": "box.png"
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true
             },
             "Transform": {
                 "pos_x": 978,
@@ -198,7 +222,9 @@
             },
             "Renderable": {
                 "scale": 1.0,
-                "texture": "box.png"
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true
             },
             "Transform": {
                 "pos_x": 235,
@@ -213,7 +239,9 @@
             },
             "Renderable": {
                 "scale": 1.0,
-                "texture": "box.png"
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true
             },
             "Transform": {
                 "pos_x": -425,
@@ -228,7 +256,9 @@
             },
             "Renderable": {
                 "scale": 1.0,
-                "texture": "box.png"
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true
             },
             "Transform": {
                 "pos_x": -104,
@@ -243,7 +273,9 @@
             },
             "Renderable": {
                 "scale": 1.0,
-                "texture": "box.png"
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true
             },
             "Transform": {
                 "pos_x": -81,
@@ -258,7 +290,9 @@
             },
             "Renderable": {
                 "scale": 1.0,
-                "texture": "box.png"
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true
             },
             "Transform": {
                 "pos_x": -480,
@@ -273,7 +307,9 @@
             },
             "Renderable": {
                 "scale": 1.0,
-                "texture": "box.png"
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true
             },
             "Transform": {
                 "pos_x": -89,
@@ -288,7 +324,9 @@
             },
             "Renderable": {
                 "scale": 1.0,
-                "texture": "box.png"
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true
             },
             "Transform": {
                 "pos_x": 154,
@@ -344,7 +382,9 @@
         "Physics": null,
         "Renderable": {
             "scale": 0.4000000059604645,
-            "texture": "Player.png"
+            "texture": "Player.png",
+            "tile_x": true,
+            "tile_y": true
         },
         "Stateful": {
             "states": "player_state.json"

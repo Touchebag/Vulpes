@@ -26,6 +26,8 @@ class RenderableEntity {
     // Used for mirroring sprites
     bool facing_right_ = true;
 
+    bool tiling_x_ = true;
+    bool tiling_y_ = true;
   protected:
     std::weak_ptr<Transform> trans_;
 
@@ -39,6 +41,4 @@ class RenderableEntity {
     std::string texture_name_;
 
     sf::IntRect original_texture_rect_;
-    bool tiling_x_ = true;
-    bool tiling_y_ = true;
 };

@@ -246,32 +246,76 @@ void Command::startCommand(Commands command) {
                 history_->addOperation(current_operation_);
                 break;
             }
+        case (Commands::RENDERABLE_SPRITE_CHANGE):
+            {
+                current_operation_ = std::make_shared<Operation>();
+                current_operation_->entity_ = current_entity_;
+                current_operation_->before_ = current_entity_->outputToJson();
+                current_operation_->layer_ = current_layer_;
+
+                text_input_ = std::make_shared<TextInput>();
+
+                current_command_ = Command::Commands::RENDERABLE_SPRITE_CHANGE;
+                break;
+            }
         case (Commands::RENDERABLE_TILING_NONE):
             if (current_entity_->renderableEntity_) {
+                current_operation_ = std::make_shared<Operation>();
+                current_operation_->entity_ = current_entity_;
+                current_operation_->before_ = current_entity_->outputToJson();
+                current_operation_->layer_ = current_layer_;
+
                 if (auto hbox = current_entity_->hitbox_) {
                     current_entity_->renderableEntity_->setTiling(false, false, hbox->width_, hbox->height_);
                 }
+
+                current_operation_->after_ = current_entity_->outputToJson();
+                history_->addOperation(current_operation_);
             }
             break;
         case (Commands::RENDERABLE_TILING_X):
             if (current_entity_->renderableEntity_) {
+                current_operation_ = std::make_shared<Operation>();
+                current_operation_->entity_ = current_entity_;
+                current_operation_->before_ = current_entity_->outputToJson();
+                current_operation_->layer_ = current_layer_;
+
                 if (auto hbox = current_entity_->hitbox_) {
                     current_entity_->renderableEntity_->setTiling(true, false, hbox->width_, hbox->height_);
                 }
+
+                current_operation_->after_ = current_entity_->outputToJson();
+                history_->addOperation(current_operation_);
             }
             break;
         case (Commands::RENDERABLE_TILING_Y):
             if (current_entity_->renderableEntity_) {
+                current_operation_ = std::make_shared<Operation>();
+                current_operation_->entity_ = current_entity_;
+                current_operation_->before_ = current_entity_->outputToJson();
+                current_operation_->layer_ = current_layer_;
+
                 if (auto hbox = current_entity_->hitbox_) {
                     current_entity_->renderableEntity_->setTiling(false, true, hbox->width_, hbox->height_);
                 }
+
+                current_operation_->after_ = current_entity_->outputToJson();
+                history_->addOperation(current_operation_);
             }
             break;
         case (Commands::RENDERABLE_TILING_XY):
             if (current_entity_->renderableEntity_) {
+                current_operation_ = std::make_shared<Operation>();
+                current_operation_->entity_ = current_entity_;
+                current_operation_->before_ = current_entity_->outputToJson();
+                current_operation_->layer_ = current_layer_;
+
                 if (auto hbox = current_entity_->hitbox_) {
                     current_entity_->renderableEntity_->setTiling(true, true, hbox->width_, hbox->height_);
                 }
+
+                current_operation_->after_ = current_entity_->outputToJson();
+                history_->addOperation(current_operation_);
             }
             break;
 
@@ -297,8 +341,28 @@ void Command::stopCommand() {
                 history_->addOperation(current_operation_);
                 break;
             }
+        case (Commands::RENDERABLE_SPRITE_CHANGE):
+            if (current_entity_->renderableEntity_ && text_input_) {
+                try {
+                    auto texture_name = text_input_->getString();
+                    current_entity_->renderableEntity_->loadTexture(texture_name);
+
+                    current_operation_->after_ = current_entity_->outputToJson();
+
+                    history_->addOperation(current_operation_);
+                } catch (std::invalid_argument& e) {
+                    LOGW("Unable to parse input text");
+                    current_operation_.reset();
+                }
+            }
+            break;
         default:
             break;
     }
     current_command_ = Commands::NONE;
+}
+
+void Command::closeTextInput() {
+    stopCommand();
+    text_input_.reset();
 }
