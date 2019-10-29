@@ -1,5 +1,5 @@
 {
-    "main": [
+    "background": [
         {
             "Hitbox": {
                 "height": 200,
@@ -7,57 +7,12 @@
             },
             "Renderable": {
                 "scale": 1.0,
-                "texture": "box.png"
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true
             },
             "Transform": {
-                "pos_x": 200,
-                "pos_y": 100
-            }
-        },
-        {
-            "Hitbox": {
-                "height": 50,
-                "width": 200
-            },
-            "Renderable": {
-                "scale": 1.0,
-                "texture": "box.png"
-            },
-            "Transform": {
-                "pos_x": 100,
-                "pos_y": 0
-            }
-        },
-        null
-    ],
-    "main_fg": [
-        {
-            "Hitbox": {
-                "height": 100,
-                "width": 50
-            },
-            "Renderable": {
-                "scale": 1.0,
-                "texture": "box.png"
-            },
-            "Transform": {
-                "pos_x": 200,
-                "pos_y": 100
-            }
-        }
-    ],
-    "main_bg": [
-        {
-            "Hitbox": {
-                "height": 300,
-                "width": 50
-            },
-            "Renderable": {
-                "scale": 1.0,
-                "texture": "box.png"
-            },
-            "Transform": {
-                "pos_x": 200,
+                "pos_x": 0,
                 "pos_y": 100
             }
         }
@@ -70,7 +25,9 @@
             },
             "Renderable": {
                 "scale": 1.0,
-                "texture": "box.png"
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true
             },
             "Transform": {
                 "pos_x": 200,
@@ -86,7 +43,9 @@
             },
             "Renderable": {
                 "scale": 2.0,
-                "texture": "box.png"
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true
             },
             "Transform": {
                 "pos_x": 200,
@@ -102,7 +61,9 @@
             },
             "Renderable": {
                 "scale": 1.0,
-                "texture": "box.png"
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true
             },
             "Transform": {
                 "pos_x": 200,
@@ -118,7 +79,9 @@
             },
             "Renderable": {
                 "scale": 1.0,
-                "texture": "box.png"
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true
             },
             "Transform": {
                 "pos_x": 200,
@@ -134,7 +97,9 @@
             },
             "Renderable": {
                 "scale": 1.0,
-                "texture": "box.png"
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true
             },
             "Transform": {
                 "pos_x": 200,
@@ -150,7 +115,9 @@
             },
             "Renderable": {
                 "scale": 1.0,
-                "texture": "box.png"
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true
             },
             "Transform": {
                 "pos_x": 100,
@@ -158,7 +125,7 @@
             }
         }
     ],
-    "background": [
+    "main": [
         {
             "Hitbox": {
                 "height": 200,
@@ -166,10 +133,65 @@
             },
             "Renderable": {
                 "scale": 1.0,
-                "texture": "box.png"
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true
             },
             "Transform": {
-                "pos_x": 0,
+                "pos_x": 200,
+                "pos_y": 100
+            }
+        },
+        {
+            "Hitbox": {
+                "height": 50,
+                "width": 200
+            },
+            "Renderable": {
+                "scale": 1.0,
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true
+            },
+            "Transform": {
+                "pos_x": 100,
+                "pos_y": 0
+            }
+        },
+        null
+    ],
+    "main_bg": [
+        {
+            "Hitbox": {
+                "height": 300,
+                "width": 50
+            },
+            "Renderable": {
+                "scale": 1.0,
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true
+            },
+            "Transform": {
+                "pos_x": 200,
+                "pos_y": 100
+            }
+        }
+    ],
+    "main_fg": [
+        {
+            "Hitbox": {
+                "height": 100,
+                "width": 50
+            },
+            "Renderable": {
+                "scale": 1.0,
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true
+            },
+            "Transform": {
+                "pos_x": 200,
                 "pos_y": 100
             }
         }
@@ -192,7 +214,9 @@
         "Physics": null,
         "Renderable": {
             "scale": 0.4000000059604645,
-            "texture": "Player.png"
+            "texture": "Player.png",
+            "tile_x": true,
+            "tile_y": true
         },
         "Stateful": {
             "states": "player_state.json"

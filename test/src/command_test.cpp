@@ -273,3 +273,74 @@ TEST_F(CommandTestFixture, ToggleActions) {
     command_.startCommand(Command::Commands::TOGGLE_ACTIONS);
     ASSERT_TRUE(entity->actions_);
 }
+
+TEST_F(CommandTestFixture, ToggleTiling) {
+    assertWorldEmpty();
+
+    std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
+    command_.add(entity);
+
+    assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
+
+    entity->renderableEntity_ = std::make_shared<RenderableEntity>(entity->trans_);
+
+    ASSERT_TRUE(entity->renderableEntity_->tiling_x_);
+    ASSERT_TRUE(entity->renderableEntity_->tiling_y_);
+
+    command_.current_entity_ = entity;
+    command_.startCommand(Command::Commands::RENDERABLE_TILING_NONE);
+
+    EXPECT_FALSE(entity->renderableEntity_->tiling_x_);
+    EXPECT_FALSE(entity->renderableEntity_->tiling_y_);
+
+    command_.startCommand(Command::Commands::RENDERABLE_TILING_X);
+
+    EXPECT_TRUE(entity->renderableEntity_->tiling_x_);
+    EXPECT_FALSE(entity->renderableEntity_->tiling_y_);
+
+    command_.startCommand(Command::Commands::RENDERABLE_TILING_Y);
+
+    EXPECT_FALSE(entity->renderableEntity_->tiling_x_);
+    EXPECT_TRUE(entity->renderableEntity_->tiling_y_);
+
+    command_.startCommand(Command::Commands::RENDERABLE_TILING_XY);
+
+    EXPECT_TRUE(entity->renderableEntity_->tiling_x_);
+    EXPECT_TRUE(entity->renderableEntity_->tiling_y_);
+}
+
+TEST_F(CommandTestFixture, ChangeTexture) {
+    assertWorldEmpty();
+
+    std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
+    command_.add(entity);
+
+    assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
+
+    command_.current_entity_ = entity;
+
+    ASSERT_EQ(entity->outputToJson().value()["Renderable"]["texture"].get<std::string>(), "box.png");
+
+    command_.startCommand(Command::Commands::RENDERABLE_SPRITE_CHANGE);
+
+    command_.text_input_->enterText("box_bg1.png");
+
+    command_.stopCommand();
+
+    ASSERT_EQ(entity->outputToJson().value()["Renderable"]["texture"].get<std::string>(), "box_bg1.png");
+
+    // Actual input will arrive character by character
+    command_.startCommand(Command::Commands::RENDERABLE_SPRITE_CHANGE);
+
+    command_.text_input_->enterText("b");
+    command_.text_input_->enterText("o");
+    command_.text_input_->enterText("x");
+    command_.text_input_->enterText(".");
+    command_.text_input_->enterText("p");
+    command_.text_input_->enterText("n");
+    command_.text_input_->enterText("g");
+
+    command_.stopCommand();
+
+    ASSERT_EQ(entity->outputToJson().value()["Renderable"]["texture"].get<std::string>(), "box.png");
+}

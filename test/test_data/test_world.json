@@ -1,4 +1,11 @@
 {
+    "background": null,
+    "bg1": null,
+    "bg2": null,
+    "bg3": null,
+    "fg1": null,
+    "fg2": null,
+    "fg3": null,
     "main": [
         {
             "Collision": null,
@@ -8,7 +15,9 @@
             },
             "Renderable": {
                 "scale": 1.0,
-                "texture": "box.png"
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true
             },
             "Transform": {
                 "pos_x": 200,
@@ -23,7 +32,9 @@
             },
             "Renderable": {
                 "scale": 1.0,
-                "texture": "box.png"
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true
             },
             "Transform": {
                 "pos_x": 0,
@@ -38,7 +49,9 @@
             },
             "Renderable": {
                 "scale": 1.0,
-                "texture": "box.png"
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true
             },
             "Transform": {
                 "pos_x": 100,
@@ -53,12 +66,17 @@
             },
             "Renderable": {
                 "scale": 1.0,
-                "texture": "box.png"
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true
             },
             "Transform": {
                 "pos_x": 100,
                 "pos_y": 0
             }
         }
-    ]
+    ],
+    "main_bg": null,
+    "main_fg": null,
+    "player": null
 }

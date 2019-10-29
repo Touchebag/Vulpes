@@ -286,3 +286,52 @@ TEST_F(HistoryTestFixture, ToggleActions) {
     ASSERT_TRUE(j1 == j3);
     ASSERT_TRUE(j2 == j4);
 }
+
+TEST_F(HistoryTestFixture, ToggleTiling) {
+    std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
+    entity->renderableEntity_ = std::make_shared<RenderableEntity>(entity->trans_);
+    command_.add(entity);
+
+    auto j1 = World::getInstance().saveWorldToJson();
+
+    command_.current_entity_ = entity;
+    command_.startCommand(Command::Commands::RENDERABLE_TILING_NONE);
+
+    auto j2 = World::getInstance().saveWorldToJson();
+
+    history_->undo();
+    auto j3 = World::getInstance().saveWorldToJson();
+
+    history_->redo();
+    auto j4 = World::getInstance().saveWorldToJson();
+
+    ASSERT_TRUE(j1 == j3);
+    ASSERT_TRUE(j2 == j4);
+}
+
+TEST_F(HistoryTestFixture, ChangeSprite) {
+    std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
+    entity->renderableEntity_ = std::make_shared<RenderableEntity>(entity->trans_);
+    command_.add(entity);
+
+    auto j1 = World::getInstance().saveWorldToJson();
+
+    command_.current_entity_ = entity;
+    command_.startCommand(Command::Commands::RENDERABLE_SPRITE_CHANGE);
+
+    command_.text_input_->enterText("box_bg1.png");
+
+    command_.stopCommand();
+
+    auto j2 = World::getInstance().saveWorldToJson();
+
+    history_->undo();
+    auto j3 = World::getInstance().saveWorldToJson();
+
+    history_->redo();
+    auto j4 = World::getInstance().saveWorldToJson();
+
+    ASSERT_TRUE(j1 == j3);
+    ASSERT_TRUE(j2 == j4);
+}
+
