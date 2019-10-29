@@ -49,7 +49,7 @@ std::shared_ptr<BaseEntity> makeHudText(std::pair<int, int> position = {0, 0}) {
     return text_element;
 }
 
-int main() {
+int main(int argc, char** argv) {
     sf::RenderWindow window(sf::VideoMode(1000,1000), "BLAAAAH");
 
     Render& renderInst = Render::getInstance();
@@ -63,7 +63,11 @@ int main() {
 
     std::shared_ptr<Mouse> mouse = std::make_shared<Mouse>(window);
 
-    World::getInstance().loadWorldFromFile("assets/world.json");
+    if (argc > 1) {
+        World::getInstance().loadWorldFromFile(argv[1]);
+    } else {
+        World::getInstance().loadWorldFromFile("assets/world.json");
+    }
 
     float view_pos_x = VIEW_POS_X;
     float view_pos_y = VIEW_POS_Y;

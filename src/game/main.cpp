@@ -14,7 +14,7 @@
 #define PHYSICS_FRAME_RATE 60
 #define MS_PER_FRAME 1000 / PHYSICS_FRAME_RATE
 
-int main() {
+int main(int argc, char** argv) {
     sf::RenderWindow window(sf::VideoMode(1000,1000), "BLAAAAH");
     window.setKeyRepeatEnabled(false);
 
@@ -23,7 +23,11 @@ int main() {
     sf::Time frames;
     sf::Clock frame_time;
 
-    worldInst.loadWorldFromFile("assets/world.json");
+    if (argc > 1) {
+        worldInst.loadWorldFromFile(argv[1]);
+    } else {
+        worldInst.loadWorldFromFile("assets/world.json");
+    }
 
     Input::getInstance().setKeyboardMap(
             {{sf::Keyboard::Key::Space, Actions::Action::JUMP},
