@@ -11,9 +11,4 @@ void Player::loadFromJson(nlohmann::json j) {
     if (actions_) {
         Input::getInstance().setActionsInstance(actions_);
     }
-
-    // TODO Move to somehwere relevant
-    if (auto stateEnt = statefulEntity_) {
-        stateEnt->incomingEvent(state::Event::START);
-    }
 }

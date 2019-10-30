@@ -8,7 +8,6 @@ MovableEntity::MovableEntity(std::weak_ptr<Transform> trans, std::weak_ptr<Hitbo
 }
 
 void MovableEntity::move(double velX, double velY) {
-    // TODO Move getMaximumMovement check in here
     if (auto trans = trans_.lock()) {
         vely_ = velY;
         velx_ = velX;

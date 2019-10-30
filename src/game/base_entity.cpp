@@ -80,6 +80,7 @@ void BaseEntity::loadFromJson(nlohmann::json j) {
     if (j.contains("Stateful")) {
         statefulEntity_ = std::make_shared<StatefulEntity>(animatedEntity_);
         statefulEntity_->loadFromJson(j["Stateful"]);
+        statefulEntity_->incomingEvent(state::Event::START);
     }
 
     actions_ = loadComponentFromJson(j, "Actions", std::make_shared<Actions>());

@@ -12,7 +12,6 @@ Physics::Physics(std::weak_ptr<StatefulEntity> statefulEntity, std::weak_ptr<Ren
 }
 
 void Physics::update() {
-    // TODO Should be part of movable?
     bool facing_right = true;
     if (auto rndr = renderableEntity_.lock()) {
         facing_right = rndr->facing_right_;

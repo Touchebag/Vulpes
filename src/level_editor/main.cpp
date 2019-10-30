@@ -310,7 +310,6 @@ int level_editor_main(sf::RenderWindow& window, std::string level_file_path) {
         }
 
         // Needed for cursor positions to map correctly when zoomed
-        // TODO Move text to be drawn by HUD layer in Render
         window.setView(old_viewport);
         window.display();
     }
