@@ -8,7 +8,7 @@ set(GAME_TARGET game)
 set(LEVEL_EDITOR_TARGET level_editor)
 set(MAIN_TARGET vulpes)
 set(STATE_GRAPH_TARGET state_graph)
-set(TEST_TARGET run_tests)
+set(TEST_TARGET tests)
 
 set(CC_OPTIONS -std=c++17 -Wall -Wpedantic -Wconversion -Wold-style-cast -DLOG_LEVEL=3)
 
@@ -34,13 +34,15 @@ add_library(${GAME_TARGET} STATIC ${COMMON_SOURCES})
 target_compile_options(${GAME_TARGET} PUBLIC ${CC_OPTIONS})
 target_include_directories(${GAME_TARGET} PUBLIC src/game/ libs/nlohmann)
 
+target_link_libraries(${GAME_TARGET} ${SFML_LIBS})
+
 # Level editor target
 file(GLOB_RECURSE LEVEL_EDITOR_SOURCES src/level_editor/*.cpp)
 add_library(${LEVEL_EDITOR_TARGET} ${LEVEL_EDITOR_SOURCES})
 target_compile_options(${LEVEL_EDITOR_TARGET} PUBLIC ${CC_OPTIONS})
 target_include_directories(${LEVEL_EDITOR_TARGET} PUBLIC src/game/ libs/nlohmann)
 
-target_link_libraries(${LEVEL_EDITOR_TARGET} ${GAME_TARGET})
+target_link_libraries(${LEVEL_EDITOR_TARGET} ${GAME_TARGET} ${SFML_LIBS})
 
 # Main target
 file(GLOB_RECURSE GAME_SOURCES src/main/main.cpp)
