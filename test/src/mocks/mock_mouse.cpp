@@ -1,4 +1,4 @@
-#include "mouse.h"
+#include "level_editor/mouse.h"
 #include "mock_mouse.h"
 
 #include "log.h"

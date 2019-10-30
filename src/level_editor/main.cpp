@@ -1,5 +1,3 @@
-#include <SFML/Graphics.hpp>
-
 #include "file.h"
 #include "log.h"
 #include "base_entity.h"
@@ -16,8 +14,6 @@
 #define VIEW_POS_X 500.0
 #define VIEW_POS_Y 500.0
 #define VIEW_SIZE 1000.0
-
-#define LEVEL_FILE_PATH "assets/world.json"
 
 World::Layer current_layer = World::Layer::MAIN;
 bool render_current_layer_only = false;
@@ -49,12 +45,8 @@ std::shared_ptr<BaseEntity> makeHudText(std::pair<int, int> position = {0, 0}) {
     return text_element;
 }
 
-int main(int argc, char** argv) {
-    sf::RenderWindow window(sf::VideoMode(1000,1000), "BLAAAAH");
-
+int level_editor_main(sf::RenderWindow& window, std::string level_file_path) {
     Render& renderInst = Render::getInstance();
-
-    std::optional<nlohmann::json> j = file::loadJson(LEVEL_FILE_PATH);
 
     Command::Commands current_action = Command::Commands::NONE;
 
@@ -63,11 +55,7 @@ int main(int argc, char** argv) {
 
     std::shared_ptr<Mouse> mouse = std::make_shared<Mouse>(window);
 
-    if (argc > 1) {
-        World::getInstance().loadWorldFromFile(argv[1]);
-    } else {
-        World::getInstance().loadWorldFromFile("assets/world.json");
-    }
+    World::getInstance().loadWorldFromFile(level_file_path);
 
     float view_pos_x = VIEW_POS_X;
     float view_pos_y = VIEW_POS_Y;
@@ -151,8 +139,12 @@ int main(int argc, char** argv) {
                         break;
                     case sf::Event::KeyPressed:
                         switch (event.key.code) {
+                            case sf::Keyboard::Key::P:
+                                World::getInstance().saveWorldToFile(level_file_path);
+                                return 0;
+                                break;
                             case sf::Keyboard::Key::S:
-                                World::getInstance().saveWorldToFile(LEVEL_FILE_PATH);
+                                World::getInstance().saveWorldToFile(level_file_path);
                                 break;
                             case sf::Keyboard::Key::A:
                                 command.add();
@@ -322,4 +314,6 @@ int main(int argc, char** argv) {
         window.setView(old_viewport);
         window.display();
     }
+
+    return 0;
 }

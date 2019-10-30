@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "command.h"
+#include "level_editor/command.h"
 #include "mocks/mock_mouse.h"
 
 class HistoryTestFixture : public ::testing::Test {

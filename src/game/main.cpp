@@ -1,6 +1,5 @@
 #include <memory>
 
-#include <SFML/Graphics.hpp>
 #include <json.hpp>
 
 #include "base_entity.h"
@@ -14,20 +13,13 @@
 #define PHYSICS_FRAME_RATE 60
 #define MS_PER_FRAME 1000 / PHYSICS_FRAME_RATE
 
-int main(int argc, char** argv) {
-    sf::RenderWindow window(sf::VideoMode(1000,1000), "BLAAAAH");
-    window.setKeyRepeatEnabled(false);
-
+int game_main(sf::RenderWindow& window, std::string level_file_path) {
     World& worldInst = World::getInstance();
 
     sf::Time frames;
     sf::Clock frame_time;
 
-    if (argc > 1) {
-        worldInst.loadWorldFromFile(argv[1]);
-    } else {
-        worldInst.loadWorldFromFile("assets/world.json");
-    }
+    worldInst.loadWorldFromFile(level_file_path);
 
     Input::getInstance().setKeyboardMap(
             {{sf::Keyboard::Key::Space, Actions::Action::JUMP},
@@ -56,6 +48,9 @@ int main(int argc, char** argv) {
                         window.close();
                         break;
                     case sf::Event::KeyPressed:
+                        if (event.key.code == sf::Keyboard::Key::P) {
+                            return 0;
+                        }
                         LOGV("Key pressed %i", event.key.code);
                         Input::getInstance().keyEvent(event.key.code, true);
                         break;
@@ -83,4 +78,6 @@ int main(int argc, char** argv) {
 
         window.display();
     }
+
+    return 0;
 }
