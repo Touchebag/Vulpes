@@ -77,22 +77,6 @@ void Render::addEntity(std::weak_ptr<RenderableEntity> entity, World::Layer laye
     }
 }
 
-// TODO Remove? Weak_ptrs should expire automatically
-void Render::removeEntity(std::weak_ptr<RenderableEntity> entity, World::Layer layer) {
-    auto& layer_list = layers_[static_cast<int>(layer)];
-    layer_list.erase(std::remove_if(layer_list.begin(), layer_list.end(),
-                                       [entity] (std::weak_ptr<RenderableEntity> list_entity){
-                                           auto e1 = entity.lock();
-                                           auto e2 = list_entity.lock();
-                                           if (e1 && e2) {
-                                               return e1 == e2;
-                                           }
-
-                                           return false;
-                                       }
-                                   ), layer_list.end());
-}
-
 Render& Render::getInstance() {
     static Render render_instance;
 

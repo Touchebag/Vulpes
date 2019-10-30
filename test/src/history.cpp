@@ -65,7 +65,7 @@ TEST_F(HistoryTestFixture, RemoveObject) {
     ASSERT_TRUE(j2 == j4);
 }
 
-TEST_F(HistoryTestFixture, CopyObjectRemoveOriginal) {
+TEST_F(HistoryTestFixture, CopyObject) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
     command_.add(entity);
 
@@ -77,6 +77,28 @@ TEST_F(HistoryTestFixture, CopyObjectRemoveOriginal) {
     history_->undo();
     auto j3 = World::getInstance().saveWorldToJson();
 
+    history_->redo();
+    auto j4 = World::getInstance().saveWorldToJson();
+
+    ASSERT_TRUE(j1 == j3);
+    ASSERT_TRUE(j2 == j4);
+}
+
+TEST_F(HistoryTestFixture, CopyObjectRemoveOriginal) {
+    std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
+    command_.add(entity);
+
+    auto j1 = World::getInstance().saveWorldToJson();
+
+    command_.copy(entity);
+    command_.remove(entity);
+    auto j2 = World::getInstance().saveWorldToJson();
+
+    history_->undo();
+    history_->undo();
+    auto j3 = World::getInstance().saveWorldToJson();
+
+    history_->redo();
     history_->redo();
     auto j4 = World::getInstance().saveWorldToJson();
 

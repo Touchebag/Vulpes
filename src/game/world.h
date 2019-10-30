@@ -61,7 +61,6 @@ class World {
     World operator=(World&&) = delete;
 
     // For level editor
-    // TODO Conditionally compile?
     static std::string getLayerString(Layer layer);
     std::weak_ptr<Player> getPlayer();
 

@@ -223,14 +223,16 @@ int level_editor_main(sf::RenderWindow& window, std::string level_file_path) {
                                 }
                                 current_entity_hud_text = makeHudText({50, 50});
 
-                                auto pos = current_entity->getPosition();
-                                auto hbox = current_entity->getHitbox();
+                                auto transform = current_entity->trans_;
+                                auto hbox = current_entity->hitbox_;
 
-                                std::static_pointer_cast<RenderableText>(current_entity_hud_text->renderableEntity_)
-                                    ->setText(std::string("X:") + std::to_string(pos.x) +
-                                              " Y: " + std::to_string(pos.y) +
-                                              "\nW:" + std::to_string(hbox.width_) +
-                                              " H: " + std::to_string(hbox.height_));
+                                if (transform && hbox) {
+                                    std::static_pointer_cast<RenderableText>(current_entity_hud_text->renderableEntity_)
+                                        ->setText(std::string("X:") + std::to_string(transform->getX()) +
+                                                  " Y: " + std::to_string(transform->getY()) +
+                                                  "\nW:" + std::to_string(hbox->width_) +
+                                                  " H: " + std::to_string(hbox->height_));
+                                }
                             }
 
                             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LAlt)) {
@@ -244,19 +246,21 @@ int level_editor_main(sf::RenderWindow& window, std::string level_file_path) {
                                 current_action = Command::Commands::CAMERA_ZOOM;
                             } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
                                 if (current_entity) {
-                                    auto hbox = current_entity->getHitbox();
-                                    int width = static_cast<int>(std::round(static_cast<float>(hbox.width_) / 5.0) * 5.0);
-                                    int height = static_cast<int>(std::round(static_cast<float>(hbox.height_) / 5.0) * 5.0);
+                                    auto hbox = current_entity->hitbox_;
+                                    int width = static_cast<int>(std::round(static_cast<float>(hbox->width_) / 5.0) * 5.0);
+                                    int height = static_cast<int>(std::round(static_cast<float>(hbox->height_) / 5.0) * 5.0);
 
                                     current_entity->setHitbox(width, height);
                                 }
                             } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
                                 if (current_entity) {
-                                    auto pos = current_entity->getPosition();
-                                    int x = static_cast<int>(std::round(static_cast<float>(pos.x) / 5.0) * 5.0);
-                                    int y = static_cast<int>(std::round(static_cast<float>(pos.y) / 5.0) * 5.0);
+                                    if(auto transform = current_entity->trans_) {
+                                        auto pos = transform->getPosition();
+                                        int x = static_cast<int>(std::round(static_cast<float>(pos.x) / 5.0) * 5.0);
+                                        int y = static_cast<int>(std::round(static_cast<float>(pos.y) / 5.0) * 5.0);
 
-                                    current_entity->setPosition(x, y);
+                                        transform->setPosition(x, y);
+                                    }
                                 }
                             }
                         }

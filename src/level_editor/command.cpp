@@ -38,10 +38,12 @@ void Command::update() {
                 if (current_operation_->before_) {
                     auto j = current_operation_->before_.value();
                     if (j.contains("Transform")) {
-                        auto trans = j["Transform"];
-                        current_entity_->setPosition(
-                                static_cast<int>(static_cast<float>(trans["pos_x"]) + mouse_world_dist.first),
-                                static_cast<int>(static_cast<float>(trans["pos_y"]) + mouse_world_dist.second));
+                        if(auto transform = current_entity_->trans_) {
+                            auto trans = j["Transform"];
+                            transform->setPosition(
+                                    static_cast<int>(static_cast<float>(trans["pos_x"]) + mouse_world_dist.first),
+                                    static_cast<int>(static_cast<float>(trans["pos_y"]) + mouse_world_dist.second));
+                        }
                     }
                 }
             }
@@ -75,6 +77,7 @@ void Command::add(std::shared_ptr<BaseEntity> entity) {
     current_operation_ = std::make_shared<Operation>();
     current_operation_->entity_ = entity;
     current_operation_->layer_ = current_layer_;
+    current_operation_->after_ = entity->outputToJson();
 
     history_->addOperation(current_operation_);
 }
@@ -89,6 +92,9 @@ void Command::remove(std::shared_ptr<BaseEntity> entity) {
     current_operation_->layer_ = current_layer_;
     current_operation_->before_ = entity->outputToJson();
 
+    // Ensure weak_ptr in render expires
+    entity->renderableEntity_.reset();
+
     history_->addOperation(current_operation_);
 
     World::getInstance().removeEntity(entity, current_layer_);
@@ -101,12 +107,15 @@ void Command::copy(std::shared_ptr<BaseEntity> entity) {
         cp_entity->loadFromJson(entity->outputToJson().value());
 
         auto mouse_world_pos = mouse_->getMouseWorldPosition();
-        cp_entity->setPosition(static_cast<int>(mouse_world_pos.first), static_cast<int>(mouse_world_pos.second));
+        if(auto transform = cp_entity->trans_) {
+            transform->setPosition(static_cast<int>(mouse_world_pos.first), static_cast<int>(mouse_world_pos.second));
+        }
         World::getInstance().addEntity(cp_entity, current_layer_);
 
         current_operation_ = std::make_shared<Operation>();
         current_operation_->entity_ = cp_entity;
         current_operation_->layer_ = current_layer_;
+        current_operation_->after_ = cp_entity->outputToJson();
 
         history_->addOperation(current_operation_);
     }

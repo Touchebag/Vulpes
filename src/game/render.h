@@ -17,8 +17,6 @@ class Render {
     static Render& getInstance();
 
     // Needed for Level Editor
-    // TODO Delete renderableEntity in history instead and let Render weak_ptr expire
-    void removeEntity(std::weak_ptr<RenderableEntity> entity, World::Layer layer);
     void renderLayer(sf::RenderWindow& window, World::Layer layer);
     bool parallax_enabled_ = true;
 

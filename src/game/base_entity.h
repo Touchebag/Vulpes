@@ -18,16 +18,10 @@ class BaseEntity {
 public:
     virtual void update();
 
-    // TODO Move to constructor?
-    void setPosition(int abs_x, int abs_y);
-    util::Point getPosition();
     void setHitbox(int width, int height);
-    const Hitbox getHitbox();
 
     virtual void loadFromJson(nlohmann::json j);
     virtual std::optional<nlohmann::json> outputToJson();
-
-    void setTextureCoords(std::pair<util::Point, util::Point>);
 
     virtual ~BaseEntity() {};
 

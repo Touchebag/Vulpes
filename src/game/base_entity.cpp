@@ -19,22 +19,9 @@ std::shared_ptr<T> loadComponentFromJson(nlohmann::json j,
     return component;
 }
 
-}
+} // namespace
 
-void BaseEntity::setPosition(int abs_x, int abs_y) {
-    if (trans_) {
-        trans_->setPosition(abs_x, abs_y);
-    }
-}
-
-util::Point BaseEntity::getPosition() {
-    if (trans_) {
-        return {trans_->getX(), trans_->getY()};
-    }
-
-    return {0, 0};
-}
-
+// Needed due to the tiling issue
 void BaseEntity::setHitbox(int width, int height) {
     if (hitbox_) {
         hitbox_->setHitbox(width, height);
@@ -43,12 +30,6 @@ void BaseEntity::setHitbox(int width, int height) {
     if (renderableEntity_) {
         renderableEntity_->recalculateTextureRect(width, height);
     }
-}
-
-// TODO Change level editor commands to store all components
-// and remove this
-const Hitbox BaseEntity::getHitbox() {
-    return *hitbox_;
 }
 
 void BaseEntity::loadFromJson(nlohmann::json j) {
@@ -68,6 +49,7 @@ void BaseEntity::loadFromJson(nlohmann::json j) {
 
     renderableEntity_ = loadComponentFromJson<RenderableEntity>(j, "Renderable", std::make_shared<RenderableEntity>(trans_));
     // TODO Fix tiling
+    // Potentially remove setHitbox when fixed
     if (hitbox_) {
         setHitbox(hitbox_->width_, hitbox_->height_);
     }
