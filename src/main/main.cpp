@@ -9,7 +9,7 @@ int main(int argc, char** argv) {
     if (argc > 1) {
         level_file = argv[1];
     } else {
-        level_file = "assets/world.json";
+        level_file = "world.json";
     }
 
     while (window.isOpen()) {

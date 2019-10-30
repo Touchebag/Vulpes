@@ -1,12 +1,15 @@
 #include "components/rendering/rendering_text.h"
 
+#include "file.h"
 #include "log.h"
 
 RenderableText::RenderableText(std::weak_ptr<Transform> trans) :
     RenderableEntity(trans) {
 
     sf::Font font;
-    if (!font.loadFromFile("assets/arial.ttf")) {
+    if (std::optional<sf::Font> tmp_font = file::loadFont("arial.ttf")) {
+        font = tmp_font.value();
+    } else {
         LOGE("Failed to load font");
     }
 

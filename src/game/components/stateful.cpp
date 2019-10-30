@@ -16,7 +16,7 @@ void StatefulEntity::update() {
 void StatefulEntity::loadFromJson(nlohmann::json j) {
     state_file_path_ = j["states"].get<std::string>();
 
-    loadStates(std::string("assets/") + state_file_path_);
+    loadStates(state_file_path_);
 }
 
 std::optional<nlohmann::json> StatefulEntity::outputToJson() {

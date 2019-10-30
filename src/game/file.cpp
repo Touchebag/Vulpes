@@ -1,10 +1,24 @@
 #include "file.h"
 #include "log.h"
 
-#include <fstream>
+const std::string ASSET_DIR = "assets";
+
+std::ifstream file::openFileForInput(std::string filepath) {
+    filepath = ASSET_DIR + "/" + filepath;
+
+    std::ifstream fs(filepath);
+
+    if (!fs) {
+        LOGE("Failed to open file %s", filepath.c_str());
+        exit(1);
+    }
+
+    return fs;
+}
 
 std::optional<nlohmann::json> file::loadJson(std::string filepath) {
-    // TODO Move "assets" prefix in here
+    filepath = ASSET_DIR + "/" + filepath;
+
     try {
         std::ifstream ifs(filepath);
         return nlohmann::json::parse(ifs);
@@ -22,5 +36,23 @@ bool file::storeJson(std::string filepath, nlohmann::json j) {
     } catch (nlohmann::json::parse_error& e) {
         LOGE("Unable to save file %s: %s", filepath.c_str(), e.what());
         return false;
+    }
+}
+
+std::optional<sf::Texture> file::loadTexture(std::string filepath) {
+    sf::Texture texture;
+    if (!texture.loadFromFile(ASSET_DIR + "/" + filepath)) {
+        return std::nullopt;
+    } else {
+        return {texture};
+    }
+}
+
+std::optional<sf::Font> file::loadFont(std::string filepath) {
+    sf::Font font;
+    if (!font.loadFromFile(ASSET_DIR + "/" + filepath)) {
+        return std::nullopt;
+    } else {
+        return {font};
     }
 }
