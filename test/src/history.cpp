@@ -95,7 +95,7 @@ TEST_F(HistoryTestFixture, ResizeObject) {
     mouse_->saveMousePosition();
 
     command_.current_entity_ = entity;
-    command_.startCommand(Command::Commands::RESIZE);
+    command_.handleCommand(Command::Commands::RESIZE);
 
     MockMouse::setMouseWorldPosition({10, 9});
     command_.update();
@@ -124,7 +124,7 @@ TEST_F(HistoryTestFixture, MoveObject) {
     mouse_->saveMousePosition();
 
     command_.current_entity_ = entity;
-    command_.startCommand(Command::Commands::MOVE);
+    command_.handleCommand(Command::Commands::MOVE);
 
     MockMouse::setMouseWorldPosition({10, 9});
     command_.update();
@@ -154,7 +154,7 @@ TEST_F(HistoryTestFixture, MoveObjectOtherLayer) {
     mouse_->saveMousePosition();
 
     command_.current_entity_ = entity;
-    command_.startCommand(Command::Commands::MOVE);
+    command_.handleCommand(Command::Commands::MOVE);
 
     MockMouse::setMouseWorldPosition({10, 9});
     command_.update();
@@ -179,7 +179,7 @@ TEST_F(HistoryTestFixture, ToggleRenderable) {
     auto j1 = World::getInstance().saveWorldToJson();
 
     command_.current_entity_ = entity;
-    command_.startCommand(Command::Commands::TOGGLE_RENDERABLE);
+    command_.handleCommand(Command::Commands::TOGGLE_RENDERABLE);
 
     auto j2 = World::getInstance().saveWorldToJson();
 
@@ -201,7 +201,7 @@ TEST_F(HistoryTestFixture, ToggleCollision) {
     auto j1 = World::getInstance().saveWorldToJson();
 
     command_.current_entity_ = entity;
-    command_.startCommand(Command::Commands::TOGGLE_COLLISION);
+    command_.handleCommand(Command::Commands::TOGGLE_COLLISION);
 
     auto j2 = World::getInstance().saveWorldToJson();
 
@@ -223,7 +223,7 @@ TEST_F(HistoryTestFixture, ToggleMovable) {
     auto j1 = World::getInstance().saveWorldToJson();
 
     command_.current_entity_ = entity;
-    command_.startCommand(Command::Commands::TOGGLE_MOVABLE);
+    command_.handleCommand(Command::Commands::TOGGLE_MOVABLE);
 
     auto j2 = World::getInstance().saveWorldToJson();
 
@@ -251,7 +251,7 @@ TEST_F(HistoryTestFixture, TogglePhysics) {
     auto j1 = World::getInstance().saveWorldToJson();
 
     command_.current_entity_ = entity;
-    command_.startCommand(Command::Commands::TOGGLE_PHYSICS);
+    command_.handleCommand(Command::Commands::TOGGLE_PHYSICS);
 
     auto j2 = World::getInstance().saveWorldToJson();
 
@@ -273,7 +273,7 @@ TEST_F(HistoryTestFixture, ToggleActions) {
     auto j1 = World::getInstance().saveWorldToJson();
 
     command_.current_entity_ = entity;
-    command_.startCommand(Command::Commands::TOGGLE_ACTIONS);
+    command_.handleCommand(Command::Commands::TOGGLE_ACTIONS);
 
     auto j2 = World::getInstance().saveWorldToJson();
 
@@ -295,7 +295,7 @@ TEST_F(HistoryTestFixture, ToggleTiling) {
     auto j1 = World::getInstance().saveWorldToJson();
 
     command_.current_entity_ = entity;
-    command_.startCommand(Command::Commands::RENDERABLE_TILING_NONE);
+    command_.handleCommand(Command::Commands::RENDERABLE_TILING_NONE);
 
     auto j2 = World::getInstance().saveWorldToJson();
 
@@ -317,7 +317,7 @@ TEST_F(HistoryTestFixture, ChangeSprite) {
     auto j1 = World::getInstance().saveWorldToJson();
 
     command_.current_entity_ = entity;
-    command_.startCommand(Command::Commands::RENDERABLE_SPRITE_CHANGE);
+    command_.handleCommand(Command::Commands::RENDERABLE_SPRITE_CHANGE);
 
     command_.text_input_->enterText("box_bg1.png");
 

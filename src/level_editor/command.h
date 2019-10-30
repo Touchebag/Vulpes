@@ -43,7 +43,7 @@ class Command {
     void remove(std::shared_ptr<BaseEntity> entity);
     void copy(std::shared_ptr<BaseEntity> entity);
 
-    void startCommand(Commands action);
+    void handleCommand(Commands action);
     void stopCommand();
 
     void closeTextInput();

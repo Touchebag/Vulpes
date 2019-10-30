@@ -91,7 +91,7 @@ int level_editor_main(sf::RenderWindow& window, std::string level_file_path) {
                                 sf::Event tmp_event;
                                 while (window.pollEvent(tmp_event)) {};
 
-                                command.startCommand(cmd.value());
+                                command.handleCommand(cmd.value());
                             }
 
                             // Close menu if we take an action
@@ -217,9 +217,9 @@ int level_editor_main(sf::RenderWindow& window, std::string level_file_path) {
 
                             if (current_entity) {
                                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
-                                    command.startCommand(Command::Commands::RESIZE);
+                                    command.handleCommand(Command::Commands::RESIZE);
                                 } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
-                                    command.startCommand(Command::Commands::MOVE);
+                                    command.handleCommand(Command::Commands::MOVE);
                                 }
                                 current_entity_hud_text = makeHudText({50, 50});
 

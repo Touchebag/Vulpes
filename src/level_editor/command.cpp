@@ -112,8 +112,7 @@ void Command::copy(std::shared_ptr<BaseEntity> entity) {
     }
 }
 
-// TODO No longer only start command. Also handling. Rename
-void Command::startCommand(Commands command) {
+void Command::handleCommand(Commands command) {
     if (!current_entity_) {
         return;
     }

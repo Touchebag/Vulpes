@@ -142,7 +142,7 @@ TEST_F(CommandTestFixture, ResizeObjectl) {
     assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
 
     command_.current_entity_ = entity;
-    command_.startCommand(Command::Commands::RESIZE);
+    command_.handleCommand(Command::Commands::RESIZE);
 
     MockMouse::setMouseWorldPosition({10, 9});
     command_.update();
@@ -167,7 +167,7 @@ TEST_F(CommandTestFixture, MoveObjectl) {
     assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
 
     command_.current_entity_ = entity;
-    command_.startCommand(Command::Commands::MOVE);
+    command_.handleCommand(Command::Commands::MOVE);
 
     MockMouse::setMouseWorldPosition({15, 27});
     command_.update();
@@ -188,11 +188,11 @@ TEST_F(CommandTestFixture, ToggleRenderable) {
     assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
 
     command_.current_entity_ = entity;
-    command_.startCommand(Command::Commands::TOGGLE_RENDERABLE);
+    command_.handleCommand(Command::Commands::TOGGLE_RENDERABLE);
 
     ASSERT_FALSE(entity->renderableEntity_);
 
-    command_.startCommand(Command::Commands::TOGGLE_RENDERABLE);
+    command_.handleCommand(Command::Commands::TOGGLE_RENDERABLE);
     ASSERT_TRUE(entity->renderableEntity_);
 }
 
@@ -206,11 +206,11 @@ TEST_F(CommandTestFixture, ToggleCollision) {
     assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
 
     command_.current_entity_ = entity;
-    command_.startCommand(Command::Commands::TOGGLE_COLLISION);
+    command_.handleCommand(Command::Commands::TOGGLE_COLLISION);
 
     ASSERT_FALSE(entity->collision_);
 
-    command_.startCommand(Command::Commands::TOGGLE_COLLISION);
+    command_.handleCommand(Command::Commands::TOGGLE_COLLISION);
     ASSERT_TRUE(entity->collision_);
 }
 
@@ -224,11 +224,11 @@ TEST_F(CommandTestFixture, ToggleMovable) {
     assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
 
     command_.current_entity_ = entity;
-    command_.startCommand(Command::Commands::TOGGLE_MOVABLE);
+    command_.handleCommand(Command::Commands::TOGGLE_MOVABLE);
 
     ASSERT_FALSE(entity->movableEntity_);
 
-    command_.startCommand(Command::Commands::TOGGLE_MOVABLE);
+    command_.handleCommand(Command::Commands::TOGGLE_MOVABLE);
     ASSERT_TRUE(entity->movableEntity_);
 }
 
@@ -248,11 +248,11 @@ TEST_F(CommandTestFixture, TogglePhysics) {
     assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
 
     command_.current_entity_ = entity;
-    command_.startCommand(Command::Commands::TOGGLE_PHYSICS);
+    command_.handleCommand(Command::Commands::TOGGLE_PHYSICS);
 
     ASSERT_FALSE(entity->physics_);
 
-    command_.startCommand(Command::Commands::TOGGLE_PHYSICS);
+    command_.handleCommand(Command::Commands::TOGGLE_PHYSICS);
     ASSERT_TRUE(entity->physics_);
 }
 
@@ -266,11 +266,11 @@ TEST_F(CommandTestFixture, ToggleActions) {
     assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
 
     command_.current_entity_ = entity;
-    command_.startCommand(Command::Commands::TOGGLE_ACTIONS);
+    command_.handleCommand(Command::Commands::TOGGLE_ACTIONS);
 
     ASSERT_FALSE(entity->actions_);
 
-    command_.startCommand(Command::Commands::TOGGLE_ACTIONS);
+    command_.handleCommand(Command::Commands::TOGGLE_ACTIONS);
     ASSERT_TRUE(entity->actions_);
 }
 
@@ -288,22 +288,22 @@ TEST_F(CommandTestFixture, ToggleTiling) {
     ASSERT_TRUE(entity->renderableEntity_->tiling_y_);
 
     command_.current_entity_ = entity;
-    command_.startCommand(Command::Commands::RENDERABLE_TILING_NONE);
+    command_.handleCommand(Command::Commands::RENDERABLE_TILING_NONE);
 
     EXPECT_FALSE(entity->renderableEntity_->tiling_x_);
     EXPECT_FALSE(entity->renderableEntity_->tiling_y_);
 
-    command_.startCommand(Command::Commands::RENDERABLE_TILING_X);
+    command_.handleCommand(Command::Commands::RENDERABLE_TILING_X);
 
     EXPECT_TRUE(entity->renderableEntity_->tiling_x_);
     EXPECT_FALSE(entity->renderableEntity_->tiling_y_);
 
-    command_.startCommand(Command::Commands::RENDERABLE_TILING_Y);
+    command_.handleCommand(Command::Commands::RENDERABLE_TILING_Y);
 
     EXPECT_FALSE(entity->renderableEntity_->tiling_x_);
     EXPECT_TRUE(entity->renderableEntity_->tiling_y_);
 
-    command_.startCommand(Command::Commands::RENDERABLE_TILING_XY);
+    command_.handleCommand(Command::Commands::RENDERABLE_TILING_XY);
 
     EXPECT_TRUE(entity->renderableEntity_->tiling_x_);
     EXPECT_TRUE(entity->renderableEntity_->tiling_y_);
@@ -321,7 +321,7 @@ TEST_F(CommandTestFixture, ChangeTexture) {
 
     ASSERT_EQ(entity->outputToJson().value()["Renderable"]["texture"].get<std::string>(), "box.png");
 
-    command_.startCommand(Command::Commands::RENDERABLE_SPRITE_CHANGE);
+    command_.handleCommand(Command::Commands::RENDERABLE_SPRITE_CHANGE);
 
     command_.text_input_->enterText("box_bg1.png");
 
@@ -330,7 +330,7 @@ TEST_F(CommandTestFixture, ChangeTexture) {
     ASSERT_EQ(entity->outputToJson().value()["Renderable"]["texture"].get<std::string>(), "box_bg1.png");
 
     // Actual input will arrive character by character
-    command_.startCommand(Command::Commands::RENDERABLE_SPRITE_CHANGE);
+    command_.handleCommand(Command::Commands::RENDERABLE_SPRITE_CHANGE);
 
     command_.text_input_->enterText("b");
     command_.text_input_->enterText("o");
