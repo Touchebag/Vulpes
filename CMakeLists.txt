@@ -12,6 +12,8 @@ set(TEST_TARGET run_tests)
 
 set(CC_OPTIONS -std=c++17 -Wall -Wpedantic -Wconversion -Wold-style-cast -DLOG_LEVEL=3)
 
+set(ASSETS_DIR assets)
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # SFML
@@ -23,8 +25,8 @@ set(SFML_LIBS sfml-graphics sfml-window sfml-system)
 find_package(GTest REQUIRED)
 
 # Assets
-file(COPY assets DESTINATION .)
-file(COPY test/test_data DESTINATION .)
+file(COPY ${ASSETS_DIR} DESTINATION .)
+file(COPY test/test_data DESTINATION ./${ASSETS_DIR})
 
 # Game target
 file(GLOB_RECURSE COMMON_SOURCES src/game/*.cpp)
