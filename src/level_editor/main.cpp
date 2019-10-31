@@ -196,6 +196,7 @@ int level_editor_main(sf::RenderWindow& window, std::string level_file_path) {
                             auto player = World::getInstance().getPlayer().lock();
                             if (player && player->collision_ && player->collision_->collides(tmp_coll)) {
                                 current_entity = player;
+                                command.current_entity_ = current_entity;
                             } else {
                                 for (auto it : World::getInstance().getWorldObjects(current_layer)) {
                                     std::shared_ptr<Collision> other_coll = nullptr;
