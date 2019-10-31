@@ -269,6 +269,7 @@ int level_editor_main(sf::RenderWindow& window, std::string level_file_path) {
                         mouse->saveMousePosition();
 
                         command.stopCommand();
+                        current_action = Command::Commands::NONE;
                         break;
                     default:
                         break;
