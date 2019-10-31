@@ -29,6 +29,8 @@ std::optional<nlohmann::json> file::loadJson(std::string filepath) {
 }
 
 bool file::storeJson(std::string filepath, nlohmann::json j) {
+    filepath = ASSET_DIR + "/" + filepath;
+
     try {
         std::ofstream ofs(filepath);
         ofs << j.dump(4);

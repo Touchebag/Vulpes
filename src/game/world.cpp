@@ -118,7 +118,7 @@ void World::saveWorldToFile(std::string file) {
     nlohmann::json j = saveWorldToJson();
 
     if (file::storeJson(file, j)) {
-        LOGD("World save successfully");
+        LOGD("World saved successfully");
     } else {
         LOGE("Failed to save json to file");
     }
