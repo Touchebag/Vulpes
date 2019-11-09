@@ -11,6 +11,7 @@ namespace file {
 std::ifstream openFileForInput(std::string filepath);
 
 std::optional<nlohmann::json> loadJson(std::string filepath);
+std::optional<nlohmann::json> loadEntityFromFile(std::string filepath);
 
 bool storeJson(std::string filepath, nlohmann::json world);
 

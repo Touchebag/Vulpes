@@ -2,6 +2,7 @@
 #include "log.h"
 
 const std::string ASSET_DIR = "assets";
+const std::string ENTITY_DIR = "entities";
 
 std::ifstream file::openFileForInput(std::string filepath) {
     filepath = ASSET_DIR + "/" + filepath;
@@ -26,6 +27,10 @@ std::optional<nlohmann::json> file::loadJson(std::string filepath) {
         LOGE("Unable to load file %s: %s", filepath.c_str(), e.what());
         return {};
     }
+}
+
+std::optional<nlohmann::json> file::loadEntityFromFile(std::string filepath) {
+    return loadJson(ENTITY_DIR + "/" + filepath);
 }
 
 bool file::storeJson(std::string filepath, nlohmann::json j) {

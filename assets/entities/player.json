@@ -1,0 +1,58 @@
+{
+    "Actions": null,
+    "Animated": {
+        "frame_list": [
+            "Idle0",
+            "Idle0",
+            "Idle0",
+            "Idle1",
+            "Idle1",
+            "Idle1",
+            "Idle2",
+            "Idle2",
+            "Idle2",
+            "Idle3",
+            "Idle3",
+            "Idle3",
+            "Idle4",
+            "Idle4",
+            "Idle4",
+            "Idle5",
+            "Idle5",
+            "Idle5",
+            "Idle6",
+            "Idle6",
+            "Idle6",
+            "Idle7",
+            "Idle7",
+            "Idle7",
+            "Idle8",
+            "Idle8",
+            "Idle8",
+            "Idle9",
+            "Idle9",
+            "Idle9"
+        ],
+        "sprite_map": "Player.txt"
+    },
+    "Collision": null,
+    "Hitbox": {
+        "height": 200,
+        "width": 50
+    },
+    "Movable": null,
+    "Physics": null,
+    "Renderable": {
+        "scale": 0.4000000059604645,
+        "texture": "Player.png",
+        "tile_x": true,
+        "tile_y": true
+    },
+    "Stateful": {
+        "states": "player_state.json"
+    },
+    "Transform": {
+        "pos_x": 350,
+        "pos_y": 1300
+    }
+}

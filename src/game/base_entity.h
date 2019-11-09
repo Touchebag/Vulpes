@@ -15,7 +15,7 @@
 #include "components/physics.h"
 
 class BaseEntity {
-public:
+  public:
     virtual void update();
 
     void setHitbox(int width, int height);
@@ -35,4 +35,7 @@ public:
     std::shared_ptr<StatefulEntity> statefulEntity_ = nullptr;
     std::shared_ptr<Actions> actions_ = nullptr;
     std::shared_ptr<Physics> physics_ = nullptr;
+
+  private:
+    std::string entity_file_;
 };

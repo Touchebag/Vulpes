@@ -1,6 +1,7 @@
 #include "base_entity.h"
 
 #include "log.h"
+#include "file.h"
 
 #include <unistd.h>
 
@@ -33,6 +34,19 @@ void BaseEntity::setHitbox(int width, int height) {
 }
 
 void BaseEntity::loadFromJson(nlohmann::json j) {
+    if (j.contains("Entity")) {
+        auto file_name = j["Entity"];
+        if (auto j_entity = file::loadEntityFromFile(file_name)) {
+            j.insert(j_entity.value().begin(), j_entity.value().end());
+        } else {
+            throw std::invalid_argument("File not found");
+        }
+
+        entity_file_ = file_name;
+    } else {
+        entity_file_.clear();
+    }
+
     if (j.contains("Hitbox")) {
         hitbox_ = std::make_shared<Hitbox>();
         hitbox_->loadFromJson(j["Hitbox"]);
@@ -85,45 +99,49 @@ std::optional<nlohmann::json> BaseEntity::outputToJson() {
         }
     }
 
-    if (collision_) {
-        if (auto opt = collision_->outputToJson()) {
-            j["Collision"] = opt.value();
+    if (!entity_file_.empty()) {
+        j["Entity"] = entity_file_;
+    } else {
+        if (collision_) {
+            if (auto opt = collision_->outputToJson()) {
+                j["Collision"] = opt.value();
+            }
         }
-    }
 
-    if (movableEntity_) {
-        if (auto opt = movableEntity_->outputToJson()) {
-            j["Movable"] = opt.value();
+        if (movableEntity_) {
+            if (auto opt = movableEntity_->outputToJson()) {
+                j["Movable"] = opt.value();
+            }
         }
-    }
 
-    if (renderableEntity_) {
-        if (auto opt = renderableEntity_->outputToJson()) {
-            j["Renderable"] = opt.value();
+        if (renderableEntity_) {
+            if (auto opt = renderableEntity_->outputToJson()) {
+                j["Renderable"] = opt.value();
+            }
         }
-    }
 
-    if (animatedEntity_) {
-        if (auto opt = animatedEntity_->outputToJson()) {
-            j["Animated"] = opt.value();
+        if (animatedEntity_) {
+            if (auto opt = animatedEntity_->outputToJson()) {
+                j["Animated"] = opt.value();
+            }
         }
-    }
 
-    if (statefulEntity_) {
-        if (auto opt = statefulEntity_->outputToJson()) {
-            j["Stateful"] = opt.value();
+        if (statefulEntity_) {
+            if (auto opt = statefulEntity_->outputToJson()) {
+                j["Stateful"] = opt.value();
+            }
         }
-    }
 
-    if (actions_) {
-        if (auto opt = actions_->outputToJson()) {
-            j["Actions"] = opt.value();
+        if (actions_) {
+            if (auto opt = actions_->outputToJson()) {
+                j["Actions"] = opt.value();
+            }
         }
-    }
 
-    if (physics_) {
-        if (auto opt = physics_->outputToJson()) {
-            j["Physics"] = opt.value();
+        if (physics_) {
+            if (auto opt = physics_->outputToJson()) {
+                j["Physics"] = opt.value();
+            }
         }
     }
 
