@@ -1,7 +1,7 @@
 #include "world.h"
 
 #include "log.h"
-#include "file.h"
+#include "utils/file.h"
 #include "render.h"
 
 namespace {
@@ -58,7 +58,7 @@ void World::clearCurrentWorld() {
 }
 
 void World::loadWorldFromFile(std::string path) {
-    std::optional<nlohmann::json> j = file::loadJson(path);
+    std::optional<nlohmann::json> j = File::loadRoom(path);
 
     if (!j) {
         LOGE("Unable to load json from file %s", path.c_str());
@@ -117,7 +117,7 @@ nlohmann::json World::jsonifyLayer(Layer layer) {
 void World::saveWorldToFile(std::string file) {
     nlohmann::json j = saveWorldToJson();
 
-    if (file::storeJson(file, j)) {
+    if (File::writeJsonToFile(file, j)) {
         LOGD("World saved successfully");
     } else {
         LOGE("Failed to save json to file");

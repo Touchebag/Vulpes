@@ -1,13 +1,13 @@
 #include "components/rendering/rendering.h"
 #include "log.h"
-#include "file.h"
+#include "utils/file.h"
 
 RenderableEntity::RenderableEntity(std::weak_ptr<Transform> trans) :
     trans_(trans) {
 }
 
 bool RenderableEntity::loadTexture(std::string file_path) {
-    if (std::optional<sf::Texture> texture = file::loadTexture(file_path)) {
+    if (std::optional<sf::Texture> texture = File::loadTexture(file_path)) {
         texture_ = texture.value();
     } else {
         LOGW("Error loading image %s", file_path.c_str());

@@ -13,7 +13,7 @@ class DynamicCollisionTestFixture : public ::testing::Test {
     }
 
     void SetUp() {
-        World::getInstance().loadWorldFromFile("test_data/test_world.json");
+        World::getInstance().loadWorldFromFile("test_world.json");
     }
 
     std::string entity_json_ = R"--(

@@ -26,7 +26,7 @@ find_package(GTest REQUIRED)
 
 # Assets
 file(COPY ${ASSETS_DIR} DESTINATION .)
-file(COPY test/test_data DESTINATION ./${ASSETS_DIR})
+file(COPY test/test_data/rooms DESTINATION ./${ASSETS_DIR})
 
 # Game target
 file(GLOB_RECURSE COMMON_SOURCES src/game/*.cpp)

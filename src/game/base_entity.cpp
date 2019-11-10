@@ -1,7 +1,7 @@
 #include "base_entity.h"
 
 #include "log.h"
-#include "file.h"
+#include "utils/file.h"
 
 #include <unistd.h>
 
@@ -36,7 +36,7 @@ void BaseEntity::setHitbox(int width, int height) {
 void BaseEntity::loadFromJson(nlohmann::json j) {
     if (j.contains("Entity")) {
         auto file_name = j["Entity"];
-        if (auto j_entity = file::loadEntityFromFile(file_name)) {
+        if (auto j_entity = File::loadEntityFromFile(file_name)) {
             j.insert(j_entity.value().begin(), j_entity.value().end());
         } else {
             throw std::invalid_argument("File not found");

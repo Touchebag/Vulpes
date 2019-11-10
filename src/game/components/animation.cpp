@@ -2,14 +2,14 @@
 
 #include "animation.h"
 #include "log.h"
-#include "file.h"
+#include "utils/file.h"
 
 AnimatedEntity::AnimatedEntity(std::weak_ptr<RenderableEntity> renderableEntity) :
     renderableEntity_(renderableEntity) {
 }
 
 void AnimatedEntity::loadSpriteMap(const std::string& path) {
-    auto fs = file::openFileForInput(path);
+    auto fs = File::openSpriteMapFile(path);
 
     std::vector<std::string> map_str(std::istream_iterator<std::string>{fs},
                                      std::istream_iterator<std::string>());

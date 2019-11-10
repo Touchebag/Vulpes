@@ -1,7 +1,5 @@
 #include "state.h"
 
-#include "file.h"
-
 State::State(state::Properties properties) :
     properties_(properties) {
     // TODO check for at least one following state

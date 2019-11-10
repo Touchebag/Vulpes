@@ -1,6 +1,6 @@
 #include "stateful.h"
 
-#include "file.h"
+#include "utils/file.h"
 #include "json.hpp"
 
 StatefulEntity::StatefulEntity(std::weak_ptr<AnimatedEntity> animatedEntity) :
@@ -28,7 +28,7 @@ std::optional<nlohmann::json> StatefulEntity::outputToJson() {
 }
 
 void StatefulEntity::loadStates(std::string file_path) {
-    auto j = file::loadJson(file_path);
+    auto j = File::loadStates(file_path);
 
     // TODO Error handling
     if (j) {
