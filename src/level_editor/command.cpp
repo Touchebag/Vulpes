@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "operation.h"
-#include "log.h"
+#include "utils/log.h"
 
 Command::Command(std::shared_ptr<History> history,
         std::shared_ptr<Operation> current_operation,

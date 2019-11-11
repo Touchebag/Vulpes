@@ -1,5 +1,5 @@
 #include "components/rendering/rendering.h"
-#include "log.h"
+#include "utils/log.h"
 #include "utils/file.h"
 
 RenderableEntity::RenderableEntity(std::weak_ptr<Transform> trans) :

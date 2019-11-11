@@ -1,5 +1,5 @@
 #include "file.h"
-#include "log.h"
+#include "utils/log.h"
 
 const std::string ASSET_DIR = "assets";
 const std::string ENTITY_DIR = "entities";

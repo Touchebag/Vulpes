@@ -1,6 +1,6 @@
 #include "mouse.h"
 
-#include "log.h"
+#include "utils/log.h"
 
 Mouse::Mouse(sf::RenderWindow& window) :
     window_(window) {

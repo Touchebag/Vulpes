@@ -1,6 +1,6 @@
-#include "input_event.h"
+#include "system/input_event.h"
 
-#include "log.h"
+#include "utils/log.h"
 
 void Input::keyEvent(sf::Keyboard::Key key, bool pressed) {
     if (auto a_inst = actions_instance_.lock()) {

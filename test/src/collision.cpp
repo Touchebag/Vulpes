@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "world.h"
+#include "system/world.h"
 
 #include "components/hitbox.h"
 #include "components/transform.h"

@@ -1,7 +1,7 @@
 #include "components/rendering/rendering_text.h"
 
 #include "utils/file.h"
-#include "log.h"
+#include "utils/log.h"
 
 RenderableText::RenderableText(std::weak_ptr<Transform> trans) :
     RenderableEntity(trans) {

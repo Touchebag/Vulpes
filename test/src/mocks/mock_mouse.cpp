@@ -1,8 +1,6 @@
 #include "level_editor/mouse.h"
 #include "mock_mouse.h"
 
-#include "log.h"
-
 std::pair<int, int> MockMouse::mock_mouse_pos_;
 std::pair<float, float> MockMouse::mock_mouse_world_pos_;
 

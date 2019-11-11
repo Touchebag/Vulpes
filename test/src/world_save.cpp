@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "world.h"
+#include "system/world.h"
 #include "utils/file.h"
 
 class WorldTestFixture : public ::testing::Test {

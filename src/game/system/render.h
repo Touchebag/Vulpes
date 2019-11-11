@@ -1,7 +1,7 @@
 #pragma once
 
 #include "base_entity.h"
-#include "world.h"
+#include "system/world.h"
 
 #include <SFML/Graphics.hpp>
 

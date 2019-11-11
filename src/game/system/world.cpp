@@ -1,8 +1,8 @@
 #include "world.h"
 
-#include "log.h"
+#include "utils/log.h"
 #include "utils/file.h"
-#include "render.h"
+#include "system/render.h"
 
 namespace {
 

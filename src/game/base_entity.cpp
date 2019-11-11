@@ -1,6 +1,6 @@
 #include "base_entity.h"
 
-#include "log.h"
+#include "utils/log.h"
 #include "utils/file.h"
 
 #include <unistd.h>

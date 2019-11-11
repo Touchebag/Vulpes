@@ -3,11 +3,11 @@
 #include <json.hpp>
 
 #include "base_entity.h"
-#include "world.h"
+#include "system/world.h"
 #include "utils/common.h"
-#include "log.h"
-#include "input_event.h"
-#include "render.h"
+#include "utils/log.h"
+#include "system/input_event.h"
+#include "system/render.h"
 
 #define PHYSICS_FRAME_RATE 60
 #define MS_PER_FRAME 1000 / PHYSICS_FRAME_RATE

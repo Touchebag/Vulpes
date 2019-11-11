@@ -1,6 +1,6 @@
 #include "player.h"
-#include "input_event.h"
-#include "log.h"
+#include "system/input_event.h"
+#include "utils/log.h"
 
 #include <tuple>
 #include <algorithm>

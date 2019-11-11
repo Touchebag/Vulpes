@@ -1,7 +1,7 @@
 #include <fstream>
 
 #include "animation.h"
-#include "log.h"
+#include "utils/log.h"
 #include "utils/file.h"
 
 AnimatedEntity::AnimatedEntity(std::weak_ptr<RenderableEntity> renderableEntity) :

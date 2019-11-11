@@ -1,6 +1,6 @@
 #include "text_input.h"
 
-#include "render.h"
+#include "system/render.h"
 
 TextInput::TextInput() {
     text_position_->setPosition(50, 300);

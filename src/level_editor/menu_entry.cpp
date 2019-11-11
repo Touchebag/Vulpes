@@ -1,7 +1,7 @@
 #include "menu_entry.h"
 
 #include "utils/common.h"
-#include "render.h"
+#include "system/render.h"
 #include "components/rendering/rendering_text.h"
 
 namespace {
