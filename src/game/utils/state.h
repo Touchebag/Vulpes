@@ -9,6 +9,7 @@ enum class Event {
     // Positions
     TOUCHING_FLOOR = 1,
     TOUCHING_WALL = 2,
+    LEAVING_WALL = 3,
 
     // Movement
     NO_MOVEMENT = 10,
@@ -26,6 +27,7 @@ struct Properties {
     bool movement_locked_y_ = false;
     bool touching_ground_ = true;
     bool touching_wall_ = false;
+    bool dashing_ = false;
     bool can_jump_ = true;
     bool can_dash_ = true;
     unsigned int frame_timer_ = UINT_MAX;

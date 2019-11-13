@@ -12,6 +12,7 @@ Physics::Physics(std::weak_ptr<StatefulEntity> statefulEntity, std::weak_ptr<Ren
 }
 
 void Physics::update() {
+    // TODO Move somwhere more logical (transform?)
     bool facing_right = true;
     if (auto rndr = renderableEntity_.lock()) {
         facing_right = rndr->facing_right_;
@@ -21,17 +22,19 @@ void Physics::update() {
     auto movable = movableEntity_.lock();
     auto act = actions_.lock();
 
-    if (stateEnt) {
-        if (movable && act) {
+    if (stateEnt && movable && act) {
             double x = movable->getVelX();
             double y = movable->getVelY();
 
             if (!stateEnt->getStateProperties().movement_locked_x_) {
                 if (act->getActionState(Actions::Action::MOVE_LEFT)) {
                     if (stateEnt->getStateProperties().touching_ground_) {
-                        x = -10.0;
+                        x -= constants_.ground_accel;
+                    } else if (stateEnt->getStateProperties().touching_wall_ && facing_right) {
+                        // Pressing away from wall should let go
+                        stateEnt->incomingEvent(state::Event::LEAVING_WALL);
                     } else {
-                        x = std::max(x - 1.0, -10.0);
+                        x -= constants_.air_accel;
                     }
                     stateEnt->incomingEvent(state::Event::MOVING);
 
@@ -39,34 +42,42 @@ void Physics::update() {
                     facing_right = x > 0.0;
                 } else if (act->getActionState(Actions::Action::MOVE_RIGHT)) {
                     if (stateEnt->getStateProperties().touching_ground_) {
-                        x = 10.0;
+                        x += constants_.ground_accel;
+                    } else if (stateEnt->getStateProperties().touching_wall_ && !facing_right) {
+                        // Pressing away from wall should let go
+                        stateEnt->incomingEvent(state::Event::LEAVING_WALL);
                     } else {
-                        x = std::min(x + 1.0, 10.0);
+                        x += constants_.air_accel;
                     }
                     stateEnt->incomingEvent(state::Event::MOVING);
 
                     // When moving right facing_right should be true even when speed is zero
                     facing_right = x >= 0.0;
                 } else {
-                    if (stateEnt->getStateProperties().touching_ground_) {
-                        x /= 5.0;
-                    }
                     stateEnt->incomingEvent(state::Event::NO_MOVEMENT);
                 }
             }
 
+            if (stateEnt->getStateProperties().dashing_) {
+                x *= constants_.dash_friction;
+            } else if (stateEnt->getStateProperties().touching_ground_) {
+                x *= constants_.ground_friction;
+            } else {
+                x *= constants_.air_friction;
+            }
+
             if (!stateEnt->getStateProperties().movement_locked_y_) {
                 // Gravity
-                y += 1.0;
+                y += constants_.gravity;
             }
 
             if (stateEnt->getStateProperties().touching_wall_) {
-                y = std::min(y, 5.0);
+                y = std::min(y, constants_.wall_slide_max_speed);
             }
 
             if (act->getActionState(Actions::Action::DASH, true)) {
                 if (stateEnt->getStateProperties().can_dash_) {
-                    x = 50.0 * (facing_right ? 1.0 : -1.0);
+                    x = constants_.dash_speed * (facing_right ? 1.0 : -1.0);
                     y = 0.0;
                     stateEnt->incomingEvent(state::Event::DASHING);
                 }
@@ -76,29 +87,28 @@ void Physics::update() {
                 if (stateEnt->getStateProperties().touching_wall_) {
                     facing_right = !facing_right;
                     int dir = facing_right ? 1.0 : -1.0;
-                    x = 10.0 * dir;
-                    y = -20.0;
+                    x = constants_.wall_jump_horizontal_impulse * dir;
+                    y = constants_.wall_jump_vertical_impulse;
 
                     stateEnt->incomingEvent(state::Event::JUMPING);
                 } else if (stateEnt->getStateProperties().can_jump_) {
-                    y = -20.0;
+                    y = constants_.jump_impulse;
                     stateEnt->incomingEvent(state::Event::JUMPING);
                 }
             }
 
-            y = std::max(std::min(y, 20.0), -20.0);
+            y = std::max(std::min(y, constants_.max_vertical_speed), constants_.min_vertical_speed);
             auto max_movement = movable->getMaximumMovement(x, y);
 
-            if (static_cast<int>(max_movement.second) < y) {
+            if (max_movement.second < y) {
                 stateEnt->incomingEvent(state::Event::TOUCHING_FLOOR);
             } else if (static_cast<int>(max_movement.first) != static_cast<int>(x)) {
                 stateEnt->incomingEvent(state::Event::TOUCHING_WALL);
-            } else if (static_cast<int>(max_movement.second) > 0.0) {
+            } else if (max_movement.second > 0.0) {
                 stateEnt->incomingEvent(state::Event::FALLING);
             }
 
             movable->move(max_movement.first, max_movement.second);
-        }
     }
 
     if (auto render = renderableEntity_.lock()) {

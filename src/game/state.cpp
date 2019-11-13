@@ -21,6 +21,9 @@ State State::loadStateFromJson(nlohmann::json j) {
     if (j.find("touching_wall") != j.end()) {
         properties.touching_wall_ = j["touching_wall"].get<bool>();
     }
+    if (j.find("dashing") != j.end()) {
+        properties.dashing_ = j["dashing"].get<bool>();
+    }
     if (j.find("can_jump") != j.end()) {
         properties.can_jump_ = j["can_jump"].get<bool>();
     }
