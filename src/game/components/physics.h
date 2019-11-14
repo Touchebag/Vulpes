@@ -42,6 +42,8 @@ class Physics {
 
     void update();
 
+    void setPhysicsConstants(Constants constants);
+
     void loadFromJson(nlohmann::json j);
     std::optional<nlohmann::json> outputToJson();
 

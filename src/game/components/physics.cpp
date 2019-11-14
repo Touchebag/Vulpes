@@ -116,8 +116,54 @@ void Physics::update() {
     }
 }
 
+void Physics::setPhysicsConstants(Constants constants) {
+    constants_ = constants;
+}
+
 void Physics::loadFromJson(nlohmann::json j) {
-    // TODO Load constants
+    Constants constants;
+
+    if (j.contains("ground_acceleration")) {
+        constants.ground_accel = j["ground_acceleration"].get<double>();
+    }
+    if (j.contains("ground_friction")) {
+        constants.ground_friction = j["ground_friction"].get<double>();
+    }
+    if (j.contains("air_acceleration")) {
+        constants.air_accel = j["air_acceleration"].get<double>();
+    }
+    if (j.contains("air_friction")) {
+        constants.air_friction = j["air_friction"].get<double>();
+    }
+    if (j.contains("gravity")) {
+        constants.gravity = j["gravity"].get<double>();
+    }
+    if (j.contains("max_vertical_speed")) {
+        constants.max_vertical_speed = j["max_vertical_speed"].get<double>();
+    }
+    if (j.contains("min_vertical_speed")) {
+        constants.min_vertical_speed = j["min_vertical_speed"].get<double>();
+    }
+    if (j.contains("jump_impulse")) {
+        constants.jump_impulse = j["jump_impulse"].get<double>();
+    }
+    if (j.contains("wall_slide_max_speed")) {
+        constants.wall_slide_max_speed = j["wall_slide_max_speed"].get<double>();
+    }
+    if (j.contains("wall_jump_horizontal_impulse")) {
+        constants.wall_jump_horizontal_impulse = j["wall_jump_horizontal_impulse"].get<double>();
+    }
+    if (j.contains("wall_jump_vertical_impulse")) {
+        constants.wall_jump_vertical_impulse = j["wall_jump_vertical_impulse"].get<double>();
+    }
+    if (j.contains("dash_speed")) {
+        constants.dash_speed = j["dash_speed"].get<double>();
+    }
+    if (j.contains("dash_friction")) {
+        constants.dash_friction = j["dash_friction"].get<double>();
+    }
+
+    setPhysicsConstants(constants);
 }
 
 std::optional<nlohmann::json> Physics::outputToJson() {
