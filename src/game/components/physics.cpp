@@ -72,7 +72,7 @@ void Physics::update() {
             }
 
             if (stateEnt->getStateProperties().touching_wall_) {
-                y = std::min(y, constants_.wall_slide_max_speed);
+                y *= constants_.wall_slide_friction;
             }
 
             if (act->getActionState(Actions::Action::DASH, true)) {
@@ -147,8 +147,8 @@ void Physics::loadFromJson(nlohmann::json j) {
     if (j.contains("jump_impulse")) {
         constants.jump_impulse = j["jump_impulse"].get<double>();
     }
-    if (j.contains("wall_slide_max_speed")) {
-        constants.wall_slide_max_speed = j["wall_slide_max_speed"].get<double>();
+    if (j.contains("wall_slide_friction")) {
+        constants.wall_slide_friction = j["wall_slide_friction"].get<double>();
     }
     if (j.contains("wall_jump_horizontal_impulse")) {
         constants.wall_jump_horizontal_impulse = j["wall_jump_horizontal_impulse"].get<double>();

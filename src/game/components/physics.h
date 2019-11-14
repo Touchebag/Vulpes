@@ -26,7 +26,7 @@ class Physics {
 
         // Other
         double jump_impulse = -20.0;
-        double wall_slide_max_speed = 5.0;
+        double wall_slide_friction = 0.85;
         double wall_jump_horizontal_impulse = 20.0;
         double wall_jump_vertical_impulse = -25.0;
         double dash_speed = 100.0;
