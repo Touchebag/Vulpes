@@ -28,6 +28,8 @@ int game_main(sf::RenderWindow& window, std::string level_file_path) {
 
     frame_time.restart();
 
+    Render& renderInst = Render::getInstance();
+
     while (window.isOpen()) {
         frames += frame_time.getElapsedTime();
         frame_time.restart();
@@ -45,6 +47,9 @@ int game_main(sf::RenderWindow& window, std::string level_file_path) {
                 switch (event.type) {
                     case sf::Event::Closed:
                         window.close();
+                        break;
+                    case sf::Event::Resized:
+                        renderInst.resizeView(static_cast<float>(event.size.width), static_cast<float>(event.size.height));
                         break;
                     case sf::Event::KeyPressed:
                         if (event.key.code == sf::Keyboard::Key::P) {
@@ -68,10 +73,8 @@ int game_main(sf::RenderWindow& window, std::string level_file_path) {
             frames -= sf::milliseconds(MS_PER_FRAME);
         }
 
-        Render& renderInst = Render::getInstance();
-
         auto view_pos = worldInst.getPlayerPosition();
-        renderInst.setView(static_cast<float>(view_pos.x), static_cast<float>(view_pos.y), 1000.0, 1000.0);
+        renderInst.moveView(static_cast<float>(view_pos.x), static_cast<float>(view_pos.y));
 
         renderInst.render(window);
 

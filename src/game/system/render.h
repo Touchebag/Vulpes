@@ -11,6 +11,8 @@ class Render {
 
     void addEntity(std::weak_ptr<RenderableEntity> entity, World::Layer layer);
 
+    void moveView(float x, float y);
+    void resizeView(float width, float height);
     void setView(float x, float y, float width, float height);
     sf::View getView();
 

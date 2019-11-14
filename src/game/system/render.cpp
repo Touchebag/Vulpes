@@ -41,6 +41,14 @@ void Render::renderLayer(sf::RenderWindow& window, World::Layer layer) {
     renderAllEntitesInVector(layers_[static_cast<int>(layer)], window);
 }
 
+void Render::moveView(float x, float y) {
+    setView(x, y, view_width_, view_height_);
+}
+
+void Render::resizeView(float width, float height) {
+    setView(view_x_, view_y_, width, height);
+}
+
 void Render::setView(float x, float y, float width, float height) {
     view_x_ = x;
     view_y_ = y;
@@ -53,12 +61,11 @@ sf::View Render::getView() {
 }
 
 void Render::drawHud(sf::RenderWindow& window) {
-    auto view = window.getView();
-
+    // Set static view for HUD
     window.setView({{500, 500}, {1000, 1000}});
     renderAllEntitesInVector(hud_layer_, window);
 
-    window.setView(view);
+    window.setView(getView());
 }
 
 void Render::render(sf::RenderWindow& window) {
