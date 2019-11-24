@@ -30,6 +30,11 @@ int game_main(sf::RenderWindow& window, std::string level_file_path) {
 
     Render& renderInst = Render::getInstance();
 
+    {
+        auto view_size = window.getView().getSize();
+        renderInst.setView(0, 0, view_size.x, view_size.y);
+    }
+
     while (window.isOpen()) {
         frames += frame_time.getElapsedTime();
         frame_time.restart();
