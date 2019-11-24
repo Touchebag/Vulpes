@@ -68,7 +68,15 @@ void Physics::update() {
 
             if (!stateEnt->getStateProperties().movement_locked_y_) {
                 // Gravity
-                y += constants_.gravity;
+                if (y > 0.0 && !stateEnt->getStateProperties().touching_wall_) {
+                    y += constants_.gravity * constants_.fall_multiplier;
+                } else if (y < 0.0
+                           && !(act->getActionState(Actions::Action::JUMP))
+                           && !stateEnt->getStateProperties().touching_wall_) {
+                    y += constants_.gravity * constants_.low_jump_multiplier;
+                } else {
+                    y += constants_.gravity;
+                }
             }
 
             if (stateEnt->getStateProperties().touching_wall_) {
@@ -137,6 +145,12 @@ void Physics::loadFromJson(nlohmann::json j) {
     }
     if (j.contains("gravity")) {
         constants.gravity = j["gravity"].get<double>();
+    }
+    if (j.contains("fall_multiplier")) {
+        constants.fall_multiplier = j["fall_multiplier"].get<double>();
+    }
+    if (j.contains("low_jump_multiplier")) {
+        constants.low_jump_multiplier = j["low_jump_multiplier"].get<double>();
     }
     if (j.contains("max_vertical_speed")) {
         constants.max_vertical_speed = j["max_vertical_speed"].get<double>();
