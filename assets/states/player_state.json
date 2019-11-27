@@ -11,6 +11,7 @@
         "next_states": [
             {"event": 11, "state": "running"},
             {"event": 12, "state": "jumping"},
+            {"event": 13, "state": "falling"},
             {"event": 14, "state": "dashing"}
         ],
         "frame_names": [
