@@ -4,6 +4,7 @@
 
 #include "state.h"
 #include "components/animation.h"
+#include "utils/state_handler.h"
 
 class StatefulEntity {
   public:
@@ -16,7 +17,7 @@ class StatefulEntity {
 
     void incomingEvent(state::Event event);
 
-    virtual const state::Properties& getStateProperties() final;
+    const state::Properties& getStateProperties();
 
   private:
     void loadStates(std::string file_path);
@@ -27,6 +28,5 @@ class StatefulEntity {
 
     std::weak_ptr<AnimatedEntity> animatedEntity_;
 
-    std::shared_ptr<State> current_state_;
-    std::unordered_map<std::string, std::shared_ptr<State>> state_list_;
+    StateHandler state_handler_;
 };

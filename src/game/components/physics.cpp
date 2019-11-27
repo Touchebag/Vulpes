@@ -26,11 +26,13 @@ void Physics::update() {
             double x = movable->getVelX();
             double y = movable->getVelY();
 
-            if (!stateEnt->getStateProperties().movement_locked_x_) {
+            auto state_props = stateEnt->getStateProperties();
+
+            if (!state_props.movement_locked_x_) {
                 if (act->getActionState(Actions::Action::MOVE_LEFT)) {
-                    if (stateEnt->getStateProperties().touching_ground_) {
+                    if (state_props.touching_ground_) {
                         x -= constants_.ground_accel;
-                    } else if (stateEnt->getStateProperties().touching_wall_ && facing_right) {
+                    } else if (state_props.touching_wall_ && facing_right) {
                         // Pressing away from wall should let go
                         stateEnt->incomingEvent(state::Event::LEAVING_WALL);
                     } else {
@@ -41,9 +43,9 @@ void Physics::update() {
                     // When moving left facing_right should be false even when speed is zero
                     facing_right = x > 0.0;
                 } else if (act->getActionState(Actions::Action::MOVE_RIGHT)) {
-                    if (stateEnt->getStateProperties().touching_ground_) {
+                    if (state_props.touching_ground_) {
                         x += constants_.ground_accel;
-                    } else if (stateEnt->getStateProperties().touching_wall_ && !facing_right) {
+                    } else if (state_props.touching_wall_ && !facing_right) {
                         // Pressing away from wall should let go
                         stateEnt->incomingEvent(state::Event::LEAVING_WALL);
                     } else {
@@ -58,33 +60,33 @@ void Physics::update() {
                 }
             }
 
-            if (stateEnt->getStateProperties().dashing_) {
+            if (state_props.dashing_) {
                 x *= constants_.dash_friction;
-            } else if (stateEnt->getStateProperties().touching_ground_) {
+            } else if (state_props.touching_ground_) {
                 x *= constants_.ground_friction;
             } else {
                 x *= constants_.air_friction;
             }
 
-            if (!stateEnt->getStateProperties().movement_locked_y_) {
+            if (!state_props.movement_locked_y_) {
                 // Gravity
-                if (y > 0.0 && !stateEnt->getStateProperties().touching_wall_) {
+                if (y > 0.0 && !state_props.touching_wall_) {
                     y += constants_.gravity * constants_.fall_multiplier;
                 } else if (y < 0.0
                            && !(act->getActionState(Actions::Action::JUMP))
-                           && !stateEnt->getStateProperties().touching_wall_) {
+                           && !state_props.touching_wall_) {
                     y += constants_.gravity * constants_.low_jump_multiplier;
                 } else {
                     y += constants_.gravity;
                 }
             }
 
-            if (stateEnt->getStateProperties().touching_wall_) {
+            if (state_props.touching_wall_) {
                 y *= constants_.wall_slide_friction;
             }
 
             if (act->getActionState(Actions::Action::DASH, true)) {
-                if (stateEnt->getStateProperties().can_dash_) {
+                if (state_props.can_dash_) {
                     x = constants_.dash_speed * (facing_right ? 1.0 : -1.0);
                     y = 0.0;
                     stateEnt->incomingEvent(state::Event::DASHING);
@@ -92,14 +94,14 @@ void Physics::update() {
             }
 
             if (act->getActionState(Actions::Action::JUMP, true)) {
-                if (stateEnt->getStateProperties().touching_wall_) {
+                if (state_props.touching_wall_) {
                     facing_right = !facing_right;
                     int dir = facing_right ? 1.0 : -1.0;
                     x = constants_.wall_jump_horizontal_impulse * dir;
                     y = constants_.wall_jump_vertical_impulse;
 
                     stateEnt->incomingEvent(state::Event::JUMPING);
-                } else if (stateEnt->getStateProperties().can_jump_) {
+                } else if (state_props.can_jump_) {
                     y = constants_.jump_impulse;
                     stateEnt->incomingEvent(state::Event::JUMPING);
                 }
