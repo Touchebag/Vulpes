@@ -9,7 +9,7 @@ StatefulEntity::StatefulEntity(std::weak_ptr<AnimatedEntity> animatedEntity) :
 
 void StatefulEntity::update() {
     if (frame_counter_-- == 0) {
-        incomingEvent(state::Event::FRAME_TIMEOUT);
+        incomingEvent(state_utils::Event::FRAME_TIMEOUT);
     }
 }
 
@@ -36,17 +36,17 @@ void StatefulEntity::loadStates(std::string file_path) {
     }
 }
 
-void StatefulEntity::incomingEvent(state::Event event) {
+void StatefulEntity::incomingEvent(state_utils::Event event) {
     auto new_state = state_handler_.incomingEvent(event);
 
     if (auto ns = new_state.lock()) {
-        frame_counter_ = ns->properties_.frame_timer_;
+        frame_counter_ = ns->getData().frame_timer_;
         if (auto tmp = animatedEntity_.lock()) {
-            tmp->setFrameList(ns->properties_.frame_names_);
+            tmp->setFrameList(ns->getData().frame_names_);
         }
     }
 }
 
-const state::Properties& StatefulEntity::getStateProperties() {
+const state_utils::Properties& StatefulEntity::getStateProperties() {
     return state_handler_.getStateData();
 }

@@ -2,7 +2,7 @@
 
 #include <json.hpp>
 
-#include "state.h"
+#include "utils/state.h"
 #include "components/animation.h"
 #include "utils/state_handler.h"
 
@@ -15,9 +15,9 @@ class StatefulEntity {
     void loadFromJson(nlohmann::json j);
     std::optional<nlohmann::json> outputToJson();
 
-    void incomingEvent(state::Event event);
+    void incomingEvent(state_utils::Event event);
 
-    const state::Properties& getStateProperties();
+    const state_utils::Properties& getStateProperties();
 
   private:
     void loadStates(std::string file_path);
@@ -28,5 +28,5 @@ class StatefulEntity {
 
     std::weak_ptr<AnimatedEntity> animatedEntity_;
 
-    StateHandler state_handler_;
+    StateHandler<state_utils::Properties> state_handler_;
 };

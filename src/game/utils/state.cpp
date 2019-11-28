@@ -1,12 +1,15 @@
 #include "state.h"
 
-State::State(state::Properties properties) :
-    properties_(properties) {
-    // TODO check for at least one following state
+#include "log.h"
+
+template <class T>
+State<T>::State(T data) :
+    data_(data) {
 }
 
-State State::loadStateFromJson(nlohmann::json j) {
-    state::Properties properties;
+template <class T>
+State<T> State<T>::loadStateFromJson(nlohmann::json j) {
+    state_utils::Properties properties;
 
     // If an option is not found use default
     if (j.find("movement_locked_x") != j.end()) {
@@ -34,29 +37,26 @@ State State::loadStateFromJson(nlohmann::json j) {
         properties.frame_timer_ = j["frame_timer"].get<unsigned int>();
     }
 
-    {
-        // Exceptions are not recoverable
-        // Let propagate and crash
-        nlohmann::json next_state_array = j["next_states"];
+    // Exceptions are not recoverable
+    // Let propagate and crash
+    nlohmann::json frame_names_array = j["frame_names"];
 
-        for (auto it : next_state_array) {
-            properties.next_states_.insert(std::make_pair(state::Event(it["event"].get<int>()), it["state"].get<std::string>()));
-        }
-
-        nlohmann::json frame_names_array = j["frame_names"];
-
-        for (auto it : frame_names_array) {
-            properties.frame_names_.push_back(it.get<std::string>());
-        }
+    for (auto it : frame_names_array) {
+        properties.frame_names_.push_back(it.get<std::string>());
     }
 
-    return State(properties);
+    auto new_state = State(properties);
+
+    new_state.loadNextStateListFromJson(j["next_states"]);
+
+    return new_state;
 }
 
-std::optional<std::string> State::incomingEvent(state::Event event) {
-    auto next_state = properties_.next_states_.find(event);
+template <class T>
+std::optional<std::string> State<T>::incomingEvent(state_utils::Event event) {
+    auto next_state = next_states_.find(event);
 
-    if (next_state != properties_.next_states_.end()) {
+    if (next_state != next_states_.end()) {
         // TODO Error handling
         return std::optional<std::string>{ next_state->second };
     } else {
@@ -64,3 +64,14 @@ std::optional<std::string> State::incomingEvent(state::Event event) {
     }
 }
 
+template <class T>
+const T& State<T>::getData() {
+    return data_;
+}
+
+template <class T>
+void State<T>::loadNextStateListFromJson(nlohmann::json j) {
+    for (auto it : j) {
+        next_states_.insert(std::make_pair(state_utils::Event(it["event"].get<int>()), it["state"].get<std::string>()));
+    }
+}

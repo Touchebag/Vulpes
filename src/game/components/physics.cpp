@@ -34,11 +34,11 @@ void Physics::update() {
                         x -= constants_.ground_accel;
                     } else if (state_props.touching_wall_ && facing_right) {
                         // Pressing away from wall should let go
-                        stateEnt->incomingEvent(state::Event::LEAVING_WALL);
+                        stateEnt->incomingEvent(state_utils::Event::LEAVING_WALL);
                     } else {
                         x -= constants_.air_accel;
                     }
-                    stateEnt->incomingEvent(state::Event::MOVING);
+                    stateEnt->incomingEvent(state_utils::Event::MOVING);
 
                     // When moving left facing_right should be false even when speed is zero
                     facing_right = x > 0.0;
@@ -47,16 +47,16 @@ void Physics::update() {
                         x += constants_.ground_accel;
                     } else if (state_props.touching_wall_ && !facing_right) {
                         // Pressing away from wall should let go
-                        stateEnt->incomingEvent(state::Event::LEAVING_WALL);
+                        stateEnt->incomingEvent(state_utils::Event::LEAVING_WALL);
                     } else {
                         x += constants_.air_accel;
                     }
-                    stateEnt->incomingEvent(state::Event::MOVING);
+                    stateEnt->incomingEvent(state_utils::Event::MOVING);
 
                     // When moving right facing_right should be true even when speed is zero
                     facing_right = x >= 0.0;
                 } else {
-                    stateEnt->incomingEvent(state::Event::NO_MOVEMENT);
+                    stateEnt->incomingEvent(state_utils::Event::NO_MOVEMENT);
                 }
             }
 
@@ -89,7 +89,7 @@ void Physics::update() {
                 if (state_props.can_dash_) {
                     x = constants_.dash_speed * (facing_right ? 1.0 : -1.0);
                     y = 0.0;
-                    stateEnt->incomingEvent(state::Event::DASHING);
+                    stateEnt->incomingEvent(state_utils::Event::DASHING);
                 }
             }
 
@@ -100,10 +100,10 @@ void Physics::update() {
                     x = constants_.wall_jump_horizontal_impulse * dir;
                     y = constants_.wall_jump_vertical_impulse;
 
-                    stateEnt->incomingEvent(state::Event::JUMPING);
+                    stateEnt->incomingEvent(state_utils::Event::JUMPING);
                 } else if (state_props.can_jump_) {
                     y = constants_.jump_impulse;
-                    stateEnt->incomingEvent(state::Event::JUMPING);
+                    stateEnt->incomingEvent(state_utils::Event::JUMPING);
                 }
             }
 
@@ -111,11 +111,11 @@ void Physics::update() {
             auto max_movement = movable->getMaximumMovement(x, y);
 
             if (max_movement.second < y) {
-                stateEnt->incomingEvent(state::Event::TOUCHING_FLOOR);
+                stateEnt->incomingEvent(state_utils::Event::TOUCHING_FLOOR);
             } else if (static_cast<int>(max_movement.first) != static_cast<int>(x)) {
-                stateEnt->incomingEvent(state::Event::TOUCHING_WALL);
+                stateEnt->incomingEvent(state_utils::Event::TOUCHING_WALL);
             } else if (max_movement.second > 0.0) {
-                stateEnt->incomingEvent(state::Event::FALLING);
+                stateEnt->incomingEvent(state_utils::Event::FALLING);
             }
 
             movable->move(max_movement.first, max_movement.second);

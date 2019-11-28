@@ -1,6 +1,6 @@
 #pragma once
 
-namespace state {
+namespace state_utils {
 
 enum class Event {
     // Initial entrypoint event
@@ -31,7 +31,7 @@ struct Properties {
     bool can_jump_ = true;
     bool can_dash_ = true;
     unsigned int frame_timer_ = UINT_MAX;
-    std::unordered_map<state::Event, std::string> next_states_;
+    std::unordered_map<state_utils::Event, std::string> next_states_;
     std::vector<std::string> frame_names_;
 };
 
