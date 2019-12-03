@@ -1,11 +1,11 @@
 #include "utils/state_handler.h"
 
-template <>
-void StateHandler<state_utils::Properties>::loadFromJson(nlohmann::json& j) {
+template <class T>
+void StateHandler<T>::loadFromJson(const nlohmann::json& j) {
     for (auto state = j.begin(); state != j.end(); ++state) {
         state_list_.insert(std::make_pair(state.key(),
-                    std::make_shared<State<state_utils::Properties>>(
-                        State<state_utils::Properties>::loadStateFromJson(state.value()))));
+                    std::make_shared<State<T>>(
+                        State<T>::loadStateFromJson(state.value()))));
     }
 
     // TODO Error handling
@@ -29,3 +29,6 @@ template <class T>
 const T& StateHandler<T>::getStateData() {
     return current_state_->getData();
 }
+
+template class StateHandler<state_utils::Properties>;
+template class StateHandler<int>;

@@ -26,5 +26,3 @@ class State {
     const T data_;
     std::map<state_utils::Event, std::string> next_states_;
 };
-
-template class State<state_utils::Properties>;

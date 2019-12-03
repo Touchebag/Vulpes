@@ -7,7 +7,7 @@
 template <class T>
 class StateHandler {
   public:
-    void loadFromJson(nlohmann::json& j);
+    void loadFromJson(const nlohmann::json& j);
 
     std::weak_ptr<State<T>> incomingEvent(state_utils::Event event);
 
@@ -17,5 +17,3 @@ class StateHandler {
     std::shared_ptr<State<T>> current_state_;
     std::unordered_map<std::string, std::shared_ptr<State<T>>> state_list_;
 };
-
-template class StateHandler<state_utils::Properties>;

@@ -8,7 +8,31 @@ State<T>::State(T data) :
 }
 
 template <class T>
-State<T> State<T>::loadStateFromJson(nlohmann::json j) {
+std::optional<std::string> State<T>::incomingEvent(state_utils::Event event) {
+    auto next_state = next_states_.find(event);
+
+    if (next_state != next_states_.end()) {
+        // TODO Error handling
+        return std::optional<std::string>{ next_state->second };
+    } else {
+        return std::nullopt;
+    }
+}
+
+template <class T>
+const T& State<T>::getData() {
+    return data_;
+}
+
+template <class T>
+void State<T>::loadNextStateListFromJson(nlohmann::json j) {
+    for (auto it : j) {
+        next_states_.insert(std::make_pair(state_utils::Event(it["event"].get<int>()), it["state"].get<std::string>()));
+    }
+}
+
+template <>
+State<state_utils::Properties> State<state_utils::Properties>::loadStateFromJson(nlohmann::json j) {
     state_utils::Properties properties;
 
     // If an option is not found use default
@@ -52,26 +76,21 @@ State<T> State<T>::loadStateFromJson(nlohmann::json j) {
     return new_state;
 }
 
-template <class T>
-std::optional<std::string> State<T>::incomingEvent(state_utils::Event event) {
-    auto next_state = next_states_.find(event);
+template <>
+State<int> State<int>::loadStateFromJson(nlohmann::json j) {
+    int data = 0;
 
-    if (next_state != next_states_.end()) {
-        // TODO Error handling
-        return std::optional<std::string>{ next_state->second };
-    } else {
-        return std::nullopt;
+    if (j.find("data") != j.end()) {
+        data = j["data"].get<int>();
     }
+
+    State<int> new_state = State<int>(data);
+
+    new_state.loadNextStateListFromJson(j["next_states"]);
+
+    return new_state;
 }
 
-template <class T>
-const T& State<T>::getData() {
-    return data_;
-}
-
-template <class T>
-void State<T>::loadNextStateListFromJson(nlohmann::json j) {
-    for (auto it : j) {
-        next_states_.insert(std::make_pair(state_utils::Event(it["event"].get<int>()), it["state"].get<std::string>()));
-    }
-}
+template class State<state_utils::Properties>;
+// TODO Change to AI state enum
+template class State<int>;
