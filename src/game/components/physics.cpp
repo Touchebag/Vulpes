@@ -32,9 +32,6 @@ void Physics::update() {
                 if (act->getActionState(Actions::Action::MOVE_LEFT)) {
                     if (state_props.touching_ground_) {
                         x -= constants_.ground_accel;
-                    } else if (state_props.touching_wall_ && facing_right) {
-                        // Pressing away from wall should let go
-                        stateEnt->incomingEvent(state_utils::Event::LEAVING_WALL);
                     } else {
                         x -= constants_.air_accel;
                     }
@@ -45,9 +42,6 @@ void Physics::update() {
                 } else if (act->getActionState(Actions::Action::MOVE_RIGHT)) {
                     if (state_props.touching_ground_) {
                         x += constants_.ground_accel;
-                    } else if (state_props.touching_wall_ && !facing_right) {
-                        // Pressing away from wall should let go
-                        stateEnt->incomingEvent(state_utils::Event::LEAVING_WALL);
                     } else {
                         x += constants_.air_accel;
                     }
@@ -82,6 +76,9 @@ void Physics::update() {
             }
 
             if (state_props.touching_wall_) {
+                // To ensure sticking on wall when not holding against it
+                // keep moving slightly toward the wall
+                x += facing_right ? 1.0 : -1.0;
                 y *= constants_.wall_slide_friction;
             }
 
@@ -112,7 +109,7 @@ void Physics::update() {
 
             if (max_movement.second < y) {
                 stateEnt->incomingEvent(state_utils::Event::TOUCHING_FLOOR);
-            } else if (static_cast<int>(max_movement.first) != static_cast<int>(x)) {
+            } else if (max_movement.first != x) {
                 stateEnt->incomingEvent(state_utils::Event::TOUCHING_WALL);
             } else if (max_movement.second > 0.0) {
                 stateEnt->incomingEvent(state_utils::Event::FALLING);

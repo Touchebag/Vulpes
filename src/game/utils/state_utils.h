@@ -9,7 +9,6 @@ enum class Event {
     // Positions
     TOUCHING_FLOOR = 1,
     TOUCHING_WALL = 2,
-    LEAVING_WALL = 3,
 
     // Movement
     NO_MOVEMENT = 10,

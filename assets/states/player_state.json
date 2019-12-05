@@ -138,8 +138,8 @@
         "frame_timer": 10,
         "next_states": [
             {"event": 1, "state": "idle"},
-            {"event": 3, "state": "falling"},
-            {"event": 12, "state": "wall_jump"}
+            {"event": 12, "state": "wall_jump"},
+            {"event": 13, "state": "falling"}
         ],
         "frame_names": [
             "Wall_slide"
