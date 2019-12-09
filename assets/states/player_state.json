@@ -1,7 +1,7 @@
 {
     "main": {
         "next_states": [
-            {"event": 0, "state": "idle"}
+            {"event": "start", "state": "idle"}
         ],
         "frame_names": [
             "Idle0"
@@ -9,10 +9,10 @@
     },
     "idle": {
         "next_states": [
-            {"event": 11, "state": "running"},
-            {"event": 12, "state": "jumping"},
-            {"event": 13, "state": "falling"},
-            {"event": 14, "state": "dashing"}
+            {"event": "moving", "state": "running"},
+            {"event": "jumping", "state": "jumping"},
+            {"event": "falling", "state": "falling"},
+            {"event": "dashing", "state": "dashing"}
         ],
         "frame_names": [
             "Idle0",
@@ -49,11 +49,11 @@
     },
     "running": {
         "next_states": [
-            {"event": 10, "state": "idle"},
-            {"event": 11, "state": "running"},
-            {"event": 12, "state": "jumping"},
-            {"event": 13, "state": "falling"},
-            {"event": 14, "state": "dashing"}
+            {"event": "no_movement", "state": "idle"},
+            {"event": "moving", "state": "running"},
+            {"event": "jumping", "state": "jumping"},
+            {"event": "falling", "state": "falling"},
+            {"event": "dashing", "state": "dashing"}
         ],
         "frame_names": [
             "Running0",
@@ -110,10 +110,10 @@
         "touching_ground": false,
         "can_jump": false,
         "next_states": [
-            {"event": 1, "state": "idle"},
-            {"event": 2, "state": "wall_slide"},
-            {"event": 13, "state": "falling"},
-            {"event": 14, "state": "dashing"}
+            {"event": "touching_floor", "state": "idle"},
+            {"event": "touching_wall", "state": "wall_slide"},
+            {"event": "falling", "state": "falling"},
+            {"event": "dashing", "state": "dashing"}
         ],
         "frame_names": [
             "Jumping"
@@ -123,9 +123,9 @@
         "touching_ground": false,
         "can_jump": false,
         "next_states": [
-            {"event": 1, "state": "idle"},
-            {"event": 2, "state": "wall_slide"},
-            {"event": 14, "state": "dashing"}
+            {"event": "touching_floor", "state": "idle"},
+            {"event": "touching_wall", "state": "wall_slide"},
+            {"event": "dashing", "state": "dashing"}
         ],
         "frame_names": [
             "Falling"
@@ -137,9 +137,9 @@
         "can_dash": false,
         "frame_timer": 10,
         "next_states": [
-            {"event": 1, "state": "idle"},
-            {"event": 12, "state": "wall_jump"},
-            {"event": 13, "state": "falling"}
+            {"event": "touching_floor", "state": "idle"},
+            {"event": "jumping", "state": "wall_jump"},
+            {"event": "falling", "state": "falling"}
         ],
         "frame_names": [
             "Wall_slide"
@@ -151,9 +151,9 @@
         "can_jump": false,
         "frame_timer": 10,
         "next_states": [
-            {"event": 2, "state": "wall_slide"},
-            {"event": 14, "state": "dashing"},
-            {"event": 20, "state": "jumping"}
+            {"event": "touching_wall", "state": "wall_slide"},
+            {"event": "dashing", "state": "dashing"},
+            {"event": "frame_timeout", "state": "jumping"}
         ],
         "frame_names": [
             "Jumping"
@@ -166,9 +166,9 @@
         "can_dash": false,
         "frame_timer": 10,
         "next_states": [
-            {"event": 2, "state": "wall_slide"},
-            {"event": 12, "state": "jumping"},
-            {"event": 20, "state": "falling"}
+            {"event": "touching_wall", "state": "wall_slide"},
+            {"event": "jumping", "state": "jumping"},
+            {"event": "frame_timeout", "state": "falling"}
         ],
         "frame_names": [
             "Dashing"

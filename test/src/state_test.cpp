@@ -12,21 +12,20 @@ class StateTestFixture : public ::testing::Test {
 {
     "main": {
         "next_states": [
-            {"event": 0, "state": "main2"},
-            {"event": 1, "state": "main4"}
+            {"event": "start", "state": "main2"},
+            {"event": "touching_floor", "state": "main4"}
         ],
         "data": 1
     },
     "main2": {
         "next_states": [
-            {"event": 1, "state": "main3"},
-            {"event": 3, "state": "main"}
+            {"event": "touching_floor", "state": "main3"}
         ],
         "data": 2
     },
     "main3": {
         "next_states": [
-            {"event": 2, "state": "main2"}
+            {"event": "touching_wall", "state": "main2"}
         ],
         "data": 3
     },
@@ -86,4 +85,26 @@ TEST_F(StateTestFixture, NoFollowingStates) {
     state_handler_.incomingEvent(state_utils::Event::START);
 
     ASSERT_EQ(state_handler_.getStateData(), 4);
+}
+
+TEST_F(StateTestFixture, ParseError) {
+    std::string state_json_invalid = R"--(
+{
+    "main": {
+        "next_states": [
+            {"event": "invalid_event", "state": "main"}
+        ],
+        "data": 1
+    }
+}
+        )--";
+
+    try {
+        state_handler_.loadFromJson(nlohmann::json::parse(state_json_invalid));
+    } catch (std::invalid_argument& e) {
+        // Should throw invalid_argument
+        return;
+    }
+
+    // Let other exceptions propagate and fail test case
 }

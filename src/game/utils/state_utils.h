@@ -1,5 +1,7 @@
 #pragma once
 
+#include <map>
+
 namespace state_utils {
 
 enum class Event {
@@ -19,6 +21,23 @@ enum class Event {
 
     // Misc
     FRAME_TIMEOUT = 20,
+};
+
+const std::map<std::string, Event> string_event_map {
+    {
+        {"start", Event::START},
+
+        {"touching_floor", Event::TOUCHING_FLOOR},
+        {"touching_wall", Event::TOUCHING_WALL},
+
+        {"no_movement", Event::NO_MOVEMENT},
+        {"moving", Event::MOVING},
+        {"jumping", Event::JUMPING},
+        {"falling", Event::FALLING},
+        {"dashing", Event::DASHING},
+
+        {"frame_timeout", Event::FRAME_TIMEOUT},
+    }
 };
 
 struct Properties {

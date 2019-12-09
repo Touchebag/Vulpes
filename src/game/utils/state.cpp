@@ -27,7 +27,16 @@ const T& State<T>::getData() {
 template <class T>
 void State<T>::loadNextStateListFromJson(nlohmann::json j) {
     for (auto it : j) {
-        next_states_.insert(std::make_pair(state_utils::Event(it["event"].get<int>()), it["state"].get<std::string>()));
+
+        auto event_name = it["event"].get<std::string>();
+        auto event_name_entry = state_utils::string_event_map.find(event_name);
+
+        if (event_name_entry != state_utils::string_event_map.end()) {
+            state_utils::Event event = event_name_entry->second;
+            next_states_.insert(std::make_pair(event, it["state"].get<std::string>()));
+        } else {
+            throw std::invalid_argument(std::string("Invalid event: ") + event_name.c_str());
+        }
     }
 }
 
