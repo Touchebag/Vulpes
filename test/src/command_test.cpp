@@ -17,7 +17,7 @@ class CommandTestFixture : public ::testing::Test {
         entity_ = std::make_shared<BaseEntity>();
         command_ = {history, operation, mouse_};
 
-        World::getInstance().loadWorldFromJson(nlohmann::json::parse("{\"main\": null}"));
+        World::getInstance<World::IWorldModify>().loadWorldFromJson(nlohmann::json::parse("{\"main\": null}"));
 
         MockMouse::setMouseWorldPosition({0, 0});
     }
@@ -40,7 +40,7 @@ void assertCorrectNumberOfEntities(
         long long unsigned fg1,
         long long unsigned fg2,
         long long unsigned fg3) {
-    auto& world = World::getInstance();
+    auto world = World::getInstance<World::IWorldRead>();
     ASSERT_TRUE(world.getWorldObjects(World::Layer::BACKGROUND).size() == background);
     ASSERT_TRUE(world.getWorldObjects(World::Layer::BG_3).size() == bg3);
     ASSERT_TRUE(world.getWorldObjects(World::Layer::BG_2).size() == bg2);
@@ -122,7 +122,7 @@ TEST_F(CommandTestFixture, CopyObjectCheckEqual) {
 
     assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 2, 0, 0, 0, 0);
 
-    nlohmann::json j = World::getInstance().saveWorldToJson();
+    nlohmann::json j = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
     ASSERT_EQ(2, j["main"].size());
 

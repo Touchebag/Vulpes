@@ -31,7 +31,7 @@ std::pair<double, double> MovableEntity::getMaximumMovement(double velX, double 
     double x = velX;
     double y = velY;
 
-    World& worldInst = World::getInstance();
+    World::IWorldRead worldInst = World::getInstance<World::IWorldRead>();
     if (auto coll = collision_.lock()) {
         for (auto it = worldInst.getWorldObjects().begin(); it != worldInst.getWorldObjects().end(); ++it) {
             auto other_coll = (*it)->collision_;

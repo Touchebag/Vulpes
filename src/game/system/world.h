@@ -36,24 +36,33 @@ class World {
         MAX_LAYERS = HUD
     };
 
-    static World& getInstance();
+    class IWorldRead {
+      public:
+        static std::vector<std::shared_ptr<BaseEntity>>& getWorldObjects(Layer layer = Layer::MAIN);
 
-    void clearCurrentWorld();
+        static util::Point getPlayerPosition();
 
-    void loadWorldFromJson(nlohmann::json j);
-    void loadWorldFromFile(std::string file);
+        static std::weak_ptr<Player> getPlayer();
+    };
 
-    nlohmann::json saveWorldToJson();
-    void saveWorldToFile(std::string file);
+    class IWorldModify {
+      public:
+        static void addEntity(std::shared_ptr<BaseEntity> entity, World::Layer layer);
+        static void removeEntity(std::shared_ptr<BaseEntity> entity, World::Layer layer);
 
-    void update();
+        static void loadWorldFromJson(nlohmann::json j);
+        static void loadWorldFromFile(std::string file);
 
-    util::Point getPlayerPosition();
+        static nlohmann::json saveWorldToJson();
+        static void saveWorldToFile(std::string file);
 
-    std::vector<std::shared_ptr<BaseEntity>>& getWorldObjects(Layer layer = Layer::MAIN);
+        static void update();
 
-    void addEntity(std::shared_ptr<BaseEntity> entity, World::Layer layer);
-    void removeEntity(std::shared_ptr<BaseEntity> entity, World::Layer layer);
+        static void clearWorld();
+    };
+
+    template <class T>
+    static T getInstance();
 
     World(const World&) = delete;
     World(World&&) = delete;
@@ -62,9 +71,28 @@ class World {
 
     // For level editor
     static std::string getLayerString(Layer layer);
-    std::weak_ptr<Player> getPlayer();
 
   private:
+    static World& getWorldInstance();
+    std::weak_ptr<Player> getPlayer();
+
+    nlohmann::json saveWorldToJson();
+    void saveWorldToFile(std::string file);
+
+    void update();
+
+    void clearWorld();
+
+    void addEntity(std::shared_ptr<BaseEntity> entity, World::Layer layer);
+    void removeEntity(std::shared_ptr<BaseEntity> entity, World::Layer layer);
+
+    void loadWorldFromJson(nlohmann::json j);
+    void loadWorldFromFile(std::string file);
+
+    util::Point getPlayerPosition();
+
+    std::vector<std::shared_ptr<BaseEntity>>& getWorldObjects(Layer layer = Layer::MAIN);
+
     World() = default;
 
     std::shared_ptr<Player> player_;
@@ -74,3 +102,6 @@ class World {
 
     std::array<std::vector<std::shared_ptr<BaseEntity>>, static_cast<int>(Layer::MAX_LAYERS) + 1> world_objects_;
 };
+
+template <> World::IWorldRead World::getInstance<World::IWorldRead>();
+template <> World::IWorldModify World::getInstance<World::IWorldModify>();

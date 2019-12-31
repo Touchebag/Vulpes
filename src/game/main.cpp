@@ -13,12 +13,13 @@
 #define MS_PER_FRAME 1000 / PHYSICS_FRAME_RATE
 
 int game_main(sf::RenderWindow& window, std::string level_file_path) {
-    World& worldInst = World::getInstance();
+    auto worldInstRead = World::getInstance<World::IWorldRead>();
+    auto worldInstWrite = World::getInstance<World::IWorldModify>();
 
     sf::Time frames;
     sf::Clock frame_time;
 
-    worldInst.loadWorldFromFile(level_file_path);
+    worldInstWrite.loadWorldFromFile(level_file_path);
 
     Input::getInstance().setKeyboardMap(
             {{sf::Keyboard::Key::Space, Actions::Action::JUMP},
@@ -73,12 +74,12 @@ int game_main(sf::RenderWindow& window, std::string level_file_path) {
                 }
             }
 
-            worldInst.update();
+            worldInstWrite.update();
 
             frames -= sf::milliseconds(MS_PER_FRAME);
         }
 
-        auto view_pos = worldInst.getPlayerPosition();
+        auto view_pos = worldInstRead.getPlayerPosition();
         renderInst.moveView(static_cast<float>(view_pos.x), static_cast<float>(view_pos.y));
 
         renderInst.render(window);

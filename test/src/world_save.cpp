@@ -17,8 +17,8 @@ class WorldTestFixture : public ::testing::Test {
 TEST_F(WorldTestFixture, SaveLoadWorld) {
     nlohmann::json world_json = File::loadRoom("test_world_2.json").value();
 
-    World::getInstance().loadWorldFromJson(world_json);
-    nlohmann::json world_json_2 = World::getInstance().saveWorldToJson();
+    World::getInstance<World::IWorldModify>().loadWorldFromJson(world_json);
+    nlohmann::json world_json_2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
     // _EQ does not work with nlohmann::json
     ASSERT_TRUE(world_json == world_json_2);
@@ -27,7 +27,7 @@ TEST_F(WorldTestFixture, SaveLoadWorld) {
 TEST_F(WorldTestFixture, SaveLoadWorldFailure) {
     nlohmann::json world_json = File::loadRoom("test_world_2.json").value();
 
-    World::getInstance().loadWorldFromJson(world_json);
+    World::getInstance<World::IWorldModify>().loadWorldFromJson(world_json);
 
     nlohmann::json j = nlohmann::json::parse( R"--(
         {
@@ -48,9 +48,9 @@ TEST_F(WorldTestFixture, SaveLoadWorldFailure) {
     auto hud_object = std::make_shared<BaseEntity>();
     hud_object->loadFromJson(j);
 
-    World::getInstance().addEntity(hud_object, World::Layer::MAIN);
+    World::getInstance<World::IWorldModify>().addEntity(hud_object, World::Layer::MAIN);
 
-    nlohmann::json world_json_2 = World::getInstance().saveWorldToJson();
+    nlohmann::json world_json_2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
     // _EQ does not work with nlohmann::json
     ASSERT_FALSE(world_json == world_json_2);
@@ -59,7 +59,7 @@ TEST_F(WorldTestFixture, SaveLoadWorldFailure) {
 TEST_F(WorldTestFixture, EnsureHudNotSaved) {
     nlohmann::json world_json = File::loadRoom("test_world_2.json").value();
 
-    World::getInstance().loadWorldFromJson(world_json);
+    World::getInstance<World::IWorldModify>().loadWorldFromJson(world_json);
 
     nlohmann::json j = nlohmann::json::parse( R"--(
         {
@@ -80,9 +80,9 @@ TEST_F(WorldTestFixture, EnsureHudNotSaved) {
     auto hud_object = std::make_shared<BaseEntity>();
     hud_object->loadFromJson(j);
 
-    World::getInstance().addEntity(hud_object, World::Layer::HUD);
+    World::getInstance<World::IWorldModify>().addEntity(hud_object, World::Layer::HUD);
 
-    nlohmann::json world_json_2 = World::getInstance().saveWorldToJson();
+    nlohmann::json world_json_2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
     // _EQ does not work with nlohmann::json
     ASSERT_TRUE(world_json == world_json_2);

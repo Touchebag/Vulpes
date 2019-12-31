@@ -39,7 +39,7 @@ std::shared_ptr<BaseEntity> makeHudText(std::pair<int, int> position = {0, 0}) {
 
     text_element->trans_ = trans;
     text_element->renderableEntity_ = text;
-    World::getInstance().addEntity(text_element, World::Layer::HUD);
+    World::getInstance<World::IWorldModify>().addEntity(text_element, World::Layer::HUD);
 
     return text_element;
 }
@@ -54,7 +54,7 @@ int level_editor_main(sf::RenderWindow& window, std::string level_file_path) {
 
     std::shared_ptr<Mouse> mouse = std::make_shared<Mouse>(window);
 
-    World::getInstance().loadWorldFromFile(level_file_path);
+    World::getInstance<World::IWorldModify>().loadWorldFromFile(level_file_path);
 
     float view_pos_x = VIEW_POS_X;
     float view_pos_y = VIEW_POS_Y;
@@ -139,11 +139,11 @@ int level_editor_main(sf::RenderWindow& window, std::string level_file_path) {
                     case sf::Event::KeyPressed:
                         switch (event.key.code) {
                             case sf::Keyboard::Key::P:
-                                World::getInstance().saveWorldToFile(level_file_path);
+                                World::getInstance<World::IWorldModify>().saveWorldToFile(level_file_path);
                                 return 0;
                                 break;
                             case sf::Keyboard::Key::S:
-                                World::getInstance().saveWorldToFile(level_file_path);
+                                World::getInstance<World::IWorldModify>().saveWorldToFile(level_file_path);
                                 break;
                             case sf::Keyboard::Key::A:
                                 command.add();
@@ -192,12 +192,12 @@ int level_editor_main(sf::RenderWindow& window, std::string level_file_path) {
                             std::shared_ptr<Hitbox> tmp_hbox = std::make_shared<Hitbox>();
                             std::shared_ptr<Collision> tmp_coll = std::make_shared<Collision>(tmp_trans, tmp_hbox);
 
-                            auto player = World::getInstance().getPlayer().lock();
+                            auto player = World::getInstance<World::IWorldRead>().getPlayer().lock();
                             if (player && player->collision_ && player->collision_->collides(tmp_coll)) {
                                 current_entity = player;
                                 command.current_entity_ = current_entity;
                             } else {
-                                for (auto it : World::getInstance().getWorldObjects(current_layer)) {
+                                for (auto it : World::getInstance<World::IWorldRead>().getWorldObjects(current_layer)) {
                                     std::shared_ptr<Collision> other_coll = nullptr;
                                     if (it->collision_) {
                                         other_coll = it->collision_;
@@ -213,7 +213,7 @@ int level_editor_main(sf::RenderWindow& window, std::string level_file_path) {
                                 }
                             }
 
-                            World::getInstance().removeEntity(current_entity_hud_text, World::Layer::HUD);
+                            World::getInstance<World::IWorldModify>().removeEntity(current_entity_hud_text, World::Layer::HUD);
 
                             if (current_entity) {
                                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {

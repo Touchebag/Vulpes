@@ -25,7 +25,17 @@ std::string World::getLayerString(Layer layer) {
     return LayerStringMap[layer];
 }
 
-World& World::getInstance() {
+template <>
+World::IWorldRead World::getInstance<World::IWorldRead>() {
+    return World::IWorldRead();
+}
+
+template <>
+World::IWorldModify World::getInstance<World::IWorldModify>() {
+    return World::IWorldModify();
+}
+
+World& World::getWorldInstance() {
     static World world;
 
     return world;
@@ -49,7 +59,7 @@ util::Point World::getPlayerPosition() {
     return player_->trans_->getPosition();
 }
 
-void World::clearCurrentWorld() {
+void World::clearWorld() {
     for (auto& it : world_objects_) {
         it.clear();
     }
@@ -74,7 +84,7 @@ void World::loadWorldFromJson(nlohmann::json j) {
         exit(EXIT_FAILURE);
     }
 
-    clearCurrentWorld();
+    clearWorld();
 
     for (int i = 0; i < static_cast<int>(Layer::MAX_LAYERS); ++i) {
         Layer layer = static_cast<Layer>(i);
