@@ -13,6 +13,7 @@
 #include "components/actions.h"
 #include "components/collision.h"
 #include "components/physics.h"
+#include "components/ai.h"
 
 class BaseEntity {
   public:
@@ -35,6 +36,7 @@ class BaseEntity {
     std::shared_ptr<StatefulEntity> statefulEntity_ = nullptr;
     std::shared_ptr<Actions> actions_ = nullptr;
     std::shared_ptr<Physics> physics_ = nullptr;
+    std::shared_ptr<AI> ai_ = nullptr;
 
   private:
     std::string entity_file_;

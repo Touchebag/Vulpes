@@ -332,6 +332,9 @@
                 "pos_x": 154,
                 "pos_y": 1529
             }
+        },
+        {
+            "Entity": "enemy.json"
         }
     ],
     "main_bg": null,
