@@ -1,24 +1,47 @@
 {
     "Actions": null,
     "AI": null,
+    "Animated": {
+        "frame_list": [
+            "Open",
+            "Open",
+            "Open",
+            "Open",
+            "Open",
+            "Open",
+            "Open",
+            "Open",
+            "Closed",
+            "Closed",
+            "Closed",
+            "Closed",
+            "Closed",
+            "Closed",
+            "Closed",
+            "Closed"
+        ],
+        "sprite_map": "Enemy.txt"
+    },
     "Collision": null,
     "Hitbox": {
         "height": 50,
         "width": 50
     },
     "Movable": null,
-    "Physics": null,
+    "Physics": {
+        "ground_acceleration": 3.0
+    },
     "Renderable": {
-        "scale": 1.0,
-        "texture": "Box.png",
+        "scale": 0.5,
+        "texture": "Enemy.png",
         "tile_x": true,
         "tile_y": true
     },
     "Stateful": {
-        "states": "player_state.json"
+        "states": "enemy_state.json"
     },
     "Transform": {
         "pos_x": 550,
-        "pos_y": 1300
+        "pos_y": 1600
     }
 }

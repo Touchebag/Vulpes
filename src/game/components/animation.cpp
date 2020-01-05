@@ -41,8 +41,13 @@ void AnimatedEntity::setFrameList(std::vector<std::string> frame_list) {
 }
 
 util::Rectangle AnimatedEntity::getSpriteRect() {
-    auto sprite = frame_list_.at(current_frame_);
-    return sprite_sheet_map_.at(sprite);
+    try {
+        auto sprite = frame_list_.at(current_frame_);
+        return sprite_sheet_map_.at(sprite);
+    } catch (std::out_of_range& e) {
+        LOGE("Could not find sprite map entry");
+        throw e;
+    }
 }
 
 void AnimatedEntity::loadFromJson(nlohmann::json j) {

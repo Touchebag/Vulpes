@@ -83,7 +83,7 @@ void BaseEntity::loadFromJson(nlohmann::json j) {
 
     physics_ = loadComponentFromJson(j, "Physics", std::make_shared<Physics>(statefulEntity_, renderableEntity_, movableEntity_, animatedEntity_, actions_, collision_));
 
-    ai_ = loadComponentFromJson(j, "AI", std::make_shared<AI>(actions_));
+    ai_ = loadComponentFromJson(j, "AI", std::make_shared<AI>(actions_, trans_));
 }
 
 std::optional<nlohmann::json> BaseEntity::outputToJson() {

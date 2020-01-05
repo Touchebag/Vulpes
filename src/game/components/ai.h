@@ -1,10 +1,11 @@
 #pragma once
 
 #include "components/actions.h"
+#include "components/transform.h"
 
 class AI {
   public:
-    AI(std::weak_ptr<Actions> actions);
+    AI(std::weak_ptr<Actions> actions, std::weak_ptr<Transform> transform);
 
     void update();
 
@@ -13,4 +14,5 @@ class AI {
 
   private:
     std::weak_ptr<Actions> actions_;
+    std::weak_ptr<Transform> transform_;
 };
