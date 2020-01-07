@@ -25,8 +25,18 @@ set(SFML_LIBS sfml-graphics sfml-window sfml-system)
 find_package(GTest REQUIRED)
 
 # Assets
-file(COPY ${ASSETS_DIR} DESTINATION .)
-file(COPY test/test_data/rooms DESTINATION ./${ASSETS_DIR})
+add_custom_target(COPY_ASSETS)
+add_custom_command(TARGET COPY_ASSETS PRE_BUILD
+                     COMMAND ${CMAKE_COMMAND} -E
+                     copy_directory ${CMAKE_SOURCE_DIR}/${ASSETS_DIR} ${ASSETS_DIR})
+
+add_custom_target(COPY_TEST_ASSETS)
+file(GLOB_RECURSE TEST_ASSETS test/test_data/rooms/*.json)
+foreach(file ${TEST_ASSETS})
+    add_custom_command(TARGET COPY_TEST_ASSETS PRE_BUILD
+                         COMMAND ${CMAKE_COMMAND} -E
+                         copy ${file} ${ASSETS_DIR}/rooms/)
+endforeach()
 
 # Game target
 file(GLOB_RECURSE COMMON_SOURCES src/game/*.cpp)
@@ -52,6 +62,8 @@ target_include_directories(${MAIN_TARGET} PUBLIC src/ libs/nlohmann)
 
 target_link_libraries(${MAIN_TARGET} ${GAME_TARGET} ${LEVEL_EDITOR_TARGET} ${SFML_LIBS})
 
+add_dependencies(${MAIN_TARGET} COPY_ASSETS)
+
 # State editor target
 # TODO Broken since game/level editor merge. Fix when adding enemies
 # file(GLOB_RECURSE STATE_GRAPH_SOURCES src/state_graph/*.cpp)
@@ -72,4 +84,6 @@ target_compile_options(${TEST_TARGET} PUBLIC ${CC_OPTIONS})
 target_include_directories(${TEST_TARGET} PUBLIC src/ libs/nlohmann ${GTEST_INCLUDE_DIRS})
 
 target_link_libraries(${TEST_TARGET} ${GAME_TARGET} ${LEVEL_EDITOR_TARGET} ${SFML_LIBS} ${GTEST_BOTH_LIBRARIES})
+
+add_dependencies(${TEST_TARGET} COPY_TEST_ASSETS)
 
