@@ -7,6 +7,7 @@
 #include "ai/logic_operators/less.h"
 #include "ai/values/constant.h"
 #include "ai/values/dynamic.h"
+#include "ai/values/this.h"
 
 AI::AI(std::weak_ptr<Actions> actions, std::weak_ptr<Transform> transform) :
     actions_(actions),
@@ -18,7 +19,7 @@ void AI::update() {
     auto trans = transform_.lock();
 
     auto v1 = ai::condition::Dynamic({});
-    auto v2 = ai::condition::Constant(500);
+    auto v2 = ai::condition::This({}, transform_);
 
     auto grt = ai::condition::Greater(v1, v2);
     auto lss = ai::condition::Less(v1, v2);
