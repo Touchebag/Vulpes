@@ -8,17 +8,17 @@ namespace condition {
 
 class Less : public LogicalOperator {
   public:
-    Less(Value& value1, Value& value2) :
-        value1_(value1),
-        value2_(value2) {}
+    Less(std::unique_ptr<const Value> value1, std::unique_ptr<const Value> value2) :
+        value1_(std::move(value1)),
+        value2_(std::move(value2)) {}
 
-    operator bool() const override {
-        return value1_ < value2_;
+    bool getValue() const override {
+        return value1_->getValue() < value2_->getValue();
     }
 
   private:
-    const Value& value1_;
-    const Value& value2_;
+    const std::unique_ptr<const Value> value1_;
+    const std::unique_ptr<const Value> value2_;
 };
 
 } // condition

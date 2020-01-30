@@ -9,7 +9,7 @@ class Constant : public Value {
   public:
     Constant(int value) : value_(value) {}
 
-    operator int() const override {
+    int getValue() const override {
         return value_;
     }
 

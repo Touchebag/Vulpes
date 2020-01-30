@@ -18,19 +18,44 @@ void AI::update() {
     auto act = actions_.lock();
     auto trans = transform_.lock();
 
-    auto v1 = ai::condition::Dynamic({});
-    auto v2 = ai::condition::This({}, transform_);
+    nlohmann::json j1 = nlohmann::json::parse( R"--(
+{
+    "type": "grt",
+    "lhs": {
+        "type": "dynamic",
+        "value": "player.position.x"
+    },
+    "rhs": {
+        "type": "this",
+        "value": "position.x"
+    }
+}
+)--");
 
-    auto grt = ai::condition::Greater(v1, v2);
-    auto lss = ai::condition::Less(v1, v2);
+    nlohmann::json j2 = nlohmann::json::parse( R"--(
+{
+    "type": "lss",
+    "lhs": {
+        "type": "dynamic",
+        "value": "player.position.x"
+    },
+    "rhs": {
+        "type": "this",
+        "value": "position.x"
+    }
+}
+)--");
+
+    auto grt = ai::condition::LogicalOperator::loadFromJson(j1, this->transform_);
+    auto lss = ai::condition::LogicalOperator::loadFromJson(j2, this->transform_);
 
     if (act && trans) {
-        if (grt) {
+        if (grt->getValue()) {
             act->addAction(Actions::Action::MOVE_RIGHT);
 
             // TODO Figure out how to clear actions correctly
             act->removeAction(Actions::Action::MOVE_LEFT);
-        } else if (lss) {
+        } else if (lss->getValue()) {
             act->addAction(Actions::Action::MOVE_LEFT);
 
             // TODO Figure out how to clear actions correctly

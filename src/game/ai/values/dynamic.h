@@ -11,7 +11,7 @@ class Dynamic : public Value {
   public:
     Dynamic(nlohmann::json j);
 
-    operator int() const override;
+    int getValue() const override;
 
   private:
     int (*int_function_)();

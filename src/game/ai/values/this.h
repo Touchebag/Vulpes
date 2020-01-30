@@ -12,7 +12,7 @@ class This : public Value {
   public:
     This(nlohmann::json j, std::weak_ptr<Transform> trans);
 
-    operator int() const override;
+    int getValue() const override;
 
   private:
     int (This::*int_function_)() const;

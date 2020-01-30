@@ -1,11 +1,17 @@
 #pragma once
 
+#include "json.hpp"
+
+#include "components/transform.h"
+
 namespace ai {
 namespace condition {
 
 class LogicalOperator {
   public:
-    virtual operator bool() const = 0;
+    static std::unique_ptr<const LogicalOperator> loadFromJson(nlohmann::json j, std::weak_ptr<Transform> trans);
+
+    virtual bool getValue() const = 0;
 };
 
 } // condition

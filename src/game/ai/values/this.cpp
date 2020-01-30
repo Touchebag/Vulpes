@@ -10,7 +10,7 @@ This::This(nlohmann::json j, std::weak_ptr<Transform> trans) :
     int_function_ = &This::positionX;
 }
 
-This::operator int() const {
+int This::getValue() const {
     return (this->*int_function_)();
 }
 
