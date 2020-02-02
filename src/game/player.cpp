@@ -12,3 +12,11 @@ void Player::loadFromJson(nlohmann::json j) {
         Input::getInstance().setActionsInstance(actions_);
     }
 }
+
+void Player::update() {
+    if (actions_) {
+        actions_->updateActions();
+    }
+
+    BaseEntity::update();
+}

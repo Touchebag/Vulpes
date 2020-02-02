@@ -52,14 +52,8 @@ void AI::update() {
     if (act && trans) {
         if (grt->getValue()) {
             act->addAction(Actions::Action::MOVE_RIGHT);
-
-            // TODO Figure out how to clear actions correctly
-            act->removeAction(Actions::Action::MOVE_LEFT);
         } else if (lss->getValue()) {
             act->addAction(Actions::Action::MOVE_LEFT);
-
-            // TODO Figure out how to clear actions correctly
-            act->removeAction(Actions::Action::MOVE_RIGHT);
         }
     }
 }

@@ -8,4 +8,6 @@
 class Player : public BaseEntity {
   public:
     void loadFromJson(nlohmann::json j) override;
+
+    void update() override;
 };
