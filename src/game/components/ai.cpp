@@ -1,6 +1,7 @@
 #include "ai.h"
 
 #include "utils/log.h"
+#include "utils/file.h"
 #include "system/world.h"
 
 #include "ai/logic_operators/greater.h"
@@ -18,47 +19,22 @@ void AI::update() {
     auto act = actions_.lock();
     auto trans = transform_.lock();
 
-    nlohmann::json j1 = nlohmann::json::parse( R"--(
-{
-    "type": "grt",
-    "lhs": {
-        "type": "dynamic",
-        "value": "player.position.x"
-    },
-    "rhs": {
-        "type": "this",
-        "value": "position.x"
-    }
-}
-)--");
-
-    nlohmann::json j2 = nlohmann::json::parse( R"--(
-{
-    "type": "lss",
-    "lhs": {
-        "type": "dynamic",
-        "value": "player.position.x"
-    },
-    "rhs": {
-        "type": "this",
-        "value": "position.x"
-    }
-}
-)--");
-
-    auto grt = ai::condition::LogicalOperator::loadFromJson(j1, this->transform_);
-    auto lss = ai::condition::LogicalOperator::loadFromJson(j2, this->transform_);
-
     if (act && trans) {
-        if (grt->getValue()) {
-            act->addAction(Actions::Action::MOVE_RIGHT);
-        } else if (lss->getValue()) {
-            act->addAction(Actions::Action::MOVE_LEFT);
+        for (auto& it : states_.getStateData()) {
+            if (it.first->getValue(trans)) {
+                act->addAction(it.second);
+            }
         }
     }
 }
 
 void AI::loadFromJson(nlohmann::json j) {
+    if (auto ai_json = File::loadAiBehavior("basic_enemy.json")) {
+        states_ = StateHandler<std::vector<std::pair<std::shared_ptr<const ai::condition::LogicalOperator>, Actions::Action>>>();
+
+        auto ai_behavior = ai_json.value();
+        states_.loadFromJson(ai_behavior);
+    }
 }
 
 std::optional<nlohmann::json> AI::outputToJson() {

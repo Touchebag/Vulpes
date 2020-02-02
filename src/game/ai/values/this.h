@@ -10,15 +10,15 @@ namespace condition {
 
 class This : public Value {
   public:
-    This(nlohmann::json j, std::weak_ptr<Transform> trans);
+    This(nlohmann::json j);
 
-    int getValue() const override;
+    int getValue(std::weak_ptr<Transform> trans) const override;
 
   private:
-    int (This::*int_function_)() const;
+    int (This::*int_function_)(std::weak_ptr<Transform>) const;
     std::weak_ptr<Transform> trans_;
 
-    int positionX() const;
+    int positionX(std::weak_ptr<Transform> trans) const;
 };
 
 } // condition

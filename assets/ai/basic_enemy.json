@@ -1,0 +1,36 @@
+{
+    "main": {
+        "next_states": [
+        ],
+        "actions": [
+            {
+                "condition": {
+                    "type": "grt",
+                    "lhs": {
+                        "type": "dynamic",
+                        "value": "player.position.x"
+                    },
+                    "rhs": {
+                        "type": "this",
+                        "value": "position.x"
+                    }
+                },
+                "action": "move_right"
+            },
+            {
+                "condition": {
+                    "type": "lss",
+                    "lhs": {
+                        "type": "dynamic",
+                        "value": "player.position.x"
+                    },
+                    "rhs": {
+                        "type": "this",
+                        "value": "position.x"
+                    }
+                },
+                "action": "move_left"
+            }
+        ]
+    }
+}

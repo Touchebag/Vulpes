@@ -9,7 +9,7 @@
 namespace ai {
 namespace condition {
 
-std::unique_ptr<const Value> Value::loadFromJson(nlohmann::json j, std::weak_ptr<Transform> trans) {
+std::unique_ptr<const Value> Value::loadFromJson(nlohmann::json j) {
     if (!j.contains("type")) {
         LOGD("%s\n", j.dump().c_str());
         throw std::invalid_argument("Value: type not found");
@@ -31,7 +31,7 @@ std::unique_ptr<const Value> Value::loadFromJson(nlohmann::json j, std::weak_ptr
         }
     } else if (type == "this") {
         if (j.contains("value")) {
-            return std::make_unique<This>(j["value"], trans);
+            return std::make_unique<This>(j["value"]);
         } else {
             throw std::invalid_argument("This: value not found");
         }

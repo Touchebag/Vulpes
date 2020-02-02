@@ -20,6 +20,8 @@ class Actions {
     void addAction(Action action);
     void removeAction(Action action);
 
+    static Action fromString(const std::string& action);
+
     // Refreshes all inputs
     // This is needed due to the event driven nature of key inputs
     // They will be removed manually on keyup events

@@ -2,6 +2,18 @@
 
 #include "utils/log.h"
 
+namespace {
+
+std::unordered_map<std::string, Actions::Action> string_action_map = {
+    {"unknown", Actions::Action::UNKNOWN},
+    {"move_left", Actions::Action::MOVE_LEFT},
+    {"move_right", Actions::Action::MOVE_RIGHT},
+    {"jump", Actions::Action::JUMP},
+    {"dash", Actions::Action::DASH},
+};
+
+}
+
 // TODO Cleanup and reuse internal functions
 
 void Actions::update() {
@@ -48,6 +60,15 @@ void Actions::updateActions() {
         if (it.second == ActionState::NOT_ACTIVE) {
             addAction(it.first);;
         }
+    }
+}
+
+Actions::Action Actions::fromString(const std::string& action) {
+    try {
+        return string_action_map.at(action);
+    } catch (std::out_of_range& e) {
+        LOGW("Unknown action %s", action.c_str());
+        return Action::UNKNOWN;
     }
 }
 

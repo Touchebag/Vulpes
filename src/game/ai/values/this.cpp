@@ -5,17 +5,16 @@
 namespace ai {
 namespace condition {
 
-This::This(nlohmann::json j, std::weak_ptr<Transform> trans) :
-    trans_(trans) {
+This::This(nlohmann::json j) {
     int_function_ = &This::positionX;
 }
 
-int This::getValue() const {
-    return (this->*int_function_)();
+int This::getValue(std::weak_ptr<Transform> trans) const {
+    return (this->*int_function_)(trans);
 }
 
-int This::positionX() const {
-    if (auto ptr = trans_.lock()) {
+int This::positionX(std::weak_ptr<Transform> trans) const {
+    if (auto ptr = trans.lock()) {
         return ptr->getX();
     } else {
         throw std::runtime_error("Error reading value. Transform ptr invalid.");

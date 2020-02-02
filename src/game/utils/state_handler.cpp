@@ -1,5 +1,8 @@
 #include "utils/state_handler.h"
 
+#include "ai/logic_operators/logic_operator.h"
+#include "components/actions.h"
+
 template <class T>
 void StateHandler<T>::loadFromJson(const nlohmann::json& j) {
     for (auto state = j.begin(); state != j.end(); ++state) {
@@ -30,5 +33,6 @@ const T& StateHandler<T>::getStateData() {
     return current_state_->getData();
 }
 
+
 template class StateHandler<state_utils::Properties>;
-template class StateHandler<int>;
+template class StateHandler<std::vector<std::pair<std::shared_ptr<const ai::condition::LogicalOperator>, Actions::Action>>>;

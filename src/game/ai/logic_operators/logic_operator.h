@@ -9,9 +9,9 @@ namespace condition {
 
 class LogicalOperator {
   public:
-    static std::unique_ptr<const LogicalOperator> loadFromJson(nlohmann::json j, std::weak_ptr<Transform> trans);
+    static std::shared_ptr<const LogicalOperator> loadFromJson(nlohmann::json j);
 
-    virtual bool getValue() const = 0;
+    virtual bool getValue(std::weak_ptr<Transform> trans) const = 0;
 };
 
 } // condition

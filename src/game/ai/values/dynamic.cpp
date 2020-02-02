@@ -9,7 +9,7 @@ Dynamic::Dynamic(nlohmann::json j) {
     int_function_ = [] () { return World::IWorldRead::getPlayerPosition().x; };
 }
 
-int Dynamic::getValue() const {
+int Dynamic::getValue(std::weak_ptr<Transform>) const {
     return int_function_();
 }
 

@@ -2,6 +2,9 @@
 
 #include "log.h"
 
+#include "ai/logic_operators/logic_operator.h"
+#include "components/actions.h"
+
 template <class T>
 State<T>::State(T data) :
     data_(data) {
@@ -85,21 +88,25 @@ State<state_utils::Properties> State<state_utils::Properties>::loadStateFromJson
     return new_state;
 }
 
-template <>
-State<int> State<int>::loadStateFromJson(nlohmann::json j) {
-    int data = 0;
+#define AI_CONDITION_TYPE std::pair<std::shared_ptr<const ai::condition::LogicalOperator>, Actions::Action>
 
-    if (j.find("data") != j.end()) {
-        data = j["data"].get<int>();
+template <>
+State<std::vector<AI_CONDITION_TYPE>>
+State<std::vector<AI_CONDITION_TYPE>>::loadStateFromJson(nlohmann::json j) {
+    if (!j.contains("actions")) {
+        throw std::invalid_argument("AI, missing actions");
     }
 
-    State<int> new_state = State<int>(data);
+    std::vector<AI_CONDITION_TYPE> ai_behavior;
 
-    new_state.loadNextStateListFromJson(j["next_states"]);
+    for (auto it : j["actions"]) {
+        auto condition = ai::condition::LogicalOperator::loadFromJson(it["condition"]);
+        Actions::Action action = Actions::fromString(it["action"]);
+        ai_behavior.push_back(std::make_pair(condition, action));
+    }
 
-    return new_state;
+    return {std::move(ai_behavior)};
 }
 
 template class State<state_utils::Properties>;
-// TODO Change to AI state enum
-template class State<int>;
+template class State<std::vector<AI_CONDITION_TYPE>>;

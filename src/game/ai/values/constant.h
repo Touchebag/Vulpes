@@ -9,7 +9,7 @@ class Constant : public Value {
   public:
     Constant(int value) : value_(value) {}
 
-    int getValue() const override {
+    int getValue(std::weak_ptr<Transform>) const override {
         return value_;
     }
 

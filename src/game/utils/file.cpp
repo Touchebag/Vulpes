@@ -5,6 +5,7 @@ const std::string ASSET_DIR = "assets";
 const std::string ENTITY_DIR = "entities";
 const std::string ROOM_DIR = "rooms";
 const std::string STATE_DIR = "states";
+const std::string AI_DIR = "ai";
 const std::string TEXTURE_DIR = "textures";
 const std::string SPRITE_MAP_DIR = "sprite_maps";
 const std::string FONT_DIR = "fonts";
@@ -64,6 +65,10 @@ bool File::writeJsonToFile(std::string filepath, nlohmann::json j) {
 
 std::optional<nlohmann::json> File::loadRoom(std::string filepath) {
     return loadJson(ROOM_DIR + "/" + filepath);
+}
+
+std::optional<nlohmann::json> File::loadAiBehavior(std::string filepath) {
+    return loadJson(AI_DIR + "/" + filepath);
 }
 
 std::optional<sf::Texture> File::loadTexture(std::string filepath) {

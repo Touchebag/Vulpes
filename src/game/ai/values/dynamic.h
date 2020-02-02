@@ -11,7 +11,7 @@ class Dynamic : public Value {
   public:
     Dynamic(nlohmann::json j);
 
-    int getValue() const override;
+    int getValue(std::weak_ptr<Transform> trans) const override;
 
   private:
     int (*int_function_)();
