@@ -15,76 +15,76 @@ class StateTestFixture : public ::testing::Test {
             {"event": "start", "state": "main2"},
             {"event": "touching_floor", "state": "main4"}
         ],
-        "data": 1
+        "frame_timer": 1
     },
     "main2": {
         "next_states": [
             {"event": "touching_floor", "state": "main3"}
         ],
-        "data": 2
+        "frame_timer": 2
     },
     "main3": {
         "next_states": [
             {"event": "touching_wall", "state": "main2"}
         ],
-        "data": 3
+        "frame_timer": 3
     },
     "main4": {
         "next_states": [
         ],
-        "data": 4
+        "frame_timer": 4
     }
 }
         )--";
 
-    StateHandler<int> state_handler_;
+    StateHandler<state_utils::Properties> state_handler_;
 };
 
 TEST_F(StateTestFixture, NormalOperation) {
-    ASSERT_EQ(state_handler_.getStateData(), 1);
+    ASSERT_EQ(state_handler_.getStateData().frame_timer_, 1);
 
     state_handler_.incomingEvent(state_utils::Event::START);
 
-    ASSERT_EQ(state_handler_.getStateData(), 2);
+    ASSERT_EQ(state_handler_.getStateData().frame_timer_, 2);
 
     state_handler_.incomingEvent(state_utils::Event::TOUCHING_FLOOR);
 
-    ASSERT_EQ(state_handler_.getStateData(), 3);
+    ASSERT_EQ(state_handler_.getStateData().frame_timer_, 3);
 
     state_handler_.incomingEvent(state_utils::Event::TOUCHING_WALL);
 
-    ASSERT_EQ(state_handler_.getStateData(), 2);
+    ASSERT_EQ(state_handler_.getStateData().frame_timer_, 2);
 
     state_handler_.incomingEvent(state_utils::Event::TOUCHING_FLOOR);
 
-    ASSERT_EQ(state_handler_.getStateData(), 3);
+    ASSERT_EQ(state_handler_.getStateData().frame_timer_, 3);
 }
 
 TEST_F(StateTestFixture, NoFollowingMatch) {
-    ASSERT_EQ(state_handler_.getStateData(), 1);
+    ASSERT_EQ(state_handler_.getStateData().frame_timer_, 1);
 
     state_handler_.incomingEvent(state_utils::Event::DASHING);
 
-    ASSERT_EQ(state_handler_.getStateData(), 1);
+    ASSERT_EQ(state_handler_.getStateData().frame_timer_, 1);
 
     state_handler_.incomingEvent(state_utils::Event::MOVING);
     state_handler_.incomingEvent(state_utils::Event::FRAME_TIMEOUT);
 
-    ASSERT_EQ(state_handler_.getStateData(), 1);
+    ASSERT_EQ(state_handler_.getStateData().frame_timer_, 1);
 }
 
 TEST_F(StateTestFixture, NoFollowingStates) {
-    ASSERT_EQ(state_handler_.getStateData(), 1);
+    ASSERT_EQ(state_handler_.getStateData().frame_timer_, 1);
 
     state_handler_.incomingEvent(state_utils::Event::TOUCHING_FLOOR);
 
-    ASSERT_EQ(state_handler_.getStateData(), 4);
+    ASSERT_EQ(state_handler_.getStateData().frame_timer_, 4);
 
     state_handler_.incomingEvent(state_utils::Event::MOVING);
     state_handler_.incomingEvent(state_utils::Event::TOUCHING_FLOOR);
     state_handler_.incomingEvent(state_utils::Event::START);
 
-    ASSERT_EQ(state_handler_.getStateData(), 4);
+    ASSERT_EQ(state_handler_.getStateData().frame_timer_, 4);
 }
 
 TEST_F(StateTestFixture, ParseError) {
