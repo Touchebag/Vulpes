@@ -10,6 +10,9 @@ std::unordered_map<std::string, Actions::Action> string_action_map = {
     {"move_right", Actions::Action::MOVE_RIGHT},
     {"jump", Actions::Action::JUMP},
     {"dash", Actions::Action::DASH},
+
+    {"ai_event_1", Actions::Action::AI_EVENT_1},
+    {"ai_event_2", Actions::Action::AI_EVENT_2},
 };
 
 }
@@ -67,7 +70,7 @@ Actions::Action Actions::fromString(const std::string& action) {
     try {
         return string_action_map.at(action);
     } catch (std::out_of_range& e) {
-        LOGW("Unknown action %s", action.c_str());
+        throw std::invalid_argument(std::string("Unknown action ") + action.c_str());
         return Action::UNKNOWN;
     }
 }

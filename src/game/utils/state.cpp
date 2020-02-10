@@ -105,7 +105,11 @@ State<std::vector<AI_CONDITION_TYPE>>::loadStateFromJson(nlohmann::json j) {
         ai_behavior.push_back(std::make_pair(condition, action));
     }
 
-    return {std::move(ai_behavior)};
+    auto new_state = State(ai_behavior);
+
+    new_state.loadNextStateListFromJson(j["next_states"]);
+
+    return new_state;
 }
 
 template class State<state_utils::Properties>;

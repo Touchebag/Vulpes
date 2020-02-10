@@ -1,6 +1,74 @@
 {
     "main": {
         "next_states": [
+            { "event": "ai_event_1", "state": "move_right_turnaround" },
+            { "event": "ai_event_2", "state": "move_left_turnaround" }
+        ],
+        "actions": [
+            {
+                "condition": {
+                    "type": "grt",
+                    "lhs": {
+                        "type": "dynamic",
+                        "value": "player.position.x"
+                    },
+                    "rhs": {
+                        "type": "this",
+                        "value": "position.x"
+                    }
+                },
+                "action": "ai_event_1"
+            },
+            {
+                "condition": {
+                    "type": "lss",
+                    "lhs": {
+                        "type": "dynamic",
+                        "value": "player.position.x"
+                    },
+                    "rhs": {
+                        "type": "this",
+                        "value": "position.x"
+                    }
+                },
+                "action": "ai_event_2"
+            }
+        ]
+    },
+    "move_right_turnaround": {
+        "next_states": [
+            { "event": "ai_event_1", "state": "move_right" }
+        ],
+        "actions": [
+            {
+                "condition": {
+                    "type": "grt",
+                    "lhs": {
+                        "type": "constant",
+                        "value": 1
+                    },
+                    "rhs": {
+                        "type": "constant",
+                        "value": 0
+                    }
+                },
+                "action": "move_right"
+            },
+            {
+                "condition": {
+                    "type": "frame_timer",
+                    "timeout": {
+                        "type": "constant",
+                        "value": 30
+                    }
+                },
+                "action": "ai_event_1"
+            }
+        ]
+    },
+    "move_right": {
+        "next_states": [
+            { "event": "ai_event_1", "state": "move_left_turnaround" }
         ],
         "actions": [
             {
@@ -16,6 +84,72 @@
                     }
                 },
                 "action": "move_right"
+            },
+            {
+                "condition": {
+                    "type": "lss",
+                    "lhs": {
+                        "type": "dynamic",
+                        "value": "player.position.x"
+                    },
+                    "rhs": {
+                        "type": "this",
+                        "value": "position.x"
+                    }
+                },
+                "action": "ai_event_1"
+            }
+        ]
+    },
+    "move_left_turnaround": {
+        "next_states": [
+            { "event": "ai_event_1", "state": "move_left" }
+        ],
+        "actions": [
+            {
+                "condition": {
+                    "type": "grt",
+                    "lhs": {
+                        "type": "constant",
+                        "value": 1
+                    },
+                    "rhs": {
+                        "type": "constant",
+                        "value": 0
+                    }
+                },
+                "action": "move_left"
+            },
+            {
+                "condition": {
+                    "type": "frame_timer",
+                    "timeout": {
+                        "type": "constant",
+                        "value": 30
+                    }
+                },
+                "action": "ai_event_1"
+            }
+        ]
+    },
+    "move_left": {
+        "next_states": [
+            { "event": "ai_event_1", "state": "move_right_turnaround" }
+        ],
+        "actions": [
+            {
+                "condition": {
+                    "type": "grt",
+                    "lhs": {
+                        "type": "dynamic",
+                        "value": "player.position.x"
+                    },
+                    "rhs": {
+                        "type": "this",
+                        "value": "position.x"
+                    }
+                },
+                "action": "ai_event_1"
             },
             {
                 "condition": {

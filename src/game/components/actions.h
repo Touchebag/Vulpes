@@ -11,6 +11,10 @@ class Actions {
         MOVE_RIGHT,
         JUMP,
         DASH,
+
+        // AI events
+        AI_EVENT_1,
+        AI_EVENT_2,
     };
 
     void update();

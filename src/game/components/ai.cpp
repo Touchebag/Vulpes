@@ -19,10 +19,24 @@ void AI::update() {
     auto act = actions_.lock();
     auto trans = transform_.lock();
 
+    frame_timer_++;
+
     if (act && trans) {
         for (auto& it : states_.getStateData()) {
-            if (it.first->getValue(trans)) {
-                act->addAction(it.second);
+            if (it.first->getValue(trans, frame_timer_)) {
+                auto action = it.second;
+                switch (action) {
+                    // AI_EVENTs should be treated differentely from input actions
+                    case Actions::Action::AI_EVENT_1:
+                        states_.incomingEvent(state_utils::Event::AI_EVENT_1);
+                        break;
+                    case Actions::Action::AI_EVENT_2:
+                        states_.incomingEvent(state_utils::Event::AI_EVENT_2);
+                        break;
+                    default:
+                        act->addAction(it.second);
+                        break;
+                }
             }
         }
     }

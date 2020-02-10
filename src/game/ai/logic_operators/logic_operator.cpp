@@ -4,6 +4,7 @@
 
 #include "greater.h"
 #include "less.h"
+#include "frame_timer.h"
 
 #include "utils/log.h"
 
@@ -31,6 +32,12 @@ std::shared_ptr<const LogicalOperator> LogicalOperator::loadFromJson(nlohmann::j
                                           Value::loadFromJson(j["rhs"]));
         } else {
             throw std::invalid_argument("Less: rhs/lhs not found");
+        }
+    } else if (type == "frame_timer") {
+        if (j.contains("timeout")) {
+            return std::make_shared<FrameTimer>(Value::loadFromJson(j["timeout"]));
+        } else {
+            throw std::invalid_argument("FrameTimer: timeout not found");
         }
     };
 
