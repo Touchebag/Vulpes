@@ -197,7 +197,7 @@ int level_editor_main(sf::RenderWindow& window, std::string level_file_path) {
                                 current_entity = player;
                                 command.current_entity_ = current_entity;
                             } else {
-                                for (auto it : World::getInstance<World::IWorldRead>().getWorldObjects(current_layer)) {
+                                for (auto it : World::getInstance<World::IWorldModify>().getWorldObjects(current_layer)) {
                                     std::shared_ptr<Collision> other_coll = nullptr;
                                     if (it->collision_) {
                                         other_coll = it->collision_;

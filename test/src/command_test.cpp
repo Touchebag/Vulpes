@@ -40,7 +40,7 @@ void assertCorrectNumberOfEntities(
         long long unsigned fg1,
         long long unsigned fg2,
         long long unsigned fg3) {
-    auto world = World::getInstance<World::IWorldRead>();
+    auto world = World::getInstance<World::IWorldModify>();
     ASSERT_TRUE(world.getWorldObjects(World::Layer::BACKGROUND).size() == background);
     ASSERT_TRUE(world.getWorldObjects(World::Layer::BG_3).size() == bg3);
     ASSERT_TRUE(world.getWorldObjects(World::Layer::BG_2).size() == bg2);

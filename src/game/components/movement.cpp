@@ -31,10 +31,10 @@ std::pair<double, double> MovableEntity::getMaximumMovement(double velX, double 
     double x = velX;
     double y = velY;
 
-    World::IWorldRead worldInst = World::getInstance<World::IWorldRead>();
+    auto worldInst = World::getInstance<World::IWorldRead>();
     if (auto coll = collision_.lock()) {
-        for (auto it = worldInst.getWorldObjects().begin(); it != worldInst.getWorldObjects().end(); ++it) {
-            auto other_coll = (*it)->collision_;
+        for (auto it = worldInst.getCollisions().begin(); it != worldInst.getCollisions().end(); ++it) {
+            auto other_coll = (*it).lock();
 
             if (other_coll) {
                 std::pair<double, double> newMoveValues = coll->getMaximumMovement(x, y, other_coll);

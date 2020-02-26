@@ -6,6 +6,7 @@
 #include "base_entity.h"
 #include "player.h"
 #include "json.hpp"
+#include "components/collision.h"
 
 class World {
 /* This class is intended to store all world objects like walls.
@@ -38,7 +39,7 @@ class World {
 
     class IWorldRead {
       public:
-        static std::vector<std::shared_ptr<BaseEntity>>& getWorldObjects(Layer layer = Layer::MAIN);
+        static const std::vector<std::weak_ptr<const Collision>>& getCollisions();
 
         static util::Point getPlayerPosition();
 
@@ -59,6 +60,8 @@ class World {
         static void update();
 
         static void clearWorld();
+
+        static std::vector<std::shared_ptr<BaseEntity>>& getWorldObjects(Layer layer = Layer::MAIN);
     };
 
     template <class T>
@@ -101,6 +104,8 @@ class World {
     nlohmann::json jsonifyLayer(Layer layer);
 
     std::array<std::vector<std::shared_ptr<BaseEntity>>, static_cast<int>(Layer::MAX_LAYERS) + 1> world_objects_;
+
+    std::array<std::vector<std::weak_ptr<const Collision>>, 1> collisions_;
 };
 
 template <> World::IWorldRead World::getInstance<World::IWorldRead>();

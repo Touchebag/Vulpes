@@ -159,6 +159,10 @@ nlohmann::json World::saveWorldToJson() {
 void World::addEntity(std::shared_ptr<BaseEntity> entity, World::Layer layer) {
     world_objects_[static_cast<int>(layer)].push_back(entity);
 
+    if (entity->collision_) {
+        collisions_[0].push_back(entity->collision_);
+    }
+
     Render::getInstance().addEntity(entity->renderableEntity_, layer);
 }
 

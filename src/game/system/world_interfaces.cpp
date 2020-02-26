@@ -1,7 +1,7 @@
 #include "world.h"
 
-std::vector<std::shared_ptr<BaseEntity>>& World::IWorldRead::getWorldObjects(World::Layer layer) {
-    return World::getWorldInstance().getWorldObjects(layer);
+const std::vector<std::weak_ptr<const Collision>>& World::IWorldRead::getCollisions() {
+    return World::getWorldInstance().collisions_[0];
 }
 
 util::Point World::IWorldRead::getPlayerPosition() {
@@ -44,3 +44,8 @@ void World::IWorldModify::update() {
 void World::IWorldModify::clearWorld() {
     World::getWorldInstance().clearWorld();
 }
+
+std::vector<std::shared_ptr<BaseEntity>>& World::IWorldModify::getWorldObjects(World::Layer layer) {
+    return World::getWorldInstance().getWorldObjects(layer);
+}
+
