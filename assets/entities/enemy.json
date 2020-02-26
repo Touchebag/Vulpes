@@ -22,7 +22,9 @@
         ],
         "sprite_map": "Enemy.txt"
     },
-    "Collision": null,
+    "Collision": {
+        "type": "enemy_hitbox"
+    },
     "Hitbox": {
         "height": 50,
         "width": 50

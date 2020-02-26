@@ -8,7 +8,9 @@
     "fg3": null,
     "main": [
         {
-            "Collision": null,
+            "Collision": {
+                "type": "static"
+            },
             "Hitbox": {
                 "height": 200,
                 "width": 50
@@ -25,7 +27,9 @@
             }
         },
         {
-            "Collision": null,
+            "Collision": {
+                "type": "static"
+            },
             "Hitbox": {
                 "height": 200,
                 "width": 50
@@ -42,7 +46,9 @@
             }
         },
         {
-            "Collision": null,
+            "Collision": {
+                "type": "static"
+            },
             "Hitbox": {
                 "height": 50,
                 "width": 200
@@ -59,7 +65,9 @@
             }
         },
         {
-            "Collision": null,
+            "Collision": {
+                "type": "static"
+            },
             "Hitbox": {
                 "height": 50,
                 "width": 200

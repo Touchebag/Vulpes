@@ -39,7 +39,7 @@ class World {
 
     class IWorldRead {
       public:
-        static const std::vector<std::weak_ptr<const Collision>>& getCollisions();
+        static const std::vector<std::weak_ptr<const Collision>>& getCollisions(Collision::CollisionType coll_type);
 
         static util::Point getPlayerPosition();
 
@@ -105,7 +105,7 @@ class World {
 
     std::array<std::vector<std::shared_ptr<BaseEntity>>, static_cast<int>(Layer::MAX_LAYERS) + 1> world_objects_;
 
-    std::array<std::vector<std::weak_ptr<const Collision>>, 1> collisions_;
+    std::array<std::vector<std::weak_ptr<const Collision>>, static_cast<int>(Collision::CollisionType::MAX_NUM)> collisions_;
 };
 
 template <> World::IWorldRead World::getInstance<World::IWorldRead>();

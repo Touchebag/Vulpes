@@ -27,7 +27,9 @@ class DynamicCollisionTestFixture : public ::testing::Test {
         "pos_y": 100
     },
     "Movable": null,
-    "Collision": null
+    "Collision": {
+        "type": "static"
+    }
 }
         )--";
 

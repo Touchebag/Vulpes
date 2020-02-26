@@ -28,23 +28,21 @@ enum class Event {
 };
 
 const std::map<std::string, Event> string_event_map {
-    {
-        {"start", Event::START},
+    {"start", Event::START},
 
-        {"touching_floor", Event::TOUCHING_FLOOR},
-        {"touching_wall", Event::TOUCHING_WALL},
+    {"touching_floor", Event::TOUCHING_FLOOR},
+    {"touching_wall", Event::TOUCHING_WALL},
 
-        {"no_movement", Event::NO_MOVEMENT},
-        {"moving", Event::MOVING},
-        {"jumping", Event::JUMPING},
-        {"falling", Event::FALLING},
-        {"dashing", Event::DASHING},
+    {"no_movement", Event::NO_MOVEMENT},
+    {"moving", Event::MOVING},
+    {"jumping", Event::JUMPING},
+    {"falling", Event::FALLING},
+    {"dashing", Event::DASHING},
 
-        {"frame_timeout", Event::FRAME_TIMEOUT},
+    {"frame_timeout", Event::FRAME_TIMEOUT},
 
-        {"ai_event_1", Event::AI_EVENT_1},
-        {"ai_event_2", Event::AI_EVENT_2},
-    }
+    {"ai_event_1", Event::AI_EVENT_1},
+    {"ai_event_2", Event::AI_EVENT_2},
 };
 
 struct Properties {

@@ -32,6 +32,14 @@ bool collidesY(std::shared_ptr<Transform> first_trans, std::shared_ptr<Hitbox> f
         && getAbsBottom(first_trans, first_hbox) > getAbsTop(second_trans, second_hbox);
 }
 
+const std::map<std::string, Collision::CollisionType> string_type_map {
+    {"static", Collision::CollisionType::STATIC},
+
+    {"player_hurtbox", Collision::CollisionType::PLAYER_HURTBOX},
+
+    {"enemy_hitbox", Collision::CollisionType::ENEMY_HITBOX},
+};
+
 } // namespace
 
 Collision::Collision(std::weak_ptr<Transform> trans, std::weak_ptr<Hitbox> hbox) :
@@ -40,11 +48,29 @@ Collision::Collision(std::weak_ptr<Transform> trans, std::weak_ptr<Hitbox> hbox)
 }
 
 void Collision::loadFromJson(nlohmann::json& j) {
+    if (j.contains("type")) {
+        auto type_entry = string_type_map.find(j["type"].get<std::string>());
+        if (type_entry != string_type_map.end()) {
+            type_ = type_entry->second;
+        } else {
+            throw std::invalid_argument("Collision: invalid type" + j["type"].get<std::string>());
+        }
+    } else {
+        throw std::invalid_argument("Collision: missing type");
+    }
 }
 
 std::optional<nlohmann::json> Collision::outputToJson() {
     nlohmann::json j;
-    return j;
+
+    for (auto it : string_type_map) {
+        if (it.second == type_) {
+            j["type"] = it.first;
+            return j;
+        }
+    }
+
+    throw std::runtime_error("Collision: this should not happen");
 }
 
 bool Collision::collides(std::weak_ptr<Collision> other_entity) {
@@ -113,5 +139,9 @@ std::pair<double, double> Collision::getMaximumMovement(double stepX, double ste
     }
 
     return {retX, retY};
+}
+
+Collision::CollisionType Collision::getType() const {
+    return type_;
 }
 

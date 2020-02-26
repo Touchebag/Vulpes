@@ -1,7 +1,7 @@
 #include "world.h"
 
-const std::vector<std::weak_ptr<const Collision>>& World::IWorldRead::getCollisions() {
-    return World::getWorldInstance().collisions_[0];
+const std::vector<std::weak_ptr<const Collision>>& World::IWorldRead::getCollisions(Collision::CollisionType coll_type) {
+    return World::getWorldInstance().collisions_[static_cast<int>(coll_type)];
 }
 
 util::Point World::IWorldRead::getPlayerPosition() {

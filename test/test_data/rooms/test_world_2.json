@@ -205,7 +205,9 @@
             ],
             "sprite_map": "Player.txt"
         },
-        "Collision": null,
+        "Collision": {
+            "type": "player_hurtbox"
+        },
         "Hitbox": {
             "height": 200,
             "width": 50
