@@ -10,7 +10,7 @@ set(MAIN_TARGET vulpes)
 set(STATE_GRAPH_TARGET state_graph)
 set(TEST_TARGET tests)
 
-set(CC_OPTIONS -std=c++17 -Wall -Wpedantic -Wconversion -Wold-style-cast -DLOG_LEVEL=3)
+set(CC_OPTIONS -std=c++17 -Wall -Wextra -Wpedantic -Wconversion -Wold-style-cast -DLOG_LEVEL=3)
 
 set(ASSETS_DIR assets)
 

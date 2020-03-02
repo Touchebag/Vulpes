@@ -18,7 +18,7 @@ void MovableEntity::move(double velX, double velY) {
     }
 }
 
-void MovableEntity::loadFromJson(nlohmann::json j) {
+void MovableEntity::loadFromJson(nlohmann::json /* j */) {
 }
 
 std::optional<nlohmann::json> MovableEntity::outputToJson() {

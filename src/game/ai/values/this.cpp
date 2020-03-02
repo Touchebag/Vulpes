@@ -5,7 +5,7 @@
 namespace ai {
 namespace condition {
 
-This::This(nlohmann::json j) {
+This::This(nlohmann::json /* j */) {
     int_function_ = &This::positionX;
 }
 
