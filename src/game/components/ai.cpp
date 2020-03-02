@@ -43,11 +43,15 @@ void AI::update() {
 }
 
 void AI::loadFromJson(nlohmann::json j) {
-    if (auto ai_json = File::loadAiBehavior("basic_enemy.json")) {
-        states_ = StateHandler<std::vector<std::pair<std::shared_ptr<const ai::condition::LogicalOperator>, Actions::Action>>>();
+    if (j.contains("file")) {
+        if (auto ai_json = File::loadAiBehavior(j["file"])) {
+            states_ = StateHandler<std::vector<std::pair<std::shared_ptr<const ai::condition::LogicalOperator>, Actions::Action>>>();
 
-        auto ai_behavior = ai_json.value();
-        states_.loadFromJson(ai_behavior);
+            auto ai_behavior = ai_json.value();
+            states_.loadFromJson(ai_behavior);
+        }
+    } else {
+        throw std::invalid_argument("Cannot find AI file");
     }
 }
 
