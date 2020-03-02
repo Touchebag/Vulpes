@@ -33,5 +33,5 @@ class Collision {
     std::weak_ptr<Transform> trans_;
     std::weak_ptr<Hitbox> hbox_;
 
-    CollisionType type_;
+    CollisionType type_ = CollisionType::STATIC;
 };
