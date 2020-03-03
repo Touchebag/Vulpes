@@ -17,7 +17,7 @@ class AnimatedEntity {
     // Returns a pair of the top-left and bottom-right points of current texture
     util::Rectangle getSpriteRect();
 
-    void loadFromJson(nlohmann::json j);
+    void reloadFromJson(nlohmann::json j);
     std::optional<nlohmann::json> outputToJson();
 
     void update();

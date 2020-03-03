@@ -12,7 +12,7 @@ std::shared_ptr<T> loadComponentFromJson(nlohmann::json j,
         const std::string& component_name, std::shared_ptr<T> component) {
     // TODO Error handling
     if (j.contains(component_name) && component) {
-        component->loadFromJson(j[component_name]);
+        component->reloadFromJson(j[component_name]);
     } else {
         component.reset();
     }
@@ -21,6 +21,15 @@ std::shared_ptr<T> loadComponentFromJson(nlohmann::json j,
 }
 
 } // namespace
+
+
+std::shared_ptr<BaseEntity> BaseEntity::createFromJson(nlohmann::json j) {
+    auto ret_ptr = std::make_shared<BaseEntity>();
+
+    ret_ptr->reloadFromJson(j);
+
+    return ret_ptr;
+}
 
 // Needed due to the tiling issue
 void BaseEntity::setHitbox(int width, int height) {
@@ -33,7 +42,7 @@ void BaseEntity::setHitbox(int width, int height) {
     }
 }
 
-void BaseEntity::loadFromJson(nlohmann::json j) {
+void BaseEntity::reloadFromJson(nlohmann::json j) {
     if (j.contains("Entity")) {
         auto file_name = j["Entity"];
         if (auto j_entity = File::loadEntityFromFile(file_name)) {
@@ -47,15 +56,9 @@ void BaseEntity::loadFromJson(nlohmann::json j) {
         entity_file_.clear();
     }
 
-    if (j.contains("Hitbox")) {
-        hitbox_ = std::make_shared<Hitbox>();
-        hitbox_->loadFromJson(j["Hitbox"]);
-    }
+    hitbox_ = loadComponentFromJson(j, "Hitbox", std::make_shared<Hitbox>());
 
-    if (j.contains("Transform")) {
-        trans_ = std::make_shared<Transform>();
-        trans_->loadFromJson(j["Transform"]);
-    }
+    trans_ = loadComponentFromJson(j, "Transform", std::make_shared<Transform>());
 
     collision_ = loadComponentFromJson<Collision>(j, "Collision", std::make_shared<Collision>(trans_, hitbox_));
 
@@ -68,14 +71,11 @@ void BaseEntity::loadFromJson(nlohmann::json j) {
         setHitbox(hitbox_->width_, hitbox_->height_);
     }
 
-    if (j.contains("Animated")) {
-        animatedEntity_ = std::make_shared<AnimatedEntity>(renderableEntity_);
-        animatedEntity_->loadFromJson(j["Animated"]);
-    }
+    animatedEntity_ = loadComponentFromJson(j, "Animated", std::make_shared<AnimatedEntity>(renderableEntity_));
 
-    if (j.contains("Stateful")) {
-        statefulEntity_ = std::make_shared<StatefulEntity>(animatedEntity_);
-        statefulEntity_->loadFromJson(j["Stateful"]);
+    statefulEntity_ = loadComponentFromJson(j, "Stateful", std::make_shared<StatefulEntity>(animatedEntity_));
+
+    if (statefulEntity_) {
         statefulEntity_->incomingEvent(state_utils::Event::START);
     }
 

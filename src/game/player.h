@@ -7,7 +7,9 @@
 
 class Player : public BaseEntity {
   public:
-    void loadFromJson(nlohmann::json j) override;
+    static std::shared_ptr<Player> createFromJson(nlohmann::json j);
+
+    void reloadFromJson(nlohmann::json j) override;
 
     void update() override;
 };

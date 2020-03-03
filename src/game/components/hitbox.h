@@ -9,7 +9,7 @@ class Hitbox {
   public:
     void setHitbox(int width, int height);
 
-    void loadFromJson(nlohmann::json& j);
+    void reloadFromJson(nlohmann::json& j);
 
     std::optional<nlohmann::json> outputToJson();
 

@@ -10,10 +10,10 @@ void Operation::undo() {
             World::getInstance<World::IWorldModify>().removeEntity(entity_, layer_);
         } else if (!after_) {
             // If entity does not exist after, add it
-            entity_->loadFromJson(before_.value());
+            entity_->reloadFromJson(before_.value());
             World::getInstance<World::IWorldModify>().addEntity(entity_, layer_);
         } else {
-            entity_->loadFromJson(before_.value());
+            entity_->reloadFromJson(before_.value());
             Render::getInstance().addEntity(entity_->renderableEntity_, layer_);
         }
     }
@@ -27,10 +27,10 @@ void Operation::redo() {
             World::getInstance<World::IWorldModify>().removeEntity(entity_, layer_);
         } else if (!before_) {
             // If entity did not exist before it was added
-            entity_->loadFromJson(after_.value());
+            entity_->reloadFromJson(after_.value());
             World::getInstance<World::IWorldModify>().addEntity(entity_, layer_);
         } else {
-            entity_->loadFromJson(after_.value());
+            entity_->reloadFromJson(after_.value());
             Render::getInstance().addEntity(entity_->renderableEntity_, layer_);
         }
     }

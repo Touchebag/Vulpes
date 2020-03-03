@@ -9,7 +9,7 @@ util::Point Transform::getPosition() {
     return {getX(), getY()};
 }
 
-void Transform::loadFromJson(nlohmann::json j) {
+void Transform::reloadFromJson(nlohmann::json j) {
     pos_x_ = j["pos_x"];
     pos_y_ = j["pos_y"];
 }

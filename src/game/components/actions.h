@@ -31,7 +31,7 @@ class Actions {
     // They will be removed manually on keyup events
     void updateActions();
 
-    void loadFromJson(nlohmann::json j);
+    void reloadFromJson(nlohmann::json j);
     std::optional<nlohmann::json> outputToJson();
 
   private:

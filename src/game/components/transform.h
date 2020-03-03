@@ -9,7 +9,7 @@ public:
     void setPosition(int x, int y);
     util::Point getPosition();
 
-    void loadFromJson(nlohmann::json j);
+    void reloadFromJson(nlohmann::json j);
     std::optional<nlohmann::json> outputToJson();
 
     int getX() const;

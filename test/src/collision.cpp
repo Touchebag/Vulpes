@@ -8,8 +8,7 @@
 class DynamicCollisionTestFixture : public ::testing::Test {
   public:
     DynamicCollisionTestFixture() {
-        entity_ = std::make_shared<BaseEntity>();
-        entity_->loadFromJson(nlohmann::json::parse(entity_json_));
+        entity_ = BaseEntity::createFromJson(nlohmann::json::parse(entity_json_));
     }
 
     void SetUp() {

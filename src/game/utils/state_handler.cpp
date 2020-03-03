@@ -4,7 +4,7 @@
 #include "components/actions.h"
 
 template <class T>
-void StateHandler<T>::loadFromJson(const nlohmann::json& j) {
+void StateHandler<T>::reloadFromJson(const nlohmann::json& j) {
     for (auto state = j.begin(); state != j.end(); ++state) {
         state_list_.insert(std::make_pair(state.key(),
                     std::make_shared<State<T>>(

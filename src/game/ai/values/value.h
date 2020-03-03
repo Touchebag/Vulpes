@@ -9,7 +9,7 @@ namespace condition {
 
 class Value {
   public:
-    static std::unique_ptr<const Value> loadFromJson(nlohmann::json j);
+    static std::unique_ptr<const Value> createFromJson(nlohmann::json j);
 
     virtual int getValue(std::weak_ptr<Transform> trans) const = 0;
 };

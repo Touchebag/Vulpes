@@ -94,16 +94,14 @@ void World::loadWorldFromJson(nlohmann::json j) {
         }
     }
 
-    player_ = std::make_shared<Player>();
-    player_->loadFromJson(j["player"]);
+    player_ = Player::createFromJson(j["player"]);
 
     Render::getInstance().addEntity(player_->renderableEntity_, Layer::MAIN);
 }
 
 void World::loadLayer(nlohmann::json json, Layer layer) {
     for (auto it : json) {
-        std::shared_ptr<BaseEntity> ent = std::make_shared<BaseEntity>();
-        ent->loadFromJson(it);
+        auto ent = BaseEntity::createFromJson(it);
 
         addEntity(ent, layer);
     }

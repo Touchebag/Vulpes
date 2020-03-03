@@ -45,8 +45,7 @@ TEST_F(WorldTestFixture, SaveLoadWorldFailure) {
             }
         })--");
 
-    auto hud_object = std::make_shared<BaseEntity>();
-    hud_object->loadFromJson(j);
+    auto hud_object = BaseEntity::createFromJson(j);
 
     World::getInstance<World::IWorldModify>().addEntity(hud_object, World::Layer::MAIN);
 
@@ -77,8 +76,7 @@ TEST_F(WorldTestFixture, EnsureHudNotSaved) {
             }
         })--");
 
-    auto hud_object = std::make_shared<BaseEntity>();
-    hud_object->loadFromJson(j);
+    auto hud_object = BaseEntity::createFromJson(j);
 
     World::getInstance<World::IWorldModify>().addEntity(hud_object, World::Layer::HUD);
 

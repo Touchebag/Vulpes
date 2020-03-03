@@ -11,7 +11,7 @@
 namespace ai {
 namespace condition {
 
-std::shared_ptr<const LogicalOperator> LogicalOperator::loadFromJson(nlohmann::json j) {
+std::shared_ptr<const LogicalOperator> LogicalOperator::createFromJson(nlohmann::json j) {
     if (!j.contains("type")) {
         LOGD("%s\n", j.dump().c_str());
         throw std::invalid_argument("LogicalOperator: type not found");
@@ -21,21 +21,21 @@ std::shared_ptr<const LogicalOperator> LogicalOperator::loadFromJson(nlohmann::j
 
     if (type == "grt") {
         if (j.contains("lhs") && j.contains("rhs")) {
-            return std::make_shared<Greater>(Value::loadFromJson(j["lhs"]),
-                                             Value::loadFromJson(j["rhs"]));
+            return std::make_shared<Greater>(Value::createFromJson(j["lhs"]),
+                                             Value::createFromJson(j["rhs"]));
         } else {
             throw std::invalid_argument("Greater: rhs/lhs not found");
         }
     } else if (type == "lss") {
         if (j.contains("lhs") && j.contains("rhs")) {
-            return std::make_shared<Less>(Value::loadFromJson(j["lhs"]),
-                                          Value::loadFromJson(j["rhs"]));
+            return std::make_shared<Less>(Value::createFromJson(j["lhs"]),
+                                          Value::createFromJson(j["rhs"]));
         } else {
             throw std::invalid_argument("Less: rhs/lhs not found");
         }
     } else if (type == "frame_timer") {
         if (j.contains("timeout")) {
-            return std::make_shared<FrameTimer>(Value::loadFromJson(j["timeout"]));
+            return std::make_shared<FrameTimer>(Value::createFromJson(j["timeout"]));
         } else {
             throw std::invalid_argument("FrameTimer: timeout not found");
         }

@@ -9,7 +9,7 @@
 namespace ai {
 namespace condition {
 
-std::unique_ptr<const Value> Value::loadFromJson(nlohmann::json j) {
+std::unique_ptr<const Value> Value::createFromJson(nlohmann::json j) {
     if (!j.contains("type")) {
         LOGD("%s\n", j.dump().c_str());
         throw std::invalid_argument("Value: type not found");

@@ -75,7 +75,7 @@ Actions::Action Actions::fromString(const std::string& action) {
     }
 }
 
-void Actions::loadFromJson(nlohmann::json /* j */) {
+void Actions::reloadFromJson(nlohmann::json /* j */) {
 }
 
 std::optional<nlohmann::json> Actions::outputToJson() {

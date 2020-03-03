@@ -13,7 +13,7 @@ void StatefulEntity::update() {
     }
 }
 
-void StatefulEntity::loadFromJson(nlohmann::json j) {
+void StatefulEntity::reloadFromJson(nlohmann::json j) {
     state_file_path_ = j["states"].get<std::string>();
 
     loadStates(state_file_path_);
@@ -32,7 +32,7 @@ void StatefulEntity::loadStates(std::string file_path) {
 
     // TODO Error handling
     if (j) {
-        state_handler_.loadFromJson(j.value());
+        state_handler_.reloadFromJson(j.value());
     }
 }
 

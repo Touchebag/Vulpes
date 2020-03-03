@@ -127,7 +127,7 @@ void Physics::setPhysicsConstants(Constants constants) {
     constants_ = constants;
 }
 
-void Physics::loadFromJson(nlohmann::json j) {
+void Physics::reloadFromJson(nlohmann::json j) {
     Constants constants;
 
     if (j.contains("ground_acceleration")) {

@@ -5,8 +5,16 @@
 #include <tuple>
 #include <algorithm>
 
-void Player::loadFromJson(nlohmann::json j) {
-    BaseEntity::loadFromJson(j);
+std::shared_ptr<Player> Player::createFromJson(nlohmann::json j) {
+    auto ret_ptr = std::make_shared<Player>();
+
+    ret_ptr->reloadFromJson(j);
+
+    return ret_ptr;
+}
+
+void Player::reloadFromJson(nlohmann::json j) {
+    BaseEntity::reloadFromJson(j);
 
     if (actions_) {
         Input::getInstance().setActionsInstance(actions_);

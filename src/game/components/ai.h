@@ -12,7 +12,7 @@ class AI {
 
     void update();
 
-    void loadFromJson(nlohmann::json j);
+    void reloadFromJson(nlohmann::json j);
     std::optional<nlohmann::json> outputToJson();
 
   private:

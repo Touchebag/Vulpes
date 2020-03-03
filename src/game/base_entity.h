@@ -21,7 +21,9 @@ class BaseEntity {
 
     void setHitbox(int width, int height);
 
-    virtual void loadFromJson(nlohmann::json j);
+    static std::shared_ptr<BaseEntity> createFromJson(nlohmann::json j);
+
+    virtual void reloadFromJson(nlohmann::json j);
     virtual std::optional<nlohmann::json> outputToJson();
 
     virtual ~BaseEntity() {};

@@ -5,7 +5,7 @@
 class StateTestFixture : public ::testing::Test {
   public:
     void SetUp() {
-        state_handler_.loadFromJson(nlohmann::json::parse(state_json_));
+        state_handler_.reloadFromJson(nlohmann::json::parse(state_json_));
     }
 
     std::string state_json_ = R"--(
@@ -100,7 +100,7 @@ TEST_F(StateTestFixture, ParseError) {
         )--";
 
     try {
-        state_handler_.loadFromJson(nlohmann::json::parse(state_json_invalid));
+        state_handler_.reloadFromJson(nlohmann::json::parse(state_json_invalid));
     } catch (std::invalid_argument& e) {
         // Should throw invalid_argument
         return;

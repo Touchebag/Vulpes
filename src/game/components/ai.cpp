@@ -42,13 +42,13 @@ void AI::update() {
     }
 }
 
-void AI::loadFromJson(nlohmann::json j) {
+void AI::reloadFromJson(nlohmann::json j) {
     if (j.contains("file")) {
         if (auto ai_json = File::loadAiBehavior(j["file"])) {
             states_ = StateHandler<std::vector<std::pair<std::shared_ptr<const ai::condition::LogicalOperator>, Actions::Action>>>();
 
             auto ai_behavior = ai_json.value();
-            states_.loadFromJson(ai_behavior);
+            states_.reloadFromJson(ai_behavior);
         }
     } else {
         throw std::invalid_argument("Cannot find AI file");

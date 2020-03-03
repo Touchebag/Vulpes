@@ -103,8 +103,7 @@ void Command::remove(std::shared_ptr<BaseEntity> entity) {
 
 void Command::copy(std::shared_ptr<BaseEntity> entity) {
     if (entity) {
-        std::shared_ptr<BaseEntity> cp_entity = std::make_shared<BaseEntity>();
-        cp_entity->loadFromJson(entity->outputToJson().value());
+        auto cp_entity = BaseEntity::createFromJson(entity->outputToJson().value());
 
         auto mouse_world_pos = mouse_->getMouseWorldPosition();
         if(auto transform = cp_entity->trans_) {

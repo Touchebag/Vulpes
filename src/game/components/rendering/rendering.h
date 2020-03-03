@@ -13,7 +13,7 @@ class RenderableEntity {
 
     virtual bool loadTexture(std::string file_path);
 
-    virtual void loadFromJson(nlohmann::json j);
+    virtual void reloadFromJson(nlohmann::json j);
     virtual std::optional<nlohmann::json> outputToJson();
 
     virtual void recalculateTextureRect(int width, int height);

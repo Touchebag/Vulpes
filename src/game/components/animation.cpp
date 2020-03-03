@@ -50,7 +50,7 @@ util::Rectangle AnimatedEntity::getSpriteRect() {
     }
 }
 
-void AnimatedEntity::loadFromJson(nlohmann::json j) {
+void AnimatedEntity::reloadFromJson(nlohmann::json j) {
     sprite_map_ = j["sprite_map"].get<std::string>();
 
     loadSpriteMap(sprite_map_);

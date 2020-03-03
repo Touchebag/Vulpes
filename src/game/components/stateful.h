@@ -12,7 +12,7 @@ class StatefulEntity {
 
     void update();
 
-    void loadFromJson(nlohmann::json j);
+    void reloadFromJson(nlohmann::json j);
     std::optional<nlohmann::json> outputToJson();
 
     void incomingEvent(state_utils::Event event);

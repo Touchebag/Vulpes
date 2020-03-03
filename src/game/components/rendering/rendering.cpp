@@ -22,7 +22,7 @@ bool RenderableEntity::loadTexture(std::string file_path) {
     return true;
 }
 
-void RenderableEntity::loadFromJson(nlohmann::json j) {
+void RenderableEntity::reloadFromJson(nlohmann::json j) {
     loadTexture(j["texture"].get<std::string>());
 
     if (j.contains("scale")) {

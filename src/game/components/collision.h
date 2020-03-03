@@ -17,7 +17,7 @@ class Collision {
 
     Collision(std::weak_ptr<Transform> trans, std::weak_ptr<Hitbox> hbox);
 
-    void loadFromJson(nlohmann::json& j);
+    void reloadFromJson(nlohmann::json& j);
     std::optional<nlohmann::json> outputToJson();
 
     bool collides(std::weak_ptr<Collision> other_entity);

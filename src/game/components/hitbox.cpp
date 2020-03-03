@@ -5,7 +5,7 @@ void Hitbox::setHitbox(int width, int height) {
     height_ = height;
 }
 
-void Hitbox::loadFromJson(nlohmann::json& j) {
+void Hitbox::reloadFromJson(nlohmann::json& j) {
     width_ = j["width"].get<int>();
     height_= j["height"].get<int>();
 }
