@@ -22,11 +22,18 @@ void Physics::update() {
     auto movable = movableEntity_.lock();
     auto act = actions_.lock();
 
+    // TODO Store in some separate component
+    int jumps_left = 0;
+
     if (stateEnt && movable && act) {
             double x = movable->getVelX();
             double y = movable->getVelY();
 
             auto state_props = stateEnt->getStateProperties();
+
+            if (state_props.touching_ground_ || state_props.touching_wall_) {
+                jumps_left = 1;
+            }
 
             if (!state_props.movement_locked_x_) {
                 if (act->getActionState(Actions::Action::MOVE_LEFT)) {
@@ -84,7 +91,17 @@ void Physics::update() {
 
             if (act->getActionState(Actions::Action::DASH, true)) {
                 if (state_props.can_dash_) {
-                    x = constants_.dash_speed * (facing_right ? 1.0 : -1.0);
+                    // If holding a direction dash in that direction
+                    // else dash forward
+                    if (act->getActionState(Actions::Action::MOVE_RIGHT)) {
+                        x = constants_.dash_speed;
+                        facing_right = true;
+                    } else if (act->getActionState(Actions::Action::MOVE_LEFT)) {
+                        x = -constants_.dash_speed;
+                        facing_right = false;
+                    } else {
+                        x = constants_.dash_speed * (facing_right ? 1.0 : -1.0);
+                    }
                     y = 0.0;
                     stateEnt->incomingEvent(state_utils::Event::DASHING);
                 }
@@ -98,8 +115,9 @@ void Physics::update() {
                     y = constants_.wall_jump_vertical_impulse;
 
                     stateEnt->incomingEvent(state_utils::Event::JUMPING);
-                } else if (state_props.can_jump_) {
+                } else if (state_props.can_jump_ && jumps_left > 0) {
                     y = constants_.jump_impulse;
+                    jumps_left--;
                     stateEnt->incomingEvent(state_utils::Event::JUMPING);
                 }
             }

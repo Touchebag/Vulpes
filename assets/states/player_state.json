@@ -160,6 +160,7 @@
         ]
     },
     "dashing": {
+        "touching_ground": false,
         "movement_locked_x": true,
         "movement_locked_y": true,
         "dashing": true,
