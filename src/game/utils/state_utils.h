@@ -48,6 +48,7 @@ const std::map<std::string, Event> string_event_map {
 struct Properties {
     bool movement_locked_x_ = false;
     bool movement_locked_y_ = false;
+    bool direction_locked_ = false;
     bool touching_ground_ = true;
     bool touching_wall_ = false;
     bool dashing_ = false;

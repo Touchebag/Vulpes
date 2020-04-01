@@ -18,8 +18,8 @@ class Physics {
         double ground_friction = 0.7;
 
         // Air movement
-        double air_accel = 0.5;
-        double air_friction = 0.97;
+        double air_accel = 2.0;
+        double air_friction = 0.93;
         double gravity = 1.0;
         double fall_multiplier = 3.5;
         double low_jump_multiplier = 2.5;
@@ -29,7 +29,7 @@ class Physics {
         // Other
         double jump_impulse = -30.0;
         double wall_slide_friction = 0.85;
-        double wall_jump_horizontal_impulse = 20.0;
+        double wall_jump_horizontal_impulse = 30.0;
         double wall_jump_vertical_impulse = -25.0;
         double dash_speed = 100.0;
         double dash_friction = 0.8;

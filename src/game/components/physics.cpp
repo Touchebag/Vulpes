@@ -2,6 +2,31 @@
 
 #include "utils/log.h"
 
+namespace {
+    class FacingDirection {
+      public:
+        void lockDirection(bool direction_locked) {
+            direction_locked_ = direction_locked;
+        }
+
+        operator bool() const {
+            return facing_right_;
+        }
+
+        void setDirection(bool facing_right) {
+            if (!direction_locked_) {
+                facing_right_ = facing_right;
+            }
+        }
+
+        FacingDirection& operator= (bool) = delete;
+
+      private:
+        bool facing_right_ = true;
+        bool direction_locked_ = false;
+    };
+} // namespace
+
 Physics::Physics(std::weak_ptr<StatefulEntity> statefulEntity, std::weak_ptr<RenderableEntity> renderableEntity, std::weak_ptr<MovableEntity> movableEntity, std::weak_ptr<AnimatedEntity> animatedEntity, std::weak_ptr<Actions> actions, std::weak_ptr<Collision> collision) :
                  statefulEntity_(statefulEntity),
                  renderableEntity_(renderableEntity),
@@ -13,11 +38,6 @@ Physics::Physics(std::weak_ptr<StatefulEntity> statefulEntity, std::weak_ptr<Ren
 
 void Physics::update() {
     // TODO Move somwhere more logical (transform?)
-    bool facing_right = true;
-    if (auto rndr = renderableEntity_.lock()) {
-        facing_right = rndr->facing_right_;
-    }
-
     auto stateEnt = statefulEntity_.lock();
     auto movable = movableEntity_.lock();
     auto act = actions_.lock();
@@ -26,10 +46,16 @@ void Physics::update() {
     int jumps_left = 0;
 
     if (stateEnt && movable && act) {
-            double x = movable->getVelX();
-            double y = movable->getVelY();
+        double x = movable->getVelX();
+        double y = movable->getVelY();
 
-            auto state_props = stateEnt->getStateProperties();
+        auto state_props = stateEnt->getStateProperties();
+
+        FacingDirection facing_right;
+        if (auto rndr = renderableEntity_.lock()) {
+            facing_right.setDirection(rndr->facing_right_);
+        }
+        facing_right.lockDirection(state_props.direction_locked_);
 
             if (state_props.touching_ground_ || state_props.touching_wall_) {
                 jumps_left = 1;
@@ -45,7 +71,7 @@ void Physics::update() {
                     stateEnt->incomingEvent(state_utils::Event::MOVING);
 
                     // When moving left facing_right should be false even when speed is zero
-                    facing_right = x > 0.0;
+                    facing_right.setDirection(x > 0.0);
                 } else if (act->getActionState(Actions::Action::MOVE_RIGHT)) {
                     if (state_props.touching_ground_) {
                         x += constants_.ground_accel;
@@ -55,7 +81,7 @@ void Physics::update() {
                     stateEnt->incomingEvent(state_utils::Event::MOVING);
 
                     // When moving right facing_right should be true even when speed is zero
-                    facing_right = x >= 0.0;
+                    facing_right.setDirection(x >= 0.0);
                 } else {
                     stateEnt->incomingEvent(state_utils::Event::NO_MOVEMENT);
                 }
@@ -83,9 +109,6 @@ void Physics::update() {
             }
 
             if (state_props.touching_wall_) {
-                // To ensure sticking on wall when not holding against it
-                // keep moving slightly toward the wall
-                x += facing_right ? 1.0 : -1.0;
                 y *= constants_.wall_slide_friction;
             }
 
@@ -95,10 +118,10 @@ void Physics::update() {
                     // else dash forward
                     if (act->getActionState(Actions::Action::MOVE_RIGHT)) {
                         x = constants_.dash_speed;
-                        facing_right = true;
+                        facing_right.setDirection(true);
                     } else if (act->getActionState(Actions::Action::MOVE_LEFT)) {
                         x = -constants_.dash_speed;
-                        facing_right = false;
+                        facing_right.setDirection(false);
                     } else {
                         x = constants_.dash_speed * (facing_right ? 1.0 : -1.0);
                     }
@@ -109,12 +132,13 @@ void Physics::update() {
 
             if (act->getActionState(Actions::Action::JUMP, true)) {
                 if (state_props.touching_wall_) {
-                    facing_right = !facing_right;
-                    int dir = facing_right ? 1.0 : -1.0;
+                    stateEnt->incomingEvent(state_utils::Event::JUMPING);
+                    facing_right.lockDirection(state_props.direction_locked_);
+
+                    facing_right.setDirection(!facing_right);
+                    int dir = facing_right ? -1.0 : 1.0;
                     x = constants_.wall_jump_horizontal_impulse * dir;
                     y = constants_.wall_jump_vertical_impulse;
-
-                    stateEnt->incomingEvent(state_utils::Event::JUMPING);
                 } else if (state_props.can_jump_ && jumps_left > 0) {
                     y = constants_.jump_impulse;
                     jumps_left--;
@@ -134,10 +158,10 @@ void Physics::update() {
             }
 
             movable->move(max_movement.first, max_movement.second);
-    }
 
-    if (auto render = renderableEntity_.lock()) {
-        render->facing_right_ = facing_right;
+        if (auto render = renderableEntity_.lock()) {
+            render->facing_right_ = facing_right;
+        }
     }
 }
 

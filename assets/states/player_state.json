@@ -134,20 +134,35 @@
     "wall_slide": {
         "touching_ground": false,
         "touching_wall": true,
+        "direction_locked": true,
         "can_dash": false,
         "frame_timer": 10,
         "next_states": [
             {"event": "touching_floor", "state": "idle"},
             {"event": "jumping", "state": "wall_jump"},
-            {"event": "falling", "state": "falling"}
+            {"event": "falling", "state": "wall_jump_grace_period"}
         ],
         "frame_names": [
             "Wall_slide"
         ]
     },
+    "wall_jump_grace_period": {
+        "touching_ground": false,
+        "touching_wall": true,
+        "frame_timer": 10,
+        "next_states": [
+            {"event": "touching_floor", "state": "idle"},
+            {"event": "touching_wall", "state": "wall_slide"},
+            {"event": "jumping", "state": "wall_jump"},
+            {"event": "dashing", "state": "dashing"},
+            {"event": "frame_timeout", "state": "falling"}
+        ],
+        "frame_names": [
+            "Falling"
+        ]
+    },
     "wall_jump": {
         "touching_ground": false,
-        "movement_locked_x": true,
         "can_jump": false,
         "frame_timer": 10,
         "next_states": [

@@ -54,6 +54,9 @@ State<state_utils::Properties> State<state_utils::Properties>::loadStateFromJson
     if (j.find("movement_locked_y") != j.end()) {
         properties.movement_locked_y_ = j["movement_locked_y"].get<bool>();
     }
+    if (j.find("direction_locked") != j.end()) {
+        properties.direction_locked_ = j["direction_locked"].get<bool>();
+    }
     if (j.find("touching_ground") != j.end()) {
         properties.touching_ground_ = j["touching_ground"].get<bool>();
     }
