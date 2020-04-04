@@ -111,7 +111,7 @@
         "can_jump": false,
         "next_states": [
             {"event": "touching_floor", "state": "idle"},
-            {"event": "touching_wall", "state": "wall_slide"},
+            {"event": "touching_wall", "state": "wall_slide_rising"},
             {"event": "falling", "state": "falling"},
             {"event": "dashing", "state": "dashing"}
         ],
@@ -131,6 +131,22 @@
             "Falling"
         ]
     },
+    "wall_slide_rising": {
+        "touching_ground": false,
+        "touching_wall": true,
+        "direction_locked": true,
+        "can_dash": false,
+        "frame_timer": 10,
+        "next_states": [
+            {"event": "touching_floor", "state": "idle"},
+            {"event": "jumping", "state": "wall_jump"},
+            {"event": "falling", "state": "wall_slide"},
+            {"event": "airborne", "state": "wall_jump_grace_period"}
+        ],
+        "frame_names": [
+            "Jumping"
+        ]
+    },
     "wall_slide": {
         "touching_ground": false,
         "touching_wall": true,
@@ -140,7 +156,7 @@
         "next_states": [
             {"event": "touching_floor", "state": "idle"},
             {"event": "jumping", "state": "wall_jump"},
-            {"event": "falling", "state": "wall_jump_grace_period"}
+            {"event": "airborne", "state": "wall_jump_grace_period"}
         ],
         "frame_names": [
             "Wall_slide"

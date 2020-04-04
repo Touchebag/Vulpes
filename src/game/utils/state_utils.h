@@ -11,6 +11,7 @@ enum class Event {
     // Positions
     TOUCHING_FLOOR,
     TOUCHING_WALL,
+    AIRBORNE,
 
     // Movement
     NO_MOVEMENT,
@@ -32,6 +33,7 @@ const std::map<std::string, Event> string_event_map {
 
     {"touching_floor", Event::TOUCHING_FLOOR},
     {"touching_wall", Event::TOUCHING_WALL},
+    {"airborne", Event::AIRBORNE},
 
     {"no_movement", Event::NO_MOVEMENT},
     {"moving", Event::MOVING},

@@ -108,7 +108,8 @@ void Physics::update() {
             }
         }
 
-        if (state_props.touching_wall_) {
+        // Only slide when falling
+        if (y > 0.0 && state_props.touching_wall_) {
             y *= constants_.wall_slide_friction;
         }
 
@@ -153,7 +154,11 @@ void Physics::update() {
             stateEnt->incomingEvent(state_utils::Event::TOUCHING_FLOOR);
         } else if (max_movement.first != x) {
             stateEnt->incomingEvent(state_utils::Event::TOUCHING_WALL);
-        } else if (max_movement.second > 0.0) {
+        } else {
+            stateEnt->incomingEvent(state_utils::Event::AIRBORNE);
+        }
+
+        if (max_movement.second > 0.0) {
             stateEnt->incomingEvent(state_utils::Event::FALLING);
         }
 
