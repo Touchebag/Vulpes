@@ -64,9 +64,9 @@ void Physics::update() {
         if (!state_props.movement_locked_x_) {
             if (act->getActionState(Actions::Action::MOVE_LEFT)) {
                 if (state_props.touching_ground_) {
-                    x -= constants_.ground_accel;
+                    x -= constants_.ground_acceleration;
                 } else {
-                    x -= constants_.air_accel;
+                    x -= constants_.air_acceleration;
                 }
                 stateEnt->incomingEvent(state_utils::Event::MOVING);
 
@@ -74,9 +74,9 @@ void Physics::update() {
                 facing_right.setDirection(x > 0.0);
             } else if (act->getActionState(Actions::Action::MOVE_RIGHT)) {
                 if (state_props.touching_ground_) {
-                    x += constants_.ground_accel;
+                    x += constants_.ground_acceleration;
                 } else {
-                    x += constants_.air_accel;
+                    x += constants_.air_acceleration;
                 }
                 stateEnt->incomingEvent(state_utils::Event::MOVING);
 
@@ -173,13 +173,13 @@ void Physics::reloadFromJson(nlohmann::json j) {
     Constants constants;
 
     if (j.contains("ground_acceleration")) {
-        constants.ground_accel = j["ground_acceleration"].get<double>();
+        constants.ground_acceleration = j["ground_acceleration"].get<double>();
     }
     if (j.contains("ground_friction")) {
         constants.ground_friction = j["ground_friction"].get<double>();
     }
     if (j.contains("air_acceleration")) {
-        constants.air_accel = j["air_acceleration"].get<double>();
+        constants.air_acceleration = j["air_acceleration"].get<double>();
     }
     if (j.contains("air_friction")) {
         constants.air_friction = j["air_friction"].get<double>();

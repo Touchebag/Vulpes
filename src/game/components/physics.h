@@ -14,25 +14,25 @@ class Physics {
   public:
     struct Constants {
         // Ground movement
-        double ground_accel = 7.0;
-        double ground_friction = 0.7;
+        double ground_acceleration = 0.0;
+        double ground_friction = 0.0;
 
         // Air movement
-        double air_accel = 2.0;
-        double air_friction = 0.93;
-        double gravity = 1.0;
-        double fall_multiplier = 3.5;
-        double low_jump_multiplier = 2.5;
-        double max_vertical_speed = 20.0;
-        double min_vertical_speed = -80.0;
+        double air_acceleration = 0.0;
+        double air_friction = 0.0;
+        double gravity = 0.0;
+        double fall_multiplier = 0.0;
+        double low_jump_multiplier = 0.0;
+        double max_vertical_speed = 0.0;
+        double min_vertical_speed = 0.0;
 
         // Other
-        double jump_impulse = -30.0;
-        double wall_slide_friction = 0.85;
-        double wall_jump_horizontal_impulse = 30.0;
-        double wall_jump_vertical_impulse = -25.0;
-        double dash_speed = 100.0;
-        double dash_friction = 0.8;
+        double jump_impulse = 0.0;
+        double wall_slide_friction = 0.0;
+        double wall_jump_horizontal_impulse = 0.0;
+        double wall_jump_vertical_impulse = 0.0;
+        double dash_speed = 0.0;
+        double dash_friction = 0.0;
     };
 
     Physics(std::weak_ptr<StatefulEntity> statefulEntity,
