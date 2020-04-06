@@ -7,6 +7,7 @@
 #include "player.h"
 #include "json.hpp"
 #include "components/collision.h"
+#include "components/rendering/rendering_text.h"
 
 class World {
 /* This class is intended to store all world objects like walls.
@@ -99,6 +100,9 @@ class World {
     World() = default;
 
     std::shared_ptr<Player> player_;
+
+    std::shared_ptr<RenderableText> player_health_;
+    std::shared_ptr<Transform> player_health_position_;
 
     void loadLayer(nlohmann::json json, Layer layer);
     nlohmann::json jsonifyLayer(Layer layer);

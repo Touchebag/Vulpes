@@ -54,6 +54,10 @@ void World::update() {
               ++it) {
         (*it)->update();
     }
+
+    if (player_->damageable_) {
+        player_health_->setText(std::to_string(player_->damageable_->getHealth()));
+    }
 }
 
 util::Point World::getPlayerPosition() {
@@ -98,6 +102,15 @@ void World::loadWorldFromJson(nlohmann::json j) {
     player_ = Player::createFromJson(j["player"]);
 
     Render::getInstance().addEntity(player_->renderableEntity_, Layer::MAIN);
+
+    // Health HUD
+    player_health_position_ = std::make_shared<Transform>();
+    player_health_position_->setPosition(50, 50);
+
+    player_health_ = std::make_shared<RenderableText>(player_health_position_);
+    player_health_->setColor(sf::Color::Green);
+
+    Render::getInstance().addEntity(player_health_, Layer::HUD);
 }
 
 void World::loadLayer(nlohmann::json json, Layer layer) {

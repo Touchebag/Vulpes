@@ -29,8 +29,6 @@ void Damageable::update() {
             }
         }
     }
-
-    LOGD("%i", health_);
 }
 
 int Damageable::getHealth() {
