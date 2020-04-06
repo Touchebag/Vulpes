@@ -20,7 +20,7 @@ class Collision {
     void reloadFromJson(nlohmann::json& j);
     std::optional<nlohmann::json> outputToJson();
 
-    bool collides(std::weak_ptr<Collision> other_entity);
+    bool collides(std::weak_ptr<const Collision> other_entity);
 
     std::pair<double, double> getMaximumMovement(double stepX, double stepY, std::shared_ptr<const Collision> other_coll);
 

@@ -46,6 +46,7 @@ std::vector<std::shared_ptr<BaseEntity>>& World::getWorldObjects(Layer layer) {
 }
 
 void World::update() {
+    // TODO Check for death
     player_->update();
 
     for (auto it = world_objects_[static_cast<int>(Layer::MAIN)].begin();

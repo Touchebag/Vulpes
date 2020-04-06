@@ -84,6 +84,8 @@ void BaseEntity::reloadFromJson(nlohmann::json j) {
     physics_ = loadComponentFromJson(j, "Physics", std::make_shared<Physics>(statefulEntity_, renderableEntity_, movableEntity_, animatedEntity_, actions_, collision_));
 
     ai_ = loadComponentFromJson(j, "AI", std::make_shared<AI>(actions_, trans_));
+
+    damageable_ = loadComponentFromJson(j, "Damageable", std::make_shared<Damageable>(collision_));
 }
 
 std::optional<nlohmann::json> BaseEntity::outputToJson() {
@@ -151,6 +153,12 @@ std::optional<nlohmann::json> BaseEntity::outputToJson() {
                 j["AI"] = opt.value();
             }
         }
+
+        if (damageable_) {
+            if (auto opt = damageable_->outputToJson()) {
+                j["Damageable"] = opt.value();
+            }
+        }
     }
 
     return {j};
@@ -177,6 +185,10 @@ void BaseEntity::update() {
 
     if (actions_) {
         actions_->update();
+    }
+
+    if (damageable_) {
+        damageable_->update();
     }
 }
 

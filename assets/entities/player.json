@@ -38,6 +38,9 @@
     "Collision": {
         "type": "player_hurtbox"
     },
+    "Damageable": {
+        "health": 100
+    },
     "Hitbox": {
         "height": 200,
         "width": 50

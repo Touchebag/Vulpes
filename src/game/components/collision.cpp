@@ -73,7 +73,7 @@ std::optional<nlohmann::json> Collision::outputToJson() {
     throw std::runtime_error("Collision: this should not happen");
 }
 
-bool Collision::collides(std::weak_ptr<Collision> other_entity) {
+bool Collision::collides(std::weak_ptr<const Collision> other_entity) {
     if (auto other_ent = other_entity.lock()) {
         auto this_trans = trans_.lock();
         auto this_hbox = hbox_.lock();
