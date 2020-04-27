@@ -20,6 +20,9 @@ enum class Event {
     FALLING,
     DASHING,
 
+    // Actions
+    ATTACKING,
+
     // Misc
     FRAME_TIMEOUT,
 
@@ -40,6 +43,7 @@ const std::map<std::string, Event> string_event_map {
     {"jumping", Event::JUMPING},
     {"falling", Event::FALLING},
     {"dashing", Event::DASHING},
+    {"attacking", Event::ATTACKING},
 
     {"frame_timeout", Event::FRAME_TIMEOUT},
 

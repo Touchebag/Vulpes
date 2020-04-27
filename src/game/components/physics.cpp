@@ -147,6 +147,13 @@ void Physics::update() {
             }
         }
 
+        // TODO Check if can attack
+        if (true) {
+            if (act->getActionState(Actions::Action::ATTACK)) {
+                stateEnt->incomingEvent(state_utils::Event::ATTACKING);
+            }
+        }
+
         y = std::max(std::min(y, constants_.max_vertical_speed), constants_.min_vertical_speed);
         auto max_movement = movable->getMaximumMovement(x, y);
 

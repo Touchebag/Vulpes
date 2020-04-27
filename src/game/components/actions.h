@@ -11,6 +11,7 @@ class Actions {
         MOVE_RIGHT,
         JUMP,
         DASH,
+        ATTACK,
 
         // AI events
         AI_EVENT_1,

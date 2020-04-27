@@ -25,7 +25,8 @@ int game_main(sf::RenderWindow& window, std::string level_file_path) {
             {{sf::Keyboard::Key::Space, Actions::Action::JUMP},
             {sf::Keyboard::Key::Left, Actions::Action::MOVE_LEFT},
             {sf::Keyboard::Key::Right, Actions::Action::MOVE_RIGHT},
-            {sf::Keyboard::Key::LShift, Actions::Action::DASH}});
+            {sf::Keyboard::Key::LShift, Actions::Action::DASH},
+            {sf::Keyboard::Key::Z, Actions::Action::ATTACK}});
 
     frame_time.restart();
 

@@ -12,7 +12,8 @@
             {"event": "moving", "state": "running"},
             {"event": "jumping", "state": "jumping"},
             {"event": "falling", "state": "falling"},
-            {"event": "dashing", "state": "dashing"}
+            {"event": "dashing", "state": "dashing"},
+            {"event": "attacking", "state": "attack"}
         ],
         "frame_names": [
             "Idle0",
@@ -53,7 +54,8 @@
             {"event": "moving", "state": "running"},
             {"event": "jumping", "state": "jumping"},
             {"event": "falling", "state": "falling"},
-            {"event": "dashing", "state": "dashing"}
+            {"event": "dashing", "state": "dashing"},
+            {"event": "attacking", "state": "attack"}
         ],
         "frame_names": [
             "Running0",
@@ -204,6 +206,33 @@
         ],
         "frame_names": [
             "Dashing"
+        ]
+    },
+    "attack": {
+        "movement_locked_x": true,
+        "movement_locked_y": true,
+        "can_dash": false,
+        "frame_timer": 1,
+        "spawn_entity": "enemy.json",
+        "next_states": [
+            {"event": "jumping", "state": "jumping"},
+            {"event": "frame_timeout", "state": "attack_end_lag"}
+        ],
+        "frame_names": [
+            "Idle0"
+        ]
+    },
+    "attack_end_lag": {
+        "movement_locked_x": true,
+        "movement_locked_y": true,
+        "can_dash": false,
+        "frame_timer": 30,
+        "next_states": [
+            {"event": "jumping", "state": "jumping"},
+            {"event": "frame_timeout", "state": "idle"}
+        ],
+        "frame_names": [
+            "Idle0"
         ]
     }
 }
