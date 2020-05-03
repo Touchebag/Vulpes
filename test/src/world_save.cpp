@@ -10,7 +10,7 @@ class WorldTestFixture : public ::testing::Test {
     WorldTestFixture() {
     }
 
-    void SetUp() {
+    void SetUp() override {
     }
 };
 

@@ -8,7 +8,7 @@ class CommandTestFixture : public ::testing::Test {
     CommandTestFixture() {
     }
 
-    void SetUp() {
+    void SetUp() override {
         std::shared_ptr<History> history = std::make_shared<History>();
         std::shared_ptr<Operation> operation = std::make_shared<Operation>();
 

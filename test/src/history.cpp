@@ -8,7 +8,7 @@ class HistoryTestFixture : public ::testing::Test {
     HistoryTestFixture() {
     }
 
-    void SetUp() {
+    void SetUp() override {
         std::shared_ptr<Operation> operation = std::make_shared<Operation>();
 
         history_ = std::make_shared<History>();

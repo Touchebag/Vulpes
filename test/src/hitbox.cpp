@@ -6,7 +6,7 @@
 
 class StaticCollisionTestFixture : public ::testing::Test {
   public:
-    void SetUp() {
+    void SetUp() override {
         trans1_ = std::make_shared<Transform>();
         trans2_ = std::make_shared<Transform>();
         hbox1_ = std::make_shared<Hitbox>();

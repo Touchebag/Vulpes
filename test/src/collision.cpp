@@ -11,7 +11,7 @@ class DynamicCollisionTestFixture : public ::testing::Test {
         entity_ = BaseEntity::createFromJson(nlohmann::json::parse(entity_json_));
     }
 
-    void SetUp() {
+    void SetUp() override {
         World::getInstance<World::IWorldModify>().loadWorldFromFile("test_world.json");
     }
 

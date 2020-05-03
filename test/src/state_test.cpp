@@ -4,7 +4,7 @@
 
 class StateTestFixture : public ::testing::Test {
   public:
-    void SetUp() {
+    void SetUp() override {
         state_handler_.reloadFromJson(nlohmann::json::parse(state_json_));
     }
 
