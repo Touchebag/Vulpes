@@ -10,7 +10,7 @@
 #include "components/movement.h"
 #include "components/collision.h"
 
-class Physics {
+class Physics : public Component {
   public:
     struct Constants {
         // Ground movement
@@ -42,12 +42,12 @@ class Physics {
             std::weak_ptr<Actions> actions,
             std::weak_ptr<Collision> collision);
 
-    void update();
+    void update() override;
 
     void setPhysicsConstants(Constants constants);
 
-    void reloadFromJson(nlohmann::json j);
-    std::optional<nlohmann::json> outputToJson();
+    void reloadFromJson(nlohmann::json j) override;
+    std::optional<nlohmann::json> outputToJson() override;
 
   private:
     std::weak_ptr<StatefulEntity> statefulEntity_;

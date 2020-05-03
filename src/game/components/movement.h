@@ -8,14 +8,16 @@
 #include <utility>
 #include <memory>
 
-class MovableEntity {
+class MovableEntity : public Component {
   public:
     MovableEntity(std::weak_ptr<Transform> trans, std::weak_ptr<Hitbox> hbox, std::weak_ptr<Collision> collision);
 
     void move(double velX, double velY);
 
-    void reloadFromJson(nlohmann::json j);
-    std::optional<nlohmann::json> outputToJson();
+    void update() override;
+
+    void reloadFromJson(nlohmann::json j) override;
+    std::optional<nlohmann::json> outputToJson() override;
 
     std::pair<double, double> getMaximumMovement(double velX, double velY);
 

@@ -1,9 +1,11 @@
 #pragma once
 
+#include "component.h"
+
 #include <unordered_map>
 #include <json.hpp>
 
-class Actions {
+class Actions : public Component {
   public:
     enum class Action {
         UNKNOWN,
@@ -18,7 +20,7 @@ class Actions {
         AI_EVENT_2,
     };
 
-    void update();
+    void update() override;
 
     bool getActionState(Action action, bool first_frame = false);
 
@@ -32,8 +34,8 @@ class Actions {
     // They will be removed manually on keyup events
     void updateActions();
 
-    void reloadFromJson(nlohmann::json j);
-    std::optional<nlohmann::json> outputToJson();
+    void reloadFromJson(nlohmann::json j) override;
+    std::optional<nlohmann::json> outputToJson() override;
 
   private:
     // ACTIVE = action has been held since at least one frame

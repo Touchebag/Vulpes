@@ -7,6 +7,9 @@ MovableEntity::MovableEntity(std::weak_ptr<Transform> trans, std::weak_ptr<Hitbo
     collision_(collision) {
 }
 
+void MovableEntity::update() {
+}
+
 void MovableEntity::move(double velX, double velY) {
     if (auto trans = trans_.lock()) {
         vely_ = velY;

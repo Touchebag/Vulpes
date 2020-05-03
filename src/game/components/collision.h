@@ -2,10 +2,12 @@
 
 #include <memory>
 
+#include "component.h"
+
 #include "components/transform.h"
 #include "components/hitbox.h"
 
-class Collision {
+class Collision : public Component {
   public:
     enum class CollisionType {
         STATIC,
@@ -17,8 +19,10 @@ class Collision {
 
     Collision(std::weak_ptr<Transform> trans, std::weak_ptr<Hitbox> hbox);
 
-    void reloadFromJson(nlohmann::json& j);
-    std::optional<nlohmann::json> outputToJson();
+    void update() override;
+
+    void reloadFromJson(nlohmann::json j) override;
+    std::optional<nlohmann::json> outputToJson() override;
 
     bool collides(std::weak_ptr<const Collision> other_entity);
 

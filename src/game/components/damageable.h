@@ -6,14 +6,14 @@
 
 #include "components/collision.h"
 
-class Damageable {
+class Damageable : public Component {
   public:
     Damageable(std::weak_ptr<Collision> hurtbox);
 
-    void reloadFromJson(nlohmann::json j);
-    std::optional<nlohmann::json> outputToJson();
+    void reloadFromJson(nlohmann::json j) override;
+    std::optional<nlohmann::json> outputToJson() override;
 
-    void update();
+    void update() override;
 
     int getHealth();
     bool isDead();

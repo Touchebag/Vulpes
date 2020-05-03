@@ -2,15 +2,19 @@
 
 #include <json.hpp>
 
+#include "component.h"
+
 #include "utils/common.h"
 
-class Transform {
+class Transform : public Component {
 public:
     void setPosition(int x, int y);
     util::Point getPosition();
 
-    void reloadFromJson(nlohmann::json j);
-    std::optional<nlohmann::json> outputToJson();
+    void update() override;
+
+    void reloadFromJson(nlohmann::json j) override;
+    std::optional<nlohmann::json> outputToJson() override;
 
     int getX() const;
     int getY() const;

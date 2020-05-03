@@ -47,7 +47,10 @@ Collision::Collision(std::weak_ptr<Transform> trans, std::weak_ptr<Hitbox> hbox)
     hbox_(hbox) {
 }
 
-void Collision::reloadFromJson(nlohmann::json& j) {
+void Collision::update() {
+}
+
+void Collision::reloadFromJson(nlohmann::json j) {
     if (j.contains("type")) {
         auto type_entry = string_type_map.find(j["type"].get<std::string>());
         if (type_entry != string_type_map.end()) {

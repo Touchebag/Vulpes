@@ -1,11 +1,14 @@
 #include "hitbox.h"
 
+void Hitbox::update() {
+}
+
 void Hitbox::setHitbox(int width, int height) {
     width_ = width;
     height_ = height;
 }
 
-void Hitbox::reloadFromJson(nlohmann::json& j) {
+void Hitbox::reloadFromJson(nlohmann::json j) {
     width_ = j["width"].get<int>();
     height_= j["height"].get<int>();
 }

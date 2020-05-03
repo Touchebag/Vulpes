@@ -6,14 +6,14 @@
 #include "components/animation.h"
 #include "utils/state_handler.h"
 
-class StatefulEntity {
+class StatefulEntity : public Component {
   public:
     StatefulEntity(std::weak_ptr<AnimatedEntity> animatedEntity);
 
-    void update();
+    void update() override;
 
-    void reloadFromJson(nlohmann::json j);
-    std::optional<nlohmann::json> outputToJson();
+    void reloadFromJson(nlohmann::json j) override;
+    std::optional<nlohmann::json> outputToJson() override;
 
     void incomingEvent(state_utils::Event event);
 
