@@ -49,21 +49,21 @@ void Physics::update() {
         double x = movable->getVelX();
         double y = movable->getVelY();
 
-        auto state_props = stateEnt->getStateProperties();
+        auto physics_props = stateEnt->getPhysicsProperties();
 
         FacingDirection facing_right;
         if (auto rndr = renderableEntity_.lock()) {
             facing_right.setDirection(rndr->facing_right_);
         }
-        facing_right.lockDirection(state_props.direction_locked_);
+        facing_right.lockDirection(physics_props.direction_locked_);
 
-        if (state_props.touching_ground_ || state_props.touching_wall_) {
+        if (physics_props.touching_ground_ || physics_props.touching_wall_) {
             jumps_left = 1;
         }
 
-        if (!state_props.movement_locked_x_) {
+        if (!physics_props.movement_locked_x_) {
             if (act->getActionState(Actions::Action::MOVE_LEFT)) {
-                if (state_props.touching_ground_) {
+                if (physics_props.touching_ground_) {
                     x -= constants_.ground_acceleration;
                 } else {
                     x -= constants_.air_acceleration;
@@ -73,7 +73,7 @@ void Physics::update() {
                 // When moving left facing_right should be false even when speed is zero
                 facing_right.setDirection(x > 0.0);
             } else if (act->getActionState(Actions::Action::MOVE_RIGHT)) {
-                if (state_props.touching_ground_) {
+                if (physics_props.touching_ground_) {
                     x += constants_.ground_acceleration;
                 } else {
                     x += constants_.air_acceleration;
@@ -87,21 +87,21 @@ void Physics::update() {
             }
         }
 
-        if (state_props.dashing_) {
+        if (physics_props.dashing_) {
             x *= constants_.dash_friction;
-        } else if (state_props.touching_ground_) {
+        } else if (physics_props.touching_ground_) {
             x *= constants_.ground_friction;
         } else {
             x *= constants_.air_friction;
         }
 
-        if (!state_props.movement_locked_y_) {
+        if (!physics_props.movement_locked_y_) {
             // Gravity
-            if (y > 0.0 && !state_props.touching_wall_) {
+            if (y > 0.0 && !physics_props.touching_wall_) {
                 y += constants_.gravity * constants_.fall_multiplier;
             } else if (y < 0.0
                        && !(act->getActionState(Actions::Action::JUMP))
-                       && !state_props.touching_wall_) {
+                       && !physics_props.touching_wall_) {
                 y += constants_.gravity * constants_.low_jump_multiplier;
             } else {
                 y += constants_.gravity;
@@ -109,12 +109,12 @@ void Physics::update() {
         }
 
         // Only slide when falling
-        if (y > 0.0 && state_props.touching_wall_) {
+        if (y > 0.0 && physics_props.touching_wall_) {
             y *= constants_.wall_slide_friction;
         }
 
         if (act->getActionState(Actions::Action::DASH, true)) {
-            if (state_props.can_dash_) {
+            if (physics_props.can_dash_) {
                 // If holding a direction dash in that direction
                 // else dash forward
                 if (act->getActionState(Actions::Action::MOVE_RIGHT)) {
@@ -132,26 +132,25 @@ void Physics::update() {
         }
 
         if (act->getActionState(Actions::Action::JUMP, true)) {
-            if (state_props.touching_wall_) {
+            if (physics_props.touching_wall_) {
                 stateEnt->incomingEvent(state_utils::Event::JUMPING);
-                facing_right.lockDirection(state_props.direction_locked_);
+                facing_right.lockDirection(physics_props.direction_locked_);
 
                 facing_right.setDirection(!facing_right);
                 int dir = facing_right ? -1.0 : 1.0;
                 x = constants_.wall_jump_horizontal_impulse * dir;
                 y = constants_.wall_jump_vertical_impulse;
-            } else if (state_props.can_jump_ && jumps_left > 0) {
+            } else if (physics_props.can_jump_ && jumps_left > 0) {
                 y = constants_.jump_impulse;
                 jumps_left--;
                 stateEnt->incomingEvent(state_utils::Event::JUMPING);
             }
         }
 
-        // TODO Check if can attack
-        if (true) {
-            if (act->getActionState(Actions::Action::ATTACK)) {
-                stateEnt->incomingEvent(state_utils::Event::ATTACKING);
-            }
+        // No need to check whether we are allowed to attack since there is no special
+        // physics handling. All actions are handled by states.
+        if (act->getActionState(Actions::Action::ATTACK)) {
+            stateEnt->incomingEvent(state_utils::Event::ATTACKING);
         }
 
         y = std::max(std::min(y, constants_.max_vertical_speed), constants_.min_vertical_speed);

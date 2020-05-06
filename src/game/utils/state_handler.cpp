@@ -34,5 +34,5 @@ const T& StateHandler<T>::getStateData() {
 }
 
 
-template class StateHandler<state_utils::Properties>;
+template class StateHandler<state_utils::EntityContent>;
 template class StateHandler<std::vector<std::pair<std::shared_ptr<const ai::condition::LogicalOperator>, Actions::Action>>>;

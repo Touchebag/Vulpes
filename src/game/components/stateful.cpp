@@ -40,13 +40,22 @@ void StatefulEntity::incomingEvent(state_utils::Event event) {
     auto new_state = state_handler_.incomingEvent(event);
 
     if (auto ns = new_state.lock()) {
-        frame_counter_ = ns->getData().frame_timer_;
+        frame_counter_ = ns->getData().state_props.frame_timer_;
         if (auto tmp = animatedEntity_.lock()) {
-            tmp->setFrameList(ns->getData().frame_names_);
+            tmp->setFrameList(ns->getData().state_props.frame_names_);
         }
+
     }
 }
 
-const state_utils::Properties& StatefulEntity::getStateProperties() {
-    return state_handler_.getStateData();
+const state_utils::StateProperties& StatefulEntity::getStateProperties() {
+    return state_handler_.getStateData().state_props;
+}
+
+const state_utils::PhysicsProperties& StatefulEntity::getPhysicsProperties() {
+    return state_handler_.getStateData().physics_props;
+}
+
+const nlohmann::json& StatefulEntity::getEntity() {
+    return state_handler_.getStateData().entity;
 }

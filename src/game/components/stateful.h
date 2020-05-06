@@ -17,7 +17,9 @@ class StatefulEntity : public Component {
 
     void incomingEvent(state_utils::Event event);
 
-    const state_utils::Properties& getStateProperties();
+    const state_utils::StateProperties& getStateProperties();
+    const state_utils::PhysicsProperties& getPhysicsProperties();
+    const nlohmann::json& getEntity();
 
   private:
     void loadStates(std::string file_path);
@@ -28,5 +30,5 @@ class StatefulEntity : public Component {
 
     std::weak_ptr<AnimatedEntity> animatedEntity_;
 
-    StateHandler<state_utils::Properties> state_handler_;
+    StateHandler<state_utils::EntityContent> state_handler_;
 };

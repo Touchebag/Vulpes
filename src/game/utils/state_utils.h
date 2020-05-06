@@ -2,6 +2,8 @@
 
 #include <map>
 
+#include "json.hpp"
+
 namespace state_utils {
 
 enum class Event {
@@ -51,7 +53,7 @@ const std::map<std::string, Event> string_event_map {
     {"ai_event_2", Event::AI_EVENT_2},
 };
 
-struct Properties {
+struct PhysicsProperties {
     bool movement_locked_x_ = false;
     bool movement_locked_y_ = false;
     bool direction_locked_ = false;
@@ -60,9 +62,18 @@ struct Properties {
     bool dashing_ = false;
     bool can_jump_ = true;
     bool can_dash_ = true;
+};
+
+struct StateProperties {
     unsigned int frame_timer_ = UINT_MAX;
     std::unordered_map<state_utils::Event, std::string> next_states_;
     std::vector<std::string> frame_names_;
 };
 
-}
+struct EntityContent {
+    PhysicsProperties physics_props;
+    StateProperties state_props;
+    nlohmann::json entity;
+};
+
+} // state_utils

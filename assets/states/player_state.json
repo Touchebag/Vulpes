@@ -109,8 +109,10 @@
         ]
     },
     "jumping": {
-        "touching_ground": false,
-        "can_jump": false,
+        "properties": {
+            "touching_ground": false,
+            "can_jump": false
+        },
         "next_states": [
             {"event": "touching_floor", "state": "idle"},
             {"event": "touching_wall", "state": "wall_slide_rising"},
@@ -122,8 +124,10 @@
         ]
     },
     "falling": {
-        "touching_ground": false,
-        "can_jump": false,
+        "properties": {
+            "touching_ground": false,
+            "can_jump": false
+        },
         "next_states": [
             {"event": "touching_floor", "state": "idle"},
             {"event": "touching_wall", "state": "wall_slide"},
@@ -134,10 +138,12 @@
         ]
     },
     "wall_slide_rising": {
-        "touching_ground": false,
-        "touching_wall": true,
-        "direction_locked": true,
-        "can_dash": false,
+        "properties": {
+            "touching_ground": false,
+            "touching_wall": true,
+            "direction_locked": true,
+            "can_dash": false
+        },
         "frame_timer": 10,
         "next_states": [
             {"event": "touching_floor", "state": "idle"},
@@ -150,10 +156,12 @@
         ]
     },
     "wall_slide": {
-        "touching_ground": false,
-        "touching_wall": true,
-        "direction_locked": true,
-        "can_dash": false,
+        "properties": {
+            "touching_ground": false,
+            "touching_wall": true,
+            "direction_locked": true,
+            "can_dash": false
+        },
         "frame_timer": 10,
         "next_states": [
             {"event": "touching_floor", "state": "idle"},
@@ -165,8 +173,10 @@
         ]
     },
     "wall_jump_grace_period": {
-        "touching_ground": false,
-        "touching_wall": true,
+        "properties": {
+            "touching_ground": false,
+            "touching_wall": true
+        },
         "frame_timer": 10,
         "next_states": [
             {"event": "touching_floor", "state": "idle"},
@@ -180,8 +190,10 @@
         ]
     },
     "wall_jump": {
-        "touching_ground": false,
-        "can_jump": false,
+        "properties": {
+            "touching_ground": false,
+            "can_jump": false
+        },
         "frame_timer": 10,
         "next_states": [
             {"event": "touching_wall", "state": "wall_slide"},
@@ -193,11 +205,13 @@
         ]
     },
     "dashing": {
-        "touching_ground": false,
-        "movement_locked_x": true,
-        "movement_locked_y": true,
-        "dashing": true,
-        "can_dash": false,
+        "properties": {
+            "touching_ground": false,
+            "movement_locked_x": true,
+            "movement_locked_y": true,
+            "dashing": true,
+            "can_dash": false
+        },
         "frame_timer": 10,
         "next_states": [
             {"event": "touching_wall", "state": "wall_slide"},
@@ -209,11 +223,25 @@
         ]
     },
     "attack": {
-        "movement_locked_x": true,
-        "movement_locked_y": true,
-        "can_dash": false,
-        "frame_timer": 1,
-        "spawn_entity": "enemy.json",
+        "properties": {
+            "movement_locked_x": true,
+            "movement_locked_y": true,
+            "can_dash": false
+        },
+        "frame_timer": 0,
+        "spawn_entity": {
+            "Hitbox": {
+                "width": 50,
+                "height": 200
+            },
+            "Renderable": {
+                "texture": "box.png"
+            },
+            "Transform": {
+                "pos_x": 0,
+                "pos_y": 0
+            }
+        },
         "next_states": [
             {"event": "jumping", "state": "jumping"},
             {"event": "frame_timeout", "state": "attack_end_lag"}
@@ -223,9 +251,11 @@
         ]
     },
     "attack_end_lag": {
-        "movement_locked_x": true,
-        "movement_locked_y": true,
-        "can_dash": false,
+        "properties": {
+            "movement_locked_x": true,
+            "movement_locked_y": true,
+            "can_dash": false
+        },
         "frame_timer": 30,
         "next_states": [
             {"event": "jumping", "state": "jumping"},

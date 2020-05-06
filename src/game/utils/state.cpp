@@ -44,36 +44,40 @@ void State<T>::loadNextStateListFromJson(nlohmann::json j) {
 }
 
 template <>
-State<state_utils::Properties> State<state_utils::Properties>::loadStateFromJson(nlohmann::json j) {
-    state_utils::Properties properties;
+State<state_utils::EntityContent> State<state_utils::EntityContent>::loadStateFromJson(nlohmann::json j) {
+    state_utils::PhysicsProperties physics_props;
+    state_utils::StateProperties state_props;
+
+    nlohmann::json physics_json = j["properties"];
 
     // If an option is not found use default
-    if (j.find("movement_locked_x") != j.end()) {
-        properties.movement_locked_x_ = j["movement_locked_x"].get<bool>();
+    if (physics_json.find("movement_locked_x") != physics_json.end()) {
+        physics_props.movement_locked_x_ = physics_json["movement_locked_x"].get<bool>();
     }
-    if (j.find("movement_locked_y") != j.end()) {
-        properties.movement_locked_y_ = j["movement_locked_y"].get<bool>();
+    if (physics_json.find("movement_locked_y") != physics_json.end()) {
+        physics_props.movement_locked_y_ = physics_json["movement_locked_y"].get<bool>();
     }
-    if (j.find("direction_locked") != j.end()) {
-        properties.direction_locked_ = j["direction_locked"].get<bool>();
+    if (physics_json.find("direction_locked") != physics_json.end()) {
+        physics_props.direction_locked_ = physics_json["direction_locked"].get<bool>();
     }
-    if (j.find("touching_ground") != j.end()) {
-        properties.touching_ground_ = j["touching_ground"].get<bool>();
+    if (physics_json.find("touching_ground") != physics_json.end()) {
+        physics_props.touching_ground_ = physics_json["touching_ground"].get<bool>();
     }
-    if (j.find("touching_wall") != j.end()) {
-        properties.touching_wall_ = j["touching_wall"].get<bool>();
+    if (physics_json.find("touching_wall") != physics_json.end()) {
+        physics_props.touching_wall_ = physics_json["touching_wall"].get<bool>();
     }
-    if (j.find("dashing") != j.end()) {
-        properties.dashing_ = j["dashing"].get<bool>();
+    if (physics_json.find("dashing") != physics_json.end()) {
+        physics_props.dashing_ = physics_json["dashing"].get<bool>();
     }
-    if (j.find("can_jump") != j.end()) {
-        properties.can_jump_ = j["can_jump"].get<bool>();
+    if (physics_json.find("can_jump") != physics_json.end()) {
+        physics_props.can_jump_ = physics_json["can_jump"].get<bool>();
     }
-    if (j.find("can_dash") != j.end()) {
-        properties.can_dash_ = j["can_dash"].get<bool>();
+    if (physics_json.find("can_dash") != physics_json.end()) {
+        physics_props.can_dash_ = physics_json["can_dash"].get<bool>();
     }
+
     if (j.find("frame_timer") != j.end()) {
-        properties.frame_timer_ = j["frame_timer"].get<unsigned int>();
+        state_props.frame_timer_ = j["frame_timer"].get<unsigned int>();
     }
 
     // Exceptions are not recoverable
@@ -81,10 +85,16 @@ State<state_utils::Properties> State<state_utils::Properties>::loadStateFromJson
     nlohmann::json frame_names_array = j["frame_names"];
 
     for (auto it : frame_names_array) {
-        properties.frame_names_.push_back(it.get<std::string>());
+        state_props.frame_names_.push_back(it.get<std::string>());
     }
 
-    auto new_state = State(properties);
+    state_utils::EntityContent entity_content = {physics_props, state_props, {}};
+
+    if (j.find("spawn_entity") != j.end()) {
+        entity_content.entity = j["spawn_entity"];
+    }
+
+    auto new_state = State(entity_content);
 
     new_state.loadNextStateListFromJson(j["next_states"]);
 
@@ -115,5 +125,5 @@ State<std::vector<AI_CONDITION_TYPE>>::loadStateFromJson(nlohmann::json j) {
     return new_state;
 }
 
-template class State<state_utils::Properties>;
+template class State<state_utils::EntityContent>;
 template class State<std::vector<AI_CONDITION_TYPE>>;
