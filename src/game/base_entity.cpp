@@ -73,7 +73,9 @@ void BaseEntity::reloadFromJson(nlohmann::json j) {
 
     animatedEntity_ = loadComponentFromJson(j, "Animated", std::make_shared<AnimatedEntity>(renderableEntity_));
 
-    statefulEntity_ = loadComponentFromJson(j, "Stateful", std::make_shared<StatefulEntity>(animatedEntity_));
+    subentity_ = loadComponentFromJson(j, "Subentity", std::make_shared<Subentity>(trans_));
+
+    statefulEntity_ = loadComponentFromJson(j, "Stateful", std::make_shared<StatefulEntity>(animatedEntity_, subentity_));
 
     if (statefulEntity_) {
         statefulEntity_->incomingEvent(state_utils::Event::START);
@@ -159,6 +161,12 @@ std::optional<nlohmann::json> BaseEntity::outputToJson() {
                 j["Damageable"] = opt.value();
             }
         }
+
+        if (subentity_) {
+            if (auto opt = subentity_->outputToJson()) {
+                j["Subentity"] = opt.value();
+            }
+        }
     }
 
     return {j};
@@ -189,6 +197,10 @@ void BaseEntity::update() {
 
     if (damageable_) {
         damageable_->update();
+    }
+
+    if (subentity_) {
+        subentity_->update();
     }
 }
 

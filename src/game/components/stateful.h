@@ -4,11 +4,12 @@
 
 #include "utils/state.h"
 #include "components/animation.h"
+#include "components/subentity.h"
 #include "utils/state_handler.h"
 
 class StatefulEntity : public Component {
   public:
-    StatefulEntity(std::weak_ptr<AnimatedEntity> animatedEntity);
+    StatefulEntity(std::weak_ptr<AnimatedEntity> animatedEntity, std::weak_ptr<Subentity> subentity);
 
     void update() override;
 
@@ -29,6 +30,7 @@ class StatefulEntity : public Component {
     std::string state_file_path_;
 
     std::weak_ptr<AnimatedEntity> animatedEntity_;
+    std::weak_ptr<Subentity> subentity_;
 
     StateHandler<state_utils::EntityContent> state_handler_;
 };

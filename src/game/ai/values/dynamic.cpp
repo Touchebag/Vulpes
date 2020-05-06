@@ -5,7 +5,7 @@
 namespace ai {
 namespace condition {
 
-Dynamic::Dynamic(nlohmann::json /* j */) {
+Dynamic::Dynamic(nlohmann::json) {
     int_function_ = [] () { return World::IWorldRead::getPlayerPosition().x; };
 }
 

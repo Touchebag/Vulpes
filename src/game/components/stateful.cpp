@@ -2,9 +2,13 @@
 
 #include "utils/file.h"
 #include "json.hpp"
+#include "base_entity.h"
 
-StatefulEntity::StatefulEntity(std::weak_ptr<AnimatedEntity> animatedEntity) :
-    animatedEntity_(animatedEntity) {
+#include "utils/log.h"
+
+StatefulEntity::StatefulEntity(std::weak_ptr<AnimatedEntity> animatedEntity, std::weak_ptr<Subentity> subentity) :
+    animatedEntity_(animatedEntity),
+    subentity_(subentity) {
 }
 
 void StatefulEntity::update() {
@@ -45,6 +49,14 @@ void StatefulEntity::incomingEvent(state_utils::Event event) {
             tmp->setFrameList(ns->getData().state_props.frame_names_);
         }
 
+        if (!getEntity().empty()) {
+            auto entity = std::make_shared<BaseEntity>();
+            entity->reloadFromJson(getEntity());
+
+            if (auto subent = subentity_.lock()) {
+                subent->addEntity(entity);
+            }
+        }
     }
 }
 

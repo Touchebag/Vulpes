@@ -15,6 +15,7 @@
 #include "components/physics.h"
 #include "components/ai.h"
 #include "components/damageable.h"
+#include "components/subentity.h"
 
 class BaseEntity {
   public:
@@ -41,6 +42,7 @@ class BaseEntity {
     std::shared_ptr<Physics> physics_ = nullptr;
     std::shared_ptr<AI> ai_ = nullptr;
     std::shared_ptr<Damageable> damageable_ = nullptr;
+    std::shared_ptr<Subentity> subentity_ = nullptr;
 
   private:
     std::string entity_file_;

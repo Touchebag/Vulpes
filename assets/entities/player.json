@@ -72,6 +72,8 @@
     "Stateful": {
         "states": "player_state.json"
     },
+    "Subentity": {
+    },
     "Transform": {
         "pos_x": 350,
         "pos_y": 1300
