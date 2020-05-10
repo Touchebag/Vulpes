@@ -289,7 +289,7 @@ TEST_F(HistoryTestFixture, TogglePhysics) {
 
 TEST_F(HistoryTestFixture, ToggleActions) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    entity->actions_ = std::make_shared<Actions>();
+    entity->actions_ = std::make_shared<Actions>(entity->active_);
     command_.add(entity);
 
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
