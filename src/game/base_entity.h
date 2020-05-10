@@ -44,6 +44,9 @@ class BaseEntity {
     std::shared_ptr<Damageable> damageable_ = nullptr;
     std::shared_ptr<Subentity> subentity_ = nullptr;
 
+    // TODO Change to interface
+    bool active_ = true;
+
   private:
     std::string entity_file_;
 };

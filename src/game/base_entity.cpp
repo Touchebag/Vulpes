@@ -81,7 +81,7 @@ void BaseEntity::reloadFromJson(nlohmann::json j) {
         statefulEntity_->incomingEvent(state_utils::Event::START);
     }
 
-    actions_ = loadComponentFromJson(j, "Actions", std::make_shared<Actions>());
+    actions_ = loadComponentFromJson(j, "Actions", std::make_shared<Actions>(active_));
 
     physics_ = loadComponentFromJson(j, "Physics", std::make_shared<Physics>(statefulEntity_, renderableEntity_, movableEntity_, animatedEntity_, actions_, collision_));
 

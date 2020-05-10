@@ -230,6 +230,10 @@
         },
         "frame_timer": 0,
         "spawn_entity": {
+            "AI": {
+                "file": "attack.json"
+            },
+            "Actions": null,
             "Hitbox": {
                 "width": 50,
                 "height": 200

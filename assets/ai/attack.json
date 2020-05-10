@@ -1,0 +1,16 @@
+{
+    "main": {
+        "actions": [
+            {
+                "condition": {
+                    "type": "frame_timer",
+                    "timeout": {
+                        "type": "constant",
+                        "value": 30
+                    }
+                },
+                "action": "die"
+            }
+        ]
+    }
+}

@@ -3,6 +3,8 @@
 #include "logic_operator.h"
 #include "ai/values/value.h"
 
+#include "utils/log.h"
+
 namespace ai {
 namespace condition {
 

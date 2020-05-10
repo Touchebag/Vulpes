@@ -18,7 +18,12 @@ class Actions : public Component {
         // AI events
         AI_EVENT_1,
         AI_EVENT_2,
+
+        // Misc
+        DIE,
     };
+
+    Actions(bool& active);
 
     void update() override;
 
@@ -50,4 +55,5 @@ class Actions : public Component {
     // Buttons currently pressed will be stored in this
     std::unordered_map<Actions::Action, ActionState> current_actions_;
 
+    bool& active_;
 };

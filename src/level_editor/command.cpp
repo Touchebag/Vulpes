@@ -244,7 +244,7 @@ void Command::handleCommand(Commands command) {
                 if (current_entity_->actions_) {
                     current_entity_->actions_ = {};
                 } else {
-                    auto actions = std::make_shared<Actions>();
+                    auto actions = std::make_shared<Actions>(current_entity_->active_);
                     current_entity_->actions_ = actions;
                 }
                 World::getInstance<World::IWorldModify>().addEntity(current_entity_, World::Layer::MAIN);

@@ -13,8 +13,14 @@ std::unordered_map<std::string, Actions::Action> string_action_map = {
 
     {"ai_event_1", Actions::Action::AI_EVENT_1},
     {"ai_event_2", Actions::Action::AI_EVENT_2},
+
+    {"die", Actions::Action::DIE},
 };
 
+}
+
+Actions::Actions(bool& active) :
+    active_(active) {
 }
 
 // TODO Cleanup and reuse internal functions
@@ -42,6 +48,10 @@ bool Actions::getActionState(Action action, bool first_frame) {
 }
 
 void Actions::addAction(Action action) {
+    if (action == Action::DIE) {
+        active_ = false;
+    }
+
     auto it = current_actions_.find(action);
 
     // If action is already in map, update to still be active
