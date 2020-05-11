@@ -73,7 +73,7 @@ void BaseEntity::reloadFromJson(nlohmann::json j) {
 
     animatedEntity_ = loadComponentFromJson(j, "Animated", std::make_shared<AnimatedEntity>(renderableEntity_));
 
-    subentity_ = loadComponentFromJson(j, "Subentity", std::make_shared<Subentity>(trans_));
+    subentity_ = loadComponentFromJson(j, "Subentity", std::make_shared<Subentity>(trans_, renderableEntity_));
 
     statefulEntity_ = loadComponentFromJson(j, "Stateful", std::make_shared<StatefulEntity>(animatedEntity_, subentity_));
 

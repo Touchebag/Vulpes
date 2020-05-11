@@ -6,7 +6,7 @@
                     "type": "frame_timer",
                     "timeout": {
                         "type": "constant",
-                        "value": 30
+                        "value": 17
                     }
                 },
                 "action": "die"
