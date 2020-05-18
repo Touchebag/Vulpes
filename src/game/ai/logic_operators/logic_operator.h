@@ -3,15 +3,23 @@
 #include "json.hpp"
 
 #include "components/transform.h"
+#include "components/animation.h"
 
 namespace ai {
 namespace condition {
 
 class LogicalOperator {
   public:
+    struct aiValues {
+        std::weak_ptr<Transform> trans = {};
+        std::weak_ptr<AnimatedEntity> anim = {};
+
+        unsigned int& frame_timer;
+    };
+
     static std::shared_ptr<const LogicalOperator> createFromJson(nlohmann::json j);
 
-    virtual bool getValue(std::weak_ptr<Transform> trans, unsigned int& frame_timer) const = 0;
+    virtual bool getValue(aiValues& values) const = 0;
 };
 
 } // condition

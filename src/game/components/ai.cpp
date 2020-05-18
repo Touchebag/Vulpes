@@ -22,8 +22,14 @@ void AI::update() {
     frame_timer_++;
 
     if (act && trans) {
+        ai::condition::LogicalOperator::aiValues values {
+            trans,
+            {},
+            frame_timer_
+        };
+
         for (auto& it : states_.getStateData()) {
-            if (it.first->getValue(trans, frame_timer_)) {
+            if (it.first->getValue(values)) {
                 auto action = it.second;
                 switch (action) {
                     // AI_EVENTs should be treated differentely from input actions

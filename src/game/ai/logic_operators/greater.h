@@ -12,8 +12,8 @@ class Greater : public LogicalOperator {
         value1_(std::move(value1)),
         value2_(std::move(value2)) {}
 
-    bool getValue(std::weak_ptr<Transform> trans, unsigned int& /* frame_timer */) const override {
-        return value1_->getValue(trans) > value2_->getValue(trans);
+    bool getValue(aiValues& values) const override {
+        return value1_->getValue(values.trans) > value2_->getValue(values.trans);
     }
 
   private:
