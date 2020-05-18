@@ -232,7 +232,7 @@
         "spawn_entity": {
             "Actions": null,
             "AI": {
-                "file": "attack.json"
+                "file": "animation_and_die.json"
             },
             "Animated": {
                 "sprite_map": "Attack1.txt",

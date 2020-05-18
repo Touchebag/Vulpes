@@ -8,7 +8,7 @@
 
 class AI : public Component{
   public:
-    AI(std::weak_ptr<Actions> actions, std::weak_ptr<Transform> transform);
+    AI(std::weak_ptr<Actions> actions, std::weak_ptr<Transform> transform, std::weak_ptr<AnimatedEntity> animated_entitiy);
 
     void update() override;
 
@@ -18,6 +18,7 @@ class AI : public Component{
   private:
     std::weak_ptr<Actions> actions_;
     std::weak_ptr<Transform> transform_;
+    std::weak_ptr<AnimatedEntity> animated_entitiy_;
 
     unsigned int frame_timer_ = 0;
 

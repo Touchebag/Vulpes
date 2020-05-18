@@ -22,6 +22,9 @@ class AnimatedEntity : public Component {
 
     void update() override;
 
+    // Returns true if current animation has just looped
+    bool hasAnimationLooped();
+
   private:
     void loadSpriteMap(const std::string& path);
 
@@ -39,5 +42,4 @@ class AnimatedEntity : public Component {
     std::vector<std::string> original_frame_list_;
 
     int current_frame_ = 0;
-
 };

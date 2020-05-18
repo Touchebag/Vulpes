@@ -52,11 +52,12 @@ void World::update() {
     for (auto it = world_objects_[static_cast<int>(Layer::MAIN)].begin();
               it != world_objects_[static_cast<int>(Layer::MAIN)].end();
               ) {
-        if ((*it)->active_) {
-            (*it)->update();
-            ++it;
-        } else {
+        (*it)->update();
+
+        if (!((*it)->active_)) {
             it = world_objects_[static_cast<int>(Layer::MAIN)].erase(it);
+        } else {
+            ++it;
         }
     }
 

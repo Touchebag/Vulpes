@@ -5,6 +5,7 @@
 #include "greater.h"
 #include "less.h"
 #include "frame_timer.h"
+#include "animation_loop.h"
 
 #include "utils/log.h"
 
@@ -39,6 +40,8 @@ std::shared_ptr<const LogicalOperator> LogicalOperator::createFromJson(nlohmann:
         } else {
             throw std::invalid_argument("FrameTimer: timeout not found");
         }
+    } else if (type == "animation_loop") {
+        return std::make_shared<AnimationLoop>();
     };
 
     throw std::invalid_argument("LogicalOperator: invalid type: " + type);

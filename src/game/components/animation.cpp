@@ -91,3 +91,6 @@ void AnimatedEntity::setRenderTexture() {
     }
 }
 
+bool AnimatedEntity::hasAnimationLooped() {
+    return current_frame_ == static_cast<int>(frame_list_.size()) - 1;
+}

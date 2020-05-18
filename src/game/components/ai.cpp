@@ -10,9 +10,10 @@
 #include "ai/values/dynamic.h"
 #include "ai/values/this.h"
 
-AI::AI(std::weak_ptr<Actions> actions, std::weak_ptr<Transform> transform) :
+AI::AI(std::weak_ptr<Actions> actions, std::weak_ptr<Transform> transform, std::weak_ptr<AnimatedEntity> animated_entitiy) :
     actions_(actions),
-    transform_(transform) {
+    transform_(transform),
+    animated_entitiy_(animated_entitiy) {
 }
 
 void AI::update() {
@@ -24,7 +25,7 @@ void AI::update() {
     if (act && trans) {
         ai::condition::LogicalOperator::aiValues values {
             trans,
-            {},
+            animated_entitiy_,
             frame_timer_
         };
 

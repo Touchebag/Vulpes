@@ -26,7 +26,7 @@ void renderAllEntitesInVector(std::vector<std::weak_ptr<RenderableEntity>>& laye
     }
 }
 
-}
+} // namespace
 
 void Render::renderLayer(sf::RenderWindow& window, World::Layer layer) {
     float parallax_mulitiplier = 1;

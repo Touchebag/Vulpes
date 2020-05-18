@@ -1,0 +1,12 @@
+{
+    "main": {
+        "actions": [
+            {
+                "condition": {
+                    "type": "animation_loop"
+                },
+                "action": "die"
+            }
+        ]
+    }
+}
