@@ -37,6 +37,8 @@ const std::map<std::string, Collision::CollisionType> string_type_map {
 
     {"player_hurtbox", Collision::CollisionType::PLAYER_HURTBOX},
 
+    {"player_hitbox", Collision::CollisionType::PLAYER_HITBOX},
+
     {"enemy_hitbox", Collision::CollisionType::ENEMY_HITBOX},
 };
 

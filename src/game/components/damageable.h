@@ -8,7 +8,7 @@
 
 class Damageable : public Component {
   public:
-    Damageable(std::weak_ptr<Collision> hurtbox);
+    Damageable(std::weak_ptr<Collision> hurtbox, bool& active);
 
     void reloadFromJson(nlohmann::json j) override;
     std::optional<nlohmann::json> outputToJson() override;
@@ -22,4 +22,6 @@ class Damageable : public Component {
     int health_ = 0;
 
     std::weak_ptr<Collision> hurtbox_;
+
+    bool& active_;
 };

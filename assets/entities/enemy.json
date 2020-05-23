@@ -27,6 +27,9 @@
     "Collision": {
         "type": "enemy_hitbox"
     },
+    "Damageable": {
+        "health": 1
+    },
     "Hitbox": {
         "height": 50,
         "width": 50

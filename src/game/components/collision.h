@@ -12,6 +12,7 @@ class Collision : public Component {
     enum class CollisionType {
         STATIC,
         PLAYER_HURTBOX,
+        PLAYER_HITBOX,
         ENEMY_HITBOX,
 
         MAX_NUM

@@ -258,6 +258,9 @@
                     "Attack1_8"
                 ]
             },
+            "Collision": {
+                "type": "player_hitbox"
+            },
             "Hitbox": {
                 "width": 100,
                 "height": 200
