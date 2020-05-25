@@ -22,5 +22,8 @@ class AI : public Component{
 
     unsigned int frame_timer_ = 0;
 
+    // For output to json
+    std::string file_name_;
+
     StateHandler<std::vector<std::pair<std::shared_ptr<const ai::condition::LogicalOperator>, Actions::Action>>> states_;
 };

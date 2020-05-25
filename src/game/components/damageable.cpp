@@ -22,11 +22,15 @@ Damageable::Damageable(std::weak_ptr<Collision> hurtbox, std::weak_ptr<Death> de
 void Damageable::reloadFromJson(nlohmann::json j) {
     if (j.contains("health")) {
         health_ = j["health"].get<int>();
+        initial_health_ = health_;
     }
 }
 
 std::optional<nlohmann::json> Damageable::outputToJson() {
-    return {};
+    nlohmann::json j;
+    j["health"] = initial_health_;
+
+    return j;
 }
 
 void Damageable::update() {

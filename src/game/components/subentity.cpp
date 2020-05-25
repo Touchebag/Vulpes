@@ -45,5 +45,6 @@ void Subentity::reloadFromJson(nlohmann::json) {
 }
 
 std::optional<nlohmann::json> Subentity::outputToJson() {
-    return {};
+    nlohmann::json j;
+    return j;
 }

@@ -7,7 +7,8 @@ void Death::reloadFromJson(nlohmann::json) {
 }
 
 std::optional<nlohmann::json> Death::outputToJson() {
-    return {};
+    nlohmann::json j;
+    return j;
 }
 
 void Death::setDead() {

@@ -52,6 +52,8 @@ void AI::update() {
 void AI::reloadFromJson(nlohmann::json j) {
     if (j.contains("file")) {
         if (auto ai_json = File::loadAiBehavior(j["file"])) {
+            file_name_ = j["file"].get<std::string>();
+
             states_ = StateHandler<std::vector<std::pair<std::shared_ptr<const ai::condition::LogicalOperator>, Actions::Action>>>();
 
             auto ai_behavior = ai_json.value();
@@ -63,6 +65,9 @@ void AI::reloadFromJson(nlohmann::json j) {
 }
 
 std::optional<nlohmann::json> AI::outputToJson() {
-    return {};
+    nlohmann::json j;
+    j["file"] = file_name_;
+
+    return j;
 }
 

@@ -3,28 +3,36 @@
 #include "utils/log.h"
 
 namespace {
-    class FacingDirection {
-      public:
-        void lockDirection(bool direction_locked) {
-            direction_locked_ = direction_locked;
+
+class FacingDirection {
+  public:
+    void lockDirection(bool direction_locked) {
+        direction_locked_ = direction_locked;
+    }
+
+    operator bool() const {
+        return facing_right_;
+    }
+
+    void setDirection(bool facing_right) {
+        if (!direction_locked_) {
+            facing_right_ = facing_right;
         }
+    }
 
-        operator bool() const {
-            return facing_right_;
-        }
+    FacingDirection& operator= (bool) = delete;
 
-        void setDirection(bool facing_right) {
-            if (!direction_locked_) {
-                facing_right_ = facing_right;
-            }
-        }
+  private:
+    bool facing_right_ = true;
+    bool direction_locked_ = false;
+};
 
-        FacingDirection& operator= (bool) = delete;
+void saveConstantToJson(nlohmann::json& j, std::string name, double constant, double default_constant) {
+    if (constant != default_constant) {
+        j[name] = constant;
+    }
+}
 
-      private:
-        bool facing_right_ = true;
-        bool direction_locked_ = false;
-    };
 } // namespace
 
 Physics::Physics(std::weak_ptr<StatefulEntity> statefulEntity, std::weak_ptr<RenderableEntity> renderableEntity, std::weak_ptr<MovableEntity> movableEntity, std::weak_ptr<AnimatedEntity> animatedEntity, std::weak_ptr<Actions> actions, std::weak_ptr<Collision> collision) :
@@ -234,5 +242,25 @@ void Physics::reloadFromJson(nlohmann::json j) {
 
 std::optional<nlohmann::json> Physics::outputToJson() {
     nlohmann::json j;
+    const Constants default_constants;
+
+    // Only save changed constants
+    saveConstantToJson(j, "ground_acceleration", constants_.ground_acceleration, default_constants.ground_acceleration);
+    saveConstantToJson(j, "ground_friction", constants_.ground_friction, default_constants.ground_friction);
+
+    saveConstantToJson(j, "air_acceleration", constants_.air_acceleration, default_constants.air_acceleration);
+    saveConstantToJson(j, "air_friction", constants_.air_friction, default_constants.air_friction);
+    saveConstantToJson(j, "gravity", constants_.gravity, default_constants.gravity);
+    saveConstantToJson(j, "fall_multiplier", constants_.fall_multiplier, default_constants.fall_multiplier);
+    saveConstantToJson(j, "low_jump_multiplier", constants_.low_jump_multiplier, default_constants.low_jump_multiplier);
+    saveConstantToJson(j, "min_vertical_speed", constants_.min_vertical_speed, default_constants.min_vertical_speed);
+    saveConstantToJson(j, "max_vertical_speed", constants_.max_vertical_speed, default_constants.max_vertical_speed);
+
+    saveConstantToJson(j, "jump_impulse", constants_.jump_impulse, default_constants.jump_impulse);
+    saveConstantToJson(j, "wall_slide_friction", constants_.wall_slide_friction, default_constants.wall_slide_friction);
+    saveConstantToJson(j, "wall_jump_horizontal_impulse", constants_.wall_jump_horizontal_impulse, default_constants.wall_jump_horizontal_impulse);
+    saveConstantToJson(j, "wall_jump_vertical_impulse", constants_.wall_jump_vertical_impulse, default_constants.wall_jump_vertical_impulse);
+    saveConstantToJson(j, "dash_speed", constants_.dash_speed, default_constants.dash_speed);
+    saveConstantToJson(j, "dash_friction", constants_.dash_friction, default_constants.dash_friction);
     return j;
 }

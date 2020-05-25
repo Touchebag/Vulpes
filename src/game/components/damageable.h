@@ -22,6 +22,9 @@ class Damageable : public Component {
   private:
     int health_ = 0;
 
+    // For output to json
+    int initial_health_;
+
     std::weak_ptr<Collision> hurtbox_;
     std::weak_ptr<Death> death_;
 };
