@@ -261,6 +261,7 @@
             "Collision": {
                 "type": "player_hitbox"
             },
+            "Death": null,
             "Hitbox": {
                 "width": 100,
                 "height": 200

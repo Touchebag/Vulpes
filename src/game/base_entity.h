@@ -16,6 +16,7 @@
 #include "components/ai.h"
 #include "components/damageable.h"
 #include "components/subentity.h"
+#include "components/death.h"
 
 class BaseEntity {
   public:
@@ -43,9 +44,7 @@ class BaseEntity {
     std::shared_ptr<AI> ai_ = nullptr;
     std::shared_ptr<Damageable> damageable_ = nullptr;
     std::shared_ptr<Subentity> subentity_ = nullptr;
-
-    // TODO Change to interface
-    bool active_ = true;
+    std::shared_ptr<Death> death_ = nullptr;
 
   private:
     std::string entity_file_;

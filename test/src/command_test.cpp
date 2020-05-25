@@ -260,7 +260,7 @@ TEST_F(CommandTestFixture, ToggleActions) {
     assertWorldEmpty();
 
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    entity->actions_ = std::make_shared<Actions>(entity->active_);
+    entity->actions_ = std::make_shared<Actions>(entity->death_);
     command_.add(entity);
 
     assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);

@@ -81,13 +81,15 @@ void BaseEntity::reloadFromJson(nlohmann::json j) {
         statefulEntity_->incomingEvent(state_utils::Event::START);
     }
 
-    actions_ = loadComponentFromJson(j, "Actions", std::make_shared<Actions>(active_));
+    death_ = loadComponentFromJson(j, "Death", std::make_shared<Death>());
+
+    actions_ = loadComponentFromJson(j, "Actions", std::make_shared<Actions>(death_));
 
     physics_ = loadComponentFromJson(j, "Physics", std::make_shared<Physics>(statefulEntity_, renderableEntity_, movableEntity_, animatedEntity_, actions_, collision_));
 
     ai_ = loadComponentFromJson(j, "AI", std::make_shared<AI>(actions_, trans_, animatedEntity_));
 
-    damageable_ = loadComponentFromJson(j, "Damageable", std::make_shared<Damageable>(collision_, active_));
+    damageable_ = loadComponentFromJson(j, "Damageable", std::make_shared<Damageable>(collision_, death_));
 }
 
 std::optional<nlohmann::json> BaseEntity::outputToJson() {
@@ -165,6 +167,12 @@ std::optional<nlohmann::json> BaseEntity::outputToJson() {
         if (subentity_) {
             if (auto opt = subentity_->outputToJson()) {
                 j["Subentity"] = opt.value();
+            }
+        }
+
+        if (death_) {
+            if (auto opt = death_->outputToJson()) {
+                j["Death"] = opt.value();
             }
         }
     }

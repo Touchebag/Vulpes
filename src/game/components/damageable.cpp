@@ -14,9 +14,9 @@ std::map<Ctype, Ctype> type_mapping = {
 
 } // namespace
 
-Damageable::Damageable(std::weak_ptr<Collision> hurtbox, bool& active) :
+Damageable::Damageable(std::weak_ptr<Collision> hurtbox, std::weak_ptr<Death> death) :
     hurtbox_(hurtbox),
-    active_(active) {
+    death_(death) {
 }
 
 void Damageable::reloadFromJson(nlohmann::json j) {
@@ -32,15 +32,19 @@ std::optional<nlohmann::json> Damageable::outputToJson() {
 void Damageable::update() {
     if (auto coll = hurtbox_.lock()) {
         auto hurting_type = type_mapping.at(coll->getType());
+
         for (auto& it : World::IWorldRead::getCollisions(hurting_type)) {
             if (auto other_coll = it.lock()) {
                 if (coll->collides(other_coll)) {
                     health_ -= 1;
-                    if (isDead()) {
-                        active_ = false;
-                    }
                 }
             }
+        }
+    }
+
+    if (isDead()) {
+        if (auto death = death_.lock()) {
+            death->setDead();
         }
     }
 }

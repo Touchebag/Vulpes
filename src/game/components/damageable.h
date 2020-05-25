@@ -5,10 +5,11 @@
 #include "json.hpp"
 
 #include "components/collision.h"
+#include "components/death.h"
 
 class Damageable : public Component {
   public:
-    Damageable(std::weak_ptr<Collision> hurtbox, bool& active);
+    Damageable(std::weak_ptr<Collision> hurtbox, std::weak_ptr<Death> death);
 
     void reloadFromJson(nlohmann::json j) override;
     std::optional<nlohmann::json> outputToJson() override;
@@ -22,6 +23,5 @@ class Damageable : public Component {
     int health_ = 0;
 
     std::weak_ptr<Collision> hurtbox_;
-
-    bool& active_;
+    std::weak_ptr<Death> death_;
 };

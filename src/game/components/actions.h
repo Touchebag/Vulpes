@@ -2,6 +2,8 @@
 
 #include "component.h"
 
+#include "death.h"
+
 #include <unordered_map>
 #include <json.hpp>
 
@@ -23,7 +25,7 @@ class Actions : public Component {
         DIE,
     };
 
-    Actions(bool& active);
+    Actions(std::weak_ptr<Death> death);
 
     void update() override;
 
@@ -55,5 +57,5 @@ class Actions : public Component {
     // Buttons currently pressed will be stored in this
     std::unordered_map<Actions::Action, ActionState> current_actions_;
 
-    bool& active_;
+    std::weak_ptr<Death> death_;
 };

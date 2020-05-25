@@ -19,8 +19,8 @@ std::unordered_map<std::string, Actions::Action> string_action_map = {
 
 }
 
-Actions::Actions(bool& active) :
-    active_(active) {
+Actions::Actions(std::weak_ptr<Death> death) :
+    death_(death) {
 }
 
 // TODO Cleanup and reuse internal functions
@@ -49,7 +49,9 @@ bool Actions::getActionState(Action action, bool first_frame) {
 
 void Actions::addAction(Action action) {
     if (action == Action::DIE) {
-        active_ = false;
+        if (auto death = death_.lock()) {
+            death->setDead();
+        }
     }
 
     auto it = current_actions_.find(action);

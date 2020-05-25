@@ -30,6 +30,7 @@
     "Damageable": {
         "health": 1
     },
+    "Death": null,
     "Hitbox": {
         "height": 50,
         "width": 50

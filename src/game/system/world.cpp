@@ -54,7 +54,7 @@ void World::update() {
               ) {
         (*it)->update();
 
-        if (!((*it)->active_)) {
+        if ((*it)->death_ && (*it)->death_->isDead()) {
             it = world_objects_[static_cast<int>(Layer::MAIN)].erase(it);
         } else {
             ++it;
