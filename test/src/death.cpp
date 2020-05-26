@@ -2,12 +2,16 @@
 
 #include "components/death.h"
 #include "base_entity.h"
+#include "system/world.h"
 
 class DeathTestFixture : public ::testing::Test {
   public:
     DeathTestFixture() {
         entity_ = BaseEntity::createFromJson(nlohmann::json::parse(entity_json_));
         attack_ = BaseEntity::createFromJson(nlohmann::json::parse(attack_json_));
+
+        World::getInstance<World::IWorldModify>().addEntity(entity_, World::Layer::MAIN);
+        World::getInstance<World::IWorldModify>().addEntity(attack_, World::Layer::MAIN);
     }
 
     void SetUp() override {
@@ -67,5 +71,5 @@ TEST_F(DeathTestFixture, TestHealthDeath) {
     entity_->update();
 
     // Now overlapping shoudl take 2 damage
-    EXPECT_TRUE(entity_->death_->isDead);
+    EXPECT_TRUE(entity_->death_->isDead());
 }

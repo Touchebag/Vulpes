@@ -65,7 +65,7 @@ TEST(TestComponents, TestLoadSaveAllComponents) {
     std::shared_ptr<BaseEntity> entity = BaseEntity::createFromJson(entity_json);
 
     auto e1 = entity->outputToJson();
-    ASSERT_TRUE(e1.has_value);
+    ASSERT_TRUE(e1.has_value());
 
     nlohmann::json j1 = e1.value();
 
@@ -74,7 +74,7 @@ TEST(TestComponents, TestLoadSaveAllComponents) {
     entity->reloadFromJson(j1);
 
     auto e2 = entity->outputToJson();
-    ASSERT_TRUE(e2.has_value);
+    ASSERT_TRUE(e2.has_value());
 
     nlohmann::json j2 = e2.value();
 
