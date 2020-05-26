@@ -70,6 +70,6 @@ TEST_F(DeathTestFixture, TestHealthDeath) {
     entity_->update();
     entity_->update();
 
-    // Now overlapping shoudl take 2 damage
+    // Now overlapping, should take 2 damage
     EXPECT_TRUE(entity_->death_->isDead());
 }
