@@ -37,6 +37,7 @@ foreach(file ${TEST_ASSETS})
                          COMMAND ${CMAKE_COMMAND} -E
                          copy ${file} ${ASSETS_DIR}/rooms/)
 endforeach()
+add_dependencies(COPY_TEST_ASSETS COPY_ASSETS)
 
 # Game target
 file(GLOB_RECURSE COMMON_SOURCES src/game/*.cpp)

@@ -29,7 +29,6 @@ std::optional<nlohmann::json> MovableEntity::outputToJson() {
     return j;
 }
 
-// TODO Store collidables separately in world
 std::pair<double, double> MovableEntity::getMaximumMovement(double velX, double velY) {
     double x = velX;
     double y = velY;

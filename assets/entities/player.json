@@ -50,7 +50,7 @@
     "Physics": {
         "ground_acceleration": 7.0,
         "ground_friction": 0.7,
-        "air_acceleration": 2.0,
+        "air_acceleration": 1.5,
         "air_friction": 0.93,
         "gravity": 1.0,
         "fall_multiplier": 3.5,
