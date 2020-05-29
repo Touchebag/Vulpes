@@ -16,7 +16,6 @@
                 "width": 50
             },
             "Renderable": {
-                "scale": 1.0,
                 "texture": "box.png",
                 "tile_x": true,
                 "tile_y": true
@@ -35,7 +34,6 @@
                 "width": 50
             },
             "Renderable": {
-                "scale": 1.0,
                 "texture": "box.png",
                 "tile_x": true,
                 "tile_y": true
@@ -54,7 +52,6 @@
                 "width": 200
             },
             "Renderable": {
-                "scale": 1.0,
                 "texture": "box.png",
                 "tile_x": true,
                 "tile_y": true
@@ -73,7 +70,6 @@
                 "width": 200
             },
             "Renderable": {
-                "scale": 1.0,
                 "texture": "box.png",
                 "tile_x": true,
                 "tile_y": true

@@ -44,7 +44,7 @@
         "min_vertical_speed": -80.0
     },
     "Renderable": {
-        "scale": 0.5,
+        "height": 90,
         "texture": "Enemy.png",
         "tile_x": true,
         "tile_y": true

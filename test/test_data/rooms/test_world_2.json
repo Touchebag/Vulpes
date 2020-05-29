@@ -6,7 +6,6 @@
                 "width": 50
             },
             "Renderable": {
-                "scale": 1.0,
                 "texture": "box.png",
                 "tile_x": true,
                 "tile_y": true
@@ -24,7 +23,6 @@
                 "width": 40
             },
             "Renderable": {
-                "scale": 1.0,
                 "texture": "box.png",
                 "tile_x": true,
                 "tile_y": true
@@ -42,7 +40,7 @@
                 "width": 50
             },
             "Renderable": {
-                "scale": 2.0,
+                "height": 100,
                 "texture": "box.png",
                 "tile_x": true,
                 "tile_y": true
@@ -60,7 +58,6 @@
                 "width": 50
             },
             "Renderable": {
-                "scale": 1.0,
                 "texture": "box.png",
                 "tile_x": true,
                 "tile_y": true
@@ -78,7 +75,6 @@
                 "width": 50
             },
             "Renderable": {
-                "scale": 1.0,
                 "texture": "box.png",
                 "tile_x": true,
                 "tile_y": true
@@ -96,7 +92,6 @@
                 "width": 50
             },
             "Renderable": {
-                "scale": 1.0,
                 "texture": "box.png",
                 "tile_x": true,
                 "tile_y": true
@@ -114,7 +109,6 @@
                 "width": 50
             },
             "Renderable": {
-                "scale": 1.0,
                 "texture": "box.png",
                 "tile_x": true,
                 "tile_y": true
@@ -132,7 +126,6 @@
                 "width": 50
             },
             "Renderable": {
-                "scale": 1.0,
                 "texture": "box.png",
                 "tile_x": true,
                 "tile_y": true
@@ -148,7 +141,6 @@
                 "width": 200
             },
             "Renderable": {
-                "scale": 1.0,
                 "texture": "box.png",
                 "tile_x": true,
                 "tile_y": true
@@ -167,7 +159,6 @@
                 "width": 50
             },
             "Renderable": {
-                "scale": 1.0,
                 "texture": "box.png",
                 "tile_x": true,
                 "tile_y": true
@@ -185,7 +176,6 @@
                 "width": 50
             },
             "Renderable": {
-                "scale": 1.0,
                 "texture": "box.png",
                 "tile_x": true,
                 "tile_y": true
@@ -197,31 +187,10 @@
         }
     ],
     "player": {
-        "Actions": null,
-        "Animated": {
-            "frame_list": [
-                "Idle0",
-                "Idle1"
-            ],
-            "sprite_map": "Player.txt"
-        },
-        "Collision": {
-            "type": "player_hurtbox"
-        },
-        "Hitbox": {
+        "Entity": "player.json",
+        "Hitbox":{
             "height": 200,
             "width": 50
-        },
-        "Movable": null,
-        "Physics": null,
-        "Renderable": {
-            "scale": 0.4000000059604645,
-            "texture": "Player.png",
-            "tile_x": true,
-            "tile_y": true
-        },
-        "Stateful": {
-            "states": "player_state.json"
         },
         "Transform": {
             "pos_x": 350,

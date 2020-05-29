@@ -35,7 +35,8 @@ class RenderableEntity {
     sf::Texture texture_;
     sf::Sprite sprite_;
 
-    float scale_ = 1.0;
+    int height_ = 0;
+    int width_ = 0;
 
     // Needed for level editor
     std::string texture_name_;

@@ -45,7 +45,8 @@ nlohmann::json entity_json = nlohmann::json::parse(R"--(
         "dash_friction": 0.8
     },
     "Renderable": {
-        "scale": 0.4000000059604645,
+        "height": 200,
+        "width": 50,
         "texture": "Player.png",
         "tile_x": true,
         "tile_y": true

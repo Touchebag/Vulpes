@@ -25,8 +25,12 @@ bool RenderableEntity::loadTexture(std::string file_path) {
 void RenderableEntity::reloadFromJson(nlohmann::json j) {
     loadTexture(j["texture"].get<std::string>());
 
-    if (j.contains("scale")) {
-        scale_ = j["scale"];
+    if (j.contains("height")) {
+        height_ = j["height"];
+    }
+
+    if (j.contains("width")) {
+        width_ = j["width"];
     }
 
     if (j.contains("tile_x")) {
@@ -59,8 +63,14 @@ std::optional<nlohmann::json> RenderableEntity::outputToJson() {
     nlohmann::json j;
 
     j["texture"] = texture_name_;
-    // TODO Rounding to some number of digits (2?)
-    j["scale"] = scale_;
+
+    if (height_ > 0) {
+        j["height"] = height_;
+    }
+
+    if (width_ > 0) {
+        j["width"] = width_;
+    }
 
     j["tile_x"] = tiling_x_;
     j["tile_y"] = tiling_y_;
@@ -76,7 +86,21 @@ void RenderableEntity::setTextureCoords(int pos_x, int pos_y, int width, int hei
     auto mirror_scale = facing_right_ ? 1.0 : -1.0;
 
     // Scale
-    sprite_.setScale(static_cast<float>(mirror_scale * scale_), static_cast<float>(scale_));
+    double x_scale = 1.0;
+    double y_scale = 1.0;
+
+    if (width_ > 0 && height_ > 0) {
+        x_scale = static_cast<double>(width_) / static_cast<double>(width);
+        y_scale = static_cast<double>(height_) / static_cast<double>(height);
+    } else if (width_ > 0) {
+        x_scale = static_cast<double>(width_) / static_cast<double>(width);
+        y_scale = y_scale;
+    } else if (height_ > 0) {
+        y_scale = static_cast<double>(height_) / static_cast<double>(height);
+        x_scale = y_scale;
+    }
+
+    sprite_.setScale(static_cast<float>(mirror_scale * x_scale), static_cast<float>(y_scale));
 }
 
 void RenderableEntity::render(sf::RenderWindow& window) {
