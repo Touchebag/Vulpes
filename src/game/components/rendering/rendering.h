@@ -21,6 +21,8 @@ class RenderableEntity {
 
     virtual void setTextureCoords(int pos_x, int pos_y, int width, int height);
 
+    virtual void setSize(int width, int height);
+
     virtual void render(sf::RenderWindow& window);
 
     // Used for mirroring sprites

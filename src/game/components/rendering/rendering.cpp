@@ -103,6 +103,11 @@ void RenderableEntity::setTextureCoords(int pos_x, int pos_y, int width, int hei
     sprite_.setScale(static_cast<float>(mirror_scale * x_scale), static_cast<float>(y_scale));
 }
 
+void RenderableEntity::setSize(int width, int height) {
+    width_ = width;
+    height_ = height;
+}
+
 void RenderableEntity::render(sf::RenderWindow& window) {
     if (auto trans = trans_.lock()) {
         sprite_.setPosition(static_cast<float>(trans->getX()), static_cast<float>(trans->getY()));

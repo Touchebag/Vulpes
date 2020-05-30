@@ -28,6 +28,20 @@ void Command::update() {
                                 static_cast<int>(static_cast<float>(hbox["width"].get<int>()) + (mouse_world_dist.first * 2.0)),
                                 static_cast<int>(static_cast<float>(hbox["height"].get<int>()) + (mouse_world_dist.second * 2.0)));
                     }
+                    if (j.contains("Renderable")) {
+                        auto render = j["Renderable"];
+                        if (current_entity_->renderableEntity_) {
+                            int w = 0;
+                            int h = 0;
+                            if (render.contains("width")) {
+                                w = static_cast<int>(static_cast<float>(render["width"].get<int>()) + (mouse_world_dist.first * 2.0));
+                            }
+                            if (render.contains("height")) {
+                                h = static_cast<int>(static_cast<float>(render["height"].get<int>()) + (mouse_world_dist.second * 2.0));
+                            }
+                            current_entity_->renderableEntity_->setSize(w, h);
+                        }
+                    }
                 }
             }
             break;
