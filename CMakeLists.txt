@@ -4,9 +4,10 @@ project(vulpes)
 set(CMAKE_INSTALL_PREFIX build)
 
 # Targets
-set(GAME_TARGET game)
-set(LEVEL_EDITOR_TARGET level_editor)
-set(MAIN_TARGET vulpes)
+set(GAME_LIB_TARGET game_lib)
+set(GAME_TARGET vulpes)
+set(EDITOR_LIB_TARGET editor_lib)
+set(EDITOR_TARGET level_editor)
 set(STATE_GRAPH_TARGET state_graph)
 set(TEST_TARGET tests)
 
@@ -39,31 +40,42 @@ foreach(file ${TEST_ASSETS})
 endforeach()
 add_dependencies(COPY_TEST_ASSETS COPY_ASSETS)
 
-# Game target
-file(GLOB_RECURSE COMMON_SOURCES src/game/*.cpp)
-add_library(${GAME_TARGET} STATIC ${COMMON_SOURCES})
-target_compile_options(${GAME_TARGET} PUBLIC ${CC_OPTIONS})
-target_include_directories(${GAME_TARGET} PUBLIC src/game/ libs/nlohmann)
+# Game library
+file(GLOB_RECURSE GAME_LIB_SOURCES src/game/*.cpp)
+list(REMOVE_ITEM GAME_LIB_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/game/main.cpp)
 
-target_link_libraries(${GAME_TARGET} ${SFML_LIBS})
+add_library(${GAME_LIB_TARGET} STATIC ${GAME_LIB_SOURCES})
+target_compile_options(${GAME_LIB_TARGET} PUBLIC ${CC_OPTIONS})
+target_include_directories(${GAME_LIB_TARGET} PUBLIC src/game/ libs/nlohmann)
+
+target_link_libraries(${GAME_LIB_TARGET} ${SFML_LIBS})
+
+# Game target
+file(GLOB_RECURSE GAME_SOURCES src/game/main.cpp)
+add_executable(${GAME_TARGET} ${GAME_SOURCES})
+target_compile_options(${GAME_TARGET} PUBLIC ${CC_OPTIONS})
+target_include_directories(${GAME_TARGET} PUBLIC src/ libs/nlohmann)
+
+target_link_libraries(${GAME_TARGET} ${GAME_LIB_TARGET} ${SFML_LIBS})
+
+add_dependencies(${GAME_TARGET} COPY_ASSETS)
+
+# Level editor library
+file(GLOB_RECURSE EDITOR_LIB_SOURCES src/level_editor/*.cpp)
+list(REMOVE_ITEM EDITOR_LIB_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/level_editor/main.cpp)
+add_library(${EDITOR_LIB_TARGET} ${EDITOR_LIB_SOURCES})
+target_compile_options(${EDITOR_LIB_TARGET} PUBLIC ${CC_OPTIONS})
+target_include_directories(${EDITOR_LIB_TARGET} PUBLIC src/game/ libs/nlohmann)
+
+target_link_libraries(${EDITOR_LIB_TARGET} ${GAME_LIB_TARGET} ${SFML_LIBS})
 
 # Level editor target
-file(GLOB_RECURSE LEVEL_EDITOR_SOURCES src/level_editor/*.cpp)
-add_library(${LEVEL_EDITOR_TARGET} ${LEVEL_EDITOR_SOURCES})
-target_compile_options(${LEVEL_EDITOR_TARGET} PUBLIC ${CC_OPTIONS})
-target_include_directories(${LEVEL_EDITOR_TARGET} PUBLIC src/game/ libs/nlohmann)
+file(GLOB_RECURSE EDITOR_SOURCES src/level_editor/*.cpp)
+add_executable(${EDITOR_TARGET} ${EDITOR_SOURCES})
+target_compile_options(${EDITOR_TARGET} PUBLIC ${CC_OPTIONS})
+target_include_directories(${EDITOR_TARGET} PUBLIC src/game/ libs/nlohmann)
 
-target_link_libraries(${LEVEL_EDITOR_TARGET} ${GAME_TARGET} ${SFML_LIBS})
-
-# Main target
-file(GLOB_RECURSE GAME_SOURCES src/main/main.cpp)
-add_executable(${MAIN_TARGET} ${GAME_SOURCES})
-target_compile_options(${MAIN_TARGET} PUBLIC ${CC_OPTIONS})
-target_include_directories(${MAIN_TARGET} PUBLIC src/ libs/nlohmann)
-
-target_link_libraries(${MAIN_TARGET} ${GAME_TARGET} ${LEVEL_EDITOR_TARGET} ${SFML_LIBS})
-
-add_dependencies(${MAIN_TARGET} COPY_ASSETS)
+target_link_libraries(${EDITOR_TARGET} ${EDITOR_LIB_TARGET} ${GAME_LIB_TARGET} ${SFML_LIBS})
 
 # State editor target
 # TODO Broken since game/level editor merge. Fix when adding enemies
@@ -84,7 +96,7 @@ add_executable(${TEST_TARGET} ${TEST_SOURCES})
 target_compile_options(${TEST_TARGET} PUBLIC ${CC_OPTIONS})
 target_include_directories(${TEST_TARGET} PUBLIC src/ libs/nlohmann ${GTEST_INCLUDE_DIRS})
 
-target_link_libraries(${TEST_TARGET} ${GAME_TARGET} ${LEVEL_EDITOR_TARGET} ${SFML_LIBS} ${GTEST_BOTH_LIBRARIES})
+target_link_libraries(${TEST_TARGET} ${GAME_LIB_TARGET} ${EDITOR_LIB_TARGET} ${SFML_LIBS} ${GTEST_BOTH_LIBRARIES})
 
 add_dependencies(${TEST_TARGET} COPY_TEST_ASSETS)
 
