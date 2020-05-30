@@ -4,7 +4,7 @@
 
 #include "json.hpp"
 
-#include "components/collision.h"
+#include "components/collision/collision.h"
 #include "components/death.h"
 
 class Damageable : public Component {

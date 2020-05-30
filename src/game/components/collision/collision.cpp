@@ -44,12 +44,22 @@ const std::map<std::string, Collision::CollisionType> string_type_map {
 
 } // namespace
 
-Collision::Collision(std::weak_ptr<Transform> trans, std::weak_ptr<Hitbox> hbox) :
-    trans_(trans),
-    hbox_(hbox) {
+Collision::Collision(std::weak_ptr<Transform> trans) :
+    trans_(trans) {
+    // TODO Should be 0?
+    // Need to fix default collision not being clickable in editor
+    setHitbox(50, 50);
 }
 
 void Collision::update() {
+}
+
+void Collision::setHitbox(int width, int height) {
+    hbox_ = std::make_shared<Hitbox>(width, height);
+}
+
+const std::shared_ptr<Hitbox>& Collision::getHitbox() const {
+    return hbox_;
 }
 
 void Collision::reloadFromJson(nlohmann::json j) {
@@ -63,10 +73,18 @@ void Collision::reloadFromJson(nlohmann::json j) {
     } else {
         throw std::invalid_argument("Collision: missing type");
     }
+
+    int hitbox_width = j["width"];
+    int hitbox_height = j["height"];
+
+    hbox_ = std::make_shared<Hitbox>(hitbox_width, hitbox_height);
 }
 
 std::optional<nlohmann::json> Collision::outputToJson() {
     nlohmann::json j;
+
+    j["width"] = getHitbox()->width_;
+    j["height"] = getHitbox()->height_;
 
     for (auto it : string_type_map) {
         if (it.second == type_) {
@@ -81,13 +99,12 @@ std::optional<nlohmann::json> Collision::outputToJson() {
 bool Collision::collides(std::weak_ptr<const Collision> other_entity) {
     if (auto other_ent = other_entity.lock()) {
         auto this_trans = trans_.lock();
-        auto this_hbox = hbox_.lock();
         auto other_trans = other_ent->trans_.lock();
-        auto other_hbox = other_ent->hbox_.lock();
+        auto other_hbox = other_ent->getHitbox();
 
-        if (this_trans && this_hbox && other_trans && other_hbox) {
-            return collidesX(this_trans, this_hbox, other_trans, other_hbox)
-                && collidesY(this_trans, this_hbox, other_trans, other_hbox);
+        if (this_trans && hbox_ && other_trans && other_hbox) {
+            return collidesX(this_trans, hbox_, other_trans, other_hbox)
+                && collidesY(this_trans, hbox_, other_trans, other_hbox);
         }
     }
 
@@ -97,7 +114,7 @@ bool Collision::collides(std::weak_ptr<const Collision> other_entity) {
 std::pair<double, double> Collision::getMaximumMovement(double stepX, double stepY,
         std::shared_ptr<const Collision> other_coll) {
     auto other_trans = other_coll->trans_.lock();
-    auto other_hbox = other_coll->hbox_.lock();
+    auto other_hbox = other_coll->getHitbox();
 
     return getMaximumMovement(stepX, stepY, other_trans, other_hbox);
 }
@@ -106,39 +123,38 @@ std::pair<double, double> Collision::getMaximumMovement(double stepX, double ste
     double retX = stepX, retY = stepY;
 
     auto this_trans = trans_.lock();
-    auto this_hbox = hbox_.lock();
 
-    if (this_trans && this_hbox) {
+    if (this_trans) {
         // Check if collision after move
         std::shared_ptr<Transform> new_pos = std::make_shared<Transform>();
         new_pos->setPosition(this_trans->getX() + static_cast<int>(stepX), this_trans->getY() + static_cast<int>(stepY));
 
-        bool collides_x = collidesX(new_pos, this_hbox, other_trans, other_hbox);
-        bool collides_y = collidesY(new_pos, this_hbox, other_trans, other_hbox);
+        bool collides_x = collidesX(new_pos, hbox_, other_trans, other_hbox);
+        bool collides_y = collidesY(new_pos, hbox_, other_trans, other_hbox);
 
         if (!(collides_x && collides_y)) {
             return {retX, retY};
         }
 
-        collides_x = collidesX(this_trans, this_hbox, other_trans, other_hbox);
-        collides_y = collidesY(this_trans, this_hbox, other_trans, other_hbox);
+        collides_x = collidesX(this_trans, hbox_, other_trans, other_hbox);
+        collides_y = collidesY(this_trans, hbox_, other_trans, other_hbox);
 
         // If X direction was already colliding before movement then we are parallel in this direction
         // I.e. do not change speed
         if (!collides_x) {
             if (stepX > 0.0) {
-                retX = std::min(stepX, static_cast<double>(getAbsLeft(other_trans, other_hbox) - getAbsRight(this_trans, this_hbox)));
+                retX = std::min(stepX, static_cast<double>(getAbsLeft(other_trans, other_hbox) - getAbsRight(this_trans, hbox_)));
             } else if (stepX < 0.0) {
-                retX = std::max(stepX, static_cast<double>(getAbsRight(other_trans, other_hbox) - getAbsLeft(this_trans, this_hbox)));
+                retX = std::max(stepX, static_cast<double>(getAbsRight(other_trans, other_hbox) - getAbsLeft(this_trans, hbox_)));
             }
         }
 
         // Same for Y
         if (!collides_y) {
             if (stepY > 0.0) {
-                retY = std::min(stepY, static_cast<double>(getAbsTop(other_trans, other_hbox) - getAbsBottom(this_trans, this_hbox)));
+                retY = std::min(stepY, static_cast<double>(getAbsTop(other_trans, other_hbox) - getAbsBottom(this_trans, hbox_)));
             } else if (stepY < 0.0) {
-                retY = std::max(stepY, static_cast<double>(getAbsBottom(other_trans, other_hbox) - getAbsTop(this_trans, this_hbox)));
+                retY = std::max(stepY, static_cast<double>(getAbsBottom(other_trans, other_hbox) - getAbsTop(this_trans, hbox_)));
             }
         }
     }

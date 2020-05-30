@@ -1,14 +1,12 @@
 {
     "background": [
         {
-            "Hitbox": {
-                "height": 200,
-                "width": 50
-            },
             "Renderable": {
                 "texture": "box.png",
                 "tile_x": true,
-                "tile_y": true
+                "tile_y": true,
+                "height": 200,
+                "width": 50
             },
             "Transform": {
                 "pos_x": 0,
@@ -18,14 +16,12 @@
     ],
     "bg1": [
         {
-            "Hitbox": {
-                "height": 200,
-                "width": 40
-            },
             "Renderable": {
                 "texture": "box.png",
                 "tile_x": true,
-                "tile_y": true
+                "tile_y": true,
+                "height": 200,
+                "width": 40
             },
             "Transform": {
                 "pos_x": 200,
@@ -35,15 +31,13 @@
     ],
     "bg2": [
         {
-            "Hitbox": {
-                "height": 200,
-                "width": 50
-            },
             "Renderable": {
                 "height": 100,
                 "texture": "box.png",
                 "tile_x": true,
-                "tile_y": true
+                "tile_y": true,
+                "height": 200,
+                "width": 50
             },
             "Transform": {
                 "pos_x": 200,
@@ -53,14 +47,12 @@
     ],
     "bg3": [
         {
-            "Hitbox": {
-                "height": 250,
-                "width": 50
-            },
             "Renderable": {
                 "texture": "box.png",
                 "tile_x": true,
-                "tile_y": true
+                "tile_y": true,
+                "height": 250,
+                "width": 50
             },
             "Transform": {
                 "pos_x": 200,
@@ -70,14 +62,12 @@
     ],
     "fg1": [
         {
-            "Hitbox": {
-                "height": 2000,
-                "width": 50
-            },
             "Renderable": {
                 "texture": "box.png",
                 "tile_x": true,
-                "tile_y": true
+                "tile_y": true,
+                "height": 2000,
+                "width": 50
             },
             "Transform": {
                 "pos_x": 200,
@@ -87,14 +77,12 @@
     ],
     "fg2": [
         {
-            "Hitbox": {
-                "height": 20,
-                "width": 50
-            },
             "Renderable": {
                 "texture": "box.png",
                 "tile_x": true,
-                "tile_y": true
+                "tile_y": true,
+                "height": 20,
+                "width": 50
             },
             "Transform": {
                 "pos_x": 200,
@@ -104,14 +92,12 @@
     ],
     "fg3": [
         {
-            "Hitbox": {
-                "height": 200,
-                "width": 50
-            },
             "Renderable": {
                 "texture": "box.png",
                 "tile_x": true,
-                "tile_y": true
+                "tile_y": true,
+                "height": 200,
+                "width": 50
             },
             "Transform": {
                 "pos_x": 100,
@@ -121,14 +107,12 @@
     ],
     "main": [
         {
-            "Hitbox": {
-                "height": 200,
-                "width": 50
-            },
             "Renderable": {
                 "texture": "box.png",
                 "tile_x": true,
-                "tile_y": true
+                "tile_y": true,
+                "height": 200,
+                "width": 50
             },
             "Transform": {
                 "pos_x": 200,
@@ -136,14 +120,12 @@
             }
         },
         {
-            "Hitbox": {
-                "height": 50,
-                "width": 200
-            },
             "Renderable": {
                 "texture": "box.png",
                 "tile_x": true,
-                "tile_y": true
+                "tile_y": true,
+                "height": 50,
+                "width": 200
             },
             "Transform": {
                 "pos_x": 100,
@@ -154,14 +136,12 @@
     ],
     "main_bg": [
         {
-            "Hitbox": {
-                "height": 300,
-                "width": 50
-            },
             "Renderable": {
                 "texture": "box.png",
                 "tile_x": true,
-                "tile_y": true
+                "tile_y": true,
+                "height": 300,
+                "width": 50
             },
             "Transform": {
                 "pos_x": 200,
@@ -171,14 +151,12 @@
     ],
     "main_fg": [
         {
-            "Hitbox": {
-                "height": 100,
-                "width": 50
-            },
             "Renderable": {
                 "texture": "box.png",
                 "tile_x": true,
-                "tile_y": true
+                "tile_y": true,
+                "height": 100,
+                "width": 50
             },
             "Transform": {
                 "pos_x": 200,
@@ -188,10 +166,6 @@
     ],
     "player": {
         "Entity": "player.json",
-        "Hitbox":{
-            "height": 200,
-            "width": 50
-        },
         "Transform": {
             "pos_x": 350,
             "pos_y": 1300

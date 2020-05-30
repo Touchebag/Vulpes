@@ -31,17 +31,6 @@ std::shared_ptr<BaseEntity> BaseEntity::createFromJson(nlohmann::json j) {
     return ret_ptr;
 }
 
-// Needed due to the tiling issue
-void BaseEntity::setHitbox(int width, int height) {
-    if (hitbox_) {
-        hitbox_->setHitbox(width, height);
-    }
-
-    if (renderableEntity_) {
-        renderableEntity_->recalculateTextureRect(width, height);
-    }
-}
-
 void BaseEntity::reloadFromJson(nlohmann::json j) {
     if (j.contains("Entity")) {
         auto file_name = j["Entity"];
@@ -56,20 +45,13 @@ void BaseEntity::reloadFromJson(nlohmann::json j) {
         entity_file_.clear();
     }
 
-    hitbox_ = loadComponentFromJson(j, "Hitbox", std::make_shared<Hitbox>());
-
     trans_ = loadComponentFromJson(j, "Transform", std::make_shared<Transform>());
 
-    collision_ = loadComponentFromJson<Collision>(j, "Collision", std::make_shared<Collision>(trans_, hitbox_));
+    collision_ = loadComponentFromJson<Collision>(j, "Collision", std::make_shared<Collision>(trans_));
 
-    movableEntity_ = loadComponentFromJson(j, "Movable", std::make_shared<MovableEntity>(trans_, hitbox_, collision_));
+    movableEntity_ = loadComponentFromJson(j, "Movable", std::make_shared<MovableEntity>(trans_, collision_));
 
     renderableEntity_ = loadComponentFromJson<RenderableEntity>(j, "Renderable", std::make_shared<RenderableEntity>(trans_));
-    // TODO Fix tiling
-    // Potentially remove setHitbox when fixed
-    if (hitbox_) {
-        setHitbox(hitbox_->width_, hitbox_->height_);
-    }
 
     animatedEntity_ = loadComponentFromJson(j, "Animated", std::make_shared<AnimatedEntity>(renderableEntity_));
 
@@ -94,12 +76,6 @@ void BaseEntity::reloadFromJson(nlohmann::json j) {
 
 std::optional<nlohmann::json> BaseEntity::outputToJson() {
     nlohmann::json j;
-
-    if (hitbox_) {
-        if (auto opt = hitbox_->outputToJson()) {
-            j["Hitbox"] = opt.value();
-        }
-    }
 
     if (trans_) {
         if (auto opt = trans_->outputToJson()) {

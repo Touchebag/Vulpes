@@ -8,7 +8,7 @@
 #include "components/actions.h"
 #include "components/animation.h"
 #include "components/movement.h"
-#include "components/collision.h"
+#include "components/collision/collision.h"
 
 class Physics : public Component {
   public:

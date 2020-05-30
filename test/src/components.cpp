@@ -16,16 +16,14 @@ nlohmann::json entity_json = nlohmann::json::parse(R"--(
         "file": "basic_enemy.json"
     },
     "Collision": {
-        "type": "player_hurtbox"
+        "type": "player_hurtbox",
+        "height": 200,
+        "width": 50
     },
     "Damageable": {
         "health": 100
     },
     "Death": null,
-    "Hitbox": {
-        "height": 200,
-        "width": 50
-    },
     "Movable": null,
     "Physics": {
         "ground_acceleration": 7.0,

@@ -24,9 +24,7 @@ class DeathTestFixture : public ::testing::Test {
         "health": 2
     },
     "Collision": {
-        "type": "enemy_hitbox"
-    },
-    "Hitbox": {
+        "type": "enemy_hitbox",
         "height": 50,
         "width": 50
     },
@@ -40,9 +38,7 @@ class DeathTestFixture : public ::testing::Test {
     std::string attack_json_ = R"--(
 {
     "Collision": {
-        "type": "player_hitbox"
-    },
-    "Hitbox": {
+        "type": "player_hitbox",
         "height": 50,
         "width": 50
     },

@@ -2,19 +2,14 @@
 
 #include <tuple>
 
-#include "component.h"
-
 #include "utils/common.h"
 #include "json.hpp"
 
-class Hitbox : public Component {
+class Hitbox {
   public:
+    Hitbox(int width, int height);
+
     void setHitbox(int width, int height);
-
-    void update() override;
-
-    void reloadFromJson(nlohmann::json j) override;
-    std::optional<nlohmann::json> outputToJson() override;
 
     void setOffset(std::pair<int, int> offset);
     void moveOffset(std::pair<int, int> offset);

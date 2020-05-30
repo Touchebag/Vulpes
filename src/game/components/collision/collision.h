@@ -2,10 +2,10 @@
 
 #include <memory>
 
-#include "component.h"
+#include "components/component.h"
 
 #include "components/transform.h"
-#include "components/hitbox.h"
+#include "hitbox.h"
 
 class Collision : public Component {
   public:
@@ -18,7 +18,7 @@ class Collision : public Component {
         MAX_NUM
     };
 
-    Collision(std::weak_ptr<Transform> trans, std::weak_ptr<Hitbox> hbox);
+    Collision(std::weak_ptr<Transform> trans);
 
     void update() override;
 
@@ -26,6 +26,9 @@ class Collision : public Component {
     std::optional<nlohmann::json> outputToJson() override;
 
     bool collides(std::weak_ptr<const Collision> other_entity);
+
+    void setHitbox(int width, int height);
+    const std::shared_ptr<Hitbox>& getHitbox() const;
 
     std::pair<double, double> getMaximumMovement(double stepX, double stepY, std::shared_ptr<const Collision> other_coll);
 
@@ -36,7 +39,8 @@ class Collision : public Component {
             std::shared_ptr<Transform> other_trans, std::shared_ptr<Hitbox> other_hbox);
 
     std::weak_ptr<Transform> trans_;
-    std::weak_ptr<Hitbox> hbox_;
+
+    std::shared_ptr<Hitbox> hbox_;
 
     CollisionType type_ = CollisionType::STATIC;
 };

@@ -2,7 +2,6 @@
 
 #include "system/world.h"
 
-#include "components/hitbox.h"
 #include "components/transform.h"
 
 class DynamicCollisionTestFixture : public ::testing::Test {
@@ -17,17 +16,15 @@ class DynamicCollisionTestFixture : public ::testing::Test {
 
     std::string entity_json_ = R"--(
 {
-    "Hitbox": {
-        "height": 50,
-        "width": 50
-    },
     "Transform": {
         "pos_x": 100,
         "pos_y": 100
     },
     "Movable": null,
     "Collision": {
-        "type": "static"
+        "type": "static",
+        "height": 50,
+        "width": 50
     }
 }
         )--";

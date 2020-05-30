@@ -9,9 +9,7 @@
     "main": [
         {
             "Collision": {
-                "type": "static"
-            },
-            "Hitbox": {
+                "type": "static",
                 "height": 4719,
                 "width": 245
             },
@@ -29,9 +27,7 @@
         },
         {
             "Collision": {
-                "type": "static"
-            },
-            "Hitbox": {
+                "type": "static",
                 "height": 4787,
                 "width": 204
             },
@@ -56,9 +52,7 @@
         },
         {
             "Collision": {
-                "type": "static"
-            },
-            "Hitbox": {
+                "type": "static",
                 "height": 49,
                 "width": 1088
             },
@@ -76,9 +70,7 @@
         },
         {
             "Collision": {
-                "type": "static"
-            },
-            "Hitbox": {
+                "type": "static",
                 "height": 705,
                 "width": 70
             },
@@ -96,9 +88,7 @@
         },
         {
             "Collision": {
-                "type": "static"
-            },
-            "Hitbox": {
+                "type": "static",
                 "height": 2749,
                 "width": 89
             },
@@ -116,9 +106,7 @@
         },
         {
             "Collision": {
-                "type": "static"
-            },
-            "Hitbox": {
+                "type": "static",
                 "height": 65,
                 "width": 1015
             },
@@ -136,9 +124,7 @@
         },
         {
             "Collision": {
-                "type": "static"
-            },
-            "Hitbox": {
+                "type": "static",
                 "height": 71,
                 "width": 1606
             },
@@ -156,9 +142,7 @@
         },
         {
             "Collision": {
-                "type": "static"
-            },
-            "Hitbox": {
+                "type": "static",
                 "height": 1394,
                 "width": 101
             },
@@ -176,9 +160,7 @@
         },
         {
             "Collision": {
-                "type": "static"
-            },
-            "Hitbox": {
+                "type": "static",
                 "height": 75,
                 "width": 996
             },
@@ -196,9 +178,7 @@
         },
         {
             "Collision": {
-                "type": "static"
-            },
-            "Hitbox": {
+                "type": "static",
                 "height": 75,
                 "width": 996
             },
@@ -216,9 +196,7 @@
         },
         {
             "Collision": {
-                "type": "static"
-            },
-            "Hitbox": {
+                "type": "static",
                 "height": 1394,
                 "width": 101
             },
@@ -236,9 +214,7 @@
         },
         {
             "Collision": {
-                "type": "static"
-            },
-            "Hitbox": {
+                "type": "static",
                 "height": 2365,
                 "width": 112
             },
@@ -256,9 +232,7 @@
         },
         {
             "Collision": {
-                "type": "static"
-            },
-            "Hitbox": {
+                "type": "static",
                 "height": 161,
                 "width": 4920
             },
@@ -276,9 +250,7 @@
         },
         {
             "Collision": {
-                "type": "static"
-            },
-            "Hitbox": {
+                "type": "static",
                 "height": 156,
                 "width": 4882
             },
@@ -296,9 +268,7 @@
         },
         {
             "Collision": {
-                "type": "static"
-            },
-            "Hitbox": {
+                "type": "static",
                 "height": 356,
                 "width": 941
             },
@@ -318,10 +288,6 @@
     "main_bg": null,
     "main_fg": [
         {
-            "Hitbox": {
-                "height": 287,
-                "width": 644
-            },
             "Renderable": {
                 "height": 235,
                 "texture": "Forest/Bush.png",
@@ -334,10 +300,6 @@
             }
         },
         {
-            "Hitbox": {
-                "height": 287,
-                "width": 644
-            },
             "Renderable": {
                 "height": 235,
                 "texture": "Forest/Bush.png",
@@ -350,10 +312,6 @@
             }
         },
         {
-            "Hitbox": {
-                "height": 287,
-                "width": 644
-            },
             "Renderable": {
                 "height": 235,
                 "texture": "Forest/Bush.png",
@@ -366,10 +324,6 @@
             }
         },
         {
-            "Hitbox": {
-                "height": 250,
-                "width": 644
-            },
             "Renderable": {
                 "height": 235,
                 "texture": "Forest/Bush.png",

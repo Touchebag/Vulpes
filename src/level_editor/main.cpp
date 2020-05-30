@@ -189,8 +189,8 @@ int level_editor_main(sf::RenderWindow& window, std::string level_file_path) {
                             std::shared_ptr<Transform> tmp_trans = std::make_shared<Transform>();
                             tmp_trans->setPosition(static_cast<int>(mouse_world_pos.first), static_cast<int>(mouse_world_pos.second));
 
-                            std::shared_ptr<Hitbox> tmp_hbox = std::make_shared<Hitbox>();
-                            std::shared_ptr<Collision> tmp_coll = std::make_shared<Collision>(tmp_trans, tmp_hbox);
+                            std::shared_ptr<Collision> tmp_coll = std::make_shared<Collision>(tmp_trans);
+                            tmp_coll->setHitbox(50, 50);
 
                             auto player = World::getInstance<World::IWorldRead>().getPlayer().lock();
                             if (player && player->collision_ && player->collision_->collides(tmp_coll)) {
@@ -201,8 +201,9 @@ int level_editor_main(sf::RenderWindow& window, std::string level_file_path) {
                                     std::shared_ptr<Collision> other_coll = nullptr;
                                     if (it->collision_) {
                                         other_coll = it->collision_;
-                                    } else if (it->hitbox_ && it->trans_) {
-                                        other_coll = std::make_shared<Collision>(it->trans_, it->hitbox_);
+                                    } else if (it->trans_) {
+                                        other_coll = std::make_shared<Collision>(it->trans_);
+                                        other_coll->setHitbox(50, 50);
                                     }
 
                                     if (other_coll->collides(tmp_coll)) {
@@ -224,14 +225,14 @@ int level_editor_main(sf::RenderWindow& window, std::string level_file_path) {
                                 current_entity_hud_text = makeHudText({50, 50});
 
                                 auto transform = current_entity->trans_;
-                                auto hbox = current_entity->hitbox_;
+                                auto coll = current_entity->collision_;
 
-                                if (transform && hbox) {
+                                if (transform && coll) {
                                     std::static_pointer_cast<RenderableText>(current_entity_hud_text->renderableEntity_)
                                         ->setText(std::string("X:") + std::to_string(transform->getX()) +
                                                   " Y: " + std::to_string(transform->getY()) +
-                                                  "\nW:" + std::to_string(hbox->width_) +
-                                                  " H: " + std::to_string(hbox->height_));
+                                                  "\nW:" + std::to_string(coll->getHitbox()->width_) +
+                                                  " H: " + std::to_string(coll->getHitbox()->height_));
                                 }
                             }
 
@@ -245,12 +246,14 @@ int level_editor_main(sf::RenderWindow& window, std::string level_file_path) {
                             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LAlt)) {
                                 current_action = Command::Commands::CAMERA_ZOOM;
                             } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
-                                if (current_entity) {
-                                    auto hbox = current_entity->hitbox_;
-                                    int width = static_cast<int>(std::round(static_cast<float>(hbox->width_) / 5.0) * 5.0);
-                                    int height = static_cast<int>(std::round(static_cast<float>(hbox->height_) / 5.0) * 5.0);
+                                auto coll = current_entity->collision_;
+                                if (current_entity && coll) {
+                                    int width = static_cast<int>(
+                                            std::round(static_cast<float>(coll->getHitbox()->width_) / 5.0) * 5.0);
+                                    int height = static_cast<int>(
+                                            std::round(static_cast<float>(coll->getHitbox()->height_) / 5.0) * 5.0);
 
-                                    current_entity->setHitbox(width, height);
+                                    current_entity->collision_->setHitbox(width, height);
                                 }
                             } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
                                 if (current_entity) {

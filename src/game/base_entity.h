@@ -4,14 +4,13 @@
 
 #include "utils/common.h"
 
-#include "components/hitbox.h"
 #include "components/transform.h"
 #include "components/movement.h"
 #include "components/rendering/rendering.h"
 #include "components/animation.h"
 #include "components/stateful.h"
 #include "components/actions.h"
-#include "components/collision.h"
+#include "components/collision/collision.h"
 #include "components/physics.h"
 #include "components/ai.h"
 #include "components/damageable.h"
@@ -33,7 +32,6 @@ class BaseEntity {
 
     // Components
     std::shared_ptr<Transform> trans_ = nullptr;
-    std::shared_ptr<Hitbox> hitbox_ = nullptr;
     std::shared_ptr<Collision> collision_ = nullptr;
     std::shared_ptr<MovableEntity> movableEntity_ = nullptr;
     std::shared_ptr<RenderableEntity> renderableEntity_ = nullptr;

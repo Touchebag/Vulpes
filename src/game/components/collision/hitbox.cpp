@@ -1,25 +1,13 @@
 #include "hitbox.h"
 
-void Hitbox::update() {
+Hitbox::Hitbox(int width, int height) :
+    width_(width),
+    height_(height) {
 }
 
 void Hitbox::setHitbox(int width, int height) {
     width_ = width;
     height_ = height;
-}
-
-void Hitbox::reloadFromJson(nlohmann::json j) {
-    width_ = j["width"].get<int>();
-    height_= j["height"].get<int>();
-}
-
-std::optional<nlohmann::json> Hitbox::outputToJson() {
-    nlohmann::json j;
-
-    j["width"] = static_cast<int>(width_);
-    j["height"] = static_cast<int>(height_);
-
-    return {j};
 }
 
 void Hitbox::setOffset(std::pair<int, int> offset) {

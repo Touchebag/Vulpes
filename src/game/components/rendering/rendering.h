@@ -16,8 +16,8 @@ class RenderableEntity {
     virtual void reloadFromJson(nlohmann::json j);
     virtual std::optional<nlohmann::json> outputToJson();
 
-    virtual void recalculateTextureRect(int width, int height);
-    virtual void setTiling(bool tiling_x, bool tiling_y, int width, int height);
+    virtual void recalculateTextureRect();
+    virtual void setTiling(bool tiling_x, bool tiling_y);
 
     virtual void setTextureCoords(int pos_x, int pos_y, int width, int height);
 
@@ -30,6 +30,7 @@ class RenderableEntity {
 
     bool tiling_x_ = true;
     bool tiling_y_ = true;
+
   protected:
     std::weak_ptr<Transform> trans_;
 

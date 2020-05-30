@@ -137,6 +137,8 @@ TEST_F(CommandTestFixture, ResizeObjectl) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
     command_.add(entity);
     entity->trans_->setPosition(0, 0);
+    entity->collision_ = std::make_shared<Collision>(entity->trans_);
+
     mouse_->saveMousePosition();
 
     assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
@@ -150,8 +152,8 @@ TEST_F(CommandTestFixture, ResizeObjectl) {
 
     window_.close();
 
-    ASSERT_EQ(entity->hitbox_->width_, 70);
-    ASSERT_EQ(entity->hitbox_->height_, 68);
+    ASSERT_EQ(entity->collision_->getHitbox()->width_, 70);
+    ASSERT_EQ(entity->collision_->getHitbox()->height_, 68);
 }
 
 TEST_F(CommandTestFixture, MoveObjectl) {
@@ -200,7 +202,7 @@ TEST_F(CommandTestFixture, ToggleCollision) {
     assertWorldEmpty();
 
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    entity->collision_ = std::make_shared<Collision>(entity->trans_, entity->hitbox_);
+    entity->collision_ = std::make_shared<Collision>(entity->trans_);
     command_.add(entity);
 
     assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
@@ -218,7 +220,7 @@ TEST_F(CommandTestFixture, ToggleMovable) {
     assertWorldEmpty();
 
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    entity->movableEntity_ = std::make_shared<MovableEntity>(entity->trans_, entity->hitbox_, entity->collision_);
+    entity->movableEntity_ = std::make_shared<MovableEntity>(entity->trans_, entity->collision_);
     command_.add(entity);
 
     assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);

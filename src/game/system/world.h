@@ -6,7 +6,6 @@
 #include "base_entity.h"
 #include "player.h"
 #include "json.hpp"
-#include "components/collision.h"
 #include "components/rendering/rendering_text.h"
 
 class World {

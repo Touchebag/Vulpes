@@ -6,8 +6,7 @@ class MovableTestFixture : public ::testing::Test {
   public:
     MovableTestFixture() {
         trans_ = std::make_shared<Transform>();
-        hitbox_ = std::make_shared<Hitbox>();
-        move_ = std::make_shared<MovableEntity>(trans_, hitbox_, coll_);
+        move_ = std::make_shared<MovableEntity>(trans_, coll_);
     }
 
     void SetUp() override {
@@ -15,7 +14,6 @@ class MovableTestFixture : public ::testing::Test {
     }
 
     std::shared_ptr<Transform> trans_;
-    std::shared_ptr<Hitbox> hitbox_;
     std::shared_ptr<MovableEntity> move_;
 
     // Not used

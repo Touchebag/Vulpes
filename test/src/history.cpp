@@ -217,7 +217,7 @@ TEST_F(HistoryTestFixture, ToggleRenderable) {
 
 TEST_F(HistoryTestFixture, ToggleCollision) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    entity->collision_ = std::make_shared<Collision>(entity->trans_, entity->hitbox_);
+    entity->collision_ = std::make_shared<Collision>(entity->trans_);
     command_.add(entity);
 
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
@@ -239,7 +239,7 @@ TEST_F(HistoryTestFixture, ToggleCollision) {
 
 TEST_F(HistoryTestFixture, ToggleMovable) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    entity->movableEntity_ = std::make_shared<MovableEntity>(entity->trans_, entity->hitbox_, entity->collision_);
+    entity->movableEntity_ = std::make_shared<MovableEntity>(entity->trans_, entity->collision_);
     command_.add(entity);
 
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();

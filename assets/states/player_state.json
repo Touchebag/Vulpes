@@ -259,13 +259,11 @@
                 ]
             },
             "Collision": {
-                "type": "player_hitbox"
-            },
-            "Death": null,
-            "Hitbox": {
+                "type": "player_hitbox",
                 "width": 100,
                 "height": 200
             },
+            "Death": null,
             "Renderable": {
                 "texture": "Attack1.png",
                 "height": 350

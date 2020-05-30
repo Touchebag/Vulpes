@@ -22,11 +22,13 @@ void Command::update() {
 
                 if (current_operation_->before_) {
                     auto j = current_operation_->before_.value();
-                    if (j.contains("Hitbox")) {
-                        auto hbox = j["Hitbox"];
-                        current_entity_->setHitbox(
-                                static_cast<int>(static_cast<float>(hbox["width"].get<int>()) + (mouse_world_dist.first * 2.0)),
-                                static_cast<int>(static_cast<float>(hbox["height"].get<int>()) + (mouse_world_dist.second * 2.0)));
+                    if (j.contains("Collision")) {
+                        auto coll = j["Collision"];
+                        if (current_entity_->collision_) {
+                            current_entity_->collision_->setHitbox(
+                                    static_cast<int>(static_cast<float>(coll["width"].get<int>()) + (mouse_world_dist.first * 2.0)),
+                                    static_cast<int>(static_cast<float>(coll["height"].get<int>()) + (mouse_world_dist.second * 2.0)));
+                        }
                     }
                     if (j.contains("Renderable")) {
                         auto render = j["Renderable"];
@@ -61,6 +63,7 @@ void Command::update() {
                     }
                 }
             }
+            break;
         default:
             break;
     }
@@ -72,17 +75,17 @@ void Command::add() {
 }
 
 void Command::add(std::shared_ptr<BaseEntity> entity) {
-    std::shared_ptr<Hitbox> hitbox = std::make_shared<Hitbox>();
     std::shared_ptr<Transform> trans = std::make_shared<Transform>();
+    std::shared_ptr<Collision> coll = std::make_shared<Collision>(trans);
     std::shared_ptr<RenderableEntity> render = std::make_shared<RenderableEntity>(trans);
 
-    hitbox->setHitbox(50, 50);
-    entity->hitbox_ = hitbox;
+    coll->setHitbox(50, 50);
 
     auto mouse_world_pos_ = mouse_->getMouseWorldPosition();
     trans->setPosition(static_cast<int>(mouse_world_pos_.first), static_cast<int>(mouse_world_pos_.second));
     entity->trans_ = trans;
 
+    render->setSize(50, 50);
     render->loadTexture("box.png");
     entity->renderableEntity_ = render;
 
@@ -192,7 +195,7 @@ void Command::handleCommand(Commands command) {
                 if (current_entity_->collision_) {
                     current_entity_->collision_ = {};
                 } else {
-                    auto collision = std::make_shared<Collision>(current_entity_->trans_, current_entity_->hitbox_);
+                    auto collision = std::make_shared<Collision>(current_entity_->trans_);
                     current_entity_->collision_ = collision;
                 }
                 World::getInstance<World::IWorldModify>().addEntity(current_entity_, World::Layer::MAIN);
@@ -212,7 +215,7 @@ void Command::handleCommand(Commands command) {
                 if (current_entity_->movableEntity_) {
                     current_entity_->movableEntity_ = {};
                 } else {
-                    auto movable = std::make_shared<MovableEntity>(current_entity_->trans_, current_entity_->hitbox_, current_entity_->collision_);
+                    auto movable = std::make_shared<MovableEntity>(current_entity_->trans_, current_entity_->collision_);
                     current_entity_->movableEntity_ = movable;
                 }
                 World::getInstance<World::IWorldModify>().addEntity(current_entity_, World::Layer::MAIN);
@@ -286,9 +289,7 @@ void Command::handleCommand(Commands command) {
                 current_operation_->before_ = current_entity_->outputToJson();
                 current_operation_->layer_ = current_layer_;
 
-                if (auto hbox = current_entity_->hitbox_) {
-                    current_entity_->renderableEntity_->setTiling(false, false, hbox->width_, hbox->height_);
-                }
+                current_entity_->renderableEntity_->setTiling(false, false);
 
                 current_operation_->after_ = current_entity_->outputToJson();
                 history_->addOperation(current_operation_);
@@ -301,9 +302,7 @@ void Command::handleCommand(Commands command) {
                 current_operation_->before_ = current_entity_->outputToJson();
                 current_operation_->layer_ = current_layer_;
 
-                if (auto hbox = current_entity_->hitbox_) {
-                    current_entity_->renderableEntity_->setTiling(true, false, hbox->width_, hbox->height_);
-                }
+                current_entity_->renderableEntity_->setTiling(true, false);
 
                 current_operation_->after_ = current_entity_->outputToJson();
                 history_->addOperation(current_operation_);
@@ -316,9 +315,7 @@ void Command::handleCommand(Commands command) {
                 current_operation_->before_ = current_entity_->outputToJson();
                 current_operation_->layer_ = current_layer_;
 
-                if (auto hbox = current_entity_->hitbox_) {
-                    current_entity_->renderableEntity_->setTiling(false, true, hbox->width_, hbox->height_);
-                }
+                current_entity_->renderableEntity_->setTiling(false, true);
 
                 current_operation_->after_ = current_entity_->outputToJson();
                 history_->addOperation(current_operation_);
@@ -331,9 +328,7 @@ void Command::handleCommand(Commands command) {
                 current_operation_->before_ = current_entity_->outputToJson();
                 current_operation_->layer_ = current_layer_;
 
-                if (auto hbox = current_entity_->hitbox_) {
-                    current_entity_->renderableEntity_->setTiling(true, true, hbox->width_, hbox->height_);
-                }
+                current_entity_->renderableEntity_->setTiling(true, true);
 
                 current_operation_->after_ = current_entity_->outputToJson();
                 history_->addOperation(current_operation_);

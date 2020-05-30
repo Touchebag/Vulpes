@@ -19,12 +19,12 @@ bool RenderableEntity::loadTexture(std::string file_path) {
     texture_.setRepeated(true);
     texture_name_ = file_path;
 
+    recalculateTextureRect();
+
     return true;
 }
 
 void RenderableEntity::reloadFromJson(nlohmann::json j) {
-    loadTexture(j["texture"].get<std::string>());
-
     if (j.contains("height")) {
         height_ = j["height"];
     }
@@ -40,23 +40,25 @@ void RenderableEntity::reloadFromJson(nlohmann::json j) {
     if (j.contains("tile_y")) {
         tiling_y_ = j["tile_y"].get<bool>();
     }
+
+    loadTexture(j["texture"].get<std::string>());
 }
 
-void RenderableEntity::recalculateTextureRect(int width, int height) {
+void RenderableEntity::recalculateTextureRect() {
     int texture_rect_x;
     int texture_rect_y;
 
-    texture_rect_x = tiling_x_ ? width : original_texture_rect_.width;
-    texture_rect_y = tiling_y_ ? height : original_texture_rect_.height;
+    texture_rect_x = tiling_x_ ? width_ : original_texture_rect_.width;
+    texture_rect_y = tiling_y_ ? height_ : original_texture_rect_.height;
 
     setTextureCoords(0, 0, texture_rect_x, texture_rect_y);
 }
 
-void RenderableEntity::setTiling(bool tiling_x, bool tiling_y, int width, int height) {
+void RenderableEntity::setTiling(bool tiling_x, bool tiling_y) {
     tiling_x_ = tiling_x;
     tiling_y_ = tiling_y;
 
-    recalculateTextureRect(width, height);
+    recalculateTextureRect();
 }
 
 std::optional<nlohmann::json> RenderableEntity::outputToJson() {
@@ -106,6 +108,8 @@ void RenderableEntity::setTextureCoords(int pos_x, int pos_y, int width, int hei
 void RenderableEntity::setSize(int width, int height) {
     width_ = width;
     height_ = height;
+
+    recalculateTextureRect();
 }
 
 void RenderableEntity::render(sf::RenderWindow& window) {

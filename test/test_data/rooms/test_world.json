@@ -9,16 +9,16 @@
     "main": [
         {
             "Collision": {
-                "type": "static"
-            },
-            "Hitbox": {
+                "type": "static",
                 "height": 200,
                 "width": 50
             },
             "Renderable": {
                 "texture": "box.png",
                 "tile_x": true,
-                "tile_y": true
+                "tile_y": true,
+                "height": 200,
+                "width": 50
             },
             "Transform": {
                 "pos_x": 200,
@@ -27,16 +27,16 @@
         },
         {
             "Collision": {
-                "type": "static"
-            },
-            "Hitbox": {
+                "type": "static",
                 "height": 200,
                 "width": 50
             },
             "Renderable": {
                 "texture": "box.png",
                 "tile_x": true,
-                "tile_y": true
+                "tile_y": true,
+                "height": 200,
+                "width": 50
             },
             "Transform": {
                 "pos_x": 0,
@@ -45,16 +45,16 @@
         },
         {
             "Collision": {
-                "type": "static"
-            },
-            "Hitbox": {
+                "type": "static",
                 "height": 50,
                 "width": 200
             },
             "Renderable": {
                 "texture": "box.png",
                 "tile_x": true,
-                "tile_y": true
+                "tile_y": true,
+                "height": 50,
+                "width": 200
             },
             "Transform": {
                 "pos_x": 100,
@@ -63,16 +63,16 @@
         },
         {
             "Collision": {
-                "type": "static"
-            },
-            "Hitbox": {
+                "type": "static",
                 "height": 50,
                 "width": 200
             },
             "Renderable": {
                 "texture": "box.png",
                 "tile_x": true,
-                "tile_y": true
+                "tile_y": true,
+                "height": 50,
+                "width": 200
             },
             "Transform": {
                 "pos_x": 100,

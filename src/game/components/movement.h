@@ -1,16 +1,15 @@
 #pragma once
 
 #include "utils/common.h"
-#include "components/hitbox.h"
 #include "components/transform.h"
-#include "components/collision.h"
+#include "components/collision/collision.h"
 
 #include <utility>
 #include <memory>
 
 class MovableEntity : public Component {
   public:
-    MovableEntity(std::weak_ptr<Transform> trans, std::weak_ptr<Hitbox> hbox, std::weak_ptr<Collision> collision);
+    MovableEntity(std::weak_ptr<Transform> trans, std::weak_ptr<Collision> collision);
 
     void move(double velX, double velY);
 

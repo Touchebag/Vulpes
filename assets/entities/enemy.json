@@ -25,16 +25,14 @@
         "sprite_map": "Enemy.txt"
     },
     "Collision": {
-        "type": "enemy_hitbox"
+        "type": "enemy_hitbox",
+        "height": 50,
+        "width": 50
     },
     "Damageable": {
         "health": 1
     },
     "Death": null,
-    "Hitbox": {
-        "height": 50,
-        "width": 50
-    },
     "Movable": null,
     "Physics": {
         "ground_acceleration": 3.0,
