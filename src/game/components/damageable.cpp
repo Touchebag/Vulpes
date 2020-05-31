@@ -40,7 +40,7 @@ void Damageable::update() {
         for (auto& it : World::IWorldRead::getCollisions(hurting_type)) {
             if (auto other_coll = it.lock()) {
                 if (coll->collides(other_coll)) {
-                    health_ -= 1;
+                    health_ -= other_coll->getDamage();
                 }
             }
         }

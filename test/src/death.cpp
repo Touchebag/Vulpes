@@ -21,7 +21,7 @@ class DeathTestFixture : public ::testing::Test {
 {
     "Death": null,
     "Damageable": {
-        "health": 2
+        "health": 6
     },
     "Collision": {
         "type": "enemy_hitbox",
@@ -40,7 +40,8 @@ class DeathTestFixture : public ::testing::Test {
     "Collision": {
         "type": "player_hitbox",
         "height": 50,
-        "width": 50
+        "width": 50,
+        "damage": 3
     },
     "Transform": {
         "pos_x": 0,

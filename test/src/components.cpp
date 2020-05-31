@@ -18,7 +18,8 @@ nlohmann::json entity_json = nlohmann::json::parse(R"--(
     "Collision": {
         "type": "player_hurtbox",
         "height": 200,
-        "width": 50
+        "width": 50,
+        "damage": 2
     },
     "Damageable": {
         "health": 100

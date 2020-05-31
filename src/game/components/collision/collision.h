@@ -30,6 +30,8 @@ class Collision : public Component {
     void setHitbox(int width, int height);
     const std::shared_ptr<Hitbox>& getHitbox() const;
 
+    int getDamage() const;
+
     std::pair<double, double> getMaximumMovement(double stepX, double stepY, std::shared_ptr<const Collision> other_coll);
 
     CollisionType getType() const;
@@ -41,6 +43,8 @@ class Collision : public Component {
     std::weak_ptr<Transform> trans_;
 
     std::shared_ptr<Hitbox> hbox_;
+
+    int damage_ = 0;
 
     CollisionType type_ = CollisionType::STATIC;
 };

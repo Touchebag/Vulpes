@@ -77,6 +77,14 @@ void Collision::reloadFromJson(nlohmann::json j) {
     int hitbox_width = j["width"];
     int hitbox_height = j["height"];
 
+    if (j.contains("damage")) {
+        damage_ = j["damage"];
+        if (damage_ < 0) {
+            LOGW("Damage must be positive but is %i, setting to 0", damage_);
+            damage_ = 0;
+        }
+    }
+
     hbox_ = std::make_shared<Hitbox>(hitbox_width, hitbox_height);
 }
 
@@ -85,6 +93,10 @@ std::optional<nlohmann::json> Collision::outputToJson() {
 
     j["width"] = getHitbox()->width_;
     j["height"] = getHitbox()->height_;
+
+    if (damage_ > 0) {
+        j["damage"] = damage_;
+    }
 
     for (auto it : string_type_map) {
         if (it.second == type_) {
@@ -166,3 +178,6 @@ Collision::CollisionType Collision::getType() const {
     return type_;
 }
 
+int Collision::getDamage() const {
+    return damage_;
+}
