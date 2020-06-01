@@ -265,6 +265,7 @@
                 "damage": 4
             },
             "Death": null,
+            "Movable": null,
             "Renderable": {
                 "texture": "Attack1.png",
                 "height": 350

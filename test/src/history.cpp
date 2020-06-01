@@ -263,7 +263,6 @@ TEST_F(HistoryTestFixture, TogglePhysics) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
     entity->physics_ = std::make_shared<Physics>(
                            entity->statefulEntity_,
-                           entity->renderableEntity_,
                            entity->movableEntity_,
                            entity->animatedEntity_,
                            entity->actions_,
@@ -311,7 +310,7 @@ TEST_F(HistoryTestFixture, ToggleActions) {
 
 TEST_F(HistoryTestFixture, ToggleTiling) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    entity->renderableEntity_ = std::make_shared<RenderableEntity>(entity->trans_);
+    entity->renderableEntity_ = std::make_shared<RenderableEntity>(entity->trans_, entity->movableEntity_);
     command_.add(entity);
 
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
@@ -333,7 +332,7 @@ TEST_F(HistoryTestFixture, ToggleTiling) {
 
 TEST_F(HistoryTestFixture, ChangeSprite) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    entity->renderableEntity_ = std::make_shared<RenderableEntity>(entity->trans_);
+    entity->renderableEntity_ = std::make_shared<RenderableEntity>(entity->trans_, entity->movableEntity_);
     command_.add(entity);
 
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();

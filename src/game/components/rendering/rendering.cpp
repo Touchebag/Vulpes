@@ -2,8 +2,9 @@
 #include "utils/log.h"
 #include "utils/file.h"
 
-RenderableEntity::RenderableEntity(std::weak_ptr<Transform> trans) :
-    trans_(trans) {
+RenderableEntity::RenderableEntity(std::weak_ptr<Transform> trans, std::weak_ptr<MovableEntity> movable) :
+    trans_(trans),
+    movable_(movable) {
 }
 
 bool RenderableEntity::loadTexture(std::string file_path) {
@@ -85,7 +86,10 @@ void RenderableEntity::setTextureCoords(int pos_x, int pos_y, int width, int hei
     sprite_.setTextureRect(sf::IntRect(pos_x, pos_y, width, height));
 
     // Mirror sprites facing left
-    auto mirror_scale = facing_right_ ? 1.0 : -1.0;
+    auto mirror_scale = 1.0;
+    if (auto move = movable_.lock()) {
+        mirror_scale = move->facing_right_ ? 1.0 : -1.0;
+    }
 
     // Scale
     double x_scale = 1.0;

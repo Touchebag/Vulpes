@@ -77,7 +77,7 @@ void Command::add() {
 void Command::add(std::shared_ptr<BaseEntity> entity) {
     std::shared_ptr<Transform> trans = std::make_shared<Transform>();
     std::shared_ptr<Collision> coll = std::make_shared<Collision>(trans);
-    std::shared_ptr<RenderableEntity> render = std::make_shared<RenderableEntity>(trans);
+    std::shared_ptr<RenderableEntity> render = std::make_shared<RenderableEntity>(trans, std::weak_ptr<MovableEntity>());
 
     coll->setHitbox(50, 50);
 
@@ -174,7 +174,8 @@ void Command::handleCommand(Commands command) {
                 if (current_entity_->renderableEntity_) {
                     current_entity_->renderableEntity_ = {};
                 } else {
-                    auto renderable = std::make_shared<RenderableEntity>(current_entity_->trans_);
+                    auto renderable = std::make_shared<RenderableEntity>(current_entity_->trans_,
+                                                                         current_entity_->movableEntity_);
                     renderable->loadTexture("box.png");
                     current_entity_->renderableEntity_ = renderable;
                 }
@@ -237,7 +238,6 @@ void Command::handleCommand(Commands command) {
                 } else {
                     auto physics = std::make_shared<Physics>(
                             current_entity_->statefulEntity_,
-                            current_entity_->renderableEntity_,
                             current_entity_->movableEntity_,
                             current_entity_->animatedEntity_,
                             current_entity_->actions_,

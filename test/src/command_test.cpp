@@ -240,7 +240,6 @@ TEST_F(CommandTestFixture, TogglePhysics) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
     entity->physics_ = std::make_shared<Physics>(
                            entity->statefulEntity_,
-                           entity->renderableEntity_,
                            entity->movableEntity_,
                            entity->animatedEntity_,
                            entity->actions_,
@@ -284,7 +283,7 @@ TEST_F(CommandTestFixture, ToggleTiling) {
 
     assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
 
-    entity->renderableEntity_ = std::make_shared<RenderableEntity>(entity->trans_);
+    entity->renderableEntity_ = std::make_shared<RenderableEntity>(entity->trans_, entity->movableEntity_);
 
     ASSERT_TRUE(entity->renderableEntity_->tiling_x_);
     ASSERT_TRUE(entity->renderableEntity_->tiling_y_);

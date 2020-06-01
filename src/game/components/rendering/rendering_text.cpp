@@ -4,7 +4,7 @@
 #include "utils/log.h"
 
 RenderableText::RenderableText(std::weak_ptr<Transform> trans) :
-    RenderableEntity(trans) {
+    RenderableEntity(trans, {}) {
 
     sf::Font font;
     if (std::optional<sf::Font> tmp_font = File::loadFont("arial.ttf")) {

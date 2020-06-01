@@ -4,9 +4,9 @@
 
 #include "utils/log.h"
 
-Subentity::Subentity(std::weak_ptr<Transform> trans, std::weak_ptr<RenderableEntity> render) :
+Subentity::Subentity(std::weak_ptr<Transform> trans, std::weak_ptr<MovableEntity> movable) :
     trans_(trans),
-    render_(render) {
+    movable_(movable) {
 }
 
 void Subentity::addEntity(std::shared_ptr<BaseEntity> entity) {
@@ -24,18 +24,17 @@ void Subentity::update() {
 
 void Subentity::set_position() {
     if (auto entity = entity_.lock()) {
-
         auto ent_trans = entity->trans_;
-        auto ent_rndr = entity->renderableEntity_;
-        if (ent_trans && ent_rndr) {
+        auto ent_move = entity->movableEntity_;
 
+        if (ent_trans && ent_move) {
             auto trans = trans_.lock();
-            auto render = render_.lock();
-            if (trans && render) {
+            auto movable = movable_.lock();
 
-                ent_trans->setPosition(trans->getX() + (ent_trans->getX() * (render->facing_right_ ? 1 : -1)) ,
+            if (trans && movable) {
+                ent_trans->setPosition(trans->getX() + (ent_trans->getX() * (movable->facing_right_ ? 1 : -1)) ,
                                        trans->getY() + ent_trans->getY());
-                ent_rndr->facing_right_ = render->facing_right_;
+                ent_move->facing_right_ = movable->facing_right_;
             }
         }
     }

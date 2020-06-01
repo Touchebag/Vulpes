@@ -23,6 +23,8 @@ class MovableEntity : public Component {
     double getVelX();
     double getVelY();
 
+    bool facing_right_ = true;
+
   private:
     double velx_ = 0.0;
     double vely_ = 0.0;

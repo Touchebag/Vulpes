@@ -36,7 +36,6 @@ class Physics : public Component {
     };
 
     Physics(std::weak_ptr<StatefulEntity> statefulEntity,
-            std::weak_ptr<RenderableEntity> renderableEntity,
             std::weak_ptr<MovableEntity> movableEntity,
             std::weak_ptr<AnimatedEntity> animatedEntity,
             std::weak_ptr<Actions> actions,
@@ -51,7 +50,6 @@ class Physics : public Component {
 
   private:
     std::weak_ptr<StatefulEntity> statefulEntity_;
-    std::weak_ptr<RenderableEntity> renderableEntity_;
     std::weak_ptr<MovableEntity> movableEntity_;
     std::weak_ptr<AnimatedEntity> animatedEntity_;
     std::weak_ptr<Actions> actions_;

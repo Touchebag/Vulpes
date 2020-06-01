@@ -5,10 +5,11 @@
 #include <SFML/Graphics.hpp>
 
 #include "components/transform.h"
+#include "components/movement.h"
 
 class RenderableEntity {
   public:
-    RenderableEntity(std::weak_ptr<Transform> trans);
+    RenderableEntity(std::weak_ptr<Transform> trans, std::weak_ptr<MovableEntity> movable);
     virtual ~RenderableEntity() = default;
 
     virtual bool loadTexture(std::string file_path);
@@ -25,14 +26,12 @@ class RenderableEntity {
 
     virtual void render(sf::RenderWindow& window);
 
-    // Used for mirroring sprites
-    bool facing_right_ = true;
-
     bool tiling_x_ = true;
     bool tiling_y_ = true;
 
   protected:
     std::weak_ptr<Transform> trans_;
+    std::weak_ptr<MovableEntity> movable_;
 
   private:
     sf::Texture texture_;

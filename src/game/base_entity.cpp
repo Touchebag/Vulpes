@@ -51,11 +51,11 @@ void BaseEntity::reloadFromJson(nlohmann::json j) {
 
     movableEntity_ = loadComponentFromJson(j, "Movable", std::make_shared<MovableEntity>(trans_, collision_));
 
-    renderableEntity_ = loadComponentFromJson<RenderableEntity>(j, "Renderable", std::make_shared<RenderableEntity>(trans_));
+    renderableEntity_ = loadComponentFromJson<RenderableEntity>(j, "Renderable", std::make_shared<RenderableEntity>(trans_, movableEntity_));
 
     animatedEntity_ = loadComponentFromJson(j, "Animated", std::make_shared<AnimatedEntity>(renderableEntity_));
 
-    subentity_ = loadComponentFromJson(j, "Subentity", std::make_shared<Subentity>(trans_, renderableEntity_));
+    subentity_ = loadComponentFromJson(j, "Subentity", std::make_shared<Subentity>(trans_, movableEntity_));
 
     statefulEntity_ = loadComponentFromJson(j, "Stateful", std::make_shared<StatefulEntity>(animatedEntity_, subentity_));
 
@@ -67,7 +67,7 @@ void BaseEntity::reloadFromJson(nlohmann::json j) {
 
     actions_ = loadComponentFromJson(j, "Actions", std::make_shared<Actions>(death_));
 
-    physics_ = loadComponentFromJson(j, "Physics", std::make_shared<Physics>(statefulEntity_, renderableEntity_, movableEntity_, animatedEntity_, actions_, collision_));
+    physics_ = loadComponentFromJson(j, "Physics", std::make_shared<Physics>(statefulEntity_, movableEntity_, animatedEntity_, actions_, collision_));
 
     ai_ = loadComponentFromJson(j, "AI", std::make_shared<AI>(actions_, trans_, animatedEntity_));
 

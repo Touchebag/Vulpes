@@ -35,9 +35,8 @@ void saveConstantToJson(nlohmann::json& j, std::string name, double constant, do
 
 } // namespace
 
-Physics::Physics(std::weak_ptr<StatefulEntity> statefulEntity, std::weak_ptr<RenderableEntity> renderableEntity, std::weak_ptr<MovableEntity> movableEntity, std::weak_ptr<AnimatedEntity> animatedEntity, std::weak_ptr<Actions> actions, std::weak_ptr<Collision> collision) :
+Physics::Physics(std::weak_ptr<StatefulEntity> statefulEntity, std::weak_ptr<MovableEntity> movableEntity, std::weak_ptr<AnimatedEntity> animatedEntity, std::weak_ptr<Actions> actions, std::weak_ptr<Collision> collision) :
                  statefulEntity_(statefulEntity),
-                 renderableEntity_(renderableEntity),
                  movableEntity_(movableEntity),
                  animatedEntity_(animatedEntity),
                  actions_(actions),
@@ -60,9 +59,9 @@ void Physics::update() {
         auto physics_props = stateEnt->getPhysicsProperties();
 
         FacingDirection facing_right;
-        if (auto rndr = renderableEntity_.lock()) {
-            facing_right.setDirection(rndr->facing_right_);
-        }
+
+        facing_right.setDirection(movable->facing_right_);
+
         facing_right.lockDirection(physics_props.direction_locked_);
 
         if (physics_props.touching_ground_ || physics_props.touching_wall_) {
@@ -178,9 +177,7 @@ void Physics::update() {
 
         movable->move(max_movement.first, max_movement.second);
 
-        if (auto render = renderableEntity_.lock()) {
-            render->facing_right_ = facing_right;
-        }
+        movable->facing_right_ = facing_right;
     }
 }
 
