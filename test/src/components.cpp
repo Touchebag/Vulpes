@@ -19,7 +19,9 @@ nlohmann::json entity_json = nlohmann::json::parse(R"--(
         "type": "player_hurtbox",
         "height": 200,
         "width": 50,
-        "damage": 2
+        "damage": 2,
+        "knockback_x": 15,
+        "knockback_y": -5
     },
     "Damageable": {
         "health": 100
@@ -69,7 +71,7 @@ TEST(TestComponents, TestLoadSaveAllComponents) {
 
     nlohmann::json j1 = e1.value();
 
-    EXPECT_TRUE(entity_json == j1);
+    EXPECT_TRUE(entity_json == j1) << entity_json.dump() << std::endl << j1.dump() << std::endl;
 
     entity->reloadFromJson(j1);
 
@@ -78,5 +80,5 @@ TEST(TestComponents, TestLoadSaveAllComponents) {
 
     nlohmann::json j2 = e2.value();
 
-    EXPECT_TRUE(j1 == j2);
+    EXPECT_TRUE(j1 == j2) << j1.dump() << std::endl << j2.dump() << std::endl;
 }

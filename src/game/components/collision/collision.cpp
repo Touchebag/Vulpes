@@ -78,11 +78,14 @@ void Collision::reloadFromJson(nlohmann::json j) {
     int hitbox_height = j["height"];
 
     if (j.contains("damage")) {
-        damage_ = j["damage"];
-        if (damage_ < 0) {
-            LOGW("Damage must be positive but is %i, setting to 0", damage_);
-            damage_ = 0;
-        }
+        attack_attributes_.damage = j["damage"];
+    }
+
+    if (j.contains("knockback_x")) {
+        attack_attributes_.knockback_x = j["knockback_x"];
+    }
+    if (j.contains("knockback_y")) {
+        attack_attributes_.knockback_y = j["knockback_y"];
     }
 
     hbox_ = std::make_shared<Hitbox>(hitbox_width, hitbox_height);
@@ -94,8 +97,15 @@ std::optional<nlohmann::json> Collision::outputToJson() {
     j["width"] = getHitbox()->width_;
     j["height"] = getHitbox()->height_;
 
-    if (damage_ > 0) {
-        j["damage"] = damage_;
+    if (attack_attributes_.damage > 0) {
+        j["damage"] = attack_attributes_.damage;
+    }
+
+    if (attack_attributes_.knockback_x != 0) {
+        j["knockback_x"] = attack_attributes_.knockback_x;
+    }
+    if (attack_attributes_.knockback_y != 0) {
+        j["knockback_y"] = attack_attributes_.knockback_y;
     }
 
     for (auto it : string_type_map) {
@@ -178,6 +188,10 @@ Collision::CollisionType Collision::getType() const {
     return type_;
 }
 
-int Collision::getDamage() const {
-    return damage_;
+const collision::AttackAttributes Collision::getAttributes() const {
+    return attack_attributes_;
+}
+
+std::weak_ptr<const Transform> Collision::getTransform() const {
+    return trans_;
 }

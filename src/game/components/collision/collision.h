@@ -3,9 +3,9 @@
 #include <memory>
 
 #include "components/component.h"
-
 #include "components/transform.h"
 #include "hitbox.h"
+#include "attack_attributes.h"
 
 class Collision : public Component {
   public:
@@ -30,7 +30,9 @@ class Collision : public Component {
     void setHitbox(int width, int height);
     const std::shared_ptr<Hitbox>& getHitbox() const;
 
-    int getDamage() const;
+    std::weak_ptr<const Transform> getTransform() const;
+
+    const collision::AttackAttributes getAttributes() const;
 
     std::pair<double, double> getMaximumMovement(double stepX, double stepY, std::shared_ptr<const Collision> other_coll);
 
@@ -44,7 +46,7 @@ class Collision : public Component {
 
     std::shared_ptr<Hitbox> hbox_;
 
-    int damage_ = 0;
+    collision::AttackAttributes attack_attributes_;
 
     CollisionType type_ = CollisionType::STATIC;
 };

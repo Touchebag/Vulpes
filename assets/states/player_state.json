@@ -13,7 +13,8 @@
             {"event": "jumping", "state": "jumping"},
             {"event": "falling", "state": "falling"},
             {"event": "dashing", "state": "dashing"},
-            {"event": "attacking", "state": "attack"}
+            {"event": "attacking", "state": "attack"},
+            {"event": "damaged", "state": "taking_damage"}
         ],
         "frame_names": [
             "Idle0",
@@ -55,7 +56,8 @@
             {"event": "jumping", "state": "jumping"},
             {"event": "falling", "state": "falling"},
             {"event": "dashing", "state": "dashing"},
-            {"event": "attacking", "state": "attack"}
+            {"event": "attacking", "state": "attack"},
+            {"event": "damaged", "state": "taking_damage"}
         ],
         "frame_names": [
             "Running0",
@@ -117,7 +119,8 @@
             {"event": "touching_floor", "state": "idle"},
             {"event": "touching_wall", "state": "wall_slide_rising"},
             {"event": "falling", "state": "falling"},
-            {"event": "dashing", "state": "dashing"}
+            {"event": "dashing", "state": "dashing"},
+            {"event": "damaged", "state": "taking_damage"}
         ],
         "frame_names": [
             "Jumping"
@@ -131,7 +134,8 @@
         "next_states": [
             {"event": "touching_floor", "state": "idle"},
             {"event": "touching_wall", "state": "wall_slide"},
-            {"event": "dashing", "state": "dashing"}
+            {"event": "dashing", "state": "dashing"},
+            {"event": "damaged", "state": "taking_damage"}
         ],
         "frame_names": [
             "Falling"
@@ -149,7 +153,8 @@
             {"event": "touching_floor", "state": "idle"},
             {"event": "jumping", "state": "wall_jump"},
             {"event": "falling", "state": "wall_slide"},
-            {"event": "airborne", "state": "wall_jump_grace_period"}
+            {"event": "airborne", "state": "wall_jump_grace_period"},
+            {"event": "damaged", "state": "taking_damage"}
         ],
         "frame_names": [
             "Jumping"
@@ -166,7 +171,8 @@
         "next_states": [
             {"event": "touching_floor", "state": "idle"},
             {"event": "jumping", "state": "wall_jump"},
-            {"event": "airborne", "state": "wall_jump_grace_period"}
+            {"event": "airborne", "state": "wall_jump_grace_period"},
+            {"event": "damaged", "state": "taking_damage"}
         ],
         "frame_names": [
             "Wall_slide"
@@ -183,7 +189,8 @@
             {"event": "touching_wall", "state": "wall_slide"},
             {"event": "jumping", "state": "wall_jump"},
             {"event": "dashing", "state": "dashing"},
-            {"event": "frame_timeout", "state": "falling"}
+            {"event": "frame_timeout", "state": "falling"},
+            {"event": "damaged", "state": "taking_damage"}
         ],
         "frame_names": [
             "Falling"
@@ -198,7 +205,8 @@
         "next_states": [
             {"event": "touching_wall", "state": "wall_slide"},
             {"event": "dashing", "state": "dashing"},
-            {"event": "frame_timeout", "state": "jumping"}
+            {"event": "frame_timeout", "state": "jumping"},
+            {"event": "damaged", "state": "taking_damage"}
         ],
         "frame_names": [
             "Jumping"
@@ -216,7 +224,8 @@
         "next_states": [
             {"event": "touching_wall", "state": "wall_slide"},
             {"event": "jumping", "state": "jumping"},
-            {"event": "frame_timeout", "state": "falling"}
+            {"event": "frame_timeout", "state": "falling"},
+            {"event": "damaged", "state": "taking_damage"}
         ],
         "frame_names": [
             "Dashing"
@@ -277,7 +286,8 @@
         },
         "next_states": [
             {"event": "jumping", "state": "jumping"},
-            {"event": "frame_timeout", "state": "attack_end_lag"}
+            {"event": "frame_timeout", "state": "attack_end_lag"},
+            {"event": "damaged", "state": "taking_damage"}
         ],
         "frame_names": [
             "Idle0"
@@ -292,10 +302,25 @@
         "frame_timer": 30,
         "next_states": [
             {"event": "jumping", "state": "jumping"},
-            {"event": "frame_timeout", "state": "idle"}
+            {"event": "frame_timeout", "state": "idle"},
+            {"event": "damaged", "state": "taking_damage"}
         ],
         "frame_names": [
             "Idle0"
+        ]
+    },
+    "taking_damage": {
+        "properties": {
+            "movement_locked_x": true,
+            "can_dash": false,
+            "can_jump": false
+        },
+        "frame_timer": 15,
+        "next_states": [
+            {"event": "frame_timeout", "state": "idle"}
+        ],
+        "frame_names": [
+            "Falling"
         ]
     }
 }
