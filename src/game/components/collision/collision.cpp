@@ -2,6 +2,11 @@
 
 #include "utils/log.h"
 
+#include "collision_static.h"
+#include "collision_player_hurtbox.h"
+#include "collision_player_hitbox.h"
+#include "collision_enemy_hitbox.h"
+
 namespace {
 
 int getAbsRight(std::shared_ptr<const Transform> trans, std::shared_ptr<const Hitbox> hbox) {
@@ -62,11 +67,12 @@ const std::shared_ptr<Hitbox>& Collision::getHitbox() const {
     return hbox_;
 }
 
-void Collision::reloadFromJson(nlohmann::json j) {
+std::shared_ptr<Collision> Collision::createFromJson(nlohmann::json j, std::weak_ptr<Transform> trans) {
+    CollisionType type;
     if (j.contains("type")) {
         auto type_entry = string_type_map.find(j["type"].get<std::string>());
         if (type_entry != string_type_map.end()) {
-            type_ = type_entry->second;
+            type = type_entry->second;
         } else {
             throw std::invalid_argument("Collision: invalid type" + j["type"].get<std::string>());
         }
@@ -74,19 +80,45 @@ void Collision::reloadFromJson(nlohmann::json j) {
         throw std::invalid_argument("Collision: missing type");
     }
 
+    switch (type) {
+        case CollisionType::STATIC:
+            {
+                auto coll = std::make_shared<CollisionStatic>(trans);
+                coll->reloadFromJson(j);
+                return coll;
+            }
+        case CollisionType::PLAYER_HURTBOX:
+            {
+                auto coll = std::make_shared<CollisionPlayerHurtbox>(trans);
+                coll->reloadFromJson(j);
+                return coll;
+            }
+        case CollisionType::PLAYER_HITBOX:
+            {
+                auto coll = std::make_shared<CollisionPlayerHitbox>(trans);
+                coll->reloadFromJson(j);
+                return coll;
+            }
+            break;
+        case CollisionType::ENEMY_HITBOX:
+            {
+                auto coll = std::make_shared<CollisionEnemyHitbox>(trans);
+                coll->reloadFromJson(j);
+                return coll;
+            }
+            break;
+            break;
+        default:
+            LOGW("Collision: This should never happen");
+            break;
+    }
+
+    return {};
+}
+
+void Collision::reloadFromJson(nlohmann::json j) {
     int hitbox_width = j["width"];
     int hitbox_height = j["height"];
-
-    if (j.contains("damage")) {
-        attack_attributes_.damage = j["damage"];
-    }
-
-    if (j.contains("knockback_x")) {
-        attack_attributes_.knockback_x = j["knockback_x"];
-    }
-    if (j.contains("knockback_y")) {
-        attack_attributes_.knockback_y = j["knockback_y"];
-    }
 
     hbox_ = std::make_shared<Hitbox>(hitbox_width, hitbox_height);
 }
@@ -97,19 +129,8 @@ std::optional<nlohmann::json> Collision::outputToJson() {
     j["width"] = getHitbox()->width_;
     j["height"] = getHitbox()->height_;
 
-    if (attack_attributes_.damage > 0) {
-        j["damage"] = attack_attributes_.damage;
-    }
-
-    if (attack_attributes_.knockback_x != 0) {
-        j["knockback_x"] = attack_attributes_.knockback_x;
-    }
-    if (attack_attributes_.knockback_y != 0) {
-        j["knockback_y"] = attack_attributes_.knockback_y;
-    }
-
     for (auto it : string_type_map) {
-        if (it.second == type_) {
+        if (it.second == getType()) {
             j["type"] = it.first;
             return j;
         }
@@ -184,12 +205,9 @@ std::pair<double, double> Collision::getMaximumMovement(double stepX, double ste
     return {retX, retY};
 }
 
-Collision::CollisionType Collision::getType() const {
-    return type_;
-}
-
 const collision::AttackAttributes Collision::getAttributes() const {
-    return attack_attributes_;
+    LOGW("Getting attack attributes on invalid object");
+    return {};
 }
 
 std::weak_ptr<const Transform> Collision::getTransform() const {

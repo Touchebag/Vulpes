@@ -80,4 +80,3 @@ TEST_F(DynamicCollisionTestFixture, MoveMultipleDirectionCollisionInOne) {
     EXPECT_EQ(150, pos_x);
     EXPECT_EQ(120, pos_y);
 }
-

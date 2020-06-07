@@ -7,6 +7,7 @@
 #include "mouse.h"
 #include "menu.h"
 #include "components/rendering/rendering_text.h"
+#include "components/collision/collision_static.h"
 
 #include "operation.h"
 
@@ -189,7 +190,7 @@ int level_editor_main(sf::RenderWindow& window, std::string level_file_path) {
                             std::shared_ptr<Transform> tmp_trans = std::make_shared<Transform>();
                             tmp_trans->setPosition(static_cast<int>(mouse_world_pos.first), static_cast<int>(mouse_world_pos.second));
 
-                            std::shared_ptr<Collision> tmp_coll = std::make_shared<Collision>(tmp_trans);
+                            std::shared_ptr<CollisionStatic> tmp_coll = std::make_shared<CollisionStatic>(tmp_trans);
                             tmp_coll->setHitbox(50, 50);
 
                             auto player = World::getInstance<World::IWorldRead>().getPlayer().lock();
@@ -198,11 +199,11 @@ int level_editor_main(sf::RenderWindow& window, std::string level_file_path) {
                                 command.current_entity_ = current_entity;
                             } else {
                                 for (auto it : World::getInstance<World::IWorldModify>().getWorldObjects(current_layer)) {
-                                    std::shared_ptr<Collision> other_coll = nullptr;
+                                    std::shared_ptr<Collision> other_coll;
                                     if (it->collision_) {
-                                        other_coll = it->collision_;
+                                        other_coll = std::static_pointer_cast<Collision>(it->collision_);
                                     } else if (it->trans_) {
-                                        other_coll = std::make_shared<Collision>(it->trans_);
+                                        other_coll = std::make_shared<CollisionStatic>(it->trans_);
                                         other_coll->setHitbox(50, 50);
                                     }
 

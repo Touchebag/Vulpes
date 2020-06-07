@@ -47,7 +47,11 @@ void BaseEntity::reloadFromJson(nlohmann::json j) {
 
     trans_ = loadComponentFromJson(j, "Transform", std::make_shared<Transform>());
 
-    collision_ = loadComponentFromJson<Collision>(j, "Collision", std::make_shared<Collision>(trans_));
+    if (j.contains("Collision")) {
+        collision_ = Collision::createFromJson(j["Collision"], trans_);
+    } else {
+        collision_.reset();
+    }
 
     movableEntity_ = loadComponentFromJson(j, "Movable", std::make_shared<MovableEntity>(trans_, collision_));
 

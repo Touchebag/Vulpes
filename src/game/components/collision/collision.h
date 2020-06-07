@@ -20,33 +20,36 @@ class Collision : public Component {
 
     Collision(std::weak_ptr<Transform> trans);
 
+    // Component interface
     void update() override;
 
     void reloadFromJson(nlohmann::json j) override;
-    std::optional<nlohmann::json> outputToJson() override;
+    virtual std::optional<nlohmann::json> outputToJson() override;
 
+    // Load derived classes from json
+    static std::shared_ptr<Collision> createFromJson(nlohmann::json j, std::weak_ptr<Transform> trans);
+
+    // Collision interface
     bool collides(std::weak_ptr<const Collision> other_entity);
 
+    std::pair<double, double> getMaximumMovement(double stepX, double stepY, std::shared_ptr<const Collision> other_coll);
+
+    // Getters/setters
     void setHitbox(int width, int height);
     const std::shared_ptr<Hitbox>& getHitbox() const;
 
     std::weak_ptr<const Transform> getTransform() const;
 
-    const collision::AttackAttributes getAttributes() const;
+    virtual const collision::AttackAttributes getAttributes() const;
 
-    std::pair<double, double> getMaximumMovement(double stepX, double stepY, std::shared_ptr<const Collision> other_coll);
+    virtual CollisionType getType() const = 0;
 
-    CollisionType getType() const;
-
-  private:
-    std::pair<double, double> getMaximumMovement(double stepX, double stepY,
-            std::shared_ptr<Transform> other_trans, std::shared_ptr<Hitbox> other_hbox);
-
+  protected:
     std::weak_ptr<Transform> trans_;
 
     std::shared_ptr<Hitbox> hbox_;
 
-    collision::AttackAttributes attack_attributes_;
-
-    CollisionType type_ = CollisionType::STATIC;
+  private:
+    std::pair<double, double> getMaximumMovement(double stepX, double stepY,
+            std::shared_ptr<Transform> other_trans, std::shared_ptr<Hitbox> other_hbox);
 };

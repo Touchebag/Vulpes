@@ -271,7 +271,9 @@
                 "type": "player_hitbox",
                 "width": 100,
                 "height": 200,
-                "damage": 4
+                "attack": {
+                    "damage": 4
+                }
             },
             "Death": null,
             "Movable": null,

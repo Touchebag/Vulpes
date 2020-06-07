@@ -3,6 +3,8 @@
 #include "level_editor/command.h"
 #include "mocks/mock_mouse.h"
 
+#include "components/collision/collision_static.h"
+
 class CommandTestFixture : public ::testing::Test {
   public:
     CommandTestFixture() {
@@ -137,7 +139,7 @@ TEST_F(CommandTestFixture, ResizeObjectl) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
     command_.add(entity);
     entity->trans_->setPosition(0, 0);
-    entity->collision_ = std::make_shared<Collision>(entity->trans_);
+    entity->collision_ = std::make_shared<CollisionStatic>(entity->trans_);
 
     mouse_->saveMousePosition();
 
@@ -202,7 +204,7 @@ TEST_F(CommandTestFixture, ToggleCollision) {
     assertWorldEmpty();
 
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    entity->collision_ = std::make_shared<Collision>(entity->trans_);
+    entity->collision_ = std::make_shared<CollisionStatic>(entity->trans_);
     command_.add(entity);
 
     assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);

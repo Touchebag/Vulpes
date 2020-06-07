@@ -41,7 +41,9 @@ class DeathTestFixture : public ::testing::Test {
         "type": "player_hitbox",
         "height": 50,
         "width": 50,
-        "damage": 3
+        "attack": {
+            "damage": 3
+        }
     },
     "Transform": {
         "pos_x": 0,

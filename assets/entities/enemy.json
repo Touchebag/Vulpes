@@ -28,9 +28,11 @@
         "type": "enemy_hitbox",
         "height": 50,
         "width": 50,
-        "damage": 10,
-        "knockback_x": 100,
-        "knockback_y": -30
+        "attack": {
+            "damage": 10,
+            "knockback_x": 100,
+            "knockback_y": -30
+        }
     },
     "Damageable": {
         "health": 1

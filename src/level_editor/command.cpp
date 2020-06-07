@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "operation.h"
+#include "components/collision/collision_static.h"
 #include "utils/log.h"
 
 Command::Command(std::shared_ptr<History> history,
@@ -76,7 +77,7 @@ void Command::add() {
 
 void Command::add(std::shared_ptr<BaseEntity> entity) {
     std::shared_ptr<Transform> trans = std::make_shared<Transform>();
-    std::shared_ptr<Collision> coll = std::make_shared<Collision>(trans);
+    std::shared_ptr<CollisionStatic> coll = std::make_shared<CollisionStatic>(trans);
     std::shared_ptr<RenderableEntity> render = std::make_shared<RenderableEntity>(trans, std::weak_ptr<MovableEntity>());
 
     coll->setHitbox(50, 50);
@@ -196,7 +197,7 @@ void Command::handleCommand(Commands command) {
                 if (current_entity_->collision_) {
                     current_entity_->collision_ = {};
                 } else {
-                    auto collision = std::make_shared<Collision>(current_entity_->trans_);
+                    auto collision = std::make_shared<CollisionStatic>(current_entity_->trans_);
                     current_entity_->collision_ = collision;
                 }
                 World::getInstance<World::IWorldModify>().addEntity(current_entity_, World::Layer::MAIN);
