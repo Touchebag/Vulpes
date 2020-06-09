@@ -11,36 +11,13 @@ void CollisionEnemyHitbox::reloadFromJson(nlohmann::json j) {
         return;
     }
 
-    auto attack = j["attack"];
-
-    if (attack.contains("damage")) {
-        attack_attributes_.damage = attack["damage"];
-    }
-
-    if (attack.contains("knockback_x")) {
-        attack_attributes_.knockback_x = attack["knockback_x"];
-    }
-    if (attack.contains("knockback_y")) {
-        attack_attributes_.knockback_y = attack["knockback_y"];
-    }
+    attack_attributes_ = collision::parseAttackAttributes(j["attack"]);
 }
 
 std::optional<nlohmann::json> CollisionEnemyHitbox::outputToJson() {
     nlohmann::json j = Collision::outputToJson().value();
-    nlohmann::json attack;
 
-    if (attack_attributes_.damage > 0) {
-        attack["damage"] = attack_attributes_.damage;
-    }
-
-    if (attack_attributes_.knockback_x != 0) {
-        attack["knockback_x"] = attack_attributes_.knockback_x;
-    }
-    if (attack_attributes_.knockback_y != 0) {
-        attack["knockback_y"] = attack_attributes_.knockback_y;
-    }
-
-    j["attack"] = attack;
+    j["attack"] = collision::dumpAttackAttributes(attack_attributes_);
 
     return j;
 }
