@@ -55,7 +55,7 @@ void World::update() {
         (*it)->update();
 
         if ((*it)->death_ && (*it)->death_->isDead()) {
-            it = world_objects_[static_cast<int>(Layer::MAIN)].erase(it);
+            it = deleteEntity(it, Layer::MAIN);
         } else {
             ++it;
         }
@@ -187,7 +187,24 @@ void World::addEntity(std::shared_ptr<BaseEntity> entity, World::Layer layer) {
 
 void World::removeEntity(std::shared_ptr<BaseEntity> entity, World::Layer layer) {
     auto& layer_list = world_objects_[static_cast<int>(layer)];
-    layer_list.erase(std::remove(layer_list.begin(), layer_list.end(), entity), layer_list.end());
+    std::vector<std::shared_ptr<BaseEntity>>::iterator it = std::find(layer_list.begin(), layer_list.end(), entity);
+    deleteEntity(it, layer);
+}
+
+std::vector<std::shared_ptr<BaseEntity>>::iterator World::deleteEntity(std::vector<std::shared_ptr<BaseEntity>>::iterator entity_it, Layer layer) {
+    auto ret_it = world_objects_[static_cast<int>(layer)].erase(entity_it);
+
+    for (auto& layer : collisions_) {
+        for (auto it = layer.begin(); it != layer.end();) {
+            if (it->expired()) {
+                it = layer.erase(it);
+            } else {
+                it++;
+            }
+        }
+    }
+
+    return ret_it;
 }
 
 std::weak_ptr<Player> World::getPlayer() {

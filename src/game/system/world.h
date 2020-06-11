@@ -92,6 +92,8 @@ class World {
     void loadWorldFromJson(nlohmann::json j);
     void loadWorldFromFile(std::string file);
 
+    std::vector<std::shared_ptr<BaseEntity>>::iterator deleteEntity(std::vector<std::shared_ptr<BaseEntity>>::iterator it, Layer lyaer);
+
     util::Point getPlayerPosition();
 
     std::vector<std::shared_ptr<BaseEntity>>& getWorldObjects(Layer layer = Layer::MAIN);
