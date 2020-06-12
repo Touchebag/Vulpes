@@ -33,7 +33,7 @@ class DynamicCollisionTestFixture : public ::testing::Test {
 };
 
 TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionNoCollision) {
-    World::getInstance<World::IWorldModify>().addEntity(entity_, World::Layer::MAIN);
+    World::getInstance<World::IWorldModify>().addEntity(entity_);
 
     auto max_mvmnt = entity_->movableEntity_->getMaximumMovement(10, 0);
 
@@ -46,7 +46,7 @@ TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionNoCollision) {
 }
 
 TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionCollision) {
-    World::getInstance<World::IWorldModify>().addEntity(entity_, World::Layer::MAIN);
+    World::getInstance<World::IWorldModify>().addEntity(entity_);
 
     auto max_mvmnt = entity_->movableEntity_->getMaximumMovement(60, 0);
     entity_->movableEntity_->move(max_mvmnt.first, max_mvmnt.second);
@@ -58,7 +58,7 @@ TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionCollision) {
 }
 
 TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionNegativeCollision) {
-    World::getInstance<World::IWorldModify>().addEntity(entity_, World::Layer::MAIN);
+    World::getInstance<World::IWorldModify>().addEntity(entity_);
 
     auto max_mvmnt = entity_->movableEntity_->getMaximumMovement(0, -70);
     entity_->movableEntity_->move(max_mvmnt.first, max_mvmnt.second);
@@ -70,7 +70,7 @@ TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionNegativeCollision) {
 }
 
 TEST_F(DynamicCollisionTestFixture, MoveMultipleDirectionCollisionInOne) {
-    World::getInstance<World::IWorldModify>().addEntity(entity_, World::Layer::MAIN);
+    World::getInstance<World::IWorldModify>().addEntity(entity_);
 
     auto max_mvmnt = entity_->movableEntity_->getMaximumMovement(80, 20);
     entity_->movableEntity_->move(max_mvmnt.first, max_mvmnt.second);

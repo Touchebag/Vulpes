@@ -10,8 +10,8 @@ class DeathTestFixture : public ::testing::Test {
         entity_ = BaseEntity::createFromJson(nlohmann::json::parse(entity_json_));
         attack_ = BaseEntity::createFromJson(nlohmann::json::parse(attack_json_));
 
-        World::getInstance<World::IWorldModify>().addEntity(entity_, World::Layer::MAIN);
-        World::getInstance<World::IWorldModify>().addEntity(attack_, World::Layer::MAIN);
+        World::getInstance<World::IWorldModify>().addEntity(entity_);
+        World::getInstance<World::IWorldModify>().addEntity(attack_);
     }
 
     void SetUp() override {

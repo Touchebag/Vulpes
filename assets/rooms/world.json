@@ -1,12 +1,5 @@
 {
-    "background": null,
-    "bg1": null,
-    "bg2": null,
-    "bg3": null,
-    "fg1": null,
-    "fg2": null,
-    "fg3": null,
-    "main": [
+    "entities": [
         {
             "Collision": {
                 "type": "static",
@@ -18,7 +11,8 @@
                 "width": 245,
                 "texture": "Forest/Tree.png",
                 "tile_x": true,
-                "tile_y": true
+                "tile_y": true,
+                "layer": "main"
             },
             "Transform": {
                 "pos_x": 2637,
@@ -36,7 +30,8 @@
                 "width": 204,
                 "texture": "Forest/Tree.png",
                 "tile_x": true,
-                "tile_y": true
+                "tile_y": true,
+                "layer": "main"
             },
             "Transform": {
                 "pos_x": -1938,
@@ -61,7 +56,8 @@
                 "width": 1088,
                 "texture": "Forest/Grass.png",
                 "tile_x": true,
-                "tile_y": true
+                "tile_y": true,
+                "layer": "main"
             },
             "Transform": {
                 "pos_x": -265,
@@ -79,7 +75,8 @@
                 "width": 70,
                 "texture": "Forest/Tree.png",
                 "tile_x": true,
-                "tile_y": true
+                "tile_y": true,
+                "layer": "main"
             },
             "Transform": {
                 "pos_x": 680,
@@ -97,7 +94,8 @@
                 "width": 89,
                 "texture": "Forest/Dirt.png",
                 "tile_x": true,
-                "tile_y": true
+                "tile_y": true,
+                "layer": "main"
             },
             "Transform": {
                 "pos_x": 1793,
@@ -115,7 +113,8 @@
                 "width": 1015,
                 "texture": "Forest/Dirt.png",
                 "tile_x": true,
-                "tile_y": true
+                "tile_y": true,
+                "layer": "main"
             },
             "Transform": {
                 "pos_x": 1297,
@@ -133,7 +132,8 @@
                 "width": 1606,
                 "texture": "Forest/Dirt.png",
                 "tile_x": true,
-                "tile_y": true
+                "tile_y": true,
+                "layer": "main"
             },
             "Transform": {
                 "pos_x": -1108,
@@ -151,7 +151,8 @@
                 "width": 101,
                 "texture": "Forest/Dirt.png",
                 "tile_x": true,
-                "tile_y": true
+                "tile_y": true,
+                "layer": "main"
             },
             "Transform": {
                 "pos_x": 820,
@@ -169,7 +170,8 @@
                 "width": 996,
                 "texture": "Forest/Dirt.png",
                 "tile_x": true,
-                "tile_y": true
+                "tile_y": true,
+                "layer": "main"
             },
             "Transform": {
                 "pos_x": 1283,
@@ -187,7 +189,8 @@
                 "width": 996,
                 "texture": "Forest/Dirt.png",
                 "tile_x": true,
-                "tile_y": true
+                "tile_y": true,
+                "layer": "main"
             },
             "Transform": {
                 "pos_x": 1277,
@@ -205,7 +208,8 @@
                 "width": 101,
                 "texture": "Forest/Dirt.png",
                 "tile_x": true,
-                "tile_y": true
+                "tile_y": true,
+                "layer": "main"
             },
             "Transform": {
                 "pos_x": -355,
@@ -223,7 +227,8 @@
                 "width": 112,
                 "texture": "Forest/Tree.png",
                 "tile_x": true,
-                "tile_y": true
+                "tile_y": true,
+                "layer": "main"
             },
             "Transform": {
                 "pos_x": 116,
@@ -241,7 +246,8 @@
                 "width": 4920,
                 "texture": "Forest/Canopy.png",
                 "tile_x": true,
-                "tile_y": true
+                "tile_y": true,
+                "layer": "main"
             },
             "Transform": {
                 "pos_x": 354,
@@ -259,7 +265,8 @@
                 "width": 4882,
                 "texture": "Forest/Grass.png",
                 "tile_x": true,
-                "tile_y": true
+                "tile_y": true,
+                "layer": "main"
             },
             "Transform": {
                 "pos_x": 353,
@@ -277,22 +284,21 @@
                 "width": 941,
                 "texture": "Forest/Dirt.png",
                 "tile_x": true,
-                "tile_y": true
+                "tile_y": true,
+                "layer": "main"
             },
             "Transform": {
                 "pos_x": -1368,
                 "pos_y": 2776
             }
-        }
-    ],
-    "main_bg": null,
-    "main_fg": [
+        },
         {
             "Renderable": {
                 "height": 235,
                 "texture": "Forest/Bush.png",
                 "tile_x": false,
-                "tile_y": false
+                "tile_y": false,
+                "layer": "main_fg"
             },
             "Transform": {
                 "pos_x": -185,
@@ -304,7 +310,8 @@
                 "height": 235,
                 "texture": "Forest/Bush.png",
                 "tile_x": false,
-                "tile_y": false
+                "tile_y": false,
+                "layer": "main_fg"
             },
             "Transform": {
                 "pos_x": 937,
@@ -316,7 +323,8 @@
                 "height": 235,
                 "texture": "Forest/Bush.png",
                 "tile_x": false,
-                "tile_y": false
+                "tile_y": false,
+                "layer": "main_fg"
             },
             "Transform": {
                 "pos_x": 1832,
@@ -328,7 +336,8 @@
                 "height": 235,
                 "texture": "Forest/Bush.png",
                 "tile_x": false,
-                "tile_y": false
+                "tile_y": false,
+                "layer": "main_fg"
             },
             "Transform": {
                 "pos_x": -33,

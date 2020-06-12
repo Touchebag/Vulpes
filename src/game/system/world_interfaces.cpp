@@ -13,12 +13,12 @@ std::weak_ptr<Player> World::IWorldRead::getPlayer() {
 }
 
 
-void World::IWorldModify::addEntity(std::shared_ptr<BaseEntity> entity, World::Layer layer) {
-    World::getWorldInstance().addEntity(entity, layer);
+void World::IWorldModify::addEntity(std::shared_ptr<BaseEntity> entity) {
+    World::getWorldInstance().addEntity(entity);
 }
 
-void World::IWorldModify::removeEntity(std::shared_ptr<BaseEntity> entity, World::Layer layer) {
-    World::getWorldInstance().removeEntity(entity, layer);
+void World::IWorldModify::removeEntity(std::shared_ptr<BaseEntity> entity) {
+    World::getWorldInstance().removeEntity(entity);
 }
 
 void World::IWorldModify::loadWorldFromJson(nlohmann::json j) {
@@ -45,7 +45,7 @@ void World::IWorldModify::clearWorld() {
     World::getWorldInstance().clearWorld();
 }
 
-std::vector<std::shared_ptr<BaseEntity>>& World::IWorldModify::getWorldObjects(World::Layer layer) {
-    return World::getWorldInstance().getWorldObjects(layer);
+std::vector<std::shared_ptr<BaseEntity>>& World::IWorldModify::getWorldObjects() {
+    return World::getWorldInstance().getWorldObjects();
 }
 

@@ -34,7 +34,7 @@ class Command {
             std::shared_ptr<Operation> current_operation,
             std::shared_ptr<Mouse> mouse);
 
-    void setLayer(World::Layer layer);
+    void setLayer(RenderableEntity::Layer layer);
 
     void update();
 
@@ -48,7 +48,7 @@ class Command {
 
     void closeTextInput();
 
-    World::Layer current_layer_ = World::Layer::MAIN;
+    RenderableEntity::Layer current_layer_ = RenderableEntity::Layer::MAIN;
 
     std::shared_ptr<BaseEntity> current_entity_;
     std::shared_ptr<TextInput> text_input_;

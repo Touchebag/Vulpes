@@ -11,7 +11,7 @@ Subentity::Subentity(std::weak_ptr<Transform> trans, std::weak_ptr<MovableEntity
 
 void Subentity::addEntity(std::shared_ptr<BaseEntity> entity) {
     // Add to world
-    World::IWorldModify::addEntity(entity, World::Layer::MAIN);
+    World::IWorldModify::addEntity(entity);
 
     // Store handle locally
     entity_ = entity;

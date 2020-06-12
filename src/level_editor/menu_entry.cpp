@@ -71,7 +71,8 @@ std::vector<std::shared_ptr<BaseEntity>> MenuEntry::draw() {
     auto title = createTextEntity(text_, {100, 100}, color_);
 
     menu_text_.push_back(title);
-    Render::getInstance().addEntity(title->renderableEntity_, World::Layer::HUD);
+    title->renderableEntity_->setLayer(RenderableEntity::Layer::HUD);
+    Render::getInstance().addEntity(title->renderableEntity_);
 
     int i = 0;
     for (auto& it : entries_) {
@@ -84,7 +85,8 @@ std::vector<std::shared_ptr<BaseEntity>> MenuEntry::draw() {
             auto text_element = createTextEntity(entry_text, position, it->getColor());
 
             menu_text_.push_back(text_element);
-            Render::getInstance().addEntity(text_element->renderableEntity_, World::Layer::HUD);
+            text_element->renderableEntity_->setLayer(RenderableEntity::Layer::HUD);
+            Render::getInstance().addEntity(text_element->renderableEntity_);
             ++i;
         }
     }

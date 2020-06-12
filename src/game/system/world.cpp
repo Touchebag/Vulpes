@@ -4,27 +4,6 @@
 #include "utils/file.h"
 #include "system/render.h"
 
-namespace {
-
-std::map<World::Layer, std::string> LayerStringMap = {
-    {World::Layer::BACKGROUND, "background"},
-    {World::Layer::BG_3, "bg3"},
-    {World::Layer::BG_2, "bg2"},
-    {World::Layer::BG_1, "bg1"},
-    {World::Layer::MAIN_BG, "main_bg"},
-    {World::Layer::MAIN, "main"},
-    {World::Layer::MAIN_FG, "main_fg"},
-    {World::Layer::FG_1, "fg1"},
-    {World::Layer::FG_2, "fg2"},
-    {World::Layer::FG_3, "fg3"},
-};
-
-}
-
-std::string World::getLayerString(Layer layer) {
-    return LayerStringMap[layer];
-}
-
 template <>
 World::IWorldRead World::getInstance<World::IWorldRead>() {
     return World::IWorldRead();
@@ -41,21 +20,21 @@ World& World::getWorldInstance() {
     return world;
 }
 
-std::vector<std::shared_ptr<BaseEntity>>& World::getWorldObjects(Layer layer) {
-    return world_objects_[static_cast<int>(layer)];
+std::vector<std::shared_ptr<BaseEntity>>& World::getWorldObjects() {
+    return world_objects_;
 }
 
 void World::update() {
     // TODO Check for death
     player_->update();
 
-    for (auto it = world_objects_[static_cast<int>(Layer::MAIN)].begin();
-              it != world_objects_[static_cast<int>(Layer::MAIN)].end();
+    for (auto it = world_objects_.begin();
+              it != world_objects_.end();
               ) {
         (*it)->update();
 
         if ((*it)->death_ && (*it)->death_->isDead()) {
-            it = deleteEntity(it, Layer::MAIN);
+            it = deleteEntity(it);
         } else {
             ++it;
         }
@@ -71,9 +50,7 @@ util::Point World::getPlayerPosition() {
 }
 
 void World::clearWorld() {
-    for (auto& it : world_objects_) {
-        it.clear();
-    }
+    world_objects_.clear();
 
     player_ = nullptr;
 }
@@ -90,24 +67,21 @@ void World::loadWorldFromFile(std::string path) {
 }
 
 void World::loadWorldFromJson(nlohmann::json j) {
-    if (!j.contains("main")) {
-        LOGE("Main not found, exiting");
+    if (!j.contains("entities")) {
+        LOGE("entities not found, exiting");
         exit(EXIT_FAILURE);
     }
 
     clearWorld();
 
-    for (int i = 0; i < static_cast<int>(Layer::MAX_LAYERS); ++i) {
-        Layer layer = static_cast<Layer>(i);
-        auto layer_string = getLayerString(layer);
-        if (j.contains(layer_string)) {
-            loadLayer(j[layer_string], layer);
-        }
+    for (auto it : j["entities"]) {
+        auto ent = BaseEntity::createFromJson(it);
+        addEntity(ent);
     }
 
     player_ = Player::createFromJson(j["player"]);
 
-    Render::getInstance().addEntity(player_->renderableEntity_, Layer::MAIN);
+    Render::getInstance().addEntity(player_->renderableEntity_);
 
     // Health HUD
     player_health_position_ = std::make_shared<Transform>();
@@ -115,31 +89,9 @@ void World::loadWorldFromJson(nlohmann::json j) {
 
     player_health_ = std::make_shared<RenderableText>(player_health_position_);
     player_health_->setColor(sf::Color::Green);
+    player_health_->setLayer(RenderableEntity::Layer::HUD);
 
-    Render::getInstance().addEntity(player_health_, Layer::HUD);
-}
-
-void World::loadLayer(nlohmann::json json, Layer layer) {
-    for (auto it : json) {
-        auto ent = BaseEntity::createFromJson(it);
-
-        addEntity(ent, layer);
-    }
-}
-
-nlohmann::json World::jsonifyLayer(Layer layer) {
-    nlohmann::json json_object_list;
-
-    auto layerList = world_objects_[static_cast<int>(layer)];
-
-    for (long unsigned int i = 0; i < layerList.size(); ++i) {
-        auto object = layerList.at(i)->outputToJson();
-        if (object) {
-            json_object_list.push_back(*object);
-        }
-    }
-
-    return json_object_list;
+    Render::getInstance().addEntity(player_health_);
 }
 
 void World::saveWorldToFile(std::string file) {
@@ -155,10 +107,18 @@ void World::saveWorldToFile(std::string file) {
 nlohmann::json World::saveWorldToJson() {
     nlohmann::json j;
 
-    for (int i = 0; i < static_cast<int>(Layer::MAX_LAYERS); ++i) {
-        auto layer_string = getLayerString(static_cast<Layer>(i));
-        j[layer_string] = jsonifyLayer(static_cast<Layer>(i));
+    nlohmann::json json_object_list;
+
+    for (auto it : world_objects_) {
+        if (auto object = it->outputToJson()) {
+            // Do not store if HUD object
+            if (!(it->renderableEntity_) || (it->renderableEntity_->getLayer() != RenderableEntity::Layer::HUD)) {
+                json_object_list.push_back(*object);
+            }
+        }
     }
+
+    j["entities"] = json_object_list;
 
     if (player_) {
         auto player_json = player_->outputToJson();
@@ -174,30 +134,31 @@ nlohmann::json World::saveWorldToJson() {
     return j;
 }
 
-void World::addEntity(std::shared_ptr<BaseEntity> entity, World::Layer layer) {
-    world_objects_[static_cast<int>(layer)].push_back(entity);
+void World::addEntity(std::shared_ptr<BaseEntity> entity) {
+    world_objects_.push_back(entity);
 
     auto coll = entity->collision_;
     if (coll) {
         collisions_[static_cast<int>(coll->getType())].push_back(coll);
     }
 
-    Render::getInstance().addEntity(entity->renderableEntity_, layer);
+    Render::getInstance().addEntity(entity->renderableEntity_);
 }
 
-void World::removeEntity(std::shared_ptr<BaseEntity> entity, World::Layer layer) {
-    auto& layer_list = world_objects_[static_cast<int>(layer)];
-    std::vector<std::shared_ptr<BaseEntity>>::iterator it = std::find(layer_list.begin(), layer_list.end(), entity);
-    deleteEntity(it, layer);
+void World::removeEntity(std::shared_ptr<BaseEntity> entity) {
+    std::vector<std::shared_ptr<BaseEntity>>::iterator it = std::find(world_objects_.begin(), world_objects_.end(), entity);
+    if (it != world_objects_.end()) {
+        deleteEntity(it);
+    }
 }
 
-std::vector<std::shared_ptr<BaseEntity>>::iterator World::deleteEntity(std::vector<std::shared_ptr<BaseEntity>>::iterator entity_it, Layer layer) {
-    auto ret_it = world_objects_[static_cast<int>(layer)].erase(entity_it);
+std::vector<std::shared_ptr<BaseEntity>>::iterator World::deleteEntity(std::vector<std::shared_ptr<BaseEntity>>::iterator entity_it) {
+    auto ret_it = world_objects_.erase(entity_it);
 
-    for (auto& layer : collisions_) {
-        for (auto it = layer.begin(); it != layer.end();) {
+    for (auto& coll_type : collisions_) {
+        for (auto it = coll_type.begin(); it != coll_type.end();) {
             if (it->expired()) {
-                it = layer.erase(it);
+                it = coll_type.erase(it);
             } else {
                 it++;
             }

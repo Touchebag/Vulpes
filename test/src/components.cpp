@@ -57,7 +57,8 @@ nlohmann::json entity_json = nlohmann::json::parse(R"--(
         "width": 50,
         "texture": "Player.png",
         "tile_x": true,
-        "tile_y": true
+        "tile_y": true,
+        "layer": "main"
     },
     "Stateful": {
         "states": "player_state.json"

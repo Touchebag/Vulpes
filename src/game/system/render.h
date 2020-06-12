@@ -1,7 +1,6 @@
 #pragma once
 
 #include "base_entity.h"
-#include "system/world.h"
 
 #include <SFML/Graphics.hpp>
 
@@ -9,7 +8,7 @@ class Render {
   public:
     void render(sf::RenderWindow& window);
 
-    void addEntity(std::weak_ptr<RenderableEntity> entity, World::Layer layer);
+    void addEntity(std::weak_ptr<RenderableEntity> entity);
 
     void moveView(float x, float y);
     void resizeView(float width, float height);
@@ -19,7 +18,7 @@ class Render {
     static Render& getInstance();
 
     // Needed for Level Editor
-    void renderLayer(sf::RenderWindow& window, World::Layer layer);
+    void renderLayer(sf::RenderWindow& window, RenderableEntity::Layer layer);
     bool parallax_enabled_ = true;
 
   private:
@@ -32,6 +31,6 @@ class Render {
 
     Render() = default;
 
-    std::array<std::vector<std::weak_ptr<RenderableEntity>>, static_cast<int>(World::Layer::MAX_LAYERS)> layers_;
+    std::array<std::vector<std::weak_ptr<RenderableEntity>>, static_cast<int>(RenderableEntity::Layer::MAX_LAYERS)> layers_;
     std::vector<std::weak_ptr<RenderableEntity>> hud_layer_;
 };

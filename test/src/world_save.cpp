@@ -21,7 +21,7 @@ TEST_F(WorldTestFixture, SaveLoadWorld) {
     nlohmann::json world_json_2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
     // _EQ does not work with nlohmann::json
-    ASSERT_TRUE(world_json == world_json_2);
+    ASSERT_TRUE(world_json == world_json_2) << world_json.dump() << std::endl << world_json_2.dump() << std::endl;
 }
 
 TEST_F(WorldTestFixture, SaveLoadWorldFailure) {
@@ -37,7 +37,8 @@ TEST_F(WorldTestFixture, SaveLoadWorldFailure) {
             },
             "Renderable": {
                 "scale": 1.0,
-                "texture": "box.png"
+                "texture": "box.png",
+                "layer": "main"
             },
             "Transform": {
                 "pos_x": 200,
@@ -47,12 +48,12 @@ TEST_F(WorldTestFixture, SaveLoadWorldFailure) {
 
     auto hud_object = BaseEntity::createFromJson(j);
 
-    World::getInstance<World::IWorldModify>().addEntity(hud_object, World::Layer::MAIN);
+    World::getInstance<World::IWorldModify>().addEntity(hud_object);
 
     nlohmann::json world_json_2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
     // _EQ does not work with nlohmann::json
-    ASSERT_FALSE(world_json == world_json_2);
+    ASSERT_FALSE(world_json == world_json_2) << world_json.dump() << std::endl << world_json_2.dump() << std::endl;
 }
 
 TEST_F(WorldTestFixture, EnsureHudNotSaved) {
@@ -68,7 +69,8 @@ TEST_F(WorldTestFixture, EnsureHudNotSaved) {
             },
             "Renderable": {
                 "scale": 1.0,
-                "texture": "box.png"
+                "texture": "box.png",
+                "layer": "hud"
             },
             "Transform": {
                 "pos_x": 200,
@@ -78,10 +80,10 @@ TEST_F(WorldTestFixture, EnsureHudNotSaved) {
 
     auto hud_object = BaseEntity::createFromJson(j);
 
-    World::getInstance<World::IWorldModify>().addEntity(hud_object, World::Layer::HUD);
+    World::getInstance<World::IWorldModify>().addEntity(hud_object);
 
     nlohmann::json world_json_2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
     // _EQ does not work with nlohmann::json
-    ASSERT_TRUE(world_json == world_json_2);
+    ASSERT_TRUE(world_json == world_json_2) << world_json.dump() << std::endl << world_json_2.dump() << std::endl;
 }

@@ -2,17 +2,17 @@
 
 namespace {
 
-std::map<World::Layer, float> parallax_map = {
-    {World::Layer::BACKGROUND, 0.0},
-    {World::Layer::BG_3, 0.85},
-    {World::Layer::BG_2, 0.9},
-    {World::Layer::BG_1, 0.95},
-    {World::Layer::MAIN_BG, 1.0},
-    {World::Layer::MAIN, 1.0},
-    {World::Layer::MAIN_FG, 1.0},
-    {World::Layer::FG_1, 1.05},
-    {World::Layer::FG_2, 1.1},
-    {World::Layer::FG_3, 1.15},
+std::map<RenderableEntity::Layer, float> parallax_map = {
+    {RenderableEntity::Layer::BACKGROUND, 0.0},
+    {RenderableEntity::Layer::BG_3, 0.85},
+    {RenderableEntity::Layer::BG_2, 0.9},
+    {RenderableEntity::Layer::BG_1, 0.95},
+    {RenderableEntity::Layer::MAIN_BG, 1.0},
+    {RenderableEntity::Layer::MAIN, 1.0},
+    {RenderableEntity::Layer::MAIN_FG, 1.0},
+    {RenderableEntity::Layer::FG_1, 1.05},
+    {RenderableEntity::Layer::FG_2, 1.1},
+    {RenderableEntity::Layer::FG_3, 1.15},
 };
 
 void renderAllEntitesInVector(std::vector<std::weak_ptr<RenderableEntity>>& layer, sf::RenderWindow& window) {
@@ -28,7 +28,7 @@ void renderAllEntitesInVector(std::vector<std::weak_ptr<RenderableEntity>>& laye
 
 } // namespace
 
-void Render::renderLayer(sf::RenderWindow& window, World::Layer layer) {
+void Render::renderLayer(sf::RenderWindow& window, RenderableEntity::Layer layer) {
     float parallax_mulitiplier = 1;
 
     if (parallax_enabled_) {
@@ -69,18 +69,22 @@ void Render::drawHud(sf::RenderWindow& window) {
 }
 
 void Render::render(sf::RenderWindow& window) {
-    for (int i = 0; i < static_cast<int>(World::Layer::MAX_LAYERS); ++i) {
-        renderLayer(window, static_cast<World::Layer>(i));
+    for (int i = 0; i < static_cast<int>(RenderableEntity::Layer::MAX_LAYERS); ++i) {
+        renderLayer(window, static_cast<RenderableEntity::Layer>(i));
     }
 
     drawHud(window);
 }
 
-void Render::addEntity(std::weak_ptr<RenderableEntity> entity, World::Layer layer) {
-    if (layer == World::Layer::HUD) {
-        hud_layer_.push_back(entity);
-    } else {
-        layers_[static_cast<int>(layer)].push_back(entity);
+void Render::addEntity(std::weak_ptr<RenderableEntity> entity) {
+    if (auto ent = entity.lock()) {
+        RenderableEntity::Layer layer = ent->getLayer();
+
+        if (layer == RenderableEntity::Layer::HUD) {
+            hud_layer_.push_back(entity);
+        } else {
+            layers_[static_cast<int>(layer)].push_back(entity);
+        }
     }
 }
 

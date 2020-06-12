@@ -10,8 +10,6 @@ class Operation {
 
     std::shared_ptr<BaseEntity> entity_;
 
-    World::Layer layer_ = World::Layer::MAIN;
-
     std::optional<nlohmann::json> before_ = std::nullopt;
     std::optional<nlohmann::json> after_ = std::nullopt;
 };

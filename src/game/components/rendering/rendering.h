@@ -9,6 +9,28 @@
 
 class RenderableEntity {
   public:
+    enum class Layer {
+        BACKGROUND,
+
+        // Counting outwards from MAIN
+        BG_3,
+        BG_2,
+        BG_1,
+
+        MAIN_BG,
+        MAIN,
+        MAIN_FG,
+
+        // Counting outwards from MAIN
+        FG_1,
+        FG_2,
+        FG_3,
+
+        // HUD is treated differently
+        HUD,
+        MAX_LAYERS = HUD
+    };
+
     RenderableEntity(std::weak_ptr<Transform> trans, std::weak_ptr<MovableEntity> movable);
     virtual ~RenderableEntity() = default;
 
@@ -26,6 +48,11 @@ class RenderableEntity {
 
     virtual void render(sf::RenderWindow& window);
 
+    Layer getLayer();
+    void setLayer(Layer layer);
+
+    static std::optional<std::string> getLayerString(Layer layer);
+
     bool tiling_x_ = true;
     bool tiling_y_ = true;
 
@@ -39,6 +66,8 @@ class RenderableEntity {
 
     int height_ = 0;
     int width_ = 0;
+
+    Layer layer_ = Layer::MAIN;
 
     // Needed for level editor
     std::string texture_name_;

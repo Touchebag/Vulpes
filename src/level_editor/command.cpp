@@ -81,6 +81,7 @@ void Command::add(std::shared_ptr<BaseEntity> entity) {
     std::shared_ptr<RenderableEntity> render = std::make_shared<RenderableEntity>(trans, std::weak_ptr<MovableEntity>());
 
     coll->setHitbox(50, 50);
+    render->setLayer(current_layer_);
 
     auto mouse_world_pos_ = mouse_->getMouseWorldPosition();
     trans->setPosition(static_cast<int>(mouse_world_pos_.first), static_cast<int>(mouse_world_pos_.second));
@@ -90,11 +91,10 @@ void Command::add(std::shared_ptr<BaseEntity> entity) {
     render->loadTexture("box.png");
     entity->renderableEntity_ = render;
 
-    World::getInstance<World::IWorldModify>().addEntity(entity, current_layer_);
+    World::getInstance<World::IWorldModify>().addEntity(entity);
 
     current_operation_ = std::make_shared<Operation>();
     current_operation_->entity_ = entity;
-    current_operation_->layer_ = current_layer_;
     current_operation_->after_ = entity->outputToJson();
 
     history_->addOperation(current_operation_);
@@ -107,7 +107,6 @@ void Command::remove(std::shared_ptr<BaseEntity> entity) {
 
     current_operation_ = std::make_shared<Operation>();
     current_operation_->entity_ = entity;
-    current_operation_->layer_ = current_layer_;
     current_operation_->before_ = entity->outputToJson();
 
     // Ensure weak_ptr in render expires
@@ -115,7 +114,7 @@ void Command::remove(std::shared_ptr<BaseEntity> entity) {
 
     history_->addOperation(current_operation_);
 
-    World::getInstance<World::IWorldModify>().removeEntity(entity, current_layer_);
+    World::getInstance<World::IWorldModify>().removeEntity(entity);
     current_entity_ = nullptr;
 }
 
@@ -127,11 +126,10 @@ void Command::copy(std::shared_ptr<BaseEntity> entity) {
         if(auto transform = cp_entity->trans_) {
             transform->setPosition(static_cast<int>(mouse_world_pos.first), static_cast<int>(mouse_world_pos.second));
         }
-        World::getInstance<World::IWorldModify>().addEntity(cp_entity, current_layer_);
+        World::getInstance<World::IWorldModify>().addEntity(cp_entity);
 
         current_operation_ = std::make_shared<Operation>();
         current_operation_->entity_ = cp_entity;
-        current_operation_->layer_ = current_layer_;
         current_operation_->after_ = cp_entity->outputToJson();
 
         history_->addOperation(current_operation_);
@@ -149,7 +147,6 @@ void Command::handleCommand(Commands command) {
                 current_operation_ = std::make_shared<Operation>();
                 current_operation_->entity_ = current_entity_;
                 current_operation_->before_ = current_entity_->outputToJson();
-                current_operation_->layer_ = current_layer_;
 
                 current_command_ = Commands::RESIZE;
             }
@@ -159,7 +156,6 @@ void Command::handleCommand(Commands command) {
                 current_operation_ = std::make_shared<Operation>();
                 current_operation_->entity_ = current_entity_;
                 current_operation_->before_ = current_entity_->outputToJson();
-                current_operation_->layer_ = current_layer_;
 
                 current_command_ = Command::Commands::MOVE;
             }
@@ -169,9 +165,8 @@ void Command::handleCommand(Commands command) {
                 current_operation_ = std::make_shared<Operation>();
                 current_operation_->entity_ = current_entity_;
                 current_operation_->before_ = current_entity_->outputToJson();
-                current_operation_->layer_ = current_layer_;
 
-                World::getInstance<World::IWorldModify>().removeEntity(current_entity_, World::Layer::MAIN);
+                World::getInstance<World::IWorldModify>().removeEntity(current_entity_);
                 if (current_entity_->renderableEntity_) {
                     current_entity_->renderableEntity_ = {};
                 } else {
@@ -180,7 +175,7 @@ void Command::handleCommand(Commands command) {
                     renderable->loadTexture("box.png");
                     current_entity_->renderableEntity_ = renderable;
                 }
-                World::getInstance<World::IWorldModify>().addEntity(current_entity_, World::Layer::MAIN);
+                World::getInstance<World::IWorldModify>().addEntity(current_entity_);
                 current_operation_->after_ = current_entity_->outputToJson();
 
                 history_->addOperation(current_operation_);
@@ -191,16 +186,15 @@ void Command::handleCommand(Commands command) {
                 current_operation_ = std::make_shared<Operation>();
                 current_operation_->entity_ = current_entity_;
                 current_operation_->before_ = current_entity_->outputToJson();
-                current_operation_->layer_ = current_layer_;
 
-                World::getInstance<World::IWorldModify>().removeEntity(current_entity_, World::Layer::MAIN);
+                World::getInstance<World::IWorldModify>().removeEntity(current_entity_);
                 if (current_entity_->collision_) {
                     current_entity_->collision_ = {};
                 } else {
                     auto collision = std::make_shared<CollisionStatic>(current_entity_->trans_);
                     current_entity_->collision_ = collision;
                 }
-                World::getInstance<World::IWorldModify>().addEntity(current_entity_, World::Layer::MAIN);
+                World::getInstance<World::IWorldModify>().addEntity(current_entity_);
                 current_operation_->after_ = current_entity_->outputToJson();
 
                 history_->addOperation(current_operation_);
@@ -211,16 +205,15 @@ void Command::handleCommand(Commands command) {
                 current_operation_ = std::make_shared<Operation>();
                 current_operation_->entity_ = current_entity_;
                 current_operation_->before_ = current_entity_->outputToJson();
-                current_operation_->layer_ = current_layer_;
 
-                World::getInstance<World::IWorldModify>().removeEntity(current_entity_, World::Layer::MAIN);
+                World::getInstance<World::IWorldModify>().removeEntity(current_entity_);
                 if (current_entity_->movableEntity_) {
                     current_entity_->movableEntity_ = {};
                 } else {
                     auto movable = std::make_shared<MovableEntity>(current_entity_->trans_, current_entity_->collision_);
                     current_entity_->movableEntity_ = movable;
                 }
-                World::getInstance<World::IWorldModify>().addEntity(current_entity_, World::Layer::MAIN);
+                World::getInstance<World::IWorldModify>().addEntity(current_entity_);
                 current_operation_->after_ = current_entity_->outputToJson();
 
                 history_->addOperation(current_operation_);
@@ -231,9 +224,8 @@ void Command::handleCommand(Commands command) {
                 current_operation_ = std::make_shared<Operation>();
                 current_operation_->entity_ = current_entity_;
                 current_operation_->before_ = current_entity_->outputToJson();
-                current_operation_->layer_ = current_layer_;
 
-                World::getInstance<World::IWorldModify>().removeEntity(current_entity_, World::Layer::MAIN);
+                World::getInstance<World::IWorldModify>().removeEntity(current_entity_);
                 if (current_entity_->physics_) {
                     current_entity_->physics_ = {};
                 } else {
@@ -245,7 +237,7 @@ void Command::handleCommand(Commands command) {
                             current_entity_->collision_);
                     current_entity_->physics_ = physics;
                 }
-                World::getInstance<World::IWorldModify>().addEntity(current_entity_, World::Layer::MAIN);
+                World::getInstance<World::IWorldModify>().addEntity(current_entity_);
                 current_operation_->after_ = current_entity_->outputToJson();
 
                 history_->addOperation(current_operation_);
@@ -256,16 +248,15 @@ void Command::handleCommand(Commands command) {
                 current_operation_ = std::make_shared<Operation>();
                 current_operation_->entity_ = current_entity_;
                 current_operation_->before_ = current_entity_->outputToJson();
-                current_operation_->layer_ = current_layer_;
 
-                World::getInstance<World::IWorldModify>().removeEntity(current_entity_, World::Layer::MAIN);
+                World::getInstance<World::IWorldModify>().removeEntity(current_entity_);
                 if (current_entity_->actions_) {
                     current_entity_->actions_ = {};
                 } else {
                     auto actions = std::make_shared<Actions>(current_entity_->death_);
                     current_entity_->actions_ = actions;
                 }
-                World::getInstance<World::IWorldModify>().addEntity(current_entity_, World::Layer::MAIN);
+                World::getInstance<World::IWorldModify>().addEntity(current_entity_);
                 current_operation_->after_ = current_entity_->outputToJson();
 
                 history_->addOperation(current_operation_);
@@ -276,7 +267,6 @@ void Command::handleCommand(Commands command) {
                 current_operation_ = std::make_shared<Operation>();
                 current_operation_->entity_ = current_entity_;
                 current_operation_->before_ = current_entity_->outputToJson();
-                current_operation_->layer_ = current_layer_;
 
                 text_input_ = std::make_shared<TextInput>();
 
@@ -288,7 +278,6 @@ void Command::handleCommand(Commands command) {
                 current_operation_ = std::make_shared<Operation>();
                 current_operation_->entity_ = current_entity_;
                 current_operation_->before_ = current_entity_->outputToJson();
-                current_operation_->layer_ = current_layer_;
 
                 current_entity_->renderableEntity_->setTiling(false, false);
 
@@ -301,7 +290,6 @@ void Command::handleCommand(Commands command) {
                 current_operation_ = std::make_shared<Operation>();
                 current_operation_->entity_ = current_entity_;
                 current_operation_->before_ = current_entity_->outputToJson();
-                current_operation_->layer_ = current_layer_;
 
                 current_entity_->renderableEntity_->setTiling(true, false);
 
@@ -314,7 +302,6 @@ void Command::handleCommand(Commands command) {
                 current_operation_ = std::make_shared<Operation>();
                 current_operation_->entity_ = current_entity_;
                 current_operation_->before_ = current_entity_->outputToJson();
-                current_operation_->layer_ = current_layer_;
 
                 current_entity_->renderableEntity_->setTiling(false, true);
 
@@ -327,7 +314,6 @@ void Command::handleCommand(Commands command) {
                 current_operation_ = std::make_shared<Operation>();
                 current_operation_->entity_ = current_entity_;
                 current_operation_->before_ = current_entity_->outputToJson();
-                current_operation_->layer_ = current_layer_;
 
                 current_entity_->renderableEntity_->setTiling(true, true);
 

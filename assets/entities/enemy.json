@@ -50,7 +50,8 @@
         "height": 90,
         "texture": "Enemy.png",
         "tile_x": true,
-        "tile_y": true
+        "tile_y": true,
+        "layer": "main"
     },
     "Stateful": {
         "states": "enemy_state.json"

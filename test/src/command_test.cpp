@@ -19,7 +19,7 @@ class CommandTestFixture : public ::testing::Test {
         entity_ = std::make_shared<BaseEntity>();
         command_ = {history, operation, mouse_};
 
-        World::getInstance<World::IWorldModify>().loadWorldFromJson(nlohmann::json::parse("{\"main\": null}"));
+        World::getInstance<World::IWorldModify>().loadWorldFromJson(nlohmann::json::parse("{\"entities\": null}"));
 
         MockMouse::setMouseWorldPosition({0, 0});
     }
@@ -42,17 +42,65 @@ void assertCorrectNumberOfEntities(
         long long unsigned fg1,
         long long unsigned fg2,
         long long unsigned fg3) {
-    auto world = World::getInstance<World::IWorldModify>();
-    ASSERT_TRUE(world.getWorldObjects(World::Layer::BACKGROUND).size() == background);
-    ASSERT_TRUE(world.getWorldObjects(World::Layer::BG_3).size() == bg3);
-    ASSERT_TRUE(world.getWorldObjects(World::Layer::BG_2).size() == bg2);
-    ASSERT_TRUE(world.getWorldObjects(World::Layer::BG_1).size() == bg1);
-    ASSERT_TRUE(world.getWorldObjects(World::Layer::MAIN_BG).size() == main_bg);
-    ASSERT_TRUE(world.getWorldObjects(World::Layer::MAIN).size() == main);
-    ASSERT_TRUE(world.getWorldObjects(World::Layer::MAIN_FG).size() == main_fg);
-    ASSERT_TRUE(world.getWorldObjects(World::Layer::FG_1).size() == fg1);
-    ASSERT_TRUE(world.getWorldObjects(World::Layer::FG_2).size() == fg2);
-    ASSERT_TRUE(world.getWorldObjects(World::Layer::FG_3).size() == fg3);
+    long long unsigned count_background = 0;
+    long long unsigned count_bg3 = 0;
+    long long unsigned count_bg2 = 0;
+    long long unsigned count_bg1 = 0;
+    long long unsigned count_main_bg = 0;
+    long long unsigned count_main = 0;
+    long long unsigned count_main_fg = 0;
+    long long unsigned count_fg1 = 0;
+    long long unsigned count_fg2 = 0;
+    long long unsigned count_fg3 = 0;
+
+    auto world_objects = World::getInstance<World::IWorldModify>().getWorldObjects();
+
+    for (auto it : world_objects) {
+        switch (it->renderableEntity_->getLayer()) {
+            case (RenderableEntity::Layer::BACKGROUND):
+                count_background++;
+                break;
+            case (RenderableEntity::Layer::BG_3):
+                count_bg3++;
+                break;
+            case (RenderableEntity::Layer::BG_2):
+                count_bg2++;
+                break;
+            case (RenderableEntity::Layer::BG_1):
+                count_bg1++;
+                break;
+            case (RenderableEntity::Layer::MAIN_BG):
+                count_main_bg++;
+                break;
+            case (RenderableEntity::Layer::MAIN):
+                count_main++;
+                break;
+            case (RenderableEntity::Layer::MAIN_FG):
+                count_main_fg++;
+                break;
+            case (RenderableEntity::Layer::FG_1):
+                count_fg1++;
+                break;
+            case (RenderableEntity::Layer::FG_2):
+                count_fg2++;
+                break;
+            case (RenderableEntity::Layer::FG_3):
+                count_fg3++;
+                break;
+            default:
+                break;
+        }
+    }
+    ASSERT_TRUE(count_background == background);
+    ASSERT_TRUE(count_bg3 == bg3);
+    ASSERT_TRUE(count_bg2 == bg2);
+    ASSERT_TRUE(count_bg1 == bg1);
+    ASSERT_TRUE(count_main_bg == main_bg);
+    ASSERT_TRUE(count_main == main);
+    ASSERT_TRUE(count_main_fg == main_fg);
+    ASSERT_TRUE(count_fg1 == fg1);
+    ASSERT_TRUE(count_fg2 == fg2);
+    ASSERT_TRUE(count_fg3 == fg3);
 }
 
 void assertWorldEmpty() {
@@ -65,7 +113,7 @@ TEST_F(CommandTestFixture, AddObject) {
     command_.add();
     command_.add();
 
-    command_.current_layer_ = World::Layer::FG_1;
+    command_.current_layer_ = RenderableEntity::Layer::FG_1;
 
     command_.add();
 
@@ -81,13 +129,13 @@ TEST_F(CommandTestFixture, RemoveObject) {
     command_.add();
     command_.add(entity);
 
-    command_.current_layer_ = World::Layer::BG_3;
+    command_.current_layer_ = RenderableEntity::Layer::BG_3;
 
     command_.add();
 
     assertCorrectNumberOfEntities(0, 1, 0, 0, 0, 3, 0, 0, 0, 0);
 
-    command_.current_layer_ = World::Layer::MAIN;
+    command_.current_layer_ = RenderableEntity::Layer::MAIN;
     command_.remove(entity);
 
     assertCorrectNumberOfEntities(0, 1, 0, 0, 0, 2, 0, 0, 0, 0);
@@ -126,9 +174,9 @@ TEST_F(CommandTestFixture, CopyObjectCheckEqual) {
 
     nlohmann::json j = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    ASSERT_EQ(2, j["main"].size());
+    ASSERT_EQ(2, j["entities"].size());
 
-    EXPECT_TRUE(j["main"][0] == j["main"][1]);
+    EXPECT_TRUE(j["entities"][0] == j["entities"][1]);
 }
 
 TEST_F(CommandTestFixture, ResizeObjectl) {

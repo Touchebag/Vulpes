@@ -15,15 +15,15 @@
 #define VIEW_POS_Y 500.0
 #define VIEW_SIZE 1000.0
 
-World::Layer current_layer = World::Layer::MAIN;
+RenderableEntity::Layer current_layer = RenderableEntity::Layer::MAIN;
 bool render_current_layer_only = false;
 
-World::Layer change_layer(bool towards_screen) {
+RenderableEntity::Layer change_layer(bool towards_screen) {
     int layer_int = static_cast<int>(current_layer);
     if (towards_screen && layer_int > 0) {
-        return static_cast<World::Layer>(layer_int - 1);
-    } else if (!towards_screen && layer_int < static_cast<int>(World::Layer::MAX_LAYERS) - 1) {
-        return static_cast<World::Layer>(layer_int + 1);
+        return static_cast<RenderableEntity::Layer>(layer_int - 1);
+    } else if (!towards_screen && layer_int < static_cast<int>(RenderableEntity::Layer::MAX_LAYERS) - 1) {
+        return static_cast<RenderableEntity::Layer>(layer_int + 1);
     }
 
     return current_layer;
@@ -35,12 +35,13 @@ std::shared_ptr<BaseEntity> makeHudText(std::pair<int, int> position = {0, 0}) {
     std::shared_ptr<Transform> trans = std::make_shared<Transform>();
     std::shared_ptr<RenderableText> text = std::make_shared<RenderableText>(trans);
     text->setColor(sf::Color::Green);
+    text->setLayer(RenderableEntity::Layer::HUD);
 
     trans->setPosition(position.first, position.second);
 
     text_element->trans_ = trans;
     text_element->renderableEntity_ = text;
-    World::getInstance<World::IWorldModify>().addEntity(text_element, World::Layer::HUD);
+    World::getInstance<World::IWorldModify>().addEntity(text_element);
 
     return text_element;
 }
@@ -198,24 +199,26 @@ int level_editor_main(sf::RenderWindow& window, std::string level_file_path) {
                                 current_entity = player;
                                 command.current_entity_ = current_entity;
                             } else {
-                                for (auto it : World::getInstance<World::IWorldModify>().getWorldObjects(current_layer)) {
+                                for (auto it : World::getInstance<World::IWorldModify>().getWorldObjects()) {
                                     std::shared_ptr<Collision> other_coll;
-                                    if (it->collision_) {
-                                        other_coll = std::static_pointer_cast<Collision>(it->collision_);
-                                    } else if (it->trans_) {
-                                        other_coll = std::make_shared<CollisionStatic>(it->trans_);
-                                        other_coll->setHitbox(50, 50);
-                                    }
+                                    if (it->renderableEntity_ && (it->renderableEntity_->getLayer() == current_layer)) {
+                                        if (it->collision_) {
+                                            other_coll = std::static_pointer_cast<Collision>(it->collision_);
+                                        } else if (it->trans_) {
+                                            other_coll = std::make_shared<CollisionStatic>(it->trans_);
+                                            other_coll->setHitbox(50, 50);
+                                        }
 
-                                    if (other_coll->collides(tmp_coll)) {
-                                        current_entity = it;
-                                        command.current_entity_ = current_entity;
-                                        break;
+                                        if (other_coll->collides(tmp_coll)) {
+                                            current_entity = it;
+                                            command.current_entity_ = current_entity;
+                                            break;
+                                        }
                                     }
                                 }
                             }
 
-                            World::getInstance<World::IWorldModify>().removeEntity(current_entity_hud_text, World::Layer::HUD);
+                            World::getInstance<World::IWorldModify>().removeEntity(current_entity_hud_text);
 
                             if (current_entity) {
                                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
@@ -309,7 +312,9 @@ int level_editor_main(sf::RenderWindow& window, std::string level_file_path) {
         window.setView(viewport);
 
         // Print current layer
-        std::static_pointer_cast<RenderableText>(layer_hud_text->renderableEntity_)->setText(World::getLayerString(current_layer));
+        if (auto layer_string = RenderableEntity::getLayerString(current_layer)) {
+            std::static_pointer_cast<RenderableText>(layer_hud_text->renderableEntity_)->setText(layer_string.value());
+        }
 
         {
             auto mouse_world_pos = mouse->getMouseWorldPosition();

@@ -19,7 +19,7 @@ class HistoryTestFixture : public ::testing::Test {
         entity_ = std::make_shared<BaseEntity>();
         command_ = {history_, operation, mouse_};
 
-        World::getInstance<World::IWorldModify>().loadWorldFromJson(nlohmann::json::parse("{\"main\": null}"));
+        World::getInstance<World::IWorldModify>().loadWorldFromJson(nlohmann::json::parse("{\"entities\": null}"));
 
         MockMouse::setMouseWorldPosition({0, 0});
     }
@@ -168,7 +168,7 @@ TEST_F(HistoryTestFixture, MoveObject) {
 
 TEST_F(HistoryTestFixture, MoveObjectOtherLayer) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    command_.current_layer_ = World::Layer::BG_1;
+    command_.current_layer_ = RenderableEntity::Layer::BG_1;
     command_.add(entity);
 
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();

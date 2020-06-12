@@ -15,27 +15,6 @@ class World {
  * TODO Figure out if this is a good idea
  */
   public:
-    enum class Layer {
-        BACKGROUND,
-
-        // Counting outwards from MAIN
-        BG_3,
-        BG_2,
-        BG_1,
-
-        MAIN_BG,
-        MAIN,
-        MAIN_FG,
-
-        // Counting outwards from MAIN
-        FG_1,
-        FG_2,
-        FG_3,
-
-        // HUD is treated differently
-        HUD,
-        MAX_LAYERS = HUD
-    };
 
     class IWorldRead {
       public:
@@ -48,8 +27,8 @@ class World {
 
     class IWorldModify {
       public:
-        static void addEntity(std::shared_ptr<BaseEntity> entity, World::Layer layer);
-        static void removeEntity(std::shared_ptr<BaseEntity> entity, World::Layer layer);
+        static void addEntity(std::shared_ptr<BaseEntity> entity);
+        static void removeEntity(std::shared_ptr<BaseEntity> entity);
 
         static void loadWorldFromJson(nlohmann::json j);
         static void loadWorldFromFile(std::string file);
@@ -61,7 +40,7 @@ class World {
 
         static void clearWorld();
 
-        static std::vector<std::shared_ptr<BaseEntity>>& getWorldObjects(Layer layer = Layer::MAIN);
+        static std::vector<std::shared_ptr<BaseEntity>>& getWorldObjects();
     };
 
     template <class T>
@@ -73,9 +52,6 @@ class World {
     World operator=(World&&) = delete;
 
     // For level editor
-    static std::string getLayerString(Layer layer);
-
-  private:
     static World& getWorldInstance();
     std::weak_ptr<Player> getPlayer();
 
@@ -86,17 +62,17 @@ class World {
 
     void clearWorld();
 
-    void addEntity(std::shared_ptr<BaseEntity> entity, World::Layer layer);
-    void removeEntity(std::shared_ptr<BaseEntity> entity, World::Layer layer);
+    void addEntity(std::shared_ptr<BaseEntity> entity);
+    void removeEntity(std::shared_ptr<BaseEntity> entity);
 
     void loadWorldFromJson(nlohmann::json j);
     void loadWorldFromFile(std::string file);
 
-    std::vector<std::shared_ptr<BaseEntity>>::iterator deleteEntity(std::vector<std::shared_ptr<BaseEntity>>::iterator it, Layer lyaer);
+    std::vector<std::shared_ptr<BaseEntity>>::iterator deleteEntity(std::vector<std::shared_ptr<BaseEntity>>::iterator it);
 
     util::Point getPlayerPosition();
 
-    std::vector<std::shared_ptr<BaseEntity>>& getWorldObjects(Layer layer = Layer::MAIN);
+    std::vector<std::shared_ptr<BaseEntity>>& getWorldObjects();
 
     World() = default;
 
@@ -105,10 +81,7 @@ class World {
     std::shared_ptr<RenderableText> player_health_;
     std::shared_ptr<Transform> player_health_position_;
 
-    void loadLayer(nlohmann::json json, Layer layer);
-    nlohmann::json jsonifyLayer(Layer layer);
-
-    std::array<std::vector<std::shared_ptr<BaseEntity>>, static_cast<int>(Layer::MAX_LAYERS) + 1> world_objects_;
+    std::vector<std::shared_ptr<BaseEntity>> world_objects_;
 
     std::array<std::vector<std::weak_ptr<const Collision>>, static_cast<int>(Collision::CollisionType::MAX_NUM)> collisions_;
 };

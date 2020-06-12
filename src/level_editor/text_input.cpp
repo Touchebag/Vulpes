@@ -5,7 +5,8 @@
 TextInput::TextInput() {
     text_position_->setPosition(50, 300);
     text_renderable_->setColor(sf::Color::Green);
-    Render::getInstance().addEntity(text_renderable_, World::Layer::HUD);
+    text_renderable_->setLayer(RenderableEntity::Layer::HUD);
+    Render::getInstance().addEntity(text_renderable_);
 }
 
 void TextInput::enterText(const std::string& text) {

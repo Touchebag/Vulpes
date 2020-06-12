@@ -1,12 +1,5 @@
 {
-    "background": null,
-    "bg1": null,
-    "bg2": null,
-    "bg3": null,
-    "fg1": null,
-    "fg2": null,
-    "fg3": null,
-    "main": [
+    "entities": [
         {
             "Collision": {
                 "type": "static",
@@ -18,7 +11,8 @@
                 "tile_x": true,
                 "tile_y": true,
                 "height": 200,
-                "width": 50
+                "width": 50,
+                "layer": "main"
             },
             "Transform": {
                 "pos_x": 200,
@@ -36,7 +30,8 @@
                 "tile_x": true,
                 "tile_y": true,
                 "height": 200,
-                "width": 50
+                "width": 50,
+                "layer": "main"
             },
             "Transform": {
                 "pos_x": 0,
@@ -54,7 +49,8 @@
                 "tile_x": true,
                 "tile_y": true,
                 "height": 50,
-                "width": 200
+                "width": 200,
+                "layer": "main"
             },
             "Transform": {
                 "pos_x": 100,
@@ -72,15 +68,13 @@
                 "tile_x": true,
                 "tile_y": true,
                 "height": 50,
-                "width": 200
+                "width": 200,
+                "layer": "main"
             },
             "Transform": {
                 "pos_x": 100,
                 "pos_y": 0
             }
         }
-    ],
-    "main_bg": null,
-    "main_fg": null,
-    "player": null
+    ]
 }
