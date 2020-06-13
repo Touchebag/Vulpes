@@ -2,6 +2,8 @@
 
 #include "ai/values/value.h"
 
+#include "true.h"
+#include "false.h"
 #include "greater.h"
 #include "less.h"
 #include "frame_timer.h"
@@ -20,7 +22,11 @@ std::shared_ptr<const LogicalOperator> LogicalOperator::createFromJson(nlohmann:
 
     auto type = j["type"].get<std::string>();
 
-    if (type == "grt") {
+    if (type == "true") {
+        return std::make_shared<True>();
+    } else if (type == "false") {
+        return std::make_shared<False>();
+    } else if (type == "grt") {
         if (j.contains("lhs") && j.contains("rhs")) {
             return std::make_shared<Greater>(Value::createFromJson(j["lhs"]),
                                              Value::createFromJson(j["rhs"]));
