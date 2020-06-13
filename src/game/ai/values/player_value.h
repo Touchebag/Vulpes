@@ -7,9 +7,9 @@
 namespace ai {
 namespace condition {
 
-class Dynamic : public Value {
+class PlayerValue : public Value {
   public:
-    Dynamic(nlohmann::json j);
+    PlayerValue(nlohmann::json j);
 
     int getValue(std::weak_ptr<Transform> trans) const override;
 

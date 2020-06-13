@@ -9,8 +9,8 @@
                 "condition": {
                     "type": "grt",
                     "lhs": {
-                        "type": "dynamic",
-                        "value": "player.position.x"
+                        "type": "player",
+                        "value": "position.x"
                     },
                     "rhs": {
                         "type": "this",
@@ -23,8 +23,8 @@
                 "condition": {
                     "type": "lss",
                     "lhs": {
-                        "type": "dynamic",
-                        "value": "player.position.x"
+                        "type": "player",
+                        "value": "position.x"
                     },
                     "rhs": {
                         "type": "this",
@@ -67,8 +67,8 @@
                 "condition": {
                     "type": "grt",
                     "lhs": {
-                        "type": "dynamic",
-                        "value": "player.position.x"
+                        "type": "player",
+                        "value": "position.x"
                     },
                     "rhs": {
                         "type": "this",
@@ -81,8 +81,8 @@
                 "condition": {
                     "type": "lss",
                     "lhs": {
-                        "type": "dynamic",
-                        "value": "player.position.x"
+                        "type": "player",
+                        "value": "position.x"
                     },
                     "rhs": {
                         "type": "this",
@@ -125,8 +125,8 @@
                 "condition": {
                     "type": "grt",
                     "lhs": {
-                        "type": "dynamic",
-                        "value": "player.position.x"
+                        "type": "player",
+                        "value": "position.x"
                     },
                     "rhs": {
                         "type": "this",
@@ -139,8 +139,8 @@
                 "condition": {
                     "type": "lss",
                     "lhs": {
-                        "type": "dynamic",
-                        "value": "player.position.x"
+                        "type": "player",
+                        "value": "position.x"
                     },
                     "rhs": {
                         "type": "this",

@@ -1,15 +1,15 @@
-#include "dynamic.h"
+#include "player_value.h"
 
 #include "system/world.h"
 
 namespace ai {
 namespace condition {
 
-Dynamic::Dynamic(nlohmann::json) {
+PlayerValue::PlayerValue(nlohmann::json) {
     int_function_ = [] () { return World::IWorldRead::getPlayerPosition().x; };
 }
 
-int Dynamic::getValue(std::weak_ptr<Transform>) const {
+int PlayerValue::getValue(std::weak_ptr<Transform>) const {
     return int_function_();
 }
 

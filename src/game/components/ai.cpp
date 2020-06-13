@@ -7,7 +7,7 @@
 #include "ai/logic_operators/greater.h"
 #include "ai/logic_operators/less.h"
 #include "ai/values/constant.h"
-#include "ai/values/dynamic.h"
+#include "ai/values/player_value.h"
 #include "ai/values/this.h"
 
 AI::AI(std::weak_ptr<Actions> actions, std::weak_ptr<Transform> transform, std::weak_ptr<AnimatedEntity> animated_entitiy) :

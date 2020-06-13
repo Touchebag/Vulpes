@@ -1,7 +1,7 @@
 #include "value.h"
 
 #include "constant.h"
-#include "dynamic.h"
+#include "player_value.h"
 #include "this.h"
 
 #include "utils/log.h"
@@ -23,11 +23,11 @@ std::unique_ptr<const Value> Value::createFromJson(nlohmann::json j) {
         } else {
             throw std::invalid_argument("Constant: value not found");
         }
-    } else if (type == "dynamic") {
+    } else if (type == "player") {
         if (j.contains("value")) {
-            return std::make_unique<Dynamic>(j["value"]);
+            return std::make_unique<PlayerValue>(j["value"]);
         } else {
-            throw std::invalid_argument("Dynamic: value not found");
+            throw std::invalid_argument("Player: value not found");
         }
     } else if (type == "this") {
         if (j.contains("value")) {
