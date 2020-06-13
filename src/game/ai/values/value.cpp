@@ -1,6 +1,7 @@
 #include "value.h"
 
 #include "constant.h"
+#include "distance.h"
 #include "player_value.h"
 #include "this.h"
 
@@ -34,6 +35,12 @@ std::unique_ptr<const Value> Value::createFromJson(nlohmann::json j) {
             return std::make_unique<This>(j["value"]);
         } else {
             throw std::invalid_argument("This: value not found");
+        }
+    } else if (type == "distance") {
+        if (j.contains("value")) {
+            return std::make_unique<Distance>(j["value"]);
+        } else {
+            throw std::invalid_argument("Distance: values not found");
         }
     };
 

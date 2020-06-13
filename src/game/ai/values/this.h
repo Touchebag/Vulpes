@@ -18,7 +18,7 @@ class This : public Value {
     int (This::*int_function_)(std::weak_ptr<Transform>) const;
     std::weak_ptr<Transform> trans_;
 
-    int positionX(std::weak_ptr<Transform> trans) const;
+    int positionX(std::weak_ptr<Transform> this_trans) const;
 };
 
 } // condition

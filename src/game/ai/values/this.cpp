@@ -9,12 +9,12 @@ This::This(nlohmann::json /* j */) {
     int_function_ = &This::positionX;
 }
 
-int This::getValue(std::weak_ptr<Transform> trans) const {
-    return (this->*int_function_)(trans);
+int This::getValue(std::weak_ptr<Transform> this_trans) const {
+    return (this->*int_function_)(this_trans);
 }
 
-int This::positionX(std::weak_ptr<Transform> trans) const {
-    if (auto ptr = trans.lock()) {
+int This::positionX(std::weak_ptr<Transform> this_trans) const {
+    if (auto ptr = this_trans.lock()) {
         return ptr->getX();
     } else {
         throw std::runtime_error("Error reading value. Transform ptr invalid.");
