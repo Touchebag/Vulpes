@@ -2,9 +2,7 @@
     "main": {
         "actions": [
             {
-                "condition": {
-                    "type": "animation_loop"
-                },
+                "condition": "animation_loop",
                 "action": "die"
             }
         ]

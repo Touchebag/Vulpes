@@ -10,7 +10,7 @@ namespace condition {
 
 class This : public Value {
   public:
-    This(nlohmann::json j);
+    This(std::vector<std::string> arguments);
 
     int getValue(std::weak_ptr<Transform> trans) const override;
 

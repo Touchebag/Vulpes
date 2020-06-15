@@ -5,7 +5,8 @@
 namespace ai {
 namespace condition {
 
-This::This(nlohmann::json /* j */) {
+This::This(std::vector<std::string>) {
+    // TODO Parse arguments
     int_function_ = &This::positionX;
 }
 

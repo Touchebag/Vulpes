@@ -9,7 +9,7 @@ namespace condition {
 
 class PlayerValue : public Value {
   public:
-    PlayerValue(nlohmann::json j);
+    PlayerValue(std::vector<std::string> arguments);
 
     int getValue(std::weak_ptr<Transform> trans) const override;
 

@@ -39,7 +39,8 @@
     "Movable": null,
     "Renderable": {
         "texture": "Attack1.png",
-        "height": 350
+        "height": 350,
+        "layer": "main"
     },
     "Transform": {
         "pos_x": 150,

@@ -9,7 +9,7 @@ namespace condition {
 
 class Distance : public Value {
   public:
-    Distance(nlohmann::json j);
+    Distance(std::unique_ptr<const Value> value1, std::unique_ptr<const Value> value2);
 
     int getValue(std::weak_ptr<Transform> trans) const override;
 
@@ -18,8 +18,8 @@ class Distance : public Value {
 
     int getDistanceX(std::weak_ptr<Transform> trans) const;
 
-    std::shared_ptr<const Value> value1_;
-    std::shared_ptr<const Value> value2_;
+    std::unique_ptr<const Value> value1_;
+    std::unique_ptr<const Value> value2_;
 };
 
 } // condition

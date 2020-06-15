@@ -5,14 +5,9 @@
 namespace ai {
 namespace condition {
 
-Distance::Distance(nlohmann::json j) {
-    if (!j.contains("value1") || !j.contains("value2")) {
-        throw std::invalid_argument("Distance: missing values");
-    }
-
-    value1_ = Value::createFromJson(j["value1"]);
-    value2_ = Value::createFromJson(j["value2"]);
-
+Distance::Distance(std::unique_ptr<const Value> value1, std::unique_ptr<const Value> value2) :
+    value1_(std::move(value1)),
+    value2_(std::move(value2)) {
     int_function_ = getDistanceX;
 }
 

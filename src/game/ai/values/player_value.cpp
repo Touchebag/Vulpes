@@ -5,7 +5,8 @@
 namespace ai {
 namespace condition {
 
-PlayerValue::PlayerValue(nlohmann::json) {
+PlayerValue::PlayerValue(std::vector<std::string>) {
+    // TODO Parse input
     int_function_ = [] () { return World::IWorldRead::getPlayerPosition().x; };
 }
 

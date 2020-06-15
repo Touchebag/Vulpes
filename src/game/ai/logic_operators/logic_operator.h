@@ -20,6 +20,9 @@ class LogicalOperator {
     static std::shared_ptr<const LogicalOperator> createFromJson(nlohmann::json j);
 
     virtual bool getValue(aiValues& values) const = 0;
+
+  private:
+    static std::shared_ptr<const LogicalOperator> createFromString(const std::string& str);
 };
 
 } // condition
