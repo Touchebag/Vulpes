@@ -50,6 +50,11 @@ std::optional<nlohmann::json> Damageable::outputToJson() {
 }
 
 void Damageable::update() {
+    if (invincibility_frame_counter_ > 0) {
+        invincibility_frame_counter_--;
+        return;
+    }
+
     if (auto coll = hurtbox_.lock()) {
         auto hurting_type = type_mapping.at(coll->getType());
 
@@ -58,6 +63,7 @@ void Damageable::update() {
                 if (coll->collides(other_coll)) {
                     auto attributes = other_coll->getAttributes();
                     health_ -= attributes.damage;
+                    invincibility_frame_counter_ = attributes.invincibility_frames;
                     if (auto state = state_.lock()) {
                         state->incomingEvent(state_utils::Event::DAMAGED);
                         if (auto move = move_.lock()) {

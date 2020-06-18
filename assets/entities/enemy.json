@@ -31,7 +31,8 @@
         "attack": {
             "damage": 10,
             "knockback_x": 100,
-            "knockback_y": -30
+            "knockback_y": -30,
+            "invincibility": 80
         }
     },
     "Damageable": {

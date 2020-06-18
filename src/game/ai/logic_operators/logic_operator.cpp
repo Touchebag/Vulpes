@@ -22,6 +22,7 @@ std::shared_ptr<const LogicalOperator> LogicalOperator::createFromString(const s
     std::vector<std::string> arguments = {};
 
     if (index != std::string::npos) {
+        // index +1 to skip extra space
         arguments = ai_utils::extractSubstrings(str.substr(index + 1, str.size()));
     }
 
@@ -30,21 +31,18 @@ std::shared_ptr<const LogicalOperator> LogicalOperator::createFromString(const s
     } else if (operation == "false") {
         return std::make_shared<False>();
     } else if (operation == "grt") {
-        // index +1 to skip extra space
         if (arguments.size() != 2) {
             throw std::invalid_argument("grt: incorrect number of arguments");
         }
         return std::make_shared<Greater>(Value::createFromString(arguments[0]),
                                          Value::createFromString(arguments[1]));
     } else if (operation == "lss") {
-        // index +1 to skip extra space
         if (arguments.size() != 2) {
             throw std::invalid_argument("lss: incorrect number of arguments");
         }
         return std::make_shared<Less>(Value::createFromString(arguments[0]),
                                       Value::createFromString(arguments[1]));
     } else if (operation == "frame_timer") {
-        // index +1 to skip extra space
         if (arguments.size() != 1) {
             throw std::invalid_argument("frame_timer: incorrect number of arguments");
         }

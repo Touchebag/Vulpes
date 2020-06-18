@@ -27,6 +27,8 @@ class Damageable : public Component {
   private:
     int health_ = 0;
 
+    int invincibility_frame_counter_;
+
     // For output to json
     int initial_health_;
 

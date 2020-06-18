@@ -15,6 +15,9 @@ AttackAttributes parseAttackAttributes(nlohmann::json j) {
     if (j.contains("knockback_y")) {
         attack.knockback_y = j["knockback_y"];
     }
+    if (j.contains("invincibility")) {
+        attack.invincibility_frames = j["invincibility"];
+    }
 
     return attack;
 }
@@ -31,6 +34,10 @@ nlohmann::json dumpAttackAttributes(AttackAttributes attack) {
     }
     if (attack.knockback_y != 0) {
         j["knockback_y"] = attack.knockback_y;
+    }
+
+    if (attack.invincibility_frames > 0) {
+        j["invincibility"] = attack.invincibility_frames;
     }
 
     return j;

@@ -27,7 +27,8 @@ nlohmann::json entity_json = nlohmann::json::parse(R"--(
         "attack": {
             "damage": 2,
             "knockback_x": 15,
-            "knockback_y": -5
+            "knockback_y": -5,
+            "invincibility": 10
         }
     },
     "Damageable": {
