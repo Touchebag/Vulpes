@@ -10,7 +10,7 @@ class RenderableText : public RenderableEntity{
 
     void setText(const std::string& text);
     void setFont(sf::Font font);
-    void setColor(sf::Color color);
+    void setColor(sf::Color color) override;
 
     void render(sf::RenderWindow& window) override;
 

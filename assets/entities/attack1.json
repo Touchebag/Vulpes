@@ -32,7 +32,9 @@
         "width": 100,
         "height": 200,
         "attack": {
-            "damage": 4
+            "damage": 4,
+            "knockback_x": 50,
+            "invincibility": 30
         }
     },
     "Death": null,

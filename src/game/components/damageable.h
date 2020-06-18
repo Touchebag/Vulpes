@@ -14,6 +14,7 @@ class Damageable : public Component {
     Damageable(std::weak_ptr<Collision> hurtbox,
                std::weak_ptr<Death> death,
                std::weak_ptr<StatefulEntity> state,
+               std::weak_ptr<RenderableEntity> render,
                std::weak_ptr<MovableEntity> move);
 
     void reloadFromJson(nlohmann::json j) override;
@@ -27,7 +28,7 @@ class Damageable : public Component {
   private:
     int health_ = 0;
 
-    int invincibility_frame_counter_;
+    int invincibility_frame_counter_ = 0;
 
     // For output to json
     int initial_health_;
@@ -35,5 +36,6 @@ class Damageable : public Component {
     std::weak_ptr<Collision> hurtbox_;
     std::weak_ptr<Death> death_;
     std::weak_ptr<StatefulEntity> state_;
+    std::weak_ptr<RenderableEntity> render_;
     std::weak_ptr<MovableEntity> move_;
 };

@@ -36,7 +36,7 @@
         }
     },
     "Damageable": {
-        "health": 1
+        "health": 10
     },
     "Death": null,
     "Movable": null,

@@ -28,10 +28,12 @@ bool knockbackRight(std::shared_ptr<Collision> this_coll, std::shared_ptr<const 
 Damageable::Damageable(std::weak_ptr<Collision> hurtbox,
                        std::weak_ptr<Death> death,
                        std::weak_ptr<StatefulEntity> state,
+                       std::weak_ptr<RenderableEntity> render,
                        std::weak_ptr<MovableEntity> move) :
     hurtbox_(hurtbox),
     death_(death),
     state_(state),
+    render_(render),
     move_(move) {
 }
 
@@ -51,7 +53,12 @@ std::optional<nlohmann::json> Damageable::outputToJson() {
 
 void Damageable::update() {
     if (invincibility_frame_counter_ > 0) {
-        invincibility_frame_counter_--;
+        // If this is the last frame remove overlay
+        if (--invincibility_frame_counter_ == 0) {
+            if (auto render = render_.lock()) {
+                render->clearColor();
+            }
+        }
         return;
     }
 
@@ -66,6 +73,13 @@ void Damageable::update() {
                     invincibility_frame_counter_ = attributes.invincibility_frames;
                     if (auto state = state_.lock()) {
                         state->incomingEvent(state_utils::Event::DAMAGED);
+
+                        if (invincibility_frame_counter_ > 0) {
+                            if (auto render = render_.lock()) {
+                                render->setColor({255, 255, 255, 128});
+                            }
+                        }
+
                         if (auto move = move_.lock()) {
                             bool should_move_right = knockbackRight(coll, other_coll);
                             auto max_movement = move->getMaximumMovement(

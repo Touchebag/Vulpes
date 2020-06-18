@@ -75,7 +75,7 @@ void BaseEntity::reloadFromJson(nlohmann::json j) {
 
     ai_ = loadComponentFromJson(j, "AI", std::make_shared<AI>(actions_, trans_, animatedEntity_));
 
-    damageable_ = loadComponentFromJson(j, "Damageable", std::make_shared<Damageable>(collision_, death_, statefulEntity_, movableEntity_));
+    damageable_ = loadComponentFromJson(j, "Damageable", std::make_shared<Damageable>(collision_, death_, statefulEntity_, renderableEntity_, movableEntity_));
 }
 
 std::optional<nlohmann::json> BaseEntity::outputToJson() {

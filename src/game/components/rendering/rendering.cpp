@@ -150,6 +150,14 @@ void RenderableEntity::setSize(int width, int height) {
     recalculateTextureRect();
 }
 
+void RenderableEntity::setColor(sf::Color color) {
+    sprite_.setColor(color);
+}
+
+void RenderableEntity::clearColor() {
+    sprite_.setColor({255, 255, 255, 255});
+}
+
 void RenderableEntity::render(sf::RenderWindow& window) {
     if (auto trans = trans_.lock()) {
         sprite_.setPosition(static_cast<float>(trans->getX()), static_cast<float>(trans->getY()));

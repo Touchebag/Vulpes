@@ -46,6 +46,9 @@ class RenderableEntity {
 
     virtual void setSize(int width, int height);
 
+    virtual void setColor(sf::Color color);
+    virtual void clearColor();
+
     virtual void render(sf::RenderWindow& window);
 
     Layer getLayer();
