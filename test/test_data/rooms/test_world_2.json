@@ -157,11 +157,11 @@
             }
         }
     ],
-    "player": {
-        "Entity": "player.json",
-        "Transform": {
+    "entrances": [
+        {
+            "id": 0,
             "pos_x": 350,
             "pos_y": 1300
         }
-    }
+    ]
 }

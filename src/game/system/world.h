@@ -51,7 +51,8 @@ class World {
     World operator=(const World&) = delete;
     World operator=(World&&) = delete;
 
-    // For level editor
+  private:
+    // Functions
     static World& getWorldInstance();
     std::weak_ptr<Player> getPlayer();
 
@@ -76,6 +77,8 @@ class World {
 
     World() = default;
 
+
+    // Data
     std::shared_ptr<Player> player_;
 
     std::shared_ptr<RenderableText> player_health_;
@@ -84,6 +87,8 @@ class World {
     std::vector<std::shared_ptr<BaseEntity>> world_objects_;
 
     std::array<std::vector<std::weak_ptr<const Collision>>, static_cast<int>(Collision::CollisionType::MAX_NUM)> collisions_;
+
+    std::vector<util::Point> entrances_;
 };
 
 template <> World::IWorldRead World::getInstance<World::IWorldRead>();

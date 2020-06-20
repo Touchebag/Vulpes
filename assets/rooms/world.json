@@ -345,11 +345,11 @@
             }
         }
     ],
-    "player": {
-        "Entity": "player.json",
-        "Transform": {
+    "entrances": [
+        {
+            "id": 0,
             "pos_x": -393,
             "pos_y": 2418
         }
-    }
+    ]
 }

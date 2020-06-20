@@ -52,6 +52,8 @@ util::Point World::getPlayerPosition() {
 void World::clearWorld() {
     world_objects_.clear();
 
+    entrances_.clear();
+
     player_ = nullptr;
 }
 
@@ -74,12 +76,29 @@ void World::loadWorldFromJson(nlohmann::json j) {
 
     clearWorld();
 
+    if (j.contains("entrances")) {
+        entrances_.resize(j["entrances"].size());
+        for (auto it : j["entrances"]) {
+            if (!(it.contains("id") && it.contains("pos_x") && it.contains("pos_y"))) {
+                throw std::invalid_argument("entrances must contain id, pos_x and pos_y");
+            }
+
+            long long unsigned int id = it["id"].get<int>();
+            if (id < entrances_.size()) {
+                entrances_[id] = util::Point(it["pos_x"].get<int>(), it["pos_y"].get<int>());
+            }
+        }
+    }
+
     for (auto it : j["entities"]) {
         auto ent = BaseEntity::createFromJson(it);
         addEntity(ent);
     }
 
-    player_ = Player::createFromJson(j["player"]);
+    player_ = Player::createFromJson(File::loadEntityFromFile("player.json").value());
+    if (!entrances_.empty()) {
+        player_->trans_->setPosition(entrances_.at(0));
+    }
 
     Render::getInstance().addEntity(player_->renderableEntity_);
 
@@ -120,15 +139,21 @@ nlohmann::json World::saveWorldToJson() {
 
     j["entities"] = json_object_list;
 
-    if (player_) {
-        auto player_json = player_->outputToJson();
+    if (!entrances_.empty()) {
+        nlohmann::json entrance_list;
 
-        if (!player_json) {
-            LOGE("Failed to store player");
-            return {};
+        for (int i = 0; i < static_cast<int>(entrances_.size()); i++) {
+            nlohmann::json j_entrance;
+            auto pos = entrances_.at(i);
+
+            j_entrance["id"] = i;
+            j_entrance["pos_x"] = pos.x;
+            j_entrance["pos_y"] = pos.y;
+
+            entrance_list.push_back(j_entrance);
         }
 
-        j["player"] = player_json.value();
+        j["entrances"] = entrance_list;
     }
 
     return j;

@@ -8,6 +8,11 @@ void Transform::setPosition(int x, int y) {
     pos_y_ = y;
 }
 
+void Transform::setPosition(util::Point point) {
+    pos_x_ = point.x;
+    pos_y_ = point.y;
+}
+
 util::Point Transform::getPosition() {
     return {getX(), getY()};
 }

@@ -5,8 +5,14 @@ namespace util {
 struct Point {
     Point(int x_pos, int y_pos) : x(x_pos), y(y_pos) {}
 
-    const int x;
-    const int y;
+    Point() = default;
+    Point(const Point&) = default;
+    Point& operator=(const Point&) = default;
+    Point(Point&&) = default;
+    Point& operator=(Point&&) = default;
+
+    int x;
+    int y;
 };
 
 struct Rectangle {
@@ -16,10 +22,16 @@ struct Rectangle {
         width(rect_width),
         height(rect_height) {}
 
-    const int x;
-    const int y;
-    const int width;
-    const int height;
+    Rectangle() = default;
+    Rectangle(const Rectangle&) = default;
+    Rectangle& operator=(const Rectangle&) = default;
+    Rectangle(Rectangle&&) = default;
+    Rectangle& operator=(Rectangle&&) = default;
+
+    int x;
+    int y;
+    int width;
+    int height;
 };
 
 } // namespace

@@ -9,6 +9,7 @@
 class Transform : public Component {
 public:
     void setPosition(int x, int y);
+    void setPosition(util::Point point);
     util::Point getPosition();
 
     void update() override;
