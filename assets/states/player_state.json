@@ -113,11 +113,12 @@
     "jumping": {
         "properties": {
             "touching_ground": false,
-            "can_jump": false
+            "can_jump": true
         },
         "next_states": [
             {"event": "touching_floor", "state": "idle"},
             {"event": "touching_wall", "state": "wall_slide_rising"},
+            {"event": "jumping", "state": "jumping"},
             {"event": "falling", "state": "falling"},
             {"event": "dashing", "state": "dashing"},
             {"event": "damaged", "state": "taking_damage"}
@@ -129,11 +130,12 @@
     "falling": {
         "properties": {
             "touching_ground": false,
-            "can_jump": false
+            "can_jump": true
         },
         "next_states": [
             {"event": "touching_floor", "state": "idle"},
             {"event": "touching_wall", "state": "wall_slide"},
+            {"event": "jumping", "state": "jumping"},
             {"event": "dashing", "state": "dashing"},
             {"event": "damaged", "state": "taking_damage"}
         ],

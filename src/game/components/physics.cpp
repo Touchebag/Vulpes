@@ -49,9 +49,6 @@ void Physics::update() {
     auto movable = movableEntity_.lock();
     auto act = actions_.lock();
 
-    // TODO Store in some separate component
-    int jumps_left = 0;
-
     if (stateEnt && movable && act) {
         double x = movable->getVelX();
         double y = movable->getVelY();
@@ -65,7 +62,7 @@ void Physics::update() {
         facing_right.lockDirection(physics_props.direction_locked_);
 
         if (physics_props.touching_ground_ || physics_props.touching_wall_) {
-            jumps_left = 1;
+            jumps_left_ = 2;
         }
 
         if (!physics_props.movement_locked_x_) {
@@ -147,9 +144,10 @@ void Physics::update() {
                 int dir = facing_right ? -1.0 : 1.0;
                 x = constants_.wall_jump_horizontal_impulse * dir;
                 y = constants_.wall_jump_vertical_impulse;
-            } else if (physics_props.can_jump_ && jumps_left > 0) {
+                jumps_left_--;
+            } else if (physics_props.can_jump_ && jumps_left_ > 0) {
                 y = constants_.jump_impulse;
-                jumps_left--;
+                jumps_left_--;
                 stateEnt->incomingEvent(state_utils::Event::JUMPING);
             }
         }
