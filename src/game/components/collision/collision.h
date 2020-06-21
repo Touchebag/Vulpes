@@ -14,6 +14,7 @@ class Collision : public Component {
         PLAYER_HURTBOX,
         PLAYER_HITBOX,
         ENEMY_HITBOX,
+        TRANSITION,
 
         MAX_NUM
     };
@@ -23,7 +24,7 @@ class Collision : public Component {
     // Component interface
     void update() override;
 
-    void reloadFromJson(nlohmann::json j) override;
+    virtual void reloadFromJson(nlohmann::json j) override;
     virtual std::optional<nlohmann::json> outputToJson() override;
 
     // Load derived classes from json

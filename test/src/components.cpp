@@ -6,6 +6,7 @@
 #include "components/collision/collision_player_hitbox.h"
 #include "components/collision/collision_player_hurtbox.h"
 #include "components/collision/collision_enemy_hitbox.h"
+#include "components/collision/collision_transition.h"
 
 nlohmann::json entity_json = nlohmann::json::parse(R"--(
 {
@@ -94,41 +95,41 @@ TEST(TestComponents, TestLoadSaveAllComponents) {
 
 TEST(TestComponents, TestSaveLoadStatic) {
     std::shared_ptr<Transform> trans = std::make_shared<Transform>();
-    nlohmann::json j = nlohmann::json::parse("{ \"width\": 50, \"height\": 50 }");
+    nlohmann::json j1= nlohmann::json::parse("{ \"width\": 50, \"height\": 50 }");
     nlohmann::json attack = nlohmann::json::parse("{ \"damage\": 5, \"knockback_x\": 50, \"knockback_y\": 10 }");
 
-    j["type"] = "static";
+    j1["type"] = "static";
     std::shared_ptr<CollisionStatic> coll =
-        std::dynamic_pointer_cast<CollisionStatic>(Collision::createFromJson(j, trans));
+        std::dynamic_pointer_cast<CollisionStatic>(Collision::createFromJson(j1, trans));
     // Ensure dynamic cast valid
     ASSERT_TRUE(coll);
 
     nlohmann::json j2 = coll->outputToJson().value();
-    ASSERT_TRUE(j == j2);
+    ASSERT_TRUE(j1== j2) << j1.dump() << std::endl << j2.dump() << std::endl;
 }
 
 TEST(TestComponents, TestSaveLoadPlayerHurtbox) {
     std::shared_ptr<Transform> trans = std::make_shared<Transform>();
-    nlohmann::json j = nlohmann::json::parse("{ \"width\": 50, \"height\": 50 }");
+    nlohmann::json j1= nlohmann::json::parse("{ \"width\": 50, \"height\": 50 }");
 
-    j["type"] = "player_hurtbox";
+    j1["type"] = "player_hurtbox";
     std::shared_ptr<CollisionPlayerHurtbox> coll =
-        std::dynamic_pointer_cast<CollisionPlayerHurtbox>(Collision::createFromJson(j, trans));
+        std::dynamic_pointer_cast<CollisionPlayerHurtbox>(Collision::createFromJson(j1, trans));
     // Ensure dynamic cast valid
     ASSERT_TRUE(coll);
 
     nlohmann::json j2 = coll->outputToJson().value();
-    ASSERT_TRUE(j == j2);
+    ASSERT_TRUE(j1== j2) << j1.dump() << std::endl << j2.dump() << std::endl;
 }
 
 TEST(TestComponents, TestSaveLoadPlayerHitbox) {
     std::shared_ptr<Transform> trans = std::make_shared<Transform>();
-    nlohmann::json j = nlohmann::json::parse("{ \"width\": 50, \"height\": 50 }");
-    j["attack"] = nlohmann::json::parse("{ \"damage\": 5, \"knockback_x\": 50, \"knockback_y\": 10 }");
+    nlohmann::json j1= nlohmann::json::parse("{ \"width\": 50, \"height\": 50 }");
+    j1["attack"] = nlohmann::json::parse("{ \"damage\": 5, \"knockback_x\": 50, \"knockback_y\": 10 }");
 
-    j["type"] = "player_hitbox";
+    j1["type"] = "player_hitbox";
     std::shared_ptr<CollisionPlayerHitbox> coll =
-        std::dynamic_pointer_cast<CollisionPlayerHitbox>(Collision::createFromJson(j, trans));
+        std::dynamic_pointer_cast<CollisionPlayerHitbox>(Collision::createFromJson(j1, trans));
     // Ensure dynamic cast valid
     ASSERT_TRUE(coll);
 
@@ -137,17 +138,17 @@ TEST(TestComponents, TestSaveLoadPlayerHitbox) {
     EXPECT_EQ(10, coll->getAttributes().knockback_y);
 
     nlohmann::json j2 = coll->outputToJson().value();
-    ASSERT_TRUE(j == j2);
+    ASSERT_TRUE(j1== j2) << j1.dump() << std::endl << j2.dump() << std::endl;
 }
 
 TEST(TestComponents, TestSaveLoadEnemyHitbox) {
     std::shared_ptr<Transform> trans = std::make_shared<Transform>();
-    nlohmann::json j = nlohmann::json::parse("{ \"width\": 50, \"height\": 50 }");
-    j["attack"] = nlohmann::json::parse("{ \"damage\": 5, \"knockback_x\": 50, \"knockback_y\": 10 }");
+    nlohmann::json j1= nlohmann::json::parse("{ \"width\": 50, \"height\": 50 }");
+    j1["attack"] = nlohmann::json::parse("{ \"damage\": 5, \"knockback_x\": 50, \"knockback_y\": 10 }");
 
-    j["type"] = "enemy_hitbox";
+    j1["type"] = "enemy_hitbox";
     std::shared_ptr<CollisionEnemyHitbox> coll =
-        std::dynamic_pointer_cast<CollisionEnemyHitbox>(Collision::createFromJson(j, trans));
+        std::dynamic_pointer_cast<CollisionEnemyHitbox>(Collision::createFromJson(j1, trans));
     // Ensure dynamic cast valid
     ASSERT_TRUE(coll);
 
@@ -156,5 +157,20 @@ TEST(TestComponents, TestSaveLoadEnemyHitbox) {
     EXPECT_EQ(10, coll->getAttributes().knockback_y);
 
     nlohmann::json j2 = coll->outputToJson().value();
-    ASSERT_TRUE(j == j2);
+    ASSERT_TRUE(j1== j2) << j1.dump() << std::endl << j2.dump() << std::endl;
+}
+
+TEST(TestComponents, TestSaveLoadTransition) {
+    std::shared_ptr<Transform> trans = std::make_shared<Transform>();
+    nlohmann::json j1= nlohmann::json::parse("{ \"width\": 50, \"height\": 50 }");
+    j1["destination"] = nlohmann::json::parse("{ \"room\": \"world.json\", \"entrance_id\": 1 }");
+
+    j1["type"] = "transition";
+    std::shared_ptr<CollisionTransition> coll =
+        std::dynamic_pointer_cast<CollisionTransition>(Collision::createFromJson(j1, trans));
+    // Ensure dynamic cast valid
+    ASSERT_TRUE(coll);
+
+    nlohmann::json j2 = coll->outputToJson().value();
+    ASSERT_TRUE(j1== j2) << j1.dump() << std::endl << j2.dump() << std::endl;
 }

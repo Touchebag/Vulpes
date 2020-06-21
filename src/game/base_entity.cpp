@@ -167,6 +167,10 @@ void BaseEntity::update() {
         statefulEntity_->update();
     }
 
+    if (collision_) {
+        collision_->update();
+    }
+
     if (ai_) {
         ai_->update();
     }

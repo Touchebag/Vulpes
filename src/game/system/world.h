@@ -41,6 +41,8 @@ class World {
         static void clearWorld();
 
         static std::vector<std::shared_ptr<BaseEntity>>& getWorldObjects();
+
+        static void loadRoom(std::string room_name, int entrance_id);
     };
 
     template <class T>
@@ -69,6 +71,8 @@ class World {
     void loadWorldFromJson(nlohmann::json j);
     void loadWorldFromFile(std::string file);
 
+    void loadRoom(std::string room_name, int entrance_id);
+
     std::vector<std::shared_ptr<BaseEntity>>::iterator deleteEntity(std::vector<std::shared_ptr<BaseEntity>>::iterator it);
 
     util::Point getPlayerPosition();
@@ -89,6 +93,8 @@ class World {
     std::array<std::vector<std::weak_ptr<const Collision>>, static_cast<int>(Collision::CollisionType::MAX_NUM)> collisions_;
 
     std::vector<util::Point> entrances_;
+
+    std::optional<std::pair<std::string, int>> new_room;
 };
 
 template <> World::IWorldRead World::getInstance<World::IWorldRead>();

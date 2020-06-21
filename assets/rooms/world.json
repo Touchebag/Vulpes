@@ -15,8 +15,8 @@
                 "width": 245
             },
             "Transform": {
-                "pos_x": 2637,
-                "pos_y": 666
+                "pos_x": 2703,
+                "pos_y": 120
             }
         },
         {
@@ -34,8 +34,8 @@
                 "width": 204
             },
             "Transform": {
-                "pos_x": -1938,
-                "pos_y": 606
+                "pos_x": -1976,
+                "pos_y": -334
             }
         },
         {
@@ -275,21 +275,21 @@
         },
         {
             "Collision": {
-                "height": 346,
+                "height": 461,
                 "type": "static",
-                "width": 685
+                "width": 1043
             },
             "Renderable": {
-                "height": 346,
+                "height": 461,
                 "layer": "main",
                 "texture": "Forest/Dirt.png",
                 "tile_x": true,
                 "tile_y": true,
-                "width": 685
+                "width": 1043
             },
             "Transform": {
-                "pos_x": -1486,
-                "pos_y": 2767
+                "pos_x": -1549,
+                "pos_y": 2715
             }
         },
         {
@@ -343,6 +343,36 @@
                 "pos_x": -19,
                 "pos_y": 2409
             }
+        },
+        {
+            "Collision": {
+                "destination": {
+                    "room": "room2.json",
+                    "entrance_id": 1
+                },
+                "height": 507,
+                "type": "transition",
+                "width": 243
+            },
+            "Transform": {
+                "pos_x": -1997,
+                "pos_y": 2284
+            }
+        },
+        {
+            "Collision": {
+                "destination": {
+                    "room": "room2.json",
+                    "entrance_id": 0
+                },
+                "height": 525,
+                "type": "transition",
+                "width": 173
+            },
+            "Transform": {
+                "pos_x": 2704,
+                "pos_y": 2666
+            }
         }
     ],
     "entrances": [
@@ -350,6 +380,16 @@
             "id": 0,
             "pos_x": -393,
             "pos_y": 2418
+        },
+        {
+            "id": 1,
+            "pos_x": -1800,
+            "pos_y": 2300
+        },
+        {
+            "id": 2,
+            "pos_x": 2600,
+            "pos_y": 2700
         }
     ]
 }

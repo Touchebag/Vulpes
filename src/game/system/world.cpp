@@ -43,6 +43,11 @@ void World::update() {
     if (player_->damageable_) {
         player_health_->setText(std::to_string(player_->damageable_->getHealth()));
     }
+
+    if (new_room) {
+        loadRoom(new_room->first, new_room->second);
+        new_room.reset();
+    }
 }
 
 util::Point World::getPlayerPosition() {
@@ -53,8 +58,6 @@ void World::clearWorld() {
     world_objects_.clear();
 
     entrances_.clear();
-
-    player_ = nullptr;
 }
 
 void World::loadWorldFromFile(std::string path) {
@@ -95,7 +98,11 @@ void World::loadWorldFromJson(nlohmann::json j) {
         addEntity(ent);
     }
 
-    player_ = Player::createFromJson(File::loadEntityFromFile("player.json").value());
+    // Don't reload player between rooms
+    if (!player_) {
+        player_ = Player::createFromJson(File::loadEntityFromFile("player.json").value());
+    }
+
     if (!entrances_.empty()) {
         player_->trans_->setPosition(entrances_.at(0));
     }
@@ -174,6 +181,16 @@ void World::removeEntity(std::shared_ptr<BaseEntity> entity) {
     std::vector<std::shared_ptr<BaseEntity>>::iterator it = std::find(world_objects_.begin(), world_objects_.end(), entity);
     if (it != world_objects_.end()) {
         deleteEntity(it);
+    }
+}
+
+void World::loadRoom(std::string room_name, int entrance_id) {
+    loadWorldFromFile(room_name);
+
+    if (entrance_id < static_cast<int>(entrances_.size())) {
+        player_->trans_->setPosition(entrances_.at(entrance_id));
+    } else {
+        throw std::invalid_argument("Entrance id not found");
     }
 }
 
