@@ -375,6 +375,10 @@
             }
         },
         {
+            "Actions": null,
+            "AI": {
+                "file": "collision_and_die.json"
+            },
             "Collision": {
                 "health": 20,
                 "height": 50,

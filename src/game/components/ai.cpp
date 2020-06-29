@@ -10,21 +10,25 @@
 #include "ai/values/player_value.h"
 #include "ai/values/this.h"
 
-AI::AI(std::weak_ptr<Actions> actions, std::weak_ptr<Transform> transform, std::weak_ptr<AnimatedEntity> animated_entitiy) :
+AI::AI(std::weak_ptr<Actions> actions,
+       std::weak_ptr<Transform> transform,
+       std::weak_ptr<Collision> collision,
+       std::weak_ptr<AnimatedEntity> animated_entitiy) :
     actions_(actions),
     transform_(transform),
+    collision_(collision),
     animated_entitiy_(animated_entitiy) {
 }
 
 void AI::update() {
     auto act = actions_.lock();
-    auto trans = transform_.lock();
 
     frame_timer_++;
 
-    if (act && trans) {
+    if (act) {
         ai::condition::LogicalOperator::aiValues values {
-            trans,
+            transform_,
+            collision_,
             animated_entitiy_,
             frame_timer_
         };

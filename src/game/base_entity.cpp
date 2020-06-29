@@ -73,7 +73,7 @@ void BaseEntity::reloadFromJson(nlohmann::json j) {
 
     physics_ = loadComponentFromJson(j, "Physics", std::make_shared<Physics>(statefulEntity_, movableEntity_, animatedEntity_, actions_, collision_));
 
-    ai_ = loadComponentFromJson(j, "AI", std::make_shared<AI>(actions_, trans_, animatedEntity_));
+    ai_ = loadComponentFromJson(j, "AI", std::make_shared<AI>(actions_, trans_, collision_, animatedEntity_));
 
     damageable_ = loadComponentFromJson(j, "Damageable", std::make_shared<Damageable>(collision_, death_, statefulEntity_, renderableEntity_, movableEntity_));
 }

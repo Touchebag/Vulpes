@@ -8,6 +8,7 @@
 #include "less.h"
 #include "frame_timer.h"
 #include "animation_loop.h"
+#include "collides.h"
 #include "ai/ai_utils.h"
 
 #include "utils/log.h"
@@ -49,6 +50,8 @@ std::shared_ptr<const LogicalOperator> LogicalOperator::createFromString(const s
         return std::make_shared<FrameTimer>(Value::createFromString(arguments[0]));
     } else if (operation == "animation_loop") {
         return std::make_shared<AnimationLoop>();
+    } else if (operation == "collides") {
+        return std::make_shared<Collides>(arguments[0]);
     };
 
     throw std::invalid_argument("LogicalOperator: invalid operation: " + operation);

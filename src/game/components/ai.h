@@ -1,6 +1,7 @@
 #pragma once
 
 #include "components/actions.h"
+#include "components/collision/collision.h"
 #include "components/transform.h"
 
 #include "utils/state_handler.h"
@@ -8,7 +9,10 @@
 
 class AI : public Component{
   public:
-    AI(std::weak_ptr<Actions> actions, std::weak_ptr<Transform> transform, std::weak_ptr<AnimatedEntity> animated_entitiy);
+    AI(std::weak_ptr<Actions> actions,
+       std::weak_ptr<Transform> transform,
+       std::weak_ptr<Collision> collision,
+       std::weak_ptr<AnimatedEntity> animated_entitiy);
 
     void update() override;
 
@@ -18,6 +22,7 @@ class AI : public Component{
   private:
     std::weak_ptr<Actions> actions_;
     std::weak_ptr<Transform> transform_;
+    std::weak_ptr<Collision> collision_;
     std::weak_ptr<AnimatedEntity> animated_entitiy_;
 
     unsigned int frame_timer_ = 0;
