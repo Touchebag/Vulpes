@@ -7,6 +7,7 @@
 #include "components/collision/collision_player_hurtbox.h"
 #include "components/collision/collision_enemy_hitbox.h"
 #include "components/collision/collision_transition.h"
+#include "components/collision/collision_health.h"
 
 nlohmann::json entity_json = nlohmann::json::parse(R"--(
 {
@@ -168,6 +169,21 @@ TEST(TestComponents, TestSaveLoadTransition) {
     j1["type"] = "transition";
     std::shared_ptr<CollisionTransition> coll =
         std::dynamic_pointer_cast<CollisionTransition>(Collision::createFromJson(j1, trans));
+    // Ensure dynamic cast valid
+    ASSERT_TRUE(coll);
+
+    nlohmann::json j2 = coll->outputToJson().value();
+    ASSERT_TRUE(j1== j2) << j1.dump() << std::endl << j2.dump() << std::endl;
+}
+
+TEST(TestComponents, TestSaveLoadHealthCollectible) {
+    std::shared_ptr<Transform> trans = std::make_shared<Transform>();
+    nlohmann::json j1= nlohmann::json::parse("{ \"width\": 50, \"height\": 50 }");
+    j1["health"] = 10;
+
+    j1["type"] = "health";
+    std::shared_ptr<CollisionHealth> coll =
+        std::dynamic_pointer_cast<CollisionHealth>(Collision::createFromJson(j1, trans));
     // Ensure dynamic cast valid
     ASSERT_TRUE(coll);
 

@@ -106,6 +106,14 @@ int Damageable::getHealth() {
     return health_;
 }
 
+void Damageable::setHealth(int health) {
+    health_ = health;
+}
+
+void Damageable::addHealth(int health) {
+    health_ += health;
+}
+
 bool Damageable::isDead() {
     return health_ <= 0;
 }

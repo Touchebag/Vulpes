@@ -15,6 +15,7 @@ class Collision : public Component {
         PLAYER_HITBOX,
         ENEMY_HITBOX,
         TRANSITION,
+        HEALTH,
 
         MAX_NUM
     };

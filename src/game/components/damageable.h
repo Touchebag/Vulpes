@@ -23,6 +23,9 @@ class Damageable : public Component {
     void update() override;
 
     int getHealth();
+    void setHealth(int health);
+
+    void addHealth(int health);
     bool isDead();
 
   private:

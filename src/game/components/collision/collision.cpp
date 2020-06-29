@@ -7,6 +7,7 @@
 #include "collision_player_hitbox.h"
 #include "collision_enemy_hitbox.h"
 #include "collision_transition.h"
+#include "collision_health.h"
 
 namespace {
 
@@ -48,6 +49,8 @@ const std::map<std::string, Collision::CollisionType> string_type_map {
     {"enemy_hitbox", Collision::CollisionType::ENEMY_HITBOX},
 
     {"transition", Collision::CollisionType::TRANSITION},
+
+    {"health", Collision::CollisionType::HEALTH},
 };
 
 } // namespace
@@ -111,6 +114,12 @@ std::shared_ptr<Collision> Collision::createFromJson(nlohmann::json j, std::weak
         case CollisionType::TRANSITION:
             {
                 auto coll = std::make_shared<CollisionTransition>(trans);
+                coll->reloadFromJson(j);
+                return coll;
+            }
+        case CollisionType::HEALTH:
+            {
+                auto coll = std::make_shared<CollisionHealth>(trans);
                 coll->reloadFromJson(j);
                 return coll;
             }

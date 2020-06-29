@@ -373,6 +373,27 @@
                 "pos_x": 2704,
                 "pos_y": 2666
             }
+        },
+        {
+            "Collision": {
+                "health": 20,
+                "height": 50,
+                "type": "health",
+                "width": 50
+            },
+            "Death": null,
+            "Renderable": {
+                "height": 50,
+                "layer": "main",
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true,
+                "width": 50
+            },
+            "Transform": {
+                "pos_x": -157,
+                "pos_y": 2227
+            }
         }
     ],
     "entrances": [
