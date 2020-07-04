@@ -225,6 +225,11 @@ const collision::AttackAttributes Collision::getAttributes() const {
     return {};
 }
 
+int Collision::getHealth() const {
+    LOGW("Getting health on invalid object");
+    return 0;
+}
+
 std::weak_ptr<const Transform> Collision::getTransform() const {
     return trans_;
 }

@@ -41,6 +41,7 @@
         "width": 50
     },
     "Damageable": {
+        "type": "player",
         "health": 100
     },
     "Death": null,

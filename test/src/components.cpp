@@ -8,6 +8,7 @@
 #include "components/collision/collision_enemy_hitbox.h"
 #include "components/collision/collision_transition.h"
 #include "components/collision/collision_health.h"
+#include "components/damageable/damageable_player.h"
 
 nlohmann::json entity_json = nlohmann::json::parse(R"--(
 {
@@ -188,5 +189,29 @@ TEST(TestComponents, TestSaveLoadHealthCollectible) {
     ASSERT_TRUE(coll);
 
     nlohmann::json j2 = coll->outputToJson().value();
+    ASSERT_TRUE(j1== j2) << j1.dump() << std::endl << j2.dump() << std::endl;
+}
+
+TEST(TestComponents, TestSaveLoadPlayerDamageable) {
+    std::shared_ptr<Transform> trans = std::make_shared<Transform>();
+    std::shared_ptr<Collision> coll = std::make_shared<CollisionPlayerHurtbox>(trans);
+    std::shared_ptr<MovableEntity> move = std::make_shared<MovableEntity>(trans, coll);
+    std::shared_ptr<Death> death = std::make_shared<Death>();
+    std::shared_ptr<Subentity> subent = std::make_shared<Subentity>(trans, move);
+    std::shared_ptr<RenderableEntity> render = std::make_shared<RenderableEntity>(trans, move);
+    std::shared_ptr<AnimatedEntity> anim = std::make_shared<AnimatedEntity>(render);
+    std::shared_ptr<StatefulEntity> state = std::make_shared<StatefulEntity>(anim, subent);
+
+    nlohmann::json j1;
+
+    j1["health"] = 10;
+    j1["type"] = "player";
+
+    std::shared_ptr<DamageablePlayer> dmg =
+        std::dynamic_pointer_cast<DamageablePlayer>(Damageable::createFromJson(j1, coll, death, state, render, move));
+    // Ensure dynamic cast valid
+    ASSERT_TRUE(dmg);
+
+    nlohmann::json j2 = dmg->outputToJson().value();
     ASSERT_TRUE(j1== j2) << j1.dump() << std::endl << j2.dump() << std::endl;
 }

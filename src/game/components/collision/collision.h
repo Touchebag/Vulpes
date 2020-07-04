@@ -42,7 +42,9 @@ class Collision : public Component {
 
     std::weak_ptr<const Transform> getTransform() const;
 
+    // Type-specific functions
     virtual const collision::AttackAttributes getAttributes() const;
+    virtual int getHealth() const;
 
     virtual CollisionType getType() const = 0;
 

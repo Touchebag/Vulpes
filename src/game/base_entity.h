@@ -13,7 +13,7 @@
 #include "components/collision/collision.h"
 #include "components/physics.h"
 #include "components/ai.h"
-#include "components/damageable.h"
+#include "components/damageable/damageable.h"
 #include "components/subentity.h"
 #include "components/death.h"
 

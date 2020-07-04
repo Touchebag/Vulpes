@@ -2,6 +2,7 @@
 
 #include "utils/log.h"
 #include "system/world.h"
+#include "damageable_player.h"
 
 namespace {
 
@@ -49,6 +50,27 @@ std::optional<nlohmann::json> Damageable::outputToJson() {
     j["health"] = initial_health_;
 
     return j;
+}
+
+std::shared_ptr<Damageable> Damageable::createFromJson(nlohmann::json j,
+                                                       std::weak_ptr<Collision> coll,
+                                                       std::weak_ptr<Death> death,
+                                                       std::weak_ptr<StatefulEntity> state,
+                                                       std::weak_ptr<RenderableEntity> render,
+                                                       std::weak_ptr<MovableEntity> move) {
+    if (!j.contains("type")) {
+        auto dmg = std::make_shared<Damageable>(coll, death, state, render, move);
+        dmg->reloadFromJson(j);
+        return dmg;
+    }
+
+    if (j["type"].get<std::string>() == "player") {
+        auto dmg = std::make_shared<DamageablePlayer>(coll, death, state, render, move);
+        dmg->reloadFromJson(j);
+        return dmg;
+    }
+
+    throw std::invalid_argument(std::string("Invalid type: ") + j["type"].get<std::string>());
 }
 
 void Damageable::update() {
@@ -104,14 +126,6 @@ void Damageable::update() {
 
 int Damageable::getHealth() {
     return health_;
-}
-
-void Damageable::setHealth(int health) {
-    health_ = health;
-}
-
-void Damageable::addHealth(int health) {
-    health_ += health;
 }
 
 bool Damageable::isDead() {
