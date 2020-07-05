@@ -37,7 +37,11 @@ nlohmann::json entity_json = nlohmann::json::parse(R"--(
     "Damageable": {
         "health": 100
     },
-    "Death": null,
+    "Death": {
+        "death_entity": {
+            "Entity": "enemy.json"
+        }
+    },
     "Movable": null,
     "Physics": {
         "ground_acceleration": 7.0,

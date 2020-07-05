@@ -34,6 +34,15 @@ void World::update() {
         (*it)->update();
 
         if ((*it)->death_ && (*it)->death_->isDead()) {
+            if (auto death_entity_json = (*it)->death_->getDeathEntityJson()) {
+                auto death_entity = BaseEntity::createFromJson(death_entity_json.value());
+
+                if ((*it)->trans_ && death_entity->trans_) {
+                    death_entity->trans_->setPosition((*it)->trans_->getPosition());
+                }
+
+                addEntity(death_entity);
+            }
             it = deleteEntity(it);
         } else {
             ++it;

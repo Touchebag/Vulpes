@@ -38,7 +38,11 @@
     "Damageable": {
         "health": 10
     },
-    "Death": null,
+    "Death": {
+        "death_entity": {
+            "Entity": "health.json"
+        }
+    },
     "Movable": null,
     "Physics": {
         "ground_acceleration": 3.0,
