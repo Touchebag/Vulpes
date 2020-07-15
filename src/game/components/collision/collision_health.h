@@ -9,7 +9,7 @@ class CollisionHealth : public Collision {
     void reloadFromJson(nlohmann::json j) override;
     virtual std::optional<nlohmann::json> outputToJson() override;
 
-    int getHealth() const override;
+    int getHealth() const;
 
     Collision::CollisionType getType() const override;
 

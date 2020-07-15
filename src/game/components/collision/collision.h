@@ -44,7 +44,6 @@ class Collision : public Component {
 
     // Type-specific functions
     virtual const collision::AttackAttributes getAttributes() const;
-    virtual int getHealth() const;
 
     virtual CollisionType getType() const = 0;
 

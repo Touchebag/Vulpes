@@ -1,6 +1,7 @@
 #include "damageable_player.h"
 
 #include "system/world.h"
+#include "components/collision/collision_health.h"
 
 DamageablePlayer::DamageablePlayer(std::weak_ptr<Collision> hurtbox,
                                    std::weak_ptr<Death> death,
@@ -31,7 +32,9 @@ void DamageablePlayer::update() {
         for (auto& it : World::IWorldRead::getCollisions(Collision::CollisionType::HEALTH)) {
             if (auto other_coll = it.lock()) {
                 if (coll->collides(other_coll)) {
-                    health_ += other_coll->getHealth();
+                    if (auto health_collision = std::dynamic_pointer_cast<const CollisionHealth>(other_coll)) {
+                        health_ += health_collision->getHealth();
+                    }
                 }
             }
         }
