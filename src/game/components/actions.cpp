@@ -53,6 +53,7 @@ void Actions::addAction(Action action) {
     if (action == Action::DIE) {
         if (auto death = death_.lock()) {
             death->setDead();
+            return;
         }
     }
 
