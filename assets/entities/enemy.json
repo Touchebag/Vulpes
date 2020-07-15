@@ -1,5 +1,7 @@
 {
-    "Actions": null,
+    "Actions": {
+        "movement_x": true
+    },
     "AI": {
         "file": "basic_enemy.json"
     },

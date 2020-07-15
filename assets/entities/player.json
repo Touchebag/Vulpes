@@ -1,5 +1,10 @@
 {
-    "Actions": null,
+    "Actions": {
+        "movement_x": true,
+        "jump": true,
+        "dash": true,
+        "attack": true
+    },
     "Animated": {
         "frame_list": [
             "Idle0",

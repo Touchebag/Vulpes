@@ -1,15 +1,17 @@
 #include "actions.h"
 
 #include "utils/log.h"
+#include "utils/bimap.h"
 
 namespace {
 
-std::unordered_map<std::string, Actions::Action> string_action_map = {
+const Bimap<std::string, Actions::Action> string_action_map = {
     {"unknown", Actions::Action::UNKNOWN},
     {"move_left", Actions::Action::MOVE_LEFT},
     {"move_right", Actions::Action::MOVE_RIGHT},
     {"jump", Actions::Action::JUMP},
     {"dash", Actions::Action::DASH},
+    {"attack", Actions::Action::ATTACK},
 
     {"ai_event_1", Actions::Action::AI_EVENT_1},
     {"ai_event_2", Actions::Action::AI_EVENT_2},
@@ -54,6 +56,11 @@ void Actions::addAction(Action action) {
         }
     }
 
+    if (!enabled_actions_[static_cast<int>(action)]) {
+        LOGD("Action disabled: %s", string_action_map.at(action).c_str());
+        return;
+    }
+
     auto it = current_actions_.find(action);
 
     // If action is already in map, update to still be active
@@ -87,10 +94,44 @@ Actions::Action Actions::fromString(const std::string& action) {
     }
 }
 
-void Actions::reloadFromJson(nlohmann::json /* j */) {
+void Actions::reloadFromJson(nlohmann::json j) {
+    if (j.contains("movement_x")) {
+        enabled_actions_[static_cast<int>(Action::MOVE_RIGHT)] = true;
+        enabled_actions_[static_cast<int>(Action::MOVE_LEFT)] = true;
+    }
+
+    if (j.contains(string_action_map.at(Action::JUMP))) {
+        enabled_actions_[static_cast<int>(Action::JUMP)] = true;
+    }
+
+    if (j.contains(string_action_map.at(Action::DASH))) {
+        enabled_actions_[static_cast<int>(Action::DASH)] = true;
+    }
+
+    if (j.contains(string_action_map.at(Action::ATTACK))) {
+        enabled_actions_[static_cast<int>(Action::ATTACK)] = true;
+    }
 }
 
 std::optional<nlohmann::json> Actions::outputToJson() {
     nlohmann::json j;
+
+    if (enabled_actions_[static_cast<int>(Action::MOVE_RIGHT)] &&
+        enabled_actions_[static_cast<int>(Action::MOVE_LEFT)]) {
+        j["movement_x"] = true;
+    }
+
+    if (enabled_actions_[static_cast<int>(Action::JUMP)]) {
+        j[string_action_map.at(Action::JUMP)] = true;
+    }
+
+    if (enabled_actions_[static_cast<int>(Action::DASH)]) {
+        j[string_action_map.at(Action::DASH)] = true;
+    }
+
+    if (enabled_actions_[static_cast<int>(Action::ATTACK)]) {
+        j[string_action_map.at(Action::ATTACK)] = true;
+    }
+
     return j;
 }

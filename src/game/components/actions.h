@@ -17,6 +17,11 @@ class Actions : public Component {
         DASH,
         ATTACK,
 
+        // Number of normal actions
+        NUM_ACTIONS,
+
+        // These actions are treated separately
+
         // AI events
         AI_EVENT_1,
         AI_EVENT_2,
@@ -56,6 +61,7 @@ class Actions : public Component {
 
     // Buttons currently pressed will be stored in this
     std::unordered_map<Actions::Action, ActionState> current_actions_;
+    bool enabled_actions_[static_cast<int>(Action::NUM_ACTIONS)] = {false};
 
     std::weak_ptr<Death> death_;
 };

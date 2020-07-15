@@ -12,7 +12,12 @@
 
 nlohmann::json entity_json = nlohmann::json::parse(R"--(
 {
-    "Actions": null,
+    "Actions": {
+            "movement_x": true,
+            "jump": true,
+            "attack": true,
+            "dash": true
+        },
     "Animated": {
         "frame_list": [
             "Idle0",
