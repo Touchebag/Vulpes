@@ -1,8 +1,9 @@
 #pragma once
 
-#include "component.h"
+#include "components/component.h"
 
-#include "death.h"
+#include "components/death.h"
+#include "utils/bimap.h"
 
 #include <unordered_map>
 #include <json.hpp>
@@ -36,7 +37,7 @@ class Actions : public Component {
 
     bool getActionState(Action action, bool first_frame = false);
 
-    void addAction(Action action);
+    virtual void addAction(Action action);
     void removeAction(Action action);
 
     static Action fromString(const std::string& action);
@@ -48,6 +49,8 @@ class Actions : public Component {
 
     void reloadFromJson(nlohmann::json j) override;
     std::optional<nlohmann::json> outputToJson() override;
+
+    static std::shared_ptr<Actions> createFromJson(nlohmann::json j, std::weak_ptr<Death> death, std::weak_ptr<Collision> coll);
 
   private:
     // ACTIVE = action has been held since at least one frame
@@ -61,7 +64,6 @@ class Actions : public Component {
 
     // Buttons currently pressed will be stored in this
     std::unordered_map<Actions::Action, ActionState> current_actions_;
-    bool enabled_actions_[static_cast<int>(Action::NUM_ACTIONS)] = {false};
 
     std::weak_ptr<Death> death_;
 };

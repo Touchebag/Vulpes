@@ -5,6 +5,8 @@ CollisionHealth::CollisionHealth(std::weak_ptr<Transform> trans) :
 }
 
 void CollisionHealth::reloadFromJson(nlohmann::json j) {
+    Collision::reloadFromJson(j);
+
     if (!j.contains("health")) {
         return;
     }

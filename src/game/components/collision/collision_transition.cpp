@@ -16,6 +16,8 @@ void CollisionTransition::update() {
 }
 
 void CollisionTransition::reloadFromJson(nlohmann::json j) {
+    Collision::reloadFromJson(j);
+
     if (!j.contains("destination")) {
         throw std::invalid_argument("Transition: destination not found");
     }

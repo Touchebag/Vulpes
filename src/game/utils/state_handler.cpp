@@ -1,7 +1,7 @@
 #include "utils/state_handler.h"
 
 #include "ai/logic_operators/logic_operator.h"
-#include "components/actions.h"
+#include "components/actions/actions.h"
 
 template <class T>
 void StateHandler<T>::reloadFromJson(const nlohmann::json& j) {

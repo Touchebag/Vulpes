@@ -8,6 +8,7 @@
 #include "collision_enemy_hitbox.h"
 #include "collision_transition.h"
 #include "collision_health.h"
+#include "collision_collectible.h"
 
 namespace {
 
@@ -51,6 +52,8 @@ const std::map<std::string, Collision::CollisionType> string_type_map {
     {"transition", Collision::CollisionType::TRANSITION},
 
     {"health", Collision::CollisionType::HEALTH},
+
+    {"collectible", Collision::CollisionType::COLLECTIBLE},
 };
 
 } // namespace
@@ -80,7 +83,7 @@ std::shared_ptr<Collision> Collision::createFromJson(nlohmann::json j, std::weak
         if (type_entry != string_type_map.end()) {
             type = type_entry->second;
         } else {
-            throw std::invalid_argument("Collision: invalid type" + j["type"].get<std::string>());
+            throw std::invalid_argument("Collision: invalid type " + j["type"].get<std::string>());
         }
     } else {
         throw std::invalid_argument("Collision: missing type");
@@ -120,6 +123,12 @@ std::shared_ptr<Collision> Collision::createFromJson(nlohmann::json j, std::weak
         case CollisionType::HEALTH:
             {
                 auto coll = std::make_shared<CollisionHealth>(trans);
+                coll->reloadFromJson(j);
+                return coll;
+            }
+        case CollisionType::COLLECTIBLE:
+            {
+                auto coll = std::make_shared<CollisionCollectible>(trans);
                 coll->reloadFromJson(j);
                 return coll;
             }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "components/actions.h"
+#include "components/actions/actions.h"
 #include "components/collision/collision.h"
 #include "components/transform.h"
 

@@ -1,25 +1,9 @@
 #include "actions.h"
 
+#include "actions_player.h"
+
+#include "common.h"
 #include "utils/log.h"
-#include "utils/bimap.h"
-
-namespace {
-
-const Bimap<std::string, Actions::Action> string_action_map = {
-    {"unknown", Actions::Action::UNKNOWN},
-    {"move_left", Actions::Action::MOVE_LEFT},
-    {"move_right", Actions::Action::MOVE_RIGHT},
-    {"jump", Actions::Action::JUMP},
-    {"dash", Actions::Action::DASH},
-    {"attack", Actions::Action::ATTACK},
-
-    {"ai_event_1", Actions::Action::AI_EVENT_1},
-    {"ai_event_2", Actions::Action::AI_EVENT_2},
-
-    {"die", Actions::Action::DIE},
-};
-
-}
 
 Actions::Actions(std::weak_ptr<Death> death) :
     death_(death) {
@@ -54,12 +38,9 @@ void Actions::addAction(Action action) {
         if (auto death = death_.lock()) {
             death->setDead();
             return;
+        } else {
+            LOGW("Missing death component");
         }
-    }
-
-    if (!enabled_actions_[static_cast<int>(action)]) {
-        LOGD("Action disabled: %s", string_action_map.at(action).c_str());
-        return;
     }
 
     auto it = current_actions_.find(action);
@@ -67,7 +48,7 @@ void Actions::addAction(Action action) {
     // If action is already in map, update to still be active
     // else add new first frame action
     if (it != current_actions_.end()) {
-            it->second = ActionState::ACTIVE;
+        it->second = ActionState::ACTIVE;
     } else {
         current_actions_.insert_or_assign(action, ActionState::FIRST_FRAME);
     }
@@ -95,44 +76,23 @@ Actions::Action Actions::fromString(const std::string& action) {
     }
 }
 
-void Actions::reloadFromJson(nlohmann::json j) {
-    if (j.contains("movement_x")) {
-        enabled_actions_[static_cast<int>(Action::MOVE_RIGHT)] = true;
-        enabled_actions_[static_cast<int>(Action::MOVE_LEFT)] = true;
+std::shared_ptr<Actions> Actions::createFromJson(nlohmann::json j, std::weak_ptr<Death> death, std::weak_ptr<Collision> coll) {
+    if (j.contains("type") && j["type"].get<std::string>() == "player") {
+        std::shared_ptr<ActionsPlayer> actions_player = std::make_shared<ActionsPlayer>(death, coll);
+        actions_player->reloadFromJson(j);
+        return actions_player;
+    } else {
+        std::shared_ptr<Actions> actions = std::make_shared<Actions>(death);
+        actions->reloadFromJson(j);
+        return actions;
     }
+}
 
-    if (j.contains(string_action_map.at(Action::JUMP))) {
-        enabled_actions_[static_cast<int>(Action::JUMP)] = true;
-    }
-
-    if (j.contains(string_action_map.at(Action::DASH))) {
-        enabled_actions_[static_cast<int>(Action::DASH)] = true;
-    }
-
-    if (j.contains(string_action_map.at(Action::ATTACK))) {
-        enabled_actions_[static_cast<int>(Action::ATTACK)] = true;
-    }
+void Actions::reloadFromJson(nlohmann::json /* j */) {
 }
 
 std::optional<nlohmann::json> Actions::outputToJson() {
     nlohmann::json j;
-
-    if (enabled_actions_[static_cast<int>(Action::MOVE_RIGHT)] &&
-        enabled_actions_[static_cast<int>(Action::MOVE_LEFT)]) {
-        j["movement_x"] = true;
-    }
-
-    if (enabled_actions_[static_cast<int>(Action::JUMP)]) {
-        j[string_action_map.at(Action::JUMP)] = true;
-    }
-
-    if (enabled_actions_[static_cast<int>(Action::DASH)]) {
-        j[string_action_map.at(Action::DASH)] = true;
-    }
-
-    if (enabled_actions_[static_cast<int>(Action::ATTACK)]) {
-        j[string_action_map.at(Action::ATTACK)] = true;
-    }
 
     return j;
 }

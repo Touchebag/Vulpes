@@ -1,9 +1,7 @@
 {
     "Actions": {
-        "movement_x": true,
-        "jump": true,
-        "dash": true,
-        "attack": true
+        "type": "player",
+        "movement_x": true
     },
     "Animated": {
         "frame_list": [

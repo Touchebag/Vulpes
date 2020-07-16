@@ -79,8 +79,8 @@
         {
             "Collision": {
                 "destination": {
-                    "room": "world.json",
-                    "entrance_id": 2
+                    "entrance_id": 2,
+                    "room": "world.json"
                 },
                 "height": 408,
                 "type": "transition",
@@ -94,8 +94,8 @@
         {
             "Collision": {
                 "destination": {
-                    "room": "world.json",
-                    "entrance_id": 1
+                    "entrance_id": 1,
+                    "room": "world.json"
                 },
                 "height": 408,
                 "type": "transition",
@@ -104,6 +104,19 @@
             "Transform": {
                 "pos_x": 1143,
                 "pos_y": 1247
+            }
+        },
+        {
+            "Entity": "collectible.json",
+            "Collision": {
+                "height": 50,
+                "type": "collectible",
+                "width": 50,
+                "id": 1
+            },
+            "Transform": {
+                "pos_x": 400,
+                "pos_y": 1120
             }
         }
     ],

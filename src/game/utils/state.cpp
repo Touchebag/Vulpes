@@ -3,7 +3,7 @@
 #include "log.h"
 
 #include "ai/logic_operators/logic_operator.h"
-#include "components/actions.h"
+#include "components/actions/actions.h"
 
 template <class T>
 State<T>::State(T data) :

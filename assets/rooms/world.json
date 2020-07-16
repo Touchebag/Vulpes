@@ -41,8 +41,8 @@
         {
             "Entity": "enemy.json",
             "Transform": {
-                "pos_x": -742,
-                "pos_y": 2801
+                "pos_x": 1350,
+                "pos_y": 2781
             }
         },
         {
@@ -347,8 +347,8 @@
         {
             "Collision": {
                 "destination": {
-                    "room": "room2.json",
-                    "entrance_id": 1
+                    "entrance_id": 1,
+                    "room": "room2.json"
                 },
                 "height": 507,
                 "type": "transition",
@@ -362,8 +362,8 @@
         {
             "Collision": {
                 "destination": {
-                    "room": "room2.json",
-                    "entrance_id": 0
+                    "entrance_id": 0,
+                    "room": "room2.json"
                 },
                 "height": 525,
                 "type": "transition",
@@ -372,6 +372,32 @@
             "Transform": {
                 "pos_x": 2704,
                 "pos_y": 2666
+            }
+        },
+        {
+            "Entity": "collectible.json",
+            "Collision": {
+                "height": 50,
+                "type": "collectible",
+                "width": 50,
+                "id": 0
+            },
+            "Transform": {
+                "pos_x": -223,
+                "pos_y": 2734
+            }
+        },
+        {
+            "Entity": "collectible.json",
+            "Collision": {
+                "height": 50,
+                "type": "collectible",
+                "width": 50,
+                "id": 2
+            },
+            "Transform": {
+                "pos_x": -1157,
+                "pos_y": -283
             }
         }
     ],

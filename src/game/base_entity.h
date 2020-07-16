@@ -9,7 +9,7 @@
 #include "components/rendering/rendering.h"
 #include "components/animation.h"
 #include "components/stateful.h"
-#include "components/actions.h"
+#include "components/actions/actions.h"
 #include "components/collision/collision.h"
 #include "components/physics.h"
 #include "components/ai.h"

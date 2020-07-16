@@ -5,7 +5,7 @@
 
 #include "components/stateful.h"
 #include "components/rendering/rendering.h"
-#include "components/actions.h"
+#include "components/actions/actions.h"
 #include "components/animation.h"
 #include "components/movement.h"
 #include "components/collision/collision.h"
