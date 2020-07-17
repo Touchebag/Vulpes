@@ -10,6 +10,18 @@ const std::string TEXTURE_DIR = "textures";
 const std::string SPRITE_MAP_DIR = "sprite_maps";
 const std::string FONT_DIR = "fonts";
 
+namespace {
+
+bool stringEndsWith(const std::string &full_string, const std::string &suffix) {
+    if (full_string.length() >= suffix.length()) {
+        return (full_string.compare(full_string.length() - suffix.length(), suffix.length(), suffix) == 0);
+    } else {
+        return false;
+    }
+}
+
+} // namespace
+
 std::ifstream File::openFileForInput(std::string filepath) {
     filepath = ASSET_DIR + "/" + filepath;
 
@@ -37,6 +49,10 @@ std::ofstream File::openFileForOutput(std::string filepath) {
 }
 
 std::optional<nlohmann::json> File::loadJson(std::string filepath) {
+    if (!stringEndsWith(filepath, ".json")) {
+        filepath.append(".json");
+    }
+
     try {
         return nlohmann::json::parse(openFileForInput(filepath));
     } catch (nlohmann::json::parse_error& e) {
@@ -50,6 +66,10 @@ std::optional<nlohmann::json> File::loadEntityFromFile(std::string filepath) {
 }
 
 std::ifstream File::openSpriteMapFile(std::string filepath) {
+    if (!stringEndsWith(filepath, ".txt")) {
+        filepath.append(".txt");
+    }
+
     return openFileForInput(SPRITE_MAP_DIR + "/" + filepath);
 }
 
@@ -72,6 +92,10 @@ std::optional<nlohmann::json> File::loadAiBehavior(std::string filepath) {
 }
 
 std::optional<sf::Texture> File::loadTexture(std::string filepath) {
+    if (!stringEndsWith(filepath, ".png")) {
+        filepath.append(".png");
+    }
+
     sf::Texture texture;
     if (!texture.loadFromFile(ASSET_DIR + "/" + TEXTURE_DIR + "/" + filepath)) {
         return std::nullopt;

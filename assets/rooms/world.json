@@ -9,7 +9,7 @@
             "Renderable": {
                 "height": 4719,
                 "layer": "main",
-                "texture": "Forest/Tree.png",
+                "texture": "Forest/Tree",
                 "tile_x": true,
                 "tile_y": true,
                 "width": 245
@@ -28,7 +28,7 @@
             "Renderable": {
                 "height": 4787,
                 "layer": "main",
-                "texture": "Forest/Tree.png",
+                "texture": "Forest/Tree",
                 "tile_x": true,
                 "tile_y": true,
                 "width": 204
@@ -39,7 +39,7 @@
             }
         },
         {
-            "Entity": "enemy.json",
+            "Entity": "enemy",
             "Transform": {
                 "pos_x": 1350,
                 "pos_y": 2781
@@ -54,7 +54,7 @@
             "Renderable": {
                 "height": 49,
                 "layer": "main",
-                "texture": "Forest/Grass.png",
+                "texture": "Forest/Grass",
                 "tile_x": true,
                 "tile_y": true,
                 "width": 1088
@@ -73,7 +73,7 @@
             "Renderable": {
                 "height": 705,
                 "layer": "main",
-                "texture": "Forest/Tree.png",
+                "texture": "Forest/Tree",
                 "tile_x": true,
                 "tile_y": true,
                 "width": 70
@@ -92,7 +92,7 @@
             "Renderable": {
                 "height": 2749,
                 "layer": "main",
-                "texture": "Forest/Dirt.png",
+                "texture": "Forest/Dirt",
                 "tile_x": true,
                 "tile_y": true,
                 "width": 89
@@ -111,7 +111,7 @@
             "Renderable": {
                 "height": 65,
                 "layer": "main",
-                "texture": "Forest/Dirt.png",
+                "texture": "Forest/Dirt",
                 "tile_x": true,
                 "tile_y": true,
                 "width": 1015
@@ -130,7 +130,7 @@
             "Renderable": {
                 "height": 71,
                 "layer": "main",
-                "texture": "Forest/Dirt.png",
+                "texture": "Forest/Dirt",
                 "tile_x": true,
                 "tile_y": true,
                 "width": 1606
@@ -149,7 +149,7 @@
             "Renderable": {
                 "height": 1394,
                 "layer": "main",
-                "texture": "Forest/Dirt.png",
+                "texture": "Forest/Dirt",
                 "tile_x": true,
                 "tile_y": true,
                 "width": 101
@@ -168,7 +168,7 @@
             "Renderable": {
                 "height": 75,
                 "layer": "main",
-                "texture": "Forest/Dirt.png",
+                "texture": "Forest/Dirt",
                 "tile_x": true,
                 "tile_y": true,
                 "width": 996
@@ -187,7 +187,7 @@
             "Renderable": {
                 "height": 75,
                 "layer": "main",
-                "texture": "Forest/Dirt.png",
+                "texture": "Forest/Dirt",
                 "tile_x": true,
                 "tile_y": true,
                 "width": 996
@@ -206,7 +206,7 @@
             "Renderable": {
                 "height": 1394,
                 "layer": "main",
-                "texture": "Forest/Dirt.png",
+                "texture": "Forest/Dirt",
                 "tile_x": true,
                 "tile_y": true,
                 "width": 101
@@ -225,7 +225,7 @@
             "Renderable": {
                 "height": 2365,
                 "layer": "main",
-                "texture": "Forest/Tree.png",
+                "texture": "Forest/Tree",
                 "tile_x": true,
                 "tile_y": true,
                 "width": 112
@@ -244,7 +244,7 @@
             "Renderable": {
                 "height": 161,
                 "layer": "main",
-                "texture": "Forest/Canopy.png",
+                "texture": "Forest/Canopy",
                 "tile_x": true,
                 "tile_y": true,
                 "width": 4920
@@ -263,7 +263,7 @@
             "Renderable": {
                 "height": 156,
                 "layer": "main",
-                "texture": "Forest/Grass.png",
+                "texture": "Forest/Grass",
                 "tile_x": true,
                 "tile_y": true,
                 "width": 4882
@@ -282,7 +282,7 @@
             "Renderable": {
                 "height": 461,
                 "layer": "main",
-                "texture": "Forest/Dirt.png",
+                "texture": "Forest/Dirt",
                 "tile_x": true,
                 "tile_y": true,
                 "width": 1043
@@ -296,7 +296,7 @@
             "Renderable": {
                 "height": 235,
                 "layer": "main_fg",
-                "texture": "Forest/Bush.png",
+                "texture": "Forest/Bush",
                 "tile_x": false,
                 "tile_y": false
             },
@@ -309,7 +309,7 @@
             "Renderable": {
                 "height": 235,
                 "layer": "main_fg",
-                "texture": "Forest/Bush.png",
+                "texture": "Forest/Bush",
                 "tile_x": false,
                 "tile_y": false
             },
@@ -322,7 +322,7 @@
             "Renderable": {
                 "height": 235,
                 "layer": "main_fg",
-                "texture": "Forest/Bush.png",
+                "texture": "Forest/Bush",
                 "tile_x": false,
                 "tile_y": false
             },
@@ -335,7 +335,7 @@
             "Renderable": {
                 "height": 235,
                 "layer": "main_fg",
-                "texture": "Forest/Bush.png",
+                "texture": "Forest/Bush",
                 "tile_x": false,
                 "tile_y": false
             },
@@ -348,7 +348,7 @@
             "Collision": {
                 "destination": {
                     "entrance_id": 1,
-                    "room": "room2.json"
+                    "room": "room2"
                 },
                 "height": 507,
                 "type": "transition",
@@ -363,7 +363,7 @@
             "Collision": {
                 "destination": {
                     "entrance_id": 0,
-                    "room": "room2.json"
+                    "room": "room2"
                 },
                 "height": 525,
                 "type": "transition",
@@ -375,7 +375,7 @@
             }
         },
         {
-            "Entity": "collectible.json",
+            "Entity": "collectible",
             "Collision": {
                 "height": 50,
                 "type": "collectible",
@@ -388,7 +388,7 @@
             }
         },
         {
-            "Entity": "collectible.json",
+            "Entity": "collectible",
             "Collision": {
                 "height": 50,
                 "type": "collectible",

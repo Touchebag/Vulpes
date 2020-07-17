@@ -1,7 +1,7 @@
 {
     "Actions": null,
     "AI": {
-        "file": "basic_enemy.json"
+        "file": "basic_enemy"
     },
     "Animated": {
         "frame_list": [
@@ -22,7 +22,7 @@
             "Closed",
             "Closed"
         ],
-        "sprite_map": "Enemy.txt"
+        "sprite_map": "Enemy"
     },
     "Collision": {
         "type": "enemy_hitbox",
@@ -40,7 +40,7 @@
     },
     "Death": {
         "death_entity": {
-            "Entity": "health.json"
+            "Entity": "health"
         }
     },
     "Movable": null,
@@ -53,13 +53,13 @@
     },
     "Renderable": {
         "height": 90,
-        "texture": "Enemy.png",
+        "texture": "Enemy",
         "tile_x": true,
         "tile_y": true,
         "layer": "main"
     },
     "Stateful": {
-        "states": "enemy_state.json"
+        "states": "enemy_state"
     },
     "Transform": {
         "pos_x": 550,

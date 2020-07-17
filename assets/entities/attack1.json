@@ -1,10 +1,10 @@
 {
     "Actions": null,
     "AI": {
-        "file": "animation_and_die.json"
+        "file": "animation_and_die"
     },
     "Animated": {
-        "sprite_map": "Attack1.txt",
+        "sprite_map": "Attack1",
         "frame_list": [
             "Attack1_1",
             "Attack1_1",
@@ -40,7 +40,7 @@
     "Death": null,
     "Movable": null,
     "Renderable": {
-        "texture": "Attack1.png",
+        "texture": "Attack1",
         "height": 350,
         "layer": "main"
     },

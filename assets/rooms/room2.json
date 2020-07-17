@@ -9,7 +9,7 @@
             "Renderable": {
                 "height": 184,
                 "layer": "main",
-                "texture": "Forest/Grass.png",
+                "texture": "Forest/Grass",
                 "tile_x": true,
                 "tile_y": true,
                 "width": 1470
@@ -28,7 +28,7 @@
             "Renderable": {
                 "height": 907,
                 "layer": "main",
-                "texture": "Forest/Tree.png",
+                "texture": "Forest/Tree",
                 "tile_x": true,
                 "tile_y": true,
                 "width": 88
@@ -47,7 +47,7 @@
             "Renderable": {
                 "height": 907,
                 "layer": "main",
-                "texture": "Forest/Tree.png",
+                "texture": "Forest/Tree",
                 "tile_x": true,
                 "tile_y": true,
                 "width": 88
@@ -66,7 +66,7 @@
             "Renderable": {
                 "height": 234,
                 "layer": "main",
-                "texture": "Forest/Canopy.png",
+                "texture": "Forest/Canopy",
                 "tile_x": true,
                 "tile_y": true,
                 "width": 1917
@@ -80,7 +80,7 @@
             "Collision": {
                 "destination": {
                     "entrance_id": 2,
-                    "room": "world.json"
+                    "room": "world"
                 },
                 "height": 408,
                 "type": "transition",
@@ -95,7 +95,7 @@
             "Collision": {
                 "destination": {
                     "entrance_id": 1,
-                    "room": "world.json"
+                    "room": "world"
                 },
                 "height": 408,
                 "type": "transition",
@@ -107,7 +107,7 @@
             }
         },
         {
-            "Entity": "collectible.json",
+            "Entity": "collectible",
             "Collision": {
                 "height": 50,
                 "type": "collectible",

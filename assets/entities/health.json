@@ -1,7 +1,7 @@
 {
     "Actions": null,
     "AI": {
-        "file": "collision_and_die.json"
+        "file": "collision_and_die"
     },
     "Collision": {
         "health": 20,
@@ -13,7 +13,7 @@
     "Renderable": {
         "height": 50,
         "layer": "main",
-        "texture": "Health.png",
+        "texture": "Health",
         "tile_x": false,
         "tile_y": false,
         "width": 50

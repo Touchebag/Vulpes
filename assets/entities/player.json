@@ -36,7 +36,7 @@
             "Idle9",
             "Idle9"
         ],
-        "sprite_map": "Player.txt"
+        "sprite_map": "Player"
     },
     "Collision": {
         "type": "player_hurtbox",
@@ -68,13 +68,13 @@
     },
     "Renderable": {
         "height": 200,
-        "texture": "Player.png",
+        "texture": "Player",
         "tile_x": false,
         "tile_y": false,
         "layer": "main"
     },
     "Stateful": {
-        "states": "player_state.json"
+        "states": "player_state"
     },
     "Subentity": {
     },

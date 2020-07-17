@@ -1,13 +1,13 @@
 {
     "Actions": null,
     "AI": {
-        "file": "collision_and_die.json"
+        "file": "collision_and_die"
     },
     "Death": null,
     "Renderable": {
         "height": 50,
         "layer": "main",
-        "texture": "collectible.png",
+        "texture": "collectible",
         "tile_x": false,
         "tile_y": false,
         "width": 50

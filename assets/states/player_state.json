@@ -241,7 +241,7 @@
         },
         "frame_timer": 0,
         "spawn_entity": {
-            "Entity": "attack1.json"
+            "Entity": "attack1"
         },
         "next_states": [
             {"event": "jumping", "state": "jumping"},
