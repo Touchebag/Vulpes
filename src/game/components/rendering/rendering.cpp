@@ -168,6 +168,8 @@ void RenderableEntity::render(sf::RenderWindow& window) {
     // rectangle.setPosition(trans_->getX() + hitbox_->left_, trans_->getY() + hitbox_->top_);
     // rectangle.setFillColor(sf::Color(255, 0, 0, 64));
     // window.draw(rectangle);
+    } else {
+        LOGW("Rendering: Missing transform");
     }
 }
 

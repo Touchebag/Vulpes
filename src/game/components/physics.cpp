@@ -176,6 +176,16 @@ void Physics::update() {
         movable->move(max_movement.first, max_movement.second);
 
         movable->facing_right_ = facing_right;
+    } else {
+        if (!stateEnt) {
+            LOGW("Physics: Missing state");
+        }
+        if (!movable) {
+            LOGW("Physics: Missing movable");
+        }
+        if (!act) {
+            LOGW("Physics: Missing actions");
+        }
     }
 }
 

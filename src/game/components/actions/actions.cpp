@@ -39,7 +39,7 @@ void Actions::addAction(Action action) {
             death->setDead();
             return;
         } else {
-            LOGW("Missing death component");
+            LOGW("Action: Missing death component");
         }
     }
 

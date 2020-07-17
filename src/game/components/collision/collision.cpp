@@ -60,6 +60,7 @@ const std::map<std::string, Collision::CollisionType> string_type_map {
 
 Collision::Collision(std::weak_ptr<Transform> trans) :
     trans_(trans) {
+
     // TODO Should be 0?
     // Need to fix default collision not being clickable in editor
     setHitbox(50, 50);
@@ -183,15 +184,19 @@ std::pair<double, double> Collision::getMaximumMovement(double stepX, double ste
     auto other_trans = other_coll->trans_.lock();
     auto other_hbox = other_coll->getHitbox();
 
-    return getMaximumMovement(stepX, stepY, other_trans, other_hbox);
+    if (other_trans) {
+        return getMaximumMovement(stepX, stepY, other_trans, other_hbox);
+    } else {
+        LOGW("Collision: unable to lock other");
+        return {stepX, stepY};
+    }
 }
 
 std::pair<double, double> Collision::getMaximumMovement(double stepX, double stepY, std::shared_ptr<Transform> other_trans, std::shared_ptr<Hitbox> other_hbox) {
     double retX = stepX, retY = stepY;
 
-    auto this_trans = trans_.lock();
 
-    if (this_trans) {
+    if (auto this_trans = trans_.lock()) {
         // Check if collision after move
         std::shared_ptr<Transform> new_pos = std::make_shared<Transform>();
         new_pos->setPosition(this_trans->getX() + static_cast<int>(stepX), this_trans->getY() + static_cast<int>(stepY));
@@ -224,6 +229,8 @@ std::pair<double, double> Collision::getMaximumMovement(double stepX, double ste
                 retY = std::max(stepY, static_cast<double>(getAbsBottom(other_trans, other_hbox) - getAbsTop(this_trans, hbox_)));
             }
         }
+    } else {
+        LOGW("Collision: Missing transform");
     }
 
     return {retX, retY};

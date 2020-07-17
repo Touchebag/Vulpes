@@ -50,6 +50,8 @@ void AI::update() {
                 }
             }
         }
+    } else {
+        LOGW("AI: Missing actions");
     }
 }
 

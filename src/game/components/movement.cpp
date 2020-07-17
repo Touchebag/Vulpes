@@ -1,5 +1,7 @@
 #include "movement.h"
+
 #include "system/world.h"
+#include "utils/log.h"
 
 MovableEntity::MovableEntity(std::weak_ptr<Transform> trans, std::weak_ptr<Collision> collision) :
     trans_(trans),
@@ -17,6 +19,8 @@ void MovableEntity::move(double velX, double velY) {
         int x = trans->getX();
         int y = trans->getY();
         trans->setPosition(x + static_cast<int>(velx_), y + static_cast<int>(vely_));
+    } else {
+        LOGW("Movable: Missing transform");
     }
 }
 

@@ -88,6 +88,8 @@ void AnimatedEntity::setRenderTexture() {
     if (auto renderable = renderableEntity_.lock()) {
         auto sprite_rect = getSpriteRect();
         renderable->setTextureCoords(sprite_rect.x, sprite_rect.y, sprite_rect.width, sprite_rect.height);
+    } else {
+        LOGW("Animated: Missing renderable");
     }
 }
 
