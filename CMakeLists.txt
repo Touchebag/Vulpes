@@ -70,7 +70,7 @@ target_include_directories(${EDITOR_LIB_TARGET} PUBLIC src/game/ libs/nlohmann)
 target_link_libraries(${EDITOR_LIB_TARGET} ${GAME_LIB_TARGET} ${SFML_LIBS})
 
 # Level editor target
-file(GLOB_RECURSE EDITOR_SOURCES src/level_editor/*.cpp)
+file(GLOB_RECURSE EDITOR_SOURCES src/level_editor/main.cpp)
 add_executable(${EDITOR_TARGET} ${EDITOR_SOURCES})
 target_compile_options(${EDITOR_TARGET} PUBLIC ${CC_OPTIONS})
 target_include_directories(${EDITOR_TARGET} PUBLIC src/game/ libs/nlohmann)
