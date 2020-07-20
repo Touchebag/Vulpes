@@ -2,9 +2,9 @@
 
 #include "collision.h"
 
-class CollisionStatic : public Collision {
+class CollisionSemiSolid : public Collision {
   public:
-    CollisionStatic(std::weak_ptr<Transform> trans);
+    CollisionSemiSolid(std::weak_ptr<Transform> trans);
 
     CollisionType getType() const override;
 

@@ -48,7 +48,7 @@
         {
             "Collision": {
                 "height": 49,
-                "type": "static",
+                "type": "semi_solid",
                 "width": 1088
             },
             "Renderable": {

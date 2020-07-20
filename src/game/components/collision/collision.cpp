@@ -9,50 +9,20 @@
 #include "collision_transition.h"
 #include "collision_health.h"
 #include "collision_collectible.h"
+#include "collision_semisolid.h"
+
+#include "collision_utils.h"
 
 namespace {
 
-int getAbsRight(std::shared_ptr<const Transform> trans, std::shared_ptr<const Hitbox> hbox) {
-    return trans->getX() + hbox->getRight();
-}
-
-int getAbsLeft(std::shared_ptr<const Transform> trans, std::shared_ptr<const Hitbox> hbox) {
-    return trans->getX() + hbox->getLeft();
-}
-
-int getAbsTop(std::shared_ptr<const Transform> trans, std::shared_ptr<const Hitbox> hbox) {
-    return trans->getY() + hbox->getTop();
-}
-
-int getAbsBottom(std::shared_ptr<const Transform> trans, std::shared_ptr<const Hitbox> hbox) {
-    return trans->getY() + hbox->getBottom();
-}
-
-bool collidesX(std::shared_ptr<Transform> first_trans, std::shared_ptr<Hitbox> first_hbox,
-               std::shared_ptr<Transform> second_trans, std::shared_ptr<Hitbox> second_hbox) {
-    return getAbsLeft(first_trans, first_hbox) < getAbsRight(second_trans, second_hbox)
-        && getAbsRight(first_trans, first_hbox) > getAbsLeft(second_trans, second_hbox);
-}
-
-bool collidesY(std::shared_ptr<Transform> first_trans, std::shared_ptr<Hitbox> first_hbox,
-               std::shared_ptr<Transform> second_trans, std::shared_ptr<Hitbox> second_hbox) {
-    return getAbsTop(first_trans, first_hbox) < getAbsBottom(second_trans, second_hbox)
-        && getAbsBottom(first_trans, first_hbox) > getAbsTop(second_trans, second_hbox);
-}
-
 const std::map<std::string, Collision::CollisionType> string_type_map {
     {"static", Collision::CollisionType::STATIC},
-
+    {"semi_solid", Collision::CollisionType::SEMI_SOLID},
     {"player_hurtbox", Collision::CollisionType::PLAYER_HURTBOX},
-
     {"player_hitbox", Collision::CollisionType::PLAYER_HITBOX},
-
     {"enemy_hitbox", Collision::CollisionType::ENEMY_HITBOX},
-
     {"transition", Collision::CollisionType::TRANSITION},
-
     {"health", Collision::CollisionType::HEALTH},
-
     {"collectible", Collision::CollisionType::COLLECTIBLE},
 };
 
@@ -73,10 +43,6 @@ void Collision::setHitbox(int width, int height) {
     hbox_ = std::make_shared<Hitbox>(width, height);
 }
 
-const std::shared_ptr<Hitbox>& Collision::getHitbox() const {
-    return hbox_;
-}
-
 std::shared_ptr<Collision> Collision::createFromJson(nlohmann::json j, std::weak_ptr<Transform> trans) {
     CollisionType type;
     if (j.contains("type")) {
@@ -94,6 +60,12 @@ std::shared_ptr<Collision> Collision::createFromJson(nlohmann::json j, std::weak
         case CollisionType::STATIC:
             {
                 auto coll = std::make_shared<CollisionStatic>(trans);
+                coll->reloadFromJson(j);
+                return coll;
+            }
+        case CollisionType::SEMI_SOLID:
+            {
+                auto coll = std::make_shared<CollisionSemiSolid>(trans);
                 coll->reloadFromJson(j);
                 return coll;
             }
@@ -179,66 +151,13 @@ bool Collision::collides(std::weak_ptr<const Collision> other_entity) {
     return false;
 }
 
-std::pair<double, double> Collision::getMaximumMovement(double stepX, double stepY,
-        std::shared_ptr<const Collision> other_coll) {
-    auto other_trans = other_coll->trans_.lock();
-    auto other_hbox = other_coll->getHitbox();
-
-    if (other_trans) {
-        return getMaximumMovement(stepX, stepY, other_trans, other_hbox);
-    } else {
-        LOGW("Collision: unable to lock other");
-        return {stepX, stepY};
-    }
-}
-
-std::pair<double, double> Collision::getMaximumMovement(double stepX, double stepY, std::shared_ptr<Transform> other_trans, std::shared_ptr<Hitbox> other_hbox) {
-    double retX = stepX, retY = stepY;
-
-
-    if (auto this_trans = trans_.lock()) {
-        // Check if collision after move
-        std::shared_ptr<Transform> new_pos = std::make_shared<Transform>();
-        new_pos->setPosition(this_trans->getX() + static_cast<int>(stepX), this_trans->getY() + static_cast<int>(stepY));
-
-        bool collides_x = collidesX(new_pos, hbox_, other_trans, other_hbox);
-        bool collides_y = collidesY(new_pos, hbox_, other_trans, other_hbox);
-
-        if (!(collides_x && collides_y)) {
-            return {retX, retY};
-        }
-
-        collides_x = collidesX(this_trans, hbox_, other_trans, other_hbox);
-        collides_y = collidesY(this_trans, hbox_, other_trans, other_hbox);
-
-        // If X direction was already colliding before movement then we are parallel in this direction
-        // I.e. do not change speed
-        if (!collides_x) {
-            if (stepX > 0.0) {
-                retX = std::min(stepX, static_cast<double>(getAbsLeft(other_trans, other_hbox) - getAbsRight(this_trans, hbox_)));
-            } else if (stepX < 0.0) {
-                retX = std::max(stepX, static_cast<double>(getAbsRight(other_trans, other_hbox) - getAbsLeft(this_trans, hbox_)));
-            }
-        }
-
-        // Same for Y
-        if (!collides_y) {
-            if (stepY > 0.0) {
-                retY = std::min(stepY, static_cast<double>(getAbsTop(other_trans, other_hbox) - getAbsBottom(this_trans, hbox_)));
-            } else if (stepY < 0.0) {
-                retY = std::max(stepY, static_cast<double>(getAbsBottom(other_trans, other_hbox) - getAbsTop(this_trans, hbox_)));
-            }
-        }
-    } else {
-        LOGW("Collision: Missing transform");
-    }
-
-    return {retX, retY};
-}
-
 const collision::AttackAttributes Collision::getAttributes() const {
     LOGW("Getting attack attributes on invalid object");
     return {};
+}
+
+const std::shared_ptr<const Hitbox> Collision::getHitbox() const {
+    return hbox_;
 }
 
 std::weak_ptr<const Transform> Collision::getTransform() const {

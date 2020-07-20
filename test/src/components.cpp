@@ -4,6 +4,7 @@
 
 #include "components/actions/actions_player.h"
 #include "components/collision/collision_static.h"
+#include "components/collision/collision_semisolid.h"
 #include "components/collision/collision_player_hitbox.h"
 #include "components/collision/collision_player_hurtbox.h"
 #include "components/collision/collision_enemy_hitbox.h"
@@ -232,6 +233,22 @@ TEST(TestComponents, TestSaveLoadCollisionCollectible) {
 
     std::shared_ptr<CollisionCollectible> coll =
         std::dynamic_pointer_cast<CollisionCollectible>(Collision::createFromJson(j1, trans));
+    // Ensure dynamic cast valid
+    ASSERT_TRUE(coll);
+
+    nlohmann::json j2 = coll->outputToJson().value();
+    ASSERT_TRUE(j1 == j2) << j1.dump() << std::endl << j2.dump() << std::endl;
+}
+
+TEST(TestComponents, TestSaveLoadCollisionSemiSolid) {
+    std::shared_ptr<Transform> trans = std::make_shared<Transform>();
+
+    nlohmann::json j1 = nlohmann::json::parse("{ \"width\": 46, \"height\": 52 }");
+
+    j1["type"] = "semi_solid";
+
+    std::shared_ptr<CollisionSemiSolid> coll =
+        std::dynamic_pointer_cast<CollisionSemiSolid>(Collision::createFromJson(j1, trans));
     // Ensure dynamic cast valid
     ASSERT_TRUE(coll);
 

@@ -11,6 +11,7 @@ class Collision : public Component {
   public:
     enum class CollisionType {
         STATIC,
+        SEMI_SOLID,
         PLAYER_HURTBOX,
         PLAYER_HITBOX,
         ENEMY_HITBOX,
@@ -35,11 +36,9 @@ class Collision : public Component {
     // Collision interface
     bool collides(std::weak_ptr<const Collision> other_entity);
 
-    std::pair<double, double> getMaximumMovement(double stepX, double stepY, std::shared_ptr<const Collision> other_coll);
-
     // Getters/setters
     void setHitbox(int width, int height);
-    const std::shared_ptr<Hitbox>& getHitbox() const;
+    const std::shared_ptr<const Hitbox> getHitbox() const;
 
     std::weak_ptr<const Transform> getTransform() const;
 
@@ -52,8 +51,4 @@ class Collision : public Component {
     std::weak_ptr<Transform> trans_;
 
     std::shared_ptr<Hitbox> hbox_;
-
-  private:
-    std::pair<double, double> getMaximumMovement(double stepX, double stepY,
-            std::shared_ptr<Transform> other_trans, std::shared_ptr<Hitbox> other_hbox);
 };

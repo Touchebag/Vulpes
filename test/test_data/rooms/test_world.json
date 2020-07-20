@@ -75,6 +75,25 @@
                 "pos_x": 100,
                 "pos_y": 0
             }
+        },
+        {
+            "Collision": {
+                "type": "semi_solid",
+                "height": 50,
+                "width": 200
+            },
+            "Renderable": {
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true,
+                "height": 50,
+                "width": 50,
+                "layer": "main"
+            },
+            "Transform": {
+                "pos_x": 500,
+                "pos_y": 100
+            }
         }
     ]
 }

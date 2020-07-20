@@ -80,3 +80,48 @@ TEST_F(DynamicCollisionTestFixture, MoveMultipleDirectionCollisionInOne) {
     EXPECT_EQ(150, pos_x);
     EXPECT_EQ(120, pos_y);
 }
+
+TEST_F(DynamicCollisionTestFixture, CollisionSemiSolidAllDirections) {
+    World::getInstance<World::IWorldModify>().addEntity(entity_);
+
+    // From below, should not be stopped
+    entity_->trans_->setPosition(500, 200);
+
+    auto max_mvmnt = entity_->movableEntity_->getMaximumMovement(0, -100);
+    entity_->movableEntity_->move(max_mvmnt.first, max_mvmnt.second);
+    auto pos_x = entity_->trans_->getX();
+    auto pos_y = entity_->trans_->getY();
+
+    EXPECT_EQ(500, pos_x);
+    EXPECT_EQ(100, pos_y);
+
+    // From above, should be stopped
+    entity_->trans_->setPosition(500, 0);
+
+    max_mvmnt = entity_->movableEntity_->getMaximumMovement(0, 100);
+    entity_->movableEntity_->move(max_mvmnt.first, max_mvmnt.second);
+    pos_x = entity_->trans_->getX();
+    pos_y = entity_->trans_->getY();
+
+    EXPECT_EQ(500, pos_x);
+    EXPECT_EQ(50, pos_y);
+
+    // Left/right, should not be stopped
+    entity_->trans_->setPosition(400, 100);
+
+    max_mvmnt = entity_->movableEntity_->getMaximumMovement(200, 0);
+    entity_->movableEntity_->move(max_mvmnt.first, max_mvmnt.second);
+    pos_x = entity_->trans_->getX();
+    pos_y = entity_->trans_->getY();
+
+    EXPECT_EQ(600, pos_x);
+    EXPECT_EQ(100, pos_y);
+
+    max_mvmnt = entity_->movableEntity_->getMaximumMovement(-200, 0);
+    entity_->movableEntity_->move(max_mvmnt.first, max_mvmnt.second);
+    pos_x = entity_->trans_->getX();
+    pos_y = entity_->trans_->getY();
+
+    EXPECT_EQ(400, pos_x);
+    EXPECT_EQ(100, pos_y);
+}

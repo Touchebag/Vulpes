@@ -1,5 +1,7 @@
 #include "movement.h"
 
+#include "collision/collision_static.h"
+#include "collision/collision_semisolid.h"
 #include "system/world.h"
 #include "utils/log.h"
 
@@ -42,9 +44,26 @@ std::pair<double, double> MovableEntity::getMaximumMovement(double velX, double 
             auto other_coll = (*it).lock();
 
             if (other_coll) {
-                std::pair<double, double> newMoveValues = coll->getMaximumMovement(x, y, other_coll);
-                x = newMoveValues.first;
-                y = newMoveValues.second;
+                if (auto static_coll = std::dynamic_pointer_cast<const CollisionStatic>(other_coll)) {
+                    std::pair<double, double> newMoveValues = static_coll->getMaximumMovement(x, y, coll);
+                    x = newMoveValues.first;
+                    y = newMoveValues.second;
+                }
+            }
+        }
+    }
+
+    if (auto coll = collision_.lock()) {
+        auto world_colls = World::getInstance<World::IWorldRead>().getCollisions(Collision::CollisionType::SEMI_SOLID);
+        for (auto it = world_colls.begin(); it != world_colls.end(); ++it) {
+            auto other_coll = (*it).lock();
+
+            if (other_coll) {
+                if (auto static_coll = std::dynamic_pointer_cast<const CollisionSemiSolid>(other_coll)) {
+                    std::pair<double, double> newMoveValues = static_coll->getMaximumMovement(x, y, coll);
+                    x = newMoveValues.first;
+                    y = newMoveValues.second;
+                }
             }
         }
     }
