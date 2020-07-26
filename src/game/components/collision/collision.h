@@ -5,7 +5,6 @@
 #include "components/component.h"
 #include "components/transform.h"
 #include "hitbox.h"
-#include "attack_attributes.h"
 
 class Collision : public Component {
   public:
@@ -43,8 +42,6 @@ class Collision : public Component {
     std::weak_ptr<const Transform> getTransform() const;
 
     // Type-specific functions
-    virtual const collision::AttackAttributes getAttributes() const;
-
     virtual CollisionType getType() const = 0;
 
   protected:

@@ -1,7 +1,9 @@
 #include "collision_enemy_hitbox.h"
 
+#include "components/collision/attack_attributes.h"
+
 CollisionEnemyHitbox::CollisionEnemyHitbox(std::weak_ptr<Transform> trans) :
-    Collision(trans) {
+    CollisionDamage(trans) {
 }
 
 void CollisionEnemyHitbox::reloadFromJson(nlohmann::json j) {
@@ -24,8 +26,4 @@ std::optional<nlohmann::json> CollisionEnemyHitbox::outputToJson() {
 
 Collision::CollisionType CollisionEnemyHitbox::getType() const {
     return Collision::CollisionType::ENEMY_HITBOX;
-}
-
-const collision::AttackAttributes CollisionEnemyHitbox::getAttributes() const {
-    return attack_attributes_;
 }

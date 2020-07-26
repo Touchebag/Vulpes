@@ -1,7 +1,9 @@
 #include "collision_player_hitbox.h"
 
+#include "components/collision/attack_attributes.h"
+
 CollisionPlayerHitbox::CollisionPlayerHitbox(std::weak_ptr<Transform> trans) :
-    Collision(trans) {
+    CollisionDamage(trans) {
 }
 
 void CollisionPlayerHitbox::reloadFromJson(nlohmann::json j) {
@@ -28,8 +30,4 @@ std::optional<nlohmann::json> CollisionPlayerHitbox::outputToJson() {
 
 Collision::CollisionType CollisionPlayerHitbox::getType() const {
     return Collision::CollisionType::PLAYER_HITBOX;
-}
-
-const collision::AttackAttributes CollisionPlayerHitbox::getAttributes() const {
-    return attack_attributes_;
 }

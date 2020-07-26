@@ -4,12 +4,13 @@
 
 #include "collision_static.h"
 #include "collision_player_hurtbox.h"
-#include "collision_player_hitbox.h"
-#include "collision_enemy_hitbox.h"
 #include "collision_transition.h"
 #include "collision_health.h"
 #include "collision_collectible.h"
 #include "collision_semisolid.h"
+
+#include "damage/collision_player_hitbox.h"
+#include "damage/collision_enemy_hitbox.h"
 
 #include "collision_utils.h"
 
@@ -149,11 +150,6 @@ bool Collision::collides(std::weak_ptr<const Collision> other_entity) {
     }
 
     return false;
-}
-
-const collision::AttackAttributes Collision::getAttributes() const {
-    LOGW("Getting attack attributes on invalid object");
-    return {};
 }
 
 const std::shared_ptr<const Hitbox> Collision::getHitbox() const {

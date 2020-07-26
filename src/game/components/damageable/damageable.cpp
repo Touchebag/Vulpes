@@ -3,6 +3,7 @@
 #include "utils/log.h"
 #include "system/world.h"
 #include "damageable_player.h"
+#include "components/collision/damage/collision_damage.h"
 
 namespace {
 
@@ -89,10 +90,20 @@ void Damageable::update() {
 
         for (auto& it : World::IWorldRead::getCollisions(hurting_type)) {
             if (auto other_coll = it.lock()) {
+
                 if (coll->collides(other_coll)) {
-                    auto attributes = other_coll->getAttributes();
+
+                    collision::AttackAttributes attributes;
+                    if (auto other_coll_damage = std::dynamic_pointer_cast<const CollisionDamage>(other_coll)) {
+                        attributes = other_coll_damage->getAttributes();
+                    } else {
+                        LOGW("Could not cast collision type to get attributes");
+                        return;
+                    }
+
                     health_ -= attributes.damage;
                     invincibility_frame_counter_ = attributes.invincibility_frames;
+
                     if (auto state = state_.lock()) {
                         state->incomingEvent(state_utils::Event::DAMAGED);
 
