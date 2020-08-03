@@ -7,7 +7,7 @@
 #include "mouse.h"
 #include "menu.h"
 #include "components/rendering/rendering_text.h"
-#include "components/collision/collision_static.h"
+#include "components/collision/movement/collision_static.h"
 
 #include "operation.h"
 

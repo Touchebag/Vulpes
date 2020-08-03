@@ -1,10 +1,10 @@
 #include "collision_static.h"
 
-#include "collision_utils.h"
+#include "components/collision/collision_utils.h"
 #include "utils/log.h"
 
 CollisionStatic::CollisionStatic(std::weak_ptr<Transform> trans) :
-    Collision(trans) {
+    ICollisionMovement(trans) {
 }
 
 Collision::CollisionType CollisionStatic::getType() const {

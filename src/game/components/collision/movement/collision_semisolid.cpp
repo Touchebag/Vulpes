@@ -1,10 +1,10 @@
 #include "collision_semisolid.h"
 
-#include "collision_utils.h"
+#include "components/collision/collision_utils.h"
 #include "utils/log.h"
 
 CollisionSemiSolid::CollisionSemiSolid(std::weak_ptr<Transform> trans) :
-    Collision(trans) {
+    ICollisionMovement(trans) {
 }
 
 Collision::CollisionType CollisionSemiSolid::getType() const {

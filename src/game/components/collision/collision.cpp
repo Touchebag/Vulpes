@@ -2,12 +2,13 @@
 
 #include "utils/log.h"
 
-#include "collision_static.h"
 #include "collision_player_hurtbox.h"
 #include "collision_transition.h"
 #include "collision_health.h"
 #include "collision_collectible.h"
-#include "collision_semisolid.h"
+
+#include "movement/collision_static.h"
+#include "movement/collision_semisolid.h"
 
 #include "damage/collision_player_hitbox.h"
 #include "damage/collision_enemy_hitbox.h"

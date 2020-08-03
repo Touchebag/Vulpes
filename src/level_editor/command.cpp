@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "operation.h"
-#include "components/collision/collision_static.h"
+#include "components/collision/movement/collision_static.h"
 #include "utils/log.h"
 
 Command::Command(std::shared_ptr<History> history,

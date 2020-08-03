@@ -3,7 +3,7 @@
 #include "level_editor/command.h"
 #include "mocks/mock_mouse.h"
 
-#include "components/collision/collision_static.h"
+#include "components/collision/movement/collision_static.h"
 
 class HistoryTestFixture : public ::testing::Test {
   public:

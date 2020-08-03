@@ -1,9 +1,34 @@
 #include "movement.h"
 
-#include "collision/collision_static.h"
-#include "collision/collision_semisolid.h"
+#include "collision/movement/i_collision_movement.h"
 #include "system/world.h"
 #include "utils/log.h"
+
+namespace {
+
+std::pair<double, double> checkMovement(double velX, double velY,
+        std::shared_ptr<Collision> this_coll,
+        Collision::CollisionType type) {
+    double x = velX;
+    double y = velY;
+
+    auto world_colls = World::getInstance<World::IWorldRead>().getCollisions(type);
+    for (auto it = world_colls.begin(); it != world_colls.end(); ++it) {
+        auto other_coll = (*it).lock();
+
+        if (other_coll) {
+            if (auto static_coll = std::dynamic_pointer_cast<const ICollisionMovement>(other_coll)) {
+                std::pair<double, double> newMoveValues = static_coll->getMaximumMovement(x, y, this_coll);
+                x = newMoveValues.first;
+                y = newMoveValues.second;
+            }
+        }
+    }
+
+    return {x, y};
+}
+
+} // namespace
 
 MovableEntity::MovableEntity(std::weak_ptr<Transform> trans, std::weak_ptr<Collision> collision) :
     trans_(trans),
@@ -35,40 +60,14 @@ std::optional<nlohmann::json> MovableEntity::outputToJson() {
 }
 
 std::pair<double, double> MovableEntity::getMaximumMovement(double velX, double velY) {
-    double x = velX;
-    double y = velY;
+    std::pair<double, double> vel = {velX, velY};
 
     if (auto coll = collision_.lock()) {
-        auto world_colls = World::getInstance<World::IWorldRead>().getCollisions(Collision::CollisionType::STATIC);
-        for (auto it = world_colls.begin(); it != world_colls.end(); ++it) {
-            auto other_coll = (*it).lock();
-
-            if (other_coll) {
-                if (auto static_coll = std::dynamic_pointer_cast<const CollisionStatic>(other_coll)) {
-                    std::pair<double, double> newMoveValues = static_coll->getMaximumMovement(x, y, coll);
-                    x = newMoveValues.first;
-                    y = newMoveValues.second;
-                }
-            }
-        }
+        vel = checkMovement(vel.first, vel.second, coll, Collision::CollisionType::STATIC);
+        vel = checkMovement(vel.first, vel.second, coll, Collision::CollisionType::SEMI_SOLID);
     }
 
-    if (auto coll = collision_.lock()) {
-        auto world_colls = World::getInstance<World::IWorldRead>().getCollisions(Collision::CollisionType::SEMI_SOLID);
-        for (auto it = world_colls.begin(); it != world_colls.end(); ++it) {
-            auto other_coll = (*it).lock();
-
-            if (other_coll) {
-                if (auto static_coll = std::dynamic_pointer_cast<const CollisionSemiSolid>(other_coll)) {
-                    std::pair<double, double> newMoveValues = static_coll->getMaximumMovement(x, y, coll);
-                    x = newMoveValues.first;
-                    y = newMoveValues.second;
-                }
-            }
-        }
-    }
-
-    return {x, y};
+    return {vel.first, vel.second};
 }
 
 double MovableEntity::getVelX() {
