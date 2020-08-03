@@ -7,7 +7,7 @@
     "Renderable": {
         "height": 50,
         "layer": "main",
-        "texture": "collectible",
+        "texture": "Collectible",
         "tile_x": false,
         "tile_y": false,
         "width": 50
