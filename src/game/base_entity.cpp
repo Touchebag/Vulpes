@@ -70,7 +70,7 @@ void BaseEntity::reloadFromJson(nlohmann::json j) {
     death_ = loadComponentFromJson(j, "Death", std::make_shared<Death>());
 
     if (j.contains("Actions")) {
-        actions_ = Actions::createFromJson(j["Actions"], death_, collision_);
+        actions_ = Actions::createFromJson(j["Actions"], death_, collision_, statefulEntity_);
     } else {
         actions_.reset();
     }

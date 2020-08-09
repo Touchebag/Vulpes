@@ -7,6 +7,7 @@
 #include "utils/log.h"
 
 #include "components/collision/collision_collectible.h"
+#include "components/collision/collision_interactable.h"
 
 namespace {
 
@@ -18,9 +19,10 @@ std::unordered_map<int, Actions::Action> id_actions_map = {
 
 } // namespace
 
-ActionsPlayer::ActionsPlayer(std::weak_ptr<Death> death, std::weak_ptr<Collision> coll) :
+ActionsPlayer::ActionsPlayer(std::weak_ptr<Death> death, std::weak_ptr<Collision> coll, std::weak_ptr<StatefulEntity> state) :
     Actions(death),
-    coll_(coll) {
+    coll_(coll),
+    state_(state) {
 }
 
 void ActionsPlayer::update() {
@@ -30,6 +32,18 @@ void ActionsPlayer::update() {
                 if (coll->collides(other_coll)) {
                     if (auto collectible = std::dynamic_pointer_cast<const CollisionCollectible>(other_coll)) {
                         enableAction(id_actions_map.at(collectible->getId()));
+                    }
+                }
+            }
+        }
+
+        if (getActionState(Action::INTERACT, true)) {
+            for (auto& it : World::IWorldRead::getCollisions(Collision::CollisionType::INTERACTABLE)) {
+                if (auto other_coll = it.lock()) {
+                    if (coll->collides(other_coll)) {
+                        if (auto interactable = std::dynamic_pointer_cast<const CollisionInteractable>(other_coll)) {
+                            World::IWorldModify::triggerInterract();
+                        }
                     }
                 }
             }
@@ -48,9 +62,17 @@ bool ActionsPlayer::isActionEnabled(Action action) {
 }
 
 void ActionsPlayer::addAction(Actions::Action action) {
+    if (action == Action::INTERACT) {
+        if (auto state = state_.lock()) {
+            if (!state->getStateProperties().can_interact) {
+                return;
+            }
+        }
+    }
+
     int action_number = static_cast<int>(action);
 
-    if (action_number < static_cast<int>(Action::NUM_ACTIONS) && !enabled_actions_[action_number]) {
+    if (action_number < static_cast<int>(Action::NUM_ACTIONS) && !isActionEnabled(action)) {
         LOGD("Action disabled: %s", string_action_map.at(action).c_str());
         return;
     }
@@ -75,6 +97,10 @@ void ActionsPlayer::reloadFromJson(nlohmann::json j) {
     if (j.contains(string_action_map.at(Action::ATTACK))) {
         enableAction(Action::ATTACK);
     }
+
+    if (j.contains(string_action_map.at(Action::INTERACT))) {
+        enableAction(Action::INTERACT);
+    }
 }
 
 std::optional<nlohmann::json> ActionsPlayer::outputToJson() {
@@ -97,6 +123,10 @@ std::optional<nlohmann::json> ActionsPlayer::outputToJson() {
 
     if (isActionEnabled(Action::ATTACK)) {
         j[string_action_map.at(Action::ATTACK)] = true;
+    }
+
+    if (isActionEnabled(Action::INTERACT)) {
+        j[string_action_map.at(Action::INTERACT)] = true;
     }
 
     return j;

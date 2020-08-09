@@ -1,5 +1,9 @@
 #include "world.h"
 
+#include "utils/log.h"
+
+/*--- Read ---*/
+
 const std::vector<std::weak_ptr<const Collision>>& World::IWorldRead::getCollisions(Collision::CollisionType coll_type) {
     return World::getWorldInstance().collisions_[static_cast<int>(coll_type)];
 }
@@ -12,6 +16,7 @@ std::weak_ptr<Player> World::IWorldRead::getPlayer() {
     return World::getWorldInstance().getPlayer();
 }
 
+/*--- Modify ---*/
 
 void World::IWorldModify::addEntity(std::shared_ptr<BaseEntity> entity) {
     World::getWorldInstance().addEntity(entity);
@@ -47,6 +52,10 @@ void World::IWorldModify::clearWorld() {
 
 std::vector<std::shared_ptr<BaseEntity>>& World::IWorldModify::getWorldObjects() {
     return World::getWorldInstance().getWorldObjects();
+}
+
+void World::IWorldModify::triggerInterract() {
+    LOGD("World interract");
 }
 
 void World::IWorldModify::loadRoom(std::string room_name, int entrance_id) {

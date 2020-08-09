@@ -76,9 +76,9 @@ Actions::Action Actions::fromString(const std::string& action) {
     }
 }
 
-std::shared_ptr<Actions> Actions::createFromJson(nlohmann::json j, std::weak_ptr<Death> death, std::weak_ptr<Collision> coll) {
+std::shared_ptr<Actions> Actions::createFromJson(nlohmann::json j, std::weak_ptr<Death> death, std::weak_ptr<Collision> coll, std::weak_ptr<StatefulEntity> state) {
     if (j.contains("type") && j["type"].get<std::string>() == "player") {
-        std::shared_ptr<ActionsPlayer> actions_player = std::make_shared<ActionsPlayer>(death, coll);
+        std::shared_ptr<ActionsPlayer> actions_player = std::make_shared<ActionsPlayer>(death, coll, state);
         actions_player->reloadFromJson(j);
         return actions_player;
     } else {

@@ -375,12 +375,18 @@
             }
         },
         {
-            "Entity": "collectible",
             "Collision": {
                 "height": 50,
-                "type": "collectible",
-                "width": 50,
-                "id": 0
+                "type": "interactable",
+                "width": 50
+            },
+            "Renderable": {
+                "height": 50,
+                "layer": "main",
+                "texture": "collectible",
+                "tile_x": false,
+                "tile_y": false,
+                "width": 50
             },
             "Transform": {
                 "pos_x": -223,

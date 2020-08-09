@@ -17,6 +17,7 @@ class Collision : public Component {
         TRANSITION,
         HEALTH,
         COLLECTIBLE,
+        INTERACTABLE,
 
         MAX_NUM
     };

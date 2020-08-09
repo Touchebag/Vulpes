@@ -8,6 +8,9 @@
         ]
     },
     "idle": {
+        "properties": {
+            "can_interact": true
+        },
         "next_states": [
             {"event": "moving", "state": "running"},
             {"event": "jumping", "state": "jumping"},
@@ -50,9 +53,11 @@
         ]
     },
     "running": {
+        "properties": {
+            "can_interact": true
+        },
         "next_states": [
             {"event": "no_movement", "state": "idle"},
-            {"event": "moving", "state": "running"},
             {"event": "jumping", "state": "jumping"},
             {"event": "falling", "state": "falling"},
             {"event": "dashing", "state": "dashing"},

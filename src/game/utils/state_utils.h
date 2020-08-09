@@ -74,6 +74,8 @@ struct StateProperties {
     unsigned int frame_timer_ = UINT_MAX;
     std::unordered_map<state_utils::Event, std::string> next_states_;
     std::vector<std::string> frame_names_;
+
+    bool can_interact = false;
 };
 
 struct EntityContent {

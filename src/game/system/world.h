@@ -42,6 +42,8 @@ class World {
 
         static std::vector<std::shared_ptr<BaseEntity>>& getWorldObjects();
 
+        static void triggerInterract();
+
         static void loadRoom(std::string room_name, int entrance_id);
     };
 

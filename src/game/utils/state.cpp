@@ -88,6 +88,10 @@ State<state_utils::EntityContent> State<state_utils::EntityContent>::loadStateFr
         state_props.frame_names_.push_back(it.get<std::string>());
     }
 
+    if (props_json.contains("can_interact")) {
+        state_props.can_interact = props_json["can_interact"].get<bool>();
+    }
+
     state_utils::EntityContent entity_content = {physics_props, state_props, {}};
 
     if (j.contains("spawn_entity")) {

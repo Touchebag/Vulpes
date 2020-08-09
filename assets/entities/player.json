@@ -1,7 +1,9 @@
 {
     "Actions": {
         "type": "player",
-        "movement_x": true
+        "movement_x": true,
+        "jump": true,
+        "interact": true
     },
     "Animated": {
         "frame_list": [

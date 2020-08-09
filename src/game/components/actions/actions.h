@@ -3,6 +3,7 @@
 #include "components/component.h"
 
 #include "components/death.h"
+#include "components/stateful.h"
 #include "utils/bimap.h"
 
 #include <unordered_map>
@@ -17,6 +18,8 @@ class Actions : public Component {
         JUMP,
         DASH,
         ATTACK,
+
+        INTERACT,
 
         // Number of normal actions
         NUM_ACTIONS,
@@ -50,7 +53,7 @@ class Actions : public Component {
     void reloadFromJson(nlohmann::json j) override;
     std::optional<nlohmann::json> outputToJson() override;
 
-    static std::shared_ptr<Actions> createFromJson(nlohmann::json j, std::weak_ptr<Death> death, std::weak_ptr<Collision> coll);
+    static std::shared_ptr<Actions> createFromJson(nlohmann::json j, std::weak_ptr<Death> death, std::weak_ptr<Collision> coll, std::weak_ptr<StatefulEntity> state);
 
   private:
     // ACTIVE = action has been held since at least one frame
