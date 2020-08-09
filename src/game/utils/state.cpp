@@ -48,35 +48,35 @@ State<state_utils::EntityContent> State<state_utils::EntityContent>::loadStateFr
     state_utils::PhysicsProperties physics_props;
     state_utils::StateProperties state_props;
 
-    nlohmann::json physics_json = j["properties"];
+    nlohmann::json props_json = j["properties"];
 
     // If an option is not found use default
-    if (physics_json.find("movement_locked_x") != physics_json.end()) {
-        physics_props.movement_locked_x_ = physics_json["movement_locked_x"].get<bool>();
+    if (props_json.contains("movement_locked_x")) {
+        physics_props.movement_locked_x_ = props_json["movement_locked_x"].get<bool>();
     }
-    if (physics_json.find("movement_locked_y") != physics_json.end()) {
-        physics_props.movement_locked_y_ = physics_json["movement_locked_y"].get<bool>();
+    if (props_json.contains("movement_locked_y")) {
+        physics_props.movement_locked_y_ = props_json["movement_locked_y"].get<bool>();
     }
-    if (physics_json.find("direction_locked") != physics_json.end()) {
-        physics_props.direction_locked_ = physics_json["direction_locked"].get<bool>();
+    if (props_json.contains("direction_locked")) {
+        physics_props.direction_locked_ = props_json["direction_locked"].get<bool>();
     }
-    if (physics_json.find("touching_ground") != physics_json.end()) {
-        physics_props.touching_ground_ = physics_json["touching_ground"].get<bool>();
+    if (props_json.contains("touching_ground")) {
+        physics_props.touching_ground_ = props_json["touching_ground"].get<bool>();
     }
-    if (physics_json.find("touching_wall") != physics_json.end()) {
-        physics_props.touching_wall_ = physics_json["touching_wall"].get<bool>();
+    if (props_json.contains("touching_wall")) {
+        physics_props.touching_wall_ = props_json["touching_wall"].get<bool>();
     }
-    if (physics_json.find("dashing") != physics_json.end()) {
-        physics_props.dashing_ = physics_json["dashing"].get<bool>();
+    if (props_json.contains("dashing")) {
+        physics_props.dashing_ = props_json["dashing"].get<bool>();
     }
-    if (physics_json.find("can_jump") != physics_json.end()) {
-        physics_props.can_jump_ = physics_json["can_jump"].get<bool>();
+    if (props_json.contains("can_jump")) {
+        physics_props.can_jump_ = props_json["can_jump"].get<bool>();
     }
-    if (physics_json.find("can_dash") != physics_json.end()) {
-        physics_props.can_dash_ = physics_json["can_dash"].get<bool>();
+    if (props_json.contains("can_dash")) {
+        physics_props.can_dash_ = props_json["can_dash"].get<bool>();
     }
 
-    if (j.find("frame_timer") != j.end()) {
+    if (j.contains("frame_timer")) {
         state_props.frame_timer_ = j["frame_timer"].get<unsigned int>();
     }
 
@@ -90,7 +90,7 @@ State<state_utils::EntityContent> State<state_utils::EntityContent>::loadStateFr
 
     state_utils::EntityContent entity_content = {physics_props, state_props, {}};
 
-    if (j.find("spawn_entity") != j.end()) {
+    if (j.contains("spawn_entity")) {
         entity_content.entity = j["spawn_entity"];
     }
 

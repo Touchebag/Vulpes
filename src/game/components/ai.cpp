@@ -37,7 +37,7 @@ void AI::update() {
             if (it.first->getValue(values)) {
                 auto action = it.second;
                 switch (action) {
-                    // AI_EVENTs should be treated differentely from input actions
+                    // AI_EVENTs should be treated differently from input actions
                     case Actions::Action::AI_EVENT_1:
                         states_.incomingEvent(state_utils::Event::AI_EVENT_1);
                         break;

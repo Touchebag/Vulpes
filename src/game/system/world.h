@@ -94,7 +94,7 @@ class World {
 
     std::vector<util::Point> entrances_;
 
-    std::optional<std::pair<std::string, int>> new_room;
+    std::optional<std::pair<std::string, int>> new_room_;
 };
 
 template <> World::IWorldRead World::getInstance<World::IWorldRead>();

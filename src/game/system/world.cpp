@@ -53,9 +53,9 @@ void World::update() {
         player_health_->setText(std::to_string(player_->damageable_->getHealth()));
     }
 
-    if (new_room) {
-        loadRoom(new_room->first, new_room->second);
-        new_room.reset();
+    if (new_room_) {
+        loadRoom(new_room_->first, new_room_->second);
+        new_room_.reset();
     }
 }
 

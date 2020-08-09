@@ -51,5 +51,5 @@ std::vector<std::shared_ptr<BaseEntity>>& World::IWorldModify::getWorldObjects()
 
 void World::IWorldModify::loadRoom(std::string room_name, int entrance_id) {
     // Enqueue new room load at frame end
-    World::getWorldInstance().new_room = {room_name, entrance_id};
+    World::getWorldInstance().new_room_ = {room_name, entrance_id};
 }
