@@ -7,6 +7,7 @@
 #include "components/collision/collision_transition.h"
 #include "components/collision/collision_health.h"
 #include "components/collision/collision_collectible.h"
+#include "components/collision/collision_interactable.h"
 
 #include "components/collision/movement/collision_static.h"
 #include "components/collision/movement/collision_semisolid.h"
@@ -259,10 +260,33 @@ TEST(TestComponents, TestSaveLoadCollisionSemiSolid) {
     ASSERT_TRUE(j1 == j2) << j1.dump() << std::endl << j2.dump() << std::endl;
 }
 
+TEST(TestComponents, TestSaveLoadInteractable) {
+    std::shared_ptr<Transform> trans = std::make_shared<Transform>();
+
+    nlohmann::json j1 = nlohmann::json::parse("{ \"width\": 46, \"height\": 52 }");
+
+    j1["type"] = "interactable";
+    j1["transition"]["name"] = "test";
+    j1["transition"]["id"] = 6;
+
+    std::shared_ptr<CollisionInteractable> coll =
+        std::dynamic_pointer_cast<CollisionInteractable>(Collision::createFromJson(j1, trans));
+    // Ensure dynamic cast valid
+    ASSERT_TRUE(coll);
+
+    nlohmann::json j2 = coll->outputToJson().value();
+    ASSERT_TRUE(j1 == j2) << j1.dump() << std::endl << j2.dump() << std::endl;
+}
+
 TEST(TestComponents, TestSaveLoadPlayerActions) {
     std::shared_ptr<Transform> trans = std::make_shared<Transform>();
     std::shared_ptr<Collision> coll = std::make_shared<CollisionPlayerHurtbox>(trans);
+    std::shared_ptr<MovableEntity> move = std::make_shared<MovableEntity>(trans, coll);
     std::shared_ptr<Death> death = std::make_shared<Death>();
+    std::shared_ptr<RenderableEntity> render = std::make_shared<RenderableEntity>(trans, move);
+    std::shared_ptr<AnimatedEntity> animated = std::make_shared<AnimatedEntity>(render);
+    std::shared_ptr<Subentity> sub = std::make_shared<Subentity>(trans, move);
+    std::shared_ptr<StatefulEntity> state = std::make_shared<StatefulEntity>(animated, sub);
 
     nlohmann::json j1;
 
@@ -271,7 +295,7 @@ TEST(TestComponents, TestSaveLoadPlayerActions) {
     j1["jump"] = true;
 
     std::shared_ptr<ActionsPlayer> actions =
-        std::dynamic_pointer_cast<ActionsPlayer>(Actions::createFromJson(j1, death, coll));
+        std::dynamic_pointer_cast<ActionsPlayer>(Actions::createFromJson(j1, death, coll, state));
     // Ensure dynamic cast valid
     ASSERT_TRUE(actions);
 

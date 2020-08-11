@@ -16,6 +16,10 @@ std::weak_ptr<Player> World::IWorldRead::getPlayer() {
     return World::getWorldInstance().getPlayer();
 }
 
+bool World::IWorldRead::hasInteractTriggered() {
+    return World::getWorldInstance().interact_triggered_;
+}
+
 /*--- Modify ---*/
 
 void World::IWorldModify::addEntity(std::shared_ptr<BaseEntity> entity) {
@@ -55,7 +59,7 @@ std::vector<std::shared_ptr<BaseEntity>>& World::IWorldModify::getWorldObjects()
 }
 
 void World::IWorldModify::triggerInterract() {
-    LOGD("World interract");
+    World::getWorldInstance().interact_triggered_ = true;
 }
 
 void World::IWorldModify::loadRoom(std::string room_name, int entrance_id) {

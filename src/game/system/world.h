@@ -23,6 +23,8 @@ class World {
         static util::Point getPlayerPosition();
 
         static std::weak_ptr<Player> getPlayer();
+
+        static bool hasInteractTriggered();
     };
 
     class IWorldModify {
@@ -97,6 +99,8 @@ class World {
     std::vector<util::Point> entrances_;
 
     std::optional<std::pair<std::string, int>> new_room_;
+
+    bool interact_triggered_ = false;
 };
 
 template <> World::IWorldRead World::getInstance<World::IWorldRead>();

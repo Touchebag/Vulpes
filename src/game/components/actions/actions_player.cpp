@@ -38,15 +38,7 @@ void ActionsPlayer::update() {
         }
 
         if (getActionState(Action::INTERACT, true)) {
-            for (auto& it : World::IWorldRead::getCollisions(Collision::CollisionType::INTERACTABLE)) {
-                if (auto other_coll = it.lock()) {
-                    if (coll->collides(other_coll)) {
-                        if (auto interactable = std::dynamic_pointer_cast<const CollisionInteractable>(other_coll)) {
-                            World::IWorldModify::triggerInterract();
-                        }
-                    }
-                }
-            }
+            World::IWorldModify::triggerInterract();
         }
     }
 

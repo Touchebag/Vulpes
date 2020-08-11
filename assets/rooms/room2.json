@@ -21,40 +21,40 @@
         },
         {
             "Collision": {
-                "height": 907,
+                "height": 1119,
                 "type": "static",
-                "width": 88
+                "width": 210
             },
             "Renderable": {
-                "height": 907,
+                "height": 1119,
                 "layer": "main",
                 "texture": "Forest/Tree",
                 "tile_x": true,
                 "tile_y": true,
-                "width": 88
+                "width": 210
             },
             "Transform": {
-                "pos_x": 1108,
-                "pos_y": 628
+                "pos_x": 1105,
+                "pos_y": 625
             }
         },
         {
             "Collision": {
-                "height": 907,
+                "height": 1088,
                 "type": "static",
-                "width": 88
+                "width": 204
             },
             "Renderable": {
-                "height": 907,
+                "height": 1088,
                 "layer": "main",
                 "texture": "Forest/Tree",
                 "tile_x": true,
                 "tile_y": true,
-                "width": 88
+                "width": 204
             },
             "Transform": {
-                "pos_x": -295,
-                "pos_y": 628
+                "pos_x": -332,
+                "pos_y": 638
             }
         },
         {
@@ -117,6 +117,20 @@
             "Transform": {
                 "pos_x": 400,
                 "pos_y": 1120
+            }
+        },
+        {
+            "Renderable": {
+                "height": 1429,
+                "layer": "main_bg",
+                "texture": "Forest/Tree_bg2",
+                "tile_x": false,
+                "tile_y": false,
+                "width": 2091
+            },
+            "Transform": {
+                "pos_x": 432,
+                "pos_y": 870
             }
         }
     ],

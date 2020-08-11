@@ -34,8 +34,8 @@
                 "width": 204
             },
             "Transform": {
-                "pos_x": -1976,
-                "pos_y": -334
+                "pos_x": -2021,
+                "pos_y": 105
             }
         },
         {
@@ -347,21 +347,6 @@
         {
             "Collision": {
                 "destination": {
-                    "entrance_id": 1,
-                    "room": "room2"
-                },
-                "height": 507,
-                "type": "transition",
-                "width": 243
-            },
-            "Transform": {
-                "pos_x": -1997,
-                "pos_y": 2284
-            }
-        },
-        {
-            "Collision": {
-                "destination": {
                     "entrance_id": 0,
                     "room": "room2"
                 },
@@ -376,21 +361,25 @@
         },
         {
             "Collision": {
-                "height": 50,
+                "height": 400,
+                "transition": {
+                    "id": 1,
+                    "name": "room2"
+                },
                 "type": "interactable",
-                "width": 50
+                "width": 220
             },
             "Renderable": {
-                "height": 50,
+                "height": 507,
                 "layer": "main",
-                "texture": "collectible",
+                "texture": "box",
                 "tile_x": false,
                 "tile_y": false,
-                "width": 50
+                "width": 243
             },
             "Transform": {
-                "pos_x": -223,
-                "pos_y": 2734
+                "pos_x": -1525,
+                "pos_y": 2237
             }
         },
         {
@@ -404,6 +393,20 @@
             "Transform": {
                 "pos_x": -1157,
                 "pos_y": -283
+            }
+        },
+        {
+            "Renderable": {
+                "height": 2534,
+                "layer": "main_bg",
+                "texture": "Forest/Tree_bg2.png",
+                "tile_x": false,
+                "tile_y": false,
+                "width": 1247
+            },
+            "Transform": {
+                "pos_x": -1551,
+                "pos_y": 1282
             }
         }
     ],

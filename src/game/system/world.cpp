@@ -57,6 +57,9 @@ void World::update() {
         loadRoom(new_room_->first, new_room_->second);
         new_room_.reset();
     }
+
+    // Reset interaction trigger at end of frame
+    interact_triggered_ = false;
 }
 
 util::Point World::getPlayerPosition() {
