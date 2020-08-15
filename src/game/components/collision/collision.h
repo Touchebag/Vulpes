@@ -11,6 +11,7 @@ class Collision : public Component {
     enum class CollisionType {
         STATIC,
         SEMI_SOLID,
+        SLOPE,
         PLAYER_HURTBOX,
         PLAYER_HITBOX,
         ENEMY_HITBOX,

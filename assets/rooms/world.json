@@ -47,21 +47,21 @@
         },
         {
             "Collision": {
-                "height": 49,
+                "height": 57,
                 "type": "semi_solid",
-                "width": 1088
+                "width": 867
             },
             "Renderable": {
-                "height": 49,
+                "height": 57,
                 "layer": "main",
                 "texture": "Forest/Grass",
                 "tile_x": true,
                 "tile_y": true,
-                "width": 1088
+                "width": 867
             },
             "Transform": {
-                "pos_x": -185,
-                "pos_y": 2551
+                "pos_x": 105,
+                "pos_y": 2546
             }
         },
         {
@@ -275,21 +275,21 @@
         },
         {
             "Collision": {
-                "height": 461,
+                "height": 367,
                 "type": "static",
-                "width": 1043
+                "width": 1076
             },
             "Renderable": {
-                "height": 461,
+                "height": 367,
                 "layer": "main",
                 "texture": "Forest/Dirt",
                 "tile_x": true,
                 "tile_y": true,
-                "width": 1043
+                "width": 1076
             },
             "Transform": {
-                "pos_x": -1549,
-                "pos_y": 2715
+                "pos_x": -1562,
+                "pos_y": 2767
             }
         },
         {
@@ -301,7 +301,7 @@
                 "tile_y": false
             },
             "Transform": {
-                "pos_x": -858,
+                "pos_x": -43,
                 "pos_y": 2740
             }
         },
@@ -314,8 +314,8 @@
                 "tile_y": false
             },
             "Transform": {
-                "pos_x": 937,
-                "pos_y": 2737
+                "pos_x": 945,
+                "pos_y": 2753
             }
         },
         {
@@ -384,12 +384,6 @@
         },
         {
             "Entity": "collectible",
-            "Collision": {
-                "height": 50,
-                "type": "collectible",
-                "width": 50,
-                "id": 2
-            },
             "Transform": {
                 "pos_x": -1157,
                 "pos_y": -283
@@ -407,6 +401,45 @@
             "Transform": {
                 "pos_x": -1551,
                 "pos_y": 1282
+            }
+        },
+        {
+            "Collision": {
+                "direction": "left",
+                "height": 393,
+                "type": "slope",
+                "width": 551
+            },
+            "Renderable": {
+                "height": 393,
+                "layer": "main",
+                "texture": "slope",
+                "tile_x": false,
+                "tile_y": false,
+                "width": 551
+            },
+            "Transform": {
+                "pos_x": -754,
+                "pos_y": 2674
+            }
+        },
+        {
+            "Collision": {
+                "height": 137,
+                "type": "semi_solid",
+                "width": 1080
+            },
+            "Renderable": {
+                "height": 137,
+                "layer": "main",
+                "texture": "Forest/Grass",
+                "tile_x": true,
+                "tile_y": true,
+                "width": 1080
+            },
+            "Transform": {
+                "pos_x": -1565,
+                "pos_y": 2545
             }
         }
     ],

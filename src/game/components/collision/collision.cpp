@@ -10,6 +10,7 @@
 
 #include "movement/collision_static.h"
 #include "movement/collision_semisolid.h"
+#include "movement/collision_slope.h"
 
 #include "damage/collision_player_hitbox.h"
 #include "damage/collision_enemy_hitbox.h"
@@ -21,6 +22,7 @@ namespace {
 const std::map<std::string, Collision::CollisionType> string_type_map {
     {"static", Collision::CollisionType::STATIC},
     {"semi_solid", Collision::CollisionType::SEMI_SOLID},
+    {"slope", Collision::CollisionType::SLOPE},
     {"player_hurtbox", Collision::CollisionType::PLAYER_HURTBOX},
     {"player_hitbox", Collision::CollisionType::PLAYER_HITBOX},
     {"enemy_hitbox", Collision::CollisionType::ENEMY_HITBOX},
@@ -70,6 +72,12 @@ std::shared_ptr<Collision> Collision::createFromJson(nlohmann::json j, std::weak
         case CollisionType::SEMI_SOLID:
             {
                 auto coll = std::make_shared<CollisionSemiSolid>(trans);
+                coll->reloadFromJson(j);
+                return coll;
+            }
+        case CollisionType::SLOPE:
+            {
+                auto coll = std::make_shared<CollisionSlope>(trans);
                 coll->reloadFromJson(j);
                 return coll;
             }

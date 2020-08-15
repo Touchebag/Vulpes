@@ -11,6 +11,7 @@
 
 #include "components/collision/movement/collision_static.h"
 #include "components/collision/movement/collision_semisolid.h"
+#include "components/collision/movement/collision_slope.h"
 
 #include "components/collision/damage/collision_player_hitbox.h"
 #include "components/collision/damage/collision_enemy_hitbox.h"
@@ -271,6 +272,23 @@ TEST(TestComponents, TestSaveLoadInteractable) {
 
     std::shared_ptr<CollisionInteractable> coll =
         std::dynamic_pointer_cast<CollisionInteractable>(Collision::createFromJson(j1, trans));
+    // Ensure dynamic cast valid
+    ASSERT_TRUE(coll);
+
+    nlohmann::json j2 = coll->outputToJson().value();
+    ASSERT_TRUE(j1 == j2) << j1.dump() << std::endl << j2.dump() << std::endl;
+}
+
+TEST(TestComponents, TestSaveLoadSlope) {
+    std::shared_ptr<Transform> trans = std::make_shared<Transform>();
+
+    nlohmann::json j1 = nlohmann::json::parse("{ \"width\": 46, \"height\": 52 }");
+
+    j1["type"] = "slope";
+    j1["direction"] = "left";
+
+    std::shared_ptr<CollisionSlope> coll =
+        std::dynamic_pointer_cast<CollisionSlope>(Collision::createFromJson(j1, trans));
     // Ensure dynamic cast valid
     ASSERT_TRUE(coll);
 

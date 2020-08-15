@@ -63,6 +63,7 @@ std::pair<double, double> MovableEntity::getMaximumMovement(double velX, double 
     std::pair<double, double> vel = {velX, velY};
 
     if (auto coll = collision_.lock()) {
+        vel = checkMovement(vel.first, vel.second, coll, Collision::CollisionType::SLOPE);
         vel = checkMovement(vel.first, vel.second, coll, Collision::CollisionType::STATIC);
         vel = checkMovement(vel.first, vel.second, coll, Collision::CollisionType::SEMI_SOLID);
     }
