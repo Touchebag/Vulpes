@@ -8,7 +8,7 @@
 
 class Transform : public Component {
 public:
-    void setPosition(int x, int y);
+    void setPosition(const int x, const int y);
     void setPosition(util::Point point);
     util::Point getPosition();
 

@@ -3,7 +3,7 @@
 void Transform::update() {
 }
 
-void Transform::setPosition(int x, int y) {
+void Transform::setPosition(const int x, const int y) {
     pos_x_ = x;
     pos_y_ = y;
 }

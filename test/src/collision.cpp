@@ -125,3 +125,51 @@ TEST_F(DynamicCollisionTestFixture, CollisionSemiSolidAllDirections) {
     EXPECT_EQ(400, pos_x);
     EXPECT_EQ(100, pos_y);
 }
+
+TEST_F(DynamicCollisionTestFixture, MoveDiagonalStuckOnCorner) {
+    World::getInstance<World::IWorldModify>().clearWorld();
+
+    std::string entity_json = R"--(
+{
+    "Collision": {
+        "type": "static",
+        "height": 20,
+        "width": 20
+    },
+    "Transform": {
+        "pos_x": 20,
+        "pos_y": 20
+    }
+}
+    )--";
+
+    auto entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
+    World::IWorldModify::addEntity(entity);
+
+    entity_json = R"--(
+{
+    "Collision": {
+        "type": "static",
+        "height": 10,
+        "width": 10
+    },
+    "Movable": null,
+    "Transform": {
+        "pos_x": 0,
+        "pos_y": 0
+    }
+}
+    )--";
+
+    entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
+    World::IWorldModify::addEntity(entity);
+
+    auto max_mvmnt = entity->movableEntity_->getMaximumMovement(10, 10);
+    entity->movableEntity_->move(max_mvmnt.first, max_mvmnt.second);
+    auto pos_x = entity->trans_->getX();
+    auto pos_y = entity->trans_->getY();
+
+    // Should continue moving on top of object instead of getting stuck in corner
+    EXPECT_EQ(10, pos_x);
+    EXPECT_EQ(5, pos_y);
+}
