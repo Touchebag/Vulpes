@@ -202,18 +202,20 @@ int level_editor_main(sf::RenderWindow& window, std::string level_file_path) {
                                 for (auto it : World::getInstance<World::IWorldModify>().getWorldObjects()) {
                                     std::shared_ptr<Collision> other_coll;
                                     if (it->renderableEntity_ && (it->renderableEntity_->getLayer() == current_layer)) {
-                                        if (it->collision_) {
-                                            other_coll = std::static_pointer_cast<Collision>(it->collision_);
-                                        } else if (it->trans_) {
-                                            other_coll = std::make_shared<CollisionStatic>(it->trans_);
-                                            other_coll->setHitbox(50, 50);
-                                        }
+                                        other_coll = std::make_shared<CollisionStatic>(it->trans_);
+                                        auto size = it->renderableEntity_->getSize();
+                                        other_coll->setHitbox(size.first, size.second);
+                                    } else if (it->collision_) {
+                                        other_coll = std::static_pointer_cast<Collision>(it->collision_);
+                                    } else if (it->trans_) {
+                                        other_coll = std::make_shared<CollisionStatic>(it->trans_);
+                                        other_coll->setHitbox(50, 50);
+                                    }
 
-                                        if (other_coll->collides(tmp_coll)) {
-                                            current_entity = it;
-                                            command.current_entity_ = current_entity;
-                                            break;
-                                        }
+                                    if (other_coll && other_coll->collides(tmp_coll)) {
+                                        current_entity = it;
+                                        command.current_entity_ = current_entity;
+                                        break;
                                     }
                                 }
                             }

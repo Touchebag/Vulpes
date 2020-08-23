@@ -150,6 +150,10 @@ void RenderableEntity::setSize(int width, int height) {
     recalculateTextureRect();
 }
 
+std::pair<int, int> RenderableEntity::getSize() {
+    return {width_, height_};
+}
+
 void RenderableEntity::setColor(sf::Color color) {
     sprite_.setColor(color);
 }

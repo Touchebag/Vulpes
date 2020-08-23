@@ -45,6 +45,7 @@ class RenderableEntity {
     virtual void setTextureCoords(int pos_x, int pos_y, int width, int height);
 
     virtual void setSize(int width, int height);
+    virtual std::pair<int, int> getSize();
 
     virtual void setColor(sf::Color color);
     virtual void clearColor();
