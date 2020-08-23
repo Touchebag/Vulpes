@@ -92,7 +92,9 @@ std::pair<double, double> CollisionSlope::getMaximumMovement(double stepX, doubl
         collides_x = collidesX(other_trans, other_hbox, this_trans, hbox_);
         collides_y = collidesY(other_trans, other_hbox, this_trans, hbox_);
 
-        int entity_ground_pos = other_trans->getY() + (other_hbox->height_ / 2);
+        // Current position needed to calculate relative movement for snapping
+        int entity_current_ground_pos = other_trans->getY() + (other_hbox->height_ / 2);
+        int entity_new_ground_pos = new_pos->getY() + (other_hbox->height_ / 2);
         int current_height = 0;
 
         // Clamp height at edges
@@ -109,7 +111,12 @@ std::pair<double, double> CollisionSlope::getMaximumMovement(double stepX, doubl
             current_height = getCurrentHeight(static_cast<int>(other_trans->getX() + retX));
         }
 
-        return {retX, current_height - entity_ground_pos};
+        // If new position is just above slope surface, snap downwards
+        if (entity_new_ground_pos + 20 > current_height) {
+            return {retX, current_height - entity_current_ground_pos};
+        } else {
+            return {retX, retY};
+        }
     } else {
         LOGW("CollisionSlope: Missing transform");
     }
