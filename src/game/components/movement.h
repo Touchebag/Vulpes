@@ -9,6 +9,12 @@
 
 class MovableEntity : public Component {
   public:
+    struct MovementAttributes {
+        bool on_ground = false;
+        bool touching_wall = false;
+        bool falling = false;
+    };
+
     MovableEntity(std::weak_ptr<Transform> trans, std::weak_ptr<Collision> collision);
 
     void move(double velX, double velY);
@@ -23,6 +29,8 @@ class MovableEntity : public Component {
     double getVelX();
     double getVelY();
 
+    const MovementAttributes& getMovementAttributes();
+
     bool facing_right_ = true;
 
   private:
@@ -32,4 +40,6 @@ class MovableEntity : public Component {
     std::weak_ptr<Transform> trans_;
     std::weak_ptr<Hitbox> hbox_;
     std::weak_ptr<Collision> collision_;
+
+    MovementAttributes move_attr_;
 };

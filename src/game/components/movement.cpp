@@ -64,8 +64,17 @@ std::pair<double, double> MovableEntity::getMaximumMovement(double velX, double 
 
     if (auto coll = collision_.lock()) {
         vel = checkMovement(vel.first, vel.second, coll, Collision::CollisionType::SLOPE);
+
+        move_attr_.on_ground = vel.second != velY;
+
         vel = checkMovement(vel.first, vel.second, coll, Collision::CollisionType::STATIC);
         vel = checkMovement(vel.first, vel.second, coll, Collision::CollisionType::SEMI_SOLID);
+
+        // If already on ground from slope, don't change
+        move_attr_.on_ground = move_attr_.on_ground || (vel.second < velY);
+        move_attr_.touching_wall = vel.first != velX;
+
+        move_attr_.falling = vel.second > 0.0;
     }
 
     return {vel.first, vel.second};
@@ -77,4 +86,8 @@ double MovableEntity::getVelX() {
 
 double MovableEntity::getVelY() {
     return vely_;
+}
+
+const MovableEntity::MovementAttributes& MovableEntity::getMovementAttributes() {
+    return move_attr_;
 }

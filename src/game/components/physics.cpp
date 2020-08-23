@@ -161,15 +161,17 @@ void Physics::update() {
         y = std::max(std::min(y, constants_.max_vertical_speed), constants_.min_vertical_speed);
         auto max_movement = movable->getMaximumMovement(x, y);
 
-        if (max_movement.second < y) {
+        auto move_attr = movable->getMovementAttributes();
+
+        if (move_attr.on_ground) {
             stateEnt->incomingEvent(state_utils::Event::TOUCHING_FLOOR);
-        } else if (max_movement.first != x) {
+        } else if (move_attr.touching_wall) {
             stateEnt->incomingEvent(state_utils::Event::TOUCHING_WALL);
         } else {
             stateEnt->incomingEvent(state_utils::Event::AIRBORNE);
         }
 
-        if (max_movement.second > 0.0) {
+        if (move_attr.falling) {
             stateEnt->incomingEvent(state_utils::Event::FALLING);
         }
 
