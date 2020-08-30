@@ -2,7 +2,7 @@
 
 #include "utils/log.h"
 #include "utils/file.h"
-#include "system/render.h"
+#include "system/system.h"
 
 template <>
 World::IWorldRead World::getInstance<World::IWorldRead>() {
@@ -119,7 +119,7 @@ void World::loadWorldFromJson(nlohmann::json j) {
         player_->trans_->setPosition(entrances_.at(0));
     }
 
-    Render::getInstance().addEntity(player_->renderableEntity_);
+    System::getRender()->addEntity(player_->renderableEntity_);
 
     // Health HUD
     player_health_position_ = std::make_shared<Transform>();
@@ -129,7 +129,7 @@ void World::loadWorldFromJson(nlohmann::json j) {
     player_health_->setColor(sf::Color::Green);
     player_health_->setLayer(RenderableEntity::Layer::HUD);
 
-    Render::getInstance().addEntity(player_health_);
+    System::getRender()->addEntity(player_health_);
 }
 
 void World::saveWorldToFile(std::string file) {
@@ -186,7 +186,7 @@ void World::addEntity(std::shared_ptr<BaseEntity> entity) {
         collisions_[static_cast<int>(coll->getType())].push_back(coll);
     }
 
-    Render::getInstance().addEntity(entity->renderableEntity_);
+    System::getRender()->addEntity(entity->renderableEntity_);
 }
 
 void World::removeEntity(std::shared_ptr<BaseEntity> entity) {

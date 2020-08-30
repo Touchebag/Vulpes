@@ -1,12 +1,12 @@
 #include "text_input.h"
 
-#include "system/render.h"
+#include "system/system.h"
 
 TextInput::TextInput() {
     text_position_->setPosition(50, 300);
     text_renderable_->setColor(sf::Color::Green);
     text_renderable_->setLayer(RenderableEntity::Layer::HUD);
-    Render::getInstance().addEntity(text_renderable_);
+    System::getRender()->addEntity(text_renderable_);
 }
 
 void TextInput::enterText(const std::string& text) {

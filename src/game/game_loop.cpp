@@ -7,7 +7,7 @@
 #include "utils/common.h"
 #include "utils/log.h"
 #include "system/input_event.h"
-#include "system/render.h"
+#include "system/system.h"
 
 #define PHYSICS_FRAME_RATE 60
 #define MS_PER_FRAME 1000 / PHYSICS_FRAME_RATE
@@ -32,11 +32,11 @@ int game_main(sf::RenderWindow& window, std::string level_file_path) {
 
     frame_time.restart();
 
-    Render& renderInst = Render::getInstance();
+    std::shared_ptr<IRender> renderInst = System::getRender();
 
     {
         auto view_size = window.getView().getSize();
-        renderInst.setView(0, 0, view_size.x, view_size.y);
+        renderInst->setView(0, 0, view_size.x, view_size.y);
     }
 
     while (window.isOpen()) {
@@ -58,7 +58,7 @@ int game_main(sf::RenderWindow& window, std::string level_file_path) {
                         window.close();
                         break;
                     case sf::Event::Resized:
-                        renderInst.resizeView(static_cast<float>(event.size.width), static_cast<float>(event.size.height));
+                        renderInst->resizeView(static_cast<float>(event.size.width), static_cast<float>(event.size.height));
                         break;
                     case sf::Event::KeyPressed:
                         if (event.key.code == sf::Keyboard::Key::P) {
@@ -83,9 +83,9 @@ int game_main(sf::RenderWindow& window, std::string level_file_path) {
         }
 
         auto view_pos = worldInstRead.getPlayerPosition();
-        renderInst.moveView(static_cast<float>(view_pos.x), static_cast<float>(view_pos.y));
+        renderInst->moveView(static_cast<float>(view_pos.x), static_cast<float>(view_pos.y));
 
-        renderInst.render(window);
+        renderInst->render(window);
 
         window.display();
     }

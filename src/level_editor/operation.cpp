@@ -1,6 +1,6 @@
 #include "operation.h"
 
-#include "system/render.h"
+#include "system/system.h"
 
 void Operation::undo() {
     if (entity_) {
@@ -14,7 +14,7 @@ void Operation::undo() {
             World::getInstance<World::IWorldModify>().addEntity(entity_);
         } else {
             entity_->reloadFromJson(before_.value());
-            Render::getInstance().addEntity(entity_->renderableEntity_);
+            System::getRender()->addEntity(entity_->renderableEntity_);
         }
     }
 }
@@ -31,7 +31,7 @@ void Operation::redo() {
             World::getInstance<World::IWorldModify>().addEntity(entity_);
         } else {
             entity_->reloadFromJson(after_.value());
-            Render::getInstance().addEntity(entity_->renderableEntity_);
+            System::getRender()->addEntity(entity_->renderableEntity_);
         }
     }
 }

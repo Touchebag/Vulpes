@@ -1,7 +1,7 @@
 #include "menu_entry.h"
 
 #include "utils/common.h"
-#include "system/render.h"
+#include "system/system.h"
 #include "components/rendering/rendering_text.h"
 
 namespace {
@@ -72,7 +72,7 @@ std::vector<std::shared_ptr<BaseEntity>> MenuEntry::draw() {
 
     menu_text_.push_back(title);
     title->renderableEntity_->setLayer(RenderableEntity::Layer::HUD);
-    Render::getInstance().addEntity(title->renderableEntity_);
+    System::getRender()->addEntity(title->renderableEntity_);
 
     int i = 0;
     for (auto& it : entries_) {
@@ -86,7 +86,7 @@ std::vector<std::shared_ptr<BaseEntity>> MenuEntry::draw() {
 
             menu_text_.push_back(text_element);
             text_element->renderableEntity_->setLayer(RenderableEntity::Layer::HUD);
-            Render::getInstance().addEntity(text_element->renderableEntity_);
+            System::getRender()->addEntity(text_element->renderableEntity_);
             ++i;
         }
     }

@@ -87,9 +87,3 @@ void Render::addEntity(std::weak_ptr<RenderableEntity> entity) {
         }
     }
 }
-
-Render& Render::getInstance() {
-    static Render render_instance;
-
-    return render_instance;
-}

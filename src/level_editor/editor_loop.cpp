@@ -2,7 +2,7 @@
 #include "base_entity.h"
 #include "history.h"
 #include "system/world.h"
-#include "system/render.h"
+#include "system/system.h"
 #include "command.h"
 #include "mouse.h"
 #include "menu.h"
@@ -47,7 +47,11 @@ std::shared_ptr<BaseEntity> makeHudText(std::pair<int, int> position = {0, 0}) {
 }
 
 int level_editor_main(sf::RenderWindow& window, std::string level_file_path) {
-    Render& renderInst = Render::getInstance();
+    auto renderInst = std::dynamic_pointer_cast<Render>(System::getRender());
+
+    if (!renderInst) {
+        throw std::runtime_error("Could not cast render instance");
+    }
 
     Command::Commands current_action = Command::Commands::NONE;
 
@@ -158,7 +162,7 @@ int level_editor_main(sf::RenderWindow& window, std::string level_file_path) {
                                 break;
                             case sf::Keyboard::Key::V:
                                 render_current_layer_only = !render_current_layer_only;
-                                renderInst.parallax_enabled_ = !renderInst.parallax_enabled_;
+                                renderInst->parallax_enabled_ = !renderInst->parallax_enabled_;
                                 break;
                             case sf::Keyboard::Key::Z:
                                 if (current_action == Command::Commands::NONE) {
@@ -301,15 +305,15 @@ int level_editor_main(sf::RenderWindow& window, std::string level_file_path) {
 
         window.clear();
 
-        renderInst.setView(static_cast<float>(view_pos_x), static_cast<float>(view_pos_y), view_size, view_size);
+        renderInst->setView(static_cast<float>(view_pos_x), static_cast<float>(view_pos_y), view_size, view_size);
 
         if (render_current_layer_only) {
-            renderInst.renderLayer(window, current_layer);
+            renderInst->renderLayer(window, current_layer);
         } else {
-            renderInst.render(window);
+            renderInst->render(window);
         }
 
-        sf::View old_viewport = renderInst.getView();
+        sf::View old_viewport = renderInst->getView();
         sf::View viewport({VIEW_POS_X, VIEW_POS_Y}, {VIEW_SIZE, VIEW_SIZE});
         window.setView(viewport);
 
