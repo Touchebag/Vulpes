@@ -1,5 +1,7 @@
 #include "game_loop.h"
 #include "editor_loop.h"
+#include "system/system.h"
+#include "editor_render.h"
 
 int main(int argc, char** argv) {
     sf::RenderWindow window(sf::VideoMode(1000,1000), "Level Editor");
@@ -11,6 +13,8 @@ int main(int argc, char** argv) {
     } else {
         level_file = "world.json";
     }
+
+    System::setRender(std::make_shared<EditorRender>());
 
     while (window.isOpen()) {
         game_main(window, level_file);

@@ -48,7 +48,6 @@ std::shared_ptr<BaseEntity> makeHudText(std::pair<int, int> position = {0, 0}) {
 }
 
 int level_editor_main(sf::RenderWindow& window, std::string level_file_path) {
-    System::setRender(std::make_shared<EditorRender>());
     auto renderInst = std::dynamic_pointer_cast<EditorRender>(System::getRender());
 
     if (!renderInst) {
@@ -180,6 +179,9 @@ int level_editor_main(sf::RenderWindow& window, std::string level_file_path) {
                                 if (!menu) {
                                     menu = std::make_shared<Menu>(current_entity);
                                 }
+                                break;
+                            case sf::Keyboard::Key::Num1:
+                                renderInst->toggleHitboxRendering();
                                 break;
                             default:
                                 break;

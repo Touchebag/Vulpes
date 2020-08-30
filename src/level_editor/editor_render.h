@@ -18,6 +18,10 @@ class EditorRender : public IRender {
     void setParallaxEnabled(bool enable);
     bool getParallaxEnabled();
 
+    void toggleHitboxRendering();
+
   private:
     Render render_;
+
+    bool render_hitboxes_ = false;
 };
