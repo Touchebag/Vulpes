@@ -2,7 +2,11 @@
 
 #include "i_render.h"
 
+class EditorRender;
+
 class Render : public IRender {
+  friend EditorRender;
+
   public:
     void render(sf::RenderWindow& window) override;
 
@@ -12,9 +16,6 @@ class Render : public IRender {
     void resizeView(float width, float height) override;
     void setView(float x, float y, float width, float height) override;
     sf::View getView() override;
-
-    void renderLayer(sf::RenderWindow& window, RenderableEntity::Layer layer);
-    bool parallax_enabled_ = true;
 
   private:
     void drawHud(sf::RenderWindow& window);
@@ -26,4 +27,7 @@ class Render : public IRender {
 
     std::array<std::vector<std::weak_ptr<RenderableEntity>>, static_cast<int>(RenderableEntity::Layer::MAX_LAYERS)> layers_;
     std::vector<std::weak_ptr<RenderableEntity>> hud_layer_;
+
+    void renderLayer(sf::RenderWindow& window, RenderableEntity::Layer layer);
+    bool parallax_enabled_ = true;
 };

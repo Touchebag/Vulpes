@@ -8,6 +8,7 @@
 #include "menu.h"
 #include "components/rendering/rendering_text.h"
 #include "components/collision/movement/collision_static.h"
+#include "editor_render.h"
 
 #include "operation.h"
 
@@ -47,7 +48,8 @@ std::shared_ptr<BaseEntity> makeHudText(std::pair<int, int> position = {0, 0}) {
 }
 
 int level_editor_main(sf::RenderWindow& window, std::string level_file_path) {
-    auto renderInst = std::dynamic_pointer_cast<Render>(System::getRender());
+    System::setRender(std::make_shared<EditorRender>());
+    auto renderInst = std::dynamic_pointer_cast<EditorRender>(System::getRender());
 
     if (!renderInst) {
         throw std::runtime_error("Could not cast render instance");
@@ -162,7 +164,7 @@ int level_editor_main(sf::RenderWindow& window, std::string level_file_path) {
                                 break;
                             case sf::Keyboard::Key::V:
                                 render_current_layer_only = !render_current_layer_only;
-                                renderInst->parallax_enabled_ = !renderInst->parallax_enabled_;
+                                renderInst->setParallaxEnabled(!renderInst->getParallaxEnabled());
                                 break;
                             case sf::Keyboard::Key::Z:
                                 if (current_action == Command::Commands::NONE) {
