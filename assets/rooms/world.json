@@ -384,6 +384,12 @@
         },
         {
             "Entity": "collectible",
+            "Collision": {
+                "height": 50,
+                "type": "collectible",
+                "width": 50,
+                "id": 2
+            },
             "Transform": {
                 "pos_x": -1157,
                 "pos_y": -283

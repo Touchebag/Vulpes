@@ -20,6 +20,7 @@ int game_main(sf::RenderWindow& window, std::string level_file_path) {
     sf::Clock frame_time;
 
     worldInstWrite.loadWorldFromFile(level_file_path);
+    worldInstWrite.loadRoom(level_file_path, 0);
 
     Input::getInstance().setKeyboardMap({
             {sf::Keyboard::Key::Space, Actions::Action::JUMP},

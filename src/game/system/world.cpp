@@ -113,13 +113,8 @@ void World::loadWorldFromJson(nlohmann::json j) {
     // Don't reload player between rooms
     if (!player_) {
         player_ = Player::createFromJson(File::loadEntityFromFile("player.json").value());
+        addPlayer(player_);
     }
-
-    if (!entrances_.empty()) {
-        player_->trans_->setPosition(entrances_.at(0));
-    }
-
-    System::getRender()->addEntity(player_->renderableEntity_);
 
     // Health HUD
     player_health_position_ = std::make_shared<Transform>();
@@ -194,6 +189,16 @@ void World::removeEntity(std::shared_ptr<BaseEntity> entity) {
     if (it != world_objects_.end()) {
         deleteEntity(it);
     }
+}
+
+void World::addPlayer(std::shared_ptr<Player> player) {
+    auto coll = player->collision_;
+
+    if (coll) {
+        collisions_[static_cast<int>(coll->getType())].push_back(coll);
+    }
+
+    System::getRender()->addEntity(player_->renderableEntity_);
 }
 
 void World::loadRoom(std::string room_name, int entrance_id) {
