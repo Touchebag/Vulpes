@@ -47,7 +47,7 @@ std::shared_ptr<BaseEntity> makeHudText(std::pair<int, int> position = {0, 0}) {
     return text_element;
 }
 
-int level_editor_main(sf::RenderWindow& window, std::string level_file_path) {
+int level_editor_main(sf::RenderWindow& window) {
     auto renderInst = std::dynamic_pointer_cast<EditorRender>(System::getRender());
 
     if (!renderInst) {
@@ -60,8 +60,6 @@ int level_editor_main(sf::RenderWindow& window, std::string level_file_path) {
     std::shared_ptr<Operation> current_operation;
 
     std::shared_ptr<Mouse> mouse = std::make_shared<Mouse>(window);
-
-    World::getInstance<World::IWorldModify>().loadWorldFromFile(level_file_path);
 
     float view_pos_x = VIEW_POS_X;
     float view_pos_y = VIEW_POS_Y;
@@ -146,11 +144,11 @@ int level_editor_main(sf::RenderWindow& window, std::string level_file_path) {
                     case sf::Event::KeyPressed:
                         switch (event.key.code) {
                             case sf::Keyboard::Key::P:
-                                World::getInstance<World::IWorldModify>().saveWorldToFile(level_file_path);
+                                World::getInstance<World::IWorldModify>().saveWorldToFile(World::IWorldRead::getCurrentRoomName());
                                 return 0;
                                 break;
                             case sf::Keyboard::Key::S:
-                                World::getInstance<World::IWorldModify>().saveWorldToFile(level_file_path);
+                                World::getInstance<World::IWorldModify>().saveWorldToFile(World::IWorldRead::getCurrentRoomName());
                                 break;
                             case sf::Keyboard::Key::A:
                                 command.add();

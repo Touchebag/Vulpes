@@ -20,6 +20,10 @@ bool World::IWorldRead::hasInteractTriggered() {
     return World::getWorldInstance().interact_triggered_;
 }
 
+std::string World::IWorldRead::getCurrentRoomName() {
+    return World::getWorldInstance().current_room_name_;
+}
+
 /*--- Modify ---*/
 
 void World::IWorldModify::addEntity(std::shared_ptr<BaseEntity> entity) {

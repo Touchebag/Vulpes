@@ -1,6 +1,7 @@
 #include "game_loop.h"
 #include "editor_loop.h"
 #include "system/system.h"
+#include "system/world.h"
 #include "editor_render.h"
 
 int main(int argc, char** argv) {
@@ -16,13 +17,18 @@ int main(int argc, char** argv) {
 
     System::setRender(std::make_shared<EditorRender>());
 
+    World::IWorldModify::loadWorldFromFile(level_file);
+    // TODO Double loading to force spawn point
+    // Remove when adding real entry point
+    World::IWorldModify::loadRoom(level_file, 0);
+
     while (window.isOpen()) {
-        game_main(window, level_file);
+        game_main(window);
 
         if (!window.isOpen()) {
             break;
         }
 
-        level_editor_main(window, level_file);
+        level_editor_main(window);
     }
 }

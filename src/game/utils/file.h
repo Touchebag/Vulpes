@@ -18,6 +18,9 @@ class File {
     static std::ifstream openSpriteMapFile(std::string filepath);
 
     static bool writeJsonToFile(std::string filepath, nlohmann::json world);
+
+    // This will append a suffix to a file name iff it is not already there
+    static std::string appendSuffix(std::string filepath, const std::string& suffix);
   private:
     static std::optional<nlohmann::json> loadJson(std::string filepath);
 

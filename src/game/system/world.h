@@ -25,6 +25,8 @@ class World {
         static std::weak_ptr<Player> getPlayer();
 
         static bool hasInteractTriggered();
+
+        static std::string getCurrentRoomName();
     };
 
     class IWorldModify {
@@ -102,6 +104,9 @@ class World {
     std::optional<std::pair<std::string, int>> new_room_;
 
     bool interact_triggered_ = false;
+
+    // Meta data
+    std::string current_room_name_;
 };
 
 template <> World::IWorldRead World::getInstance<World::IWorldRead>();

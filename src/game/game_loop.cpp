@@ -12,14 +12,12 @@
 #define PHYSICS_FRAME_RATE 60
 #define MS_PER_FRAME 1000 / PHYSICS_FRAME_RATE
 
-int game_main(sf::RenderWindow& window, std::string level_file_path) {
+int game_main(sf::RenderWindow& window) {
     auto worldInstRead = World::getInstance<World::IWorldRead>();
     auto worldInstWrite = World::getInstance<World::IWorldModify>();
 
     sf::Time frames;
     sf::Clock frame_time;
-
-    worldInstWrite.loadWorldFromFile(level_file_path);
 
     Input::getInstance().setKeyboardMap({
             {sf::Keyboard::Key::Space, Actions::Action::JUMP},
