@@ -208,6 +208,10 @@ void World::addPlayer(std::shared_ptr<Player> player) {
 void World::loadRoom(std::string room_name, int entrance_id) {
     loadWorldFromFile(room_name);
 
+    setEntrance(entrance_id);
+}
+
+void World::setEntrance(int entrance_id) {
     if (entrance_id < static_cast<int>(entrances_.size())) {
         player_->trans_->setPosition(entrances_.at(entrance_id));
     } else {

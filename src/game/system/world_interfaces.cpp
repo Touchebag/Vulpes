@@ -70,3 +70,7 @@ void World::IWorldModify::loadRoom(std::string room_name, int entrance_id) {
     // Enqueue new room load at frame end
     World::getWorldInstance().new_room_ = {room_name, entrance_id};
 }
+
+void World::IWorldModify::setEntrance(int entrance_id) {
+    World::getWorldInstance().setEntrance(entrance_id);
+}

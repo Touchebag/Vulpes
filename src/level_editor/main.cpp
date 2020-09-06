@@ -18,9 +18,7 @@ int main(int argc, char** argv) {
     System::setRender(std::make_shared<EditorRender>());
 
     World::IWorldModify::loadWorldFromFile(level_file);
-    // TODO Double loading to force spawn point
-    // Remove when adding real entry point
-    World::IWorldModify::loadRoom(level_file, 0);
+    World::IWorldModify::setEntrance(0);
 
     while (window.isOpen()) {
         game_main(window);

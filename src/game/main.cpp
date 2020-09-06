@@ -6,9 +6,7 @@ int main() {
     window.setKeyRepeatEnabled(false);
 
     World::IWorldModify::loadWorldFromFile("world.json");
-    // TODO Double loading to force spawn point
-    // Remove when adding real entry point
-    World::IWorldModify::loadRoom("world.json", 0);
+    World::IWorldModify::setEntrance(0);
 
     game_main(window);
 }

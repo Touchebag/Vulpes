@@ -49,6 +49,8 @@ class World {
         static void triggerInterract();
 
         static void loadRoom(std::string room_name, int entrance_id);
+
+        static void setEntrance(int entrance_id);
     };
 
     template <class T>
@@ -79,6 +81,8 @@ class World {
     void loadWorldFromFile(std::string file);
 
     void loadRoom(std::string room_name, int entrance_id);
+
+    void setEntrance(int entrance_id);
 
     std::vector<std::shared_ptr<BaseEntity>>::iterator deleteEntity(std::vector<std::shared_ptr<BaseEntity>>::iterator it);
 
