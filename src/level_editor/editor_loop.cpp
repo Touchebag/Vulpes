@@ -19,6 +19,14 @@
 RenderableEntity::Layer current_layer = RenderableEntity::Layer::MAIN;
 bool render_current_layer_only = false;
 
+enum EditorEntities {
+    LAYER_HUD_TEXT,
+    MOUSE_HUD_TEXT,
+    CURRENT_ENTITY_HUD_TEXT,
+
+    MAX_ENTITIES,
+};
+
 RenderableEntity::Layer change_layer(bool towards_screen) {
     int layer_int = static_cast<int>(current_layer);
     if (towards_screen && layer_int > 0) {
@@ -65,15 +73,22 @@ int level_editor_main(sf::RenderWindow& window) {
     float view_pos_y = VIEW_POS_Y;
     float view_size = VIEW_SIZE;
 
+    if (auto player = World::IWorldRead::getPlayer().lock()) {
+        view_pos_x = static_cast<float>(player->trans_->getX());
+        view_pos_y = static_cast<float>(player->trans_->getY());
+    }
+
     std::shared_ptr<BaseEntity> current_entity;
 
     Command command{history, current_operation, mouse};
 
     std::shared_ptr<Menu> menu;
 
-    auto layer_hud_text = makeHudText({50, 20});
-    auto mouse_hud_text = makeHudText({500, 20});
-    auto current_entity_hud_text = makeHudText({50, 50});
+    std::array<std::shared_ptr<BaseEntity>, EditorEntities::MAX_ENTITIES> editor_entities;
+
+    editor_entities[EditorEntities::LAYER_HUD_TEXT] = makeHudText({50, 20});
+    editor_entities[EditorEntities::MOUSE_HUD_TEXT] = makeHudText({500, 20});
+    editor_entities[EditorEntities::CURRENT_ENTITY_HUD_TEXT] = makeHudText({50, 50});
 
     while (window.isOpen()) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
@@ -144,6 +159,10 @@ int level_editor_main(sf::RenderWindow& window) {
                     case sf::Event::KeyPressed:
                         switch (event.key.code) {
                             case sf::Keyboard::Key::P:
+                                for (auto it : editor_entities) {
+                                    World::IWorldModify::removeEntity(it);
+                                }
+
                                 World::getInstance<World::IWorldModify>().saveWorldToFile(World::IWorldRead::getCurrentRoomName());
                                 return 0;
                                 break;
@@ -226,6 +245,7 @@ int level_editor_main(sf::RenderWindow& window) {
                                 }
                             }
 
+                            auto current_entity_hud_text = editor_entities[EditorEntities::CURRENT_ENTITY_HUD_TEXT];
                             World::getInstance<World::IWorldModify>().removeEntity(current_entity_hud_text);
 
                             if (current_entity) {
@@ -321,12 +341,12 @@ int level_editor_main(sf::RenderWindow& window) {
 
         // Print current layer
         if (auto layer_string = RenderableEntity::getLayerString(current_layer)) {
-            std::static_pointer_cast<RenderableText>(layer_hud_text->renderableEntity_)->setText(layer_string.value());
+            std::static_pointer_cast<RenderableText>(editor_entities[EditorEntities::LAYER_HUD_TEXT]->renderableEntity_)->setText(layer_string.value());
         }
 
         {
             auto mouse_world_pos = mouse->getMouseWorldPosition();
-            std::static_pointer_cast<RenderableText>(mouse_hud_text->renderableEntity_)->setText(
+            std::static_pointer_cast<RenderableText>(editor_entities[EditorEntities::MOUSE_HUD_TEXT]->renderableEntity_)->setText(
                     std::string("Mouse X: ") + std::to_string(mouse_world_pos.first) +
                     "\nMouse Y: " + std::to_string(mouse_world_pos.second));
         }
