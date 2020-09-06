@@ -40,8 +40,12 @@ std::optional<nlohmann::json> CollisionInteractable::outputToJson() {
 
 void CollisionInteractable::update() {
     if (World::IWorldRead::hasInteractTriggered()) {
-        if (transition_) {
-            World::IWorldModify::loadRoom(transition_.value().first, transition_.value().second);
+        for (auto it : World::IWorldRead::getCollisions(Collision::CollisionType::PLAYER_HURTBOX)) {
+            if (collides(it)) {
+                if (transition_) {
+                    World::IWorldModify::loadRoom(transition_.value().first, transition_.value().second);
+                }
+            }
         }
     }
 }
