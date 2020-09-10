@@ -65,7 +65,7 @@ file(GLOB_RECURSE EDITOR_LIB_SOURCES src/level_editor/*.cpp)
 list(REMOVE_ITEM EDITOR_LIB_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/level_editor/main.cpp)
 add_library(${EDITOR_LIB_TARGET} ${EDITOR_LIB_SOURCES})
 target_compile_options(${EDITOR_LIB_TARGET} PUBLIC ${CC_OPTIONS})
-target_include_directories(${EDITOR_LIB_TARGET} PUBLIC src/game/ libs/nlohmann)
+target_include_directories(${EDITOR_LIB_TARGET} PUBLIC src/game/ src/level_editor/ libs/nlohmann)
 
 target_link_libraries(${EDITOR_LIB_TARGET} ${GAME_LIB_TARGET} ${SFML_LIBS})
 

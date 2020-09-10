@@ -1,14 +1,12 @@
 #include "utils/log.h"
-#include "base_entity.h"
 #include "history.h"
 #include "system/world.h"
 #include "system/system.h"
-#include "command.h"
-#include "mouse.h"
 #include "menu.h"
 #include "components/rendering/rendering_text.h"
 #include "components/collision/movement/collision_static.h"
 #include "editor_render.h"
+#include "editor_loop/editor_environment.h"
 
 #include "operation.h"
 
@@ -18,14 +16,6 @@
 
 RenderableEntity::Layer current_layer = RenderableEntity::Layer::MAIN;
 bool render_current_layer_only = false;
-
-enum EditorEntities {
-    LAYER_HUD_TEXT,
-    MOUSE_HUD_TEXT,
-    CURRENT_ENTITY_HUD_TEXT,
-
-    MAX_ENTITIES,
-};
 
 RenderableEntity::Layer change_layer(bool towards_screen) {
     int layer_int = static_cast<int>(current_layer);
@@ -38,36 +28,12 @@ RenderableEntity::Layer change_layer(bool towards_screen) {
     return current_layer;
 }
 
-std::shared_ptr<BaseEntity> makeHudText(std::pair<int, int> position = {0, 0}) {
-    std::shared_ptr<BaseEntity> text_element = std::make_shared<BaseEntity>();
-
-    std::shared_ptr<Transform> trans = std::make_shared<Transform>();
-    std::shared_ptr<RenderableText> text = std::make_shared<RenderableText>(trans);
-    text->setColor(sf::Color::Green);
-    text->setLayer(RenderableEntity::Layer::HUD);
-
-    trans->setPosition(position.first, position.second);
-
-    text_element->trans_ = trans;
-    text_element->renderableEntity_ = text;
-    World::getInstance<World::IWorldModify>().addEntity(text_element);
-
-    return text_element;
-}
-
 int level_editor_main(sf::RenderWindow& window) {
     auto renderInst = std::dynamic_pointer_cast<EditorRender>(System::getRender());
 
     if (!renderInst) {
         throw std::runtime_error("Could not cast render instance");
     }
-
-    Command::Commands current_action = Command::Commands::NONE;
-
-    std::shared_ptr<History> history = std::make_shared<History>();
-    std::shared_ptr<Operation> current_operation;
-
-    std::shared_ptr<Mouse> mouse = std::make_shared<Mouse>(window);
 
     float view_pos_x = VIEW_POS_X;
     float view_pos_y = VIEW_POS_Y;
@@ -78,17 +44,16 @@ int level_editor_main(sf::RenderWindow& window) {
         view_pos_y = static_cast<float>(player->trans_->getY());
     }
 
-    std::shared_ptr<BaseEntity> current_entity;
-
-    Command command{history, current_operation, mouse};
+    EditorEnvironment editor_env = {window};
 
     std::shared_ptr<Menu> menu;
 
-    std::array<std::shared_ptr<BaseEntity>, EditorEntities::MAX_ENTITIES> editor_entities;
+    // TODO Create all of these directly in EditorEnv instead
+    std::array<std::shared_ptr<BaseEntity>, EditorEnvironment::EditorEntities::MAX_ENTITIES> editor_entities;
 
-    editor_entities[EditorEntities::LAYER_HUD_TEXT] = makeHudText({50, 20});
-    editor_entities[EditorEntities::MOUSE_HUD_TEXT] = makeHudText({500, 20});
-    editor_entities[EditorEntities::CURRENT_ENTITY_HUD_TEXT] = makeHudText({50, 50});
+    editor_entities[EditorEnvironment::EditorEntities::LAYER_HUD_TEXT] = editor_common::makeHudText({50, 20});
+    editor_entities[EditorEnvironment::EditorEntities::MOUSE_HUD_TEXT] = editor_common::makeHudText({500, 20});
+    editor_entities[EditorEnvironment::EditorEntities::CURRENT_ENTITY_HUD_TEXT] = editor_common::makeHudText({50, 50});
 
     while (window.isOpen()) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
@@ -96,6 +61,7 @@ int level_editor_main(sf::RenderWindow& window) {
         }
 
         sf::Event event;
+        editor_env.event = event;
         while (window.pollEvent(event)) {
             if (menu) {
                 if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::E) {
@@ -105,12 +71,12 @@ int level_editor_main(sf::RenderWindow& window) {
                         char key = static_cast<char>(event.text.unicode);
                         int option = std::stoi(std::string(&key));
                         if (auto cmd = menu->selectOption(option)) {
-                            if (current_entity) {
+                            if (editor_env.current_entity) {
                                 // Clear event buffer to avoid duplicate characters
                                 sf::Event tmp_event;
                                 while (window.pollEvent(tmp_event)) {};
 
-                                command.handleCommand(cmd.value());
+                                editor_env.command.handleCommand(cmd.value());
                             }
 
                             // Close menu if we take an action
@@ -120,18 +86,18 @@ int level_editor_main(sf::RenderWindow& window) {
                         LOGV("Invalid menu option, ignoring");
                     }
                 }
-            } else if (command.text_input_) {
+            } else if (editor_env.command.text_input_) {
                 switch (event.type) {
                     case sf::Event::Closed:
                         window.close();
                         break;
                     case sf::Event::TextEntered:
-                        command.text_input_->enterText(sf::String(event.text.unicode).toAnsiString());
+                        editor_env.command.text_input_->enterText(sf::String(event.text.unicode).toAnsiString());
                         break;
                     case sf::Event::KeyPressed:
                         switch (event.key.code) {
                             case sf::Keyboard::Enter:
-                                command.closeTextInput();
+                                editor_env.command.closeTextInput();
                                 break;
                             default:
                                 break;
@@ -147,7 +113,7 @@ int level_editor_main(sf::RenderWindow& window) {
                     case sf::Event::MouseWheelScrolled:
                         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
                             current_layer = change_layer(event.mouseWheelScroll.delta > 0.0);
-                            command.current_layer_ = current_layer;
+                            editor_env.command.current_layer_ = current_layer;
                         } else {
                             if (event.mouseWheelScroll.delta > 0) {
                                 view_size -= 200;
@@ -170,31 +136,31 @@ int level_editor_main(sf::RenderWindow& window) {
                                 World::getInstance<World::IWorldModify>().saveWorldToFile(World::IWorldRead::getCurrentRoomName());
                                 break;
                             case sf::Keyboard::Key::A:
-                                command.add();
+                                editor_env.command.add();
                                 break;
                             case sf::Keyboard::Key::D:
-                                command.remove(current_entity);
+                                editor_env.command.remove(editor_env.current_entity);
                                 break;
                             case sf::Keyboard::Key::C:
-                                command.copy(current_entity);
+                                editor_env.command.copy(editor_env.current_entity);
                                 break;
                             case sf::Keyboard::Key::V:
                                 render_current_layer_only = !render_current_layer_only;
                                 renderInst->setParallaxEnabled(!renderInst->getParallaxEnabled());
                                 break;
                             case sf::Keyboard::Key::Z:
-                                if (current_action == Command::Commands::NONE) {
-                                    history->undo();
+                                if (editor_env.current_action == Command::Commands::NONE) {
+                                    editor_env.history->undo();
                                 }
                                 break;
                             case sf::Keyboard::Key::R:
-                                if (current_action == Command::Commands::NONE) {
-                                    history->redo();
+                                if (editor_env.current_action == Command::Commands::NONE) {
+                                    editor_env.history->redo();
                                 }
                                 break;
                             case sf::Keyboard::Key::E:
                                 if (!menu) {
-                                    menu = std::make_shared<Menu>(current_entity);
+                                    menu = std::make_shared<Menu>(editor_env.current_entity);
                                 }
                                 break;
                             case sf::Keyboard::Key::Num1:
@@ -207,11 +173,11 @@ int level_editor_main(sf::RenderWindow& window) {
                     case sf::Event::MouseButtonPressed:
                         if (event.mouseButton.button == sf::Mouse::Button::Left) {
                             // Store current mouse position
-                            mouse->saveMousePosition();
+                            editor_env.mouse->saveMousePosition();
 
-                            current_entity = nullptr;
+                            editor_env.current_entity = nullptr;
 
-                            auto mouse_world_pos = mouse->getMouseWorldPosition();
+                            auto mouse_world_pos = editor_env.mouse->getMouseWorldPosition();
 
                             std::shared_ptr<Transform> tmp_trans = std::make_shared<Transform>();
                             tmp_trans->setPosition(static_cast<int>(mouse_world_pos.first), static_cast<int>(mouse_world_pos.second));
@@ -221,8 +187,8 @@ int level_editor_main(sf::RenderWindow& window) {
 
                             auto player = World::getInstance<World::IWorldRead>().getPlayer().lock();
                             if (player && player->collision_ && player->collision_->collides(tmp_coll)) {
-                                current_entity = player;
-                                command.current_entity_ = current_entity;
+                                editor_env.current_entity = player;
+                                editor_env.command.current_entity_ = editor_env.current_entity;
                             } else {
                                 for (auto it : World::getInstance<World::IWorldModify>().getWorldObjects()) {
                                     std::shared_ptr<Collision> other_coll;
@@ -238,26 +204,26 @@ int level_editor_main(sf::RenderWindow& window) {
                                     }
 
                                     if (other_coll && other_coll->collides(tmp_coll)) {
-                                        current_entity = it;
-                                        command.current_entity_ = current_entity;
+                                        editor_env.current_entity = it;
+                                        editor_env.command.current_entity_ = editor_env.current_entity;
                                         break;
                                     }
                                 }
                             }
 
-                            auto current_entity_hud_text = editor_entities[EditorEntities::CURRENT_ENTITY_HUD_TEXT];
+                            auto current_entity_hud_text = editor_entities[EditorEnvironment::EditorEntities::CURRENT_ENTITY_HUD_TEXT];
                             World::getInstance<World::IWorldModify>().removeEntity(current_entity_hud_text);
 
-                            if (current_entity) {
+                            if (editor_env.current_entity) {
                                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
-                                    command.handleCommand(Command::Commands::RESIZE);
+                                    editor_env.command.handleCommand(Command::Commands::RESIZE);
                                 } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
-                                    command.handleCommand(Command::Commands::MOVE);
+                                    editor_env.command.handleCommand(Command::Commands::MOVE);
                                 }
-                                current_entity_hud_text = makeHudText({50, 50});
+                                current_entity_hud_text = editor_common::makeHudText({50, 50});
 
-                                auto transform = current_entity->trans_;
-                                auto coll = current_entity->collision_;
+                                auto transform = editor_env.current_entity->trans_;
+                                auto coll = editor_env.current_entity->collision_;
 
                                 if (transform && coll) {
                                     std::static_pointer_cast<RenderableText>(current_entity_hud_text->renderableEntity_)
@@ -269,27 +235,27 @@ int level_editor_main(sf::RenderWindow& window) {
                             }
 
                             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LAlt)) {
-                                current_action = Command::Commands::CAMERA_MOVE;
+                                editor_env.current_action = Command::Commands::CAMERA_MOVE;
                             }
                         } else if (event.mouseButton.button == sf::Mouse::Button::Right) {
                             // Store current mouse position
-                            mouse->saveMousePosition();
+                            editor_env.mouse->saveMousePosition();
 
                             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LAlt)) {
-                                current_action = Command::Commands::CAMERA_ZOOM;
+                                editor_env.current_action = Command::Commands::CAMERA_ZOOM;
                             } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
-                                auto coll = current_entity->collision_;
-                                if (current_entity && coll) {
+                                auto coll = editor_env.current_entity->collision_;
+                                if (editor_env.current_entity && coll) {
                                     int width = static_cast<int>(
                                             std::round(static_cast<float>(coll->getHitbox()->width_) / 5.0) * 5.0);
                                     int height = static_cast<int>(
                                             std::round(static_cast<float>(coll->getHitbox()->height_) / 5.0) * 5.0);
 
-                                    current_entity->collision_->setHitbox(width, height);
+                                    editor_env.current_entity->collision_->setHitbox(width, height);
                                 }
                             } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
-                                if (current_entity) {
-                                    if(auto transform = current_entity->trans_) {
+                                if (editor_env.current_entity) {
+                                    if(auto transform = editor_env.current_entity->trans_) {
                                         auto pos = transform->getPosition();
                                         int x = static_cast<int>(std::round(static_cast<float>(pos.x) / 5.0) * 5.0);
                                         int y = static_cast<int>(std::round(static_cast<float>(pos.y) / 5.0) * 5.0);
@@ -301,10 +267,10 @@ int level_editor_main(sf::RenderWindow& window) {
                         }
                         break;
                     case sf::Event::MouseButtonReleased:
-                        mouse->saveMousePosition();
+                        editor_env.mouse->saveMousePosition();
 
-                        command.stopCommand();
-                        current_action = Command::Commands::NONE;
+                        editor_env.command.stopCommand();
+                        editor_env.current_action = Command::Commands::NONE;
                         break;
                     default:
                         break;
@@ -312,17 +278,17 @@ int level_editor_main(sf::RenderWindow& window) {
             }
         }
 
-        command.update();
+        editor_env.command.update();
 
-        if (current_action == Command::Commands::CAMERA_MOVE) {
-            auto mouse_dist = mouse->getMouseDistance();
+        if (editor_env.current_action == Command::Commands::CAMERA_MOVE) {
+            auto mouse_dist = editor_env.mouse->getMouseDistance();
             view_pos_x -= static_cast<float>(mouse_dist.first);
             view_pos_y -= static_cast<float>(mouse_dist.second);
-            mouse->saveMousePosition();
-        } else if (current_action == Command::Commands::CAMERA_ZOOM) {
-            auto mouse_dist = mouse->getMouseDistance();
+            editor_env.mouse->saveMousePosition();
+        } else if (editor_env.current_action == Command::Commands::CAMERA_ZOOM) {
+            auto mouse_dist = editor_env.mouse->getMouseDistance();
             view_size += static_cast<float>(mouse_dist.second * 5);
-            mouse->saveMousePosition();
+            editor_env.mouse->saveMousePosition();
         }
 
         window.clear();
@@ -341,12 +307,12 @@ int level_editor_main(sf::RenderWindow& window) {
 
         // Print current layer
         if (auto layer_string = RenderableEntity::getLayerString(current_layer)) {
-            std::static_pointer_cast<RenderableText>(editor_entities[EditorEntities::LAYER_HUD_TEXT]->renderableEntity_)->setText(layer_string.value());
+            std::static_pointer_cast<RenderableText>(editor_entities[EditorEnvironment::EditorEntities::LAYER_HUD_TEXT]->renderableEntity_)->setText(layer_string.value());
         }
 
         {
-            auto mouse_world_pos = mouse->getMouseWorldPosition();
-            std::static_pointer_cast<RenderableText>(editor_entities[EditorEntities::MOUSE_HUD_TEXT]->renderableEntity_)->setText(
+            auto mouse_world_pos = editor_env.mouse->getMouseWorldPosition();
+            std::static_pointer_cast<RenderableText>(editor_entities[EditorEnvironment::EditorEntities::MOUSE_HUD_TEXT]->renderableEntity_)->setText(
                     std::string("Mouse X: ") + std::to_string(mouse_world_pos.first) +
                     "\nMouse Y: " + std::to_string(mouse_world_pos.second));
         }
