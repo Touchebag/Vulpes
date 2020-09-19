@@ -1,36 +1,40 @@
 #include "menu.h"
 
 #include "menu_entries.h"
+#include "editor_loop/editor_environment.h"
 
-Menu::Menu(std::shared_ptr<BaseEntity> current_entity) {
-    if (current_entity) {
+Menu::Menu(std::weak_ptr<EditorEnvironment> editor_environment) :
+    editor_env_(editor_environment) {
+    auto editor_env = editor_env_.lock();
+    if (editor_env->current_entity) {
         auto main_entry = std::make_shared<MenuEntry>("Main");
-        current_entry = main_entry;
+
+        main_entry_->addEntry(menu_entries::makeRenderableEntry(editor_env->current_entity));
+
+        main_entry_->addEntry(menu_entries::makeCollisionEntry(editor_env->current_entity));
+
+        main_entry_->addEntry(menu_entries::makeMovableEntry(editor_env->current_entity));
+
+        main_entry_->addEntry(menu_entries::makePhysicsEntry(editor_env->current_entity));
+
+        main_entry_->addEntry(menu_entries::makeActionsEntry(editor_env->current_entity));
+
+        current_entry_ = main_entry;
         main_entry_ = main_entry;
-
-        main_entry->addEntry(menu_entries::makeRenderableEntry(current_entity));
-
-        main_entry->addEntry(menu_entries::makeCollisionEntry(current_entity));
-
-        main_entry->addEntry(menu_entries::makeMovableEntry(current_entity));
-
-        main_entry->addEntry(menu_entries::makePhysicsEntry(current_entity));
-
-        main_entry->addEntry(menu_entries::makeActionsEntry(current_entity));
 
         draw();
     }
 }
 
 std::optional<Command::Commands> Menu::selectOption(int option) {
-    auto new_entry = current_entry->selectOption(option);
+    auto new_entry = current_entry_->selectOption(option);
 
     if (new_entry) {
         if (auto action = new_entry->getAction()) {
             return action;
         }
 
-        current_entry = new_entry;
+        current_entry_ = new_entry;
         draw();
     }
 
@@ -38,6 +42,6 @@ std::optional<Command::Commands> Menu::selectOption(int option) {
 }
 
 void Menu::draw() {
-    menu_text_ = current_entry->draw();
+    menu_text_ = current_entry_->draw();
 }
 

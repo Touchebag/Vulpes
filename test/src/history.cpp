@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "level_editor/command.h"
+#include "level_editor/editor_loop/editor_environment.h"
+#include "level_editor/history.h"
 #include "mocks/mock_mouse.h"
 
 #include "components/collision/movement/collision_static.h"
@@ -13,12 +14,6 @@ class HistoryTestFixture : public ::testing::Test {
     void SetUp() override {
         std::shared_ptr<Operation> operation = std::make_shared<Operation>();
 
-        history_ = std::make_shared<History>();
-        mouse_ = std::make_shared<Mouse>(window_);
-
-        entity_ = std::make_shared<BaseEntity>();
-        command_ = {history_, operation, mouse_};
-
         World::getInstance<World::IWorldModify>().loadWorldFromJson(nlohmann::json::parse("{\"entities\": null}"));
 
         MockMouse::setMouseWorldPosition({0, 0});
@@ -26,22 +21,19 @@ class HistoryTestFixture : public ::testing::Test {
 
   protected:
     sf::RenderWindow window_;
-    std::shared_ptr<BaseEntity> entity_;
-    std::shared_ptr<Mouse> mouse_;
-    std::shared_ptr<History> history_;
-    Command command_ = {nullptr, nullptr, nullptr};
+    std::shared_ptr<EditorEnvironment> editor_env = EditorEnvironment::create_environment(window_);
 };
 
 TEST_F(HistoryTestFixture, AddObject) {
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    command_.add();
+    editor_env->command->add();
     auto j2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    history_->undo();
+    editor_env->history->undo();
     auto j3 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    history_->redo();
+    editor_env->history->redo();
     auto j4 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
     ASSERT_TRUE(j1 == j3);
@@ -50,17 +42,17 @@ TEST_F(HistoryTestFixture, AddObject) {
 
 TEST_F(HistoryTestFixture, RemoveObject) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    command_.add(entity);
+    editor_env->command->add(entity);
 
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    command_.remove(entity);
+    editor_env->command->remove(entity);
     auto j2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    history_->undo();
+    editor_env->history->undo();
     auto j3 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    history_->redo();
+    editor_env->history->redo();
     auto j4 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
     ASSERT_TRUE(j1 == j3);
@@ -69,17 +61,17 @@ TEST_F(HistoryTestFixture, RemoveObject) {
 
 TEST_F(HistoryTestFixture, CopyObject) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    command_.add(entity);
+    editor_env->command->add(entity);
 
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    command_.copy(entity);
+    editor_env->command->copy(entity);
     auto j2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    history_->undo();
+    editor_env->history->undo();
     auto j3 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    history_->redo();
+    editor_env->history->redo();
     auto j4 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
     ASSERT_TRUE(j1 == j3);
@@ -88,20 +80,20 @@ TEST_F(HistoryTestFixture, CopyObject) {
 
 TEST_F(HistoryTestFixture, CopyObjectRemoveOriginal) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    command_.add(entity);
+    editor_env->command->add(entity);
 
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    command_.copy(entity);
-    command_.remove(entity);
+    editor_env->command->copy(entity);
+    editor_env->command->remove(entity);
     auto j2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    history_->undo();
-    history_->undo();
+    editor_env->history->undo();
+    editor_env->history->undo();
     auto j3 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    history_->redo();
-    history_->redo();
+    editor_env->history->redo();
+    editor_env->history->redo();
     auto j4 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
     ASSERT_TRUE(j1 == j3);
@@ -110,27 +102,27 @@ TEST_F(HistoryTestFixture, CopyObjectRemoveOriginal) {
 
 TEST_F(HistoryTestFixture, ResizeObject) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    command_.add(entity);
+    editor_env->command->add(entity);
 
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
     MockMouse::setMouseWorldPosition({0, 0});
     entity->trans_->setPosition(0, 0);
-    mouse_->saveMousePosition();
+    editor_env->mouse->saveMousePosition();
 
-    command_.current_entity_ = entity;
-    command_.handleCommand(Command::Commands::RESIZE);
+    editor_env->current_entity = entity;
+    editor_env->command->handleCommand(Command::Commands::RESIZE);
 
     MockMouse::setMouseWorldPosition({10, 9});
-    command_.update();
-    command_.stopCommand();
+    editor_env->command->update();
+    editor_env->command->stopCommand();
 
     auto j2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    history_->undo();
+    editor_env->history->undo();
     auto j3 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    history_->redo();
+    editor_env->history->redo();
     auto j4 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
     ASSERT_TRUE(j1 == j3);
@@ -139,27 +131,27 @@ TEST_F(HistoryTestFixture, ResizeObject) {
 
 TEST_F(HistoryTestFixture, MoveObject) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    command_.add(entity);
+    editor_env->command->add(entity);
 
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
     MockMouse::setMouseWorldPosition({0, 0});
     entity->trans_->setPosition(0, 0);
-    mouse_->saveMousePosition();
+    editor_env->mouse->saveMousePosition();
 
-    command_.current_entity_ = entity;
-    command_.handleCommand(Command::Commands::MOVE);
+    editor_env->current_entity = entity;
+    editor_env->command->handleCommand(Command::Commands::MOVE);
 
     MockMouse::setMouseWorldPosition({10, 9});
-    command_.update();
-    command_.stopCommand();
+    editor_env->command->update();
+    editor_env->command->stopCommand();
 
     auto j2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    history_->undo();
+    editor_env->history->undo();
     auto j3 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    history_->redo();
+    editor_env->history->redo();
     auto j4 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
     ASSERT_TRUE(j1 == j3);
@@ -168,28 +160,28 @@ TEST_F(HistoryTestFixture, MoveObject) {
 
 TEST_F(HistoryTestFixture, MoveObjectOtherLayer) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    command_.current_layer_ = RenderableEntity::Layer::BG_1;
-    command_.add(entity);
+    editor_env->command->current_layer_ = RenderableEntity::Layer::BG_1;
+    editor_env->command->add(entity);
 
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
     MockMouse::setMouseWorldPosition({0, 0});
     entity->trans_->setPosition(0, 0);
-    mouse_->saveMousePosition();
+    editor_env->mouse->saveMousePosition();
 
-    command_.current_entity_ = entity;
-    command_.handleCommand(Command::Commands::MOVE);
+    editor_env->current_entity = entity;
+    editor_env->command->handleCommand(Command::Commands::MOVE);
 
     MockMouse::setMouseWorldPosition({10, 9});
-    command_.update();
-    command_.stopCommand();
+    editor_env->command->update();
+    editor_env->command->stopCommand();
 
     auto j2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    history_->undo();
+    editor_env->history->undo();
     auto j3 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    history_->redo();
+    editor_env->history->redo();
     auto j4 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
     ASSERT_TRUE(j1 == j3);
@@ -198,19 +190,19 @@ TEST_F(HistoryTestFixture, MoveObjectOtherLayer) {
 
 TEST_F(HistoryTestFixture, ToggleRenderable) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    command_.add(entity);
+    editor_env->command->add(entity);
 
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    command_.current_entity_ = entity;
-    command_.handleCommand(Command::Commands::TOGGLE_RENDERABLE);
+    editor_env->current_entity = entity;
+    editor_env->command->handleCommand(Command::Commands::TOGGLE_RENDERABLE);
 
     auto j2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    history_->undo();
+    editor_env->history->undo();
     auto j3 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    history_->redo();
+    editor_env->history->redo();
     auto j4 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
     ASSERT_TRUE(j1 == j3);
@@ -220,19 +212,19 @@ TEST_F(HistoryTestFixture, ToggleRenderable) {
 TEST_F(HistoryTestFixture, ToggleCollision) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
     entity->collision_ = std::make_shared<CollisionStatic>(entity->trans_);
-    command_.add(entity);
+    editor_env->command->add(entity);
 
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    command_.current_entity_ = entity;
-    command_.handleCommand(Command::Commands::TOGGLE_COLLISION);
+    editor_env->current_entity = entity;
+    editor_env->command->handleCommand(Command::Commands::TOGGLE_COLLISION);
 
     auto j2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    history_->undo();
+    editor_env->history->undo();
     auto j3 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    history_->redo();
+    editor_env->history->redo();
     auto j4 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
     ASSERT_TRUE(j1 == j3);
@@ -242,19 +234,19 @@ TEST_F(HistoryTestFixture, ToggleCollision) {
 TEST_F(HistoryTestFixture, ToggleMovable) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
     entity->movableEntity_ = std::make_shared<MovableEntity>(entity->trans_, entity->collision_);
-    command_.add(entity);
+    editor_env->command->add(entity);
 
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    command_.current_entity_ = entity;
-    command_.handleCommand(Command::Commands::TOGGLE_MOVABLE);
+    editor_env->current_entity = entity;
+    editor_env->command->handleCommand(Command::Commands::TOGGLE_MOVABLE);
 
     auto j2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    history_->undo();
+    editor_env->history->undo();
     auto j3 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    history_->redo();
+    editor_env->history->redo();
     auto j4 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
     ASSERT_TRUE(j1 == j3);
@@ -269,19 +261,19 @@ TEST_F(HistoryTestFixture, TogglePhysics) {
                            entity->animatedEntity_,
                            entity->actions_,
                            entity->collision_);
-    command_.add(entity);
+    editor_env->command->add(entity);
 
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    command_.current_entity_ = entity;
-    command_.handleCommand(Command::Commands::TOGGLE_PHYSICS);
+    editor_env->current_entity = entity;
+    editor_env->command->handleCommand(Command::Commands::TOGGLE_PHYSICS);
 
     auto j2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    history_->undo();
+    editor_env->history->undo();
     auto j3 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    history_->redo();
+    editor_env->history->redo();
     auto j4 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
     ASSERT_TRUE(j1 == j3);
@@ -291,19 +283,19 @@ TEST_F(HistoryTestFixture, TogglePhysics) {
 TEST_F(HistoryTestFixture, ToggleActions) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
     entity->actions_ = std::make_shared<Actions>(entity->death_);
-    command_.add(entity);
+    editor_env->command->add(entity);
 
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    command_.current_entity_ = entity;
-    command_.handleCommand(Command::Commands::TOGGLE_ACTIONS);
+    editor_env->current_entity = entity;
+    editor_env->command->handleCommand(Command::Commands::TOGGLE_ACTIONS);
 
     auto j2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    history_->undo();
+    editor_env->history->undo();
     auto j3 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    history_->redo();
+    editor_env->history->redo();
     auto j4 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
     ASSERT_TRUE(j1 == j3);
@@ -313,19 +305,19 @@ TEST_F(HistoryTestFixture, ToggleActions) {
 TEST_F(HistoryTestFixture, ToggleTiling) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
     entity->renderableEntity_ = std::make_shared<RenderableEntity>(entity->trans_, entity->movableEntity_);
-    command_.add(entity);
+    editor_env->command->add(entity);
 
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    command_.current_entity_ = entity;
-    command_.handleCommand(Command::Commands::RENDERABLE_TILING_NONE);
+    editor_env->current_entity = entity;
+    editor_env->command->handleCommand(Command::Commands::RENDERABLE_TILING_NONE);
 
     auto j2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    history_->undo();
+    editor_env->history->undo();
     auto j3 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    history_->redo();
+    editor_env->history->redo();
     auto j4 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
     ASSERT_TRUE(j1 == j3);
@@ -335,23 +327,23 @@ TEST_F(HistoryTestFixture, ToggleTiling) {
 TEST_F(HistoryTestFixture, ChangeSprite) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
     entity->renderableEntity_ = std::make_shared<RenderableEntity>(entity->trans_, entity->movableEntity_);
-    command_.add(entity);
+    editor_env->command->add(entity);
 
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    command_.current_entity_ = entity;
-    command_.handleCommand(Command::Commands::RENDERABLE_SPRITE_CHANGE);
+    editor_env->current_entity = entity;
+    editor_env->command->handleCommand(Command::Commands::RENDERABLE_SPRITE_CHANGE);
 
-    command_.text_input_->enterText("box_bg1.png");
+    editor_env->command->text_input_->enterText("box_bg1.png");
 
-    command_.stopCommand();
+    editor_env->command->stopCommand();
 
     auto j2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    history_->undo();
+    editor_env->history->undo();
     auto j3 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    history_->redo();
+    editor_env->history->redo();
     auto j4 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
     ASSERT_TRUE(j1 == j3);

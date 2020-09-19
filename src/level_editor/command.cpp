@@ -3,37 +3,37 @@
 #include <memory>
 
 #include "operation.h"
+#include "editor_loop/editor_environment.h"
 #include "components/collision/movement/collision_static.h"
 #include "utils/log.h"
 
-Command::Command(std::shared_ptr<History> history,
-        std::shared_ptr<Operation> current_operation,
-        std::shared_ptr<Mouse> mouse) :
-    history_(history),
-    current_operation_(current_operation),
-    mouse_(mouse),
-    current_command_(Commands::NONE) {
+Command::Command(std::weak_ptr<EditorEnvironment> editor_env) :
+        editor_env_(editor_env) {
+    if (!editor_env.lock()) {
+        LOGE("Command, failed to lock editor_env");
+    }
 }
 
 void Command::update() {
-    switch (current_command_) {
+    auto editor_env = editor_env_.lock();
+    switch (editor_env->current_command) {
         case Commands::RESIZE:
             {
-                auto mouse_world_dist = mouse_->getMouseWorldDistance();
+                auto mouse_world_dist = editor_env->mouse->getMouseWorldDistance();
 
-                if (current_operation_->before_) {
-                    auto j = current_operation_->before_.value();
+                if (editor_env->current_operation->before_) {
+                    auto j = editor_env->current_operation->before_.value();
                     if (j.contains("Collision")) {
                         auto coll = j["Collision"];
-                        if (current_entity_->collision_) {
-                            current_entity_->collision_->setHitbox(
+                        if (editor_env->current_entity->collision_) {
+                            editor_env->current_entity->collision_->setHitbox(
                                     static_cast<int>(static_cast<float>(coll["width"].get<int>()) + (mouse_world_dist.first * 2.0)),
                                     static_cast<int>(static_cast<float>(coll["height"].get<int>()) + (mouse_world_dist.second * 2.0)));
                         }
                     }
                     if (j.contains("Renderable")) {
                         auto render = j["Renderable"];
-                        if (current_entity_->renderableEntity_) {
+                        if (editor_env->current_entity->renderableEntity_) {
                             int w = 0;
                             int h = 0;
                             if (render.contains("width")) {
@@ -42,7 +42,7 @@ void Command::update() {
                             if (render.contains("height")) {
                                 h = static_cast<int>(static_cast<float>(render["height"].get<int>()) + (mouse_world_dist.second * 2.0));
                             }
-                            current_entity_->renderableEntity_->setSize(w, h);
+                            editor_env->current_entity->renderableEntity_->setSize(w, h);
                         }
                     }
                 }
@@ -50,12 +50,12 @@ void Command::update() {
             break;
         case (Command::Commands::MOVE):
             {
-                auto mouse_world_dist = mouse_->getMouseWorldDistance();
+                auto mouse_world_dist = editor_env->mouse->getMouseWorldDistance();
 
-                if (current_operation_->before_) {
-                    auto j = current_operation_->before_.value();
+                if (editor_env->current_operation->before_) {
+                    auto j = editor_env->current_operation->before_.value();
                     if (j.contains("Transform")) {
-                        if(auto transform = current_entity_->trans_) {
+                        if(auto transform = editor_env->current_entity->trans_) {
                             auto trans = j["Transform"];
                             transform->setPosition(
                                     static_cast<int>(static_cast<float>(trans["pos_x"]) + mouse_world_dist.first),
@@ -76,6 +76,8 @@ void Command::add() {
 }
 
 void Command::add(std::shared_ptr<BaseEntity> entity) {
+    auto editor_env = editor_env_.lock();
+
     std::shared_ptr<Transform> trans = std::make_shared<Transform>();
     std::shared_ptr<CollisionStatic> coll = std::make_shared<CollisionStatic>(trans);
     std::shared_ptr<RenderableEntity> render = std::make_shared<RenderableEntity>(trans, std::weak_ptr<MovableEntity>());
@@ -83,7 +85,7 @@ void Command::add(std::shared_ptr<BaseEntity> entity) {
     coll->setHitbox(50, 50);
     render->setLayer(current_layer_);
 
-    auto mouse_world_pos_ = mouse_->getMouseWorldPosition();
+    auto mouse_world_pos_ = editor_env->mouse->getMouseWorldPosition();
     trans->setPosition(static_cast<int>(mouse_world_pos_.first), static_cast<int>(mouse_world_pos_.second));
     entity->trans_ = trans;
 
@@ -93,11 +95,11 @@ void Command::add(std::shared_ptr<BaseEntity> entity) {
 
     World::getInstance<World::IWorldModify>().addEntity(entity);
 
-    current_operation_ = std::make_shared<Operation>();
-    current_operation_->entity_ = entity;
-    current_operation_->after_ = entity->outputToJson();
+    editor_env->current_operation = std::make_shared<Operation>();
+    editor_env->current_operation->entity_ = entity;
+    editor_env->current_operation->after_ = entity->outputToJson();
 
-    history_->addOperation(current_operation_);
+    editor_env->history->addOperation(editor_env->current_operation);
 }
 
 void Command::remove(std::shared_ptr<BaseEntity> entity) {
@@ -105,220 +107,226 @@ void Command::remove(std::shared_ptr<BaseEntity> entity) {
         return;
     }
 
-    current_operation_ = std::make_shared<Operation>();
-    current_operation_->entity_ = entity;
-    current_operation_->before_ = entity->outputToJson();
+    auto editor_env = editor_env_.lock();
+
+    editor_env->current_operation = std::make_shared<Operation>();
+    editor_env->current_operation->entity_ = entity;
+    editor_env->current_operation->before_ = entity->outputToJson();
 
     // Ensure weak_ptr in render expires
     entity->renderableEntity_.reset();
 
-    history_->addOperation(current_operation_);
+    editor_env->history->addOperation(editor_env->current_operation);
 
     World::getInstance<World::IWorldModify>().removeEntity(entity);
-    current_entity_ = nullptr;
+    editor_env->current_entity = nullptr;
 }
 
 void Command::copy(std::shared_ptr<BaseEntity> entity) {
     if (entity) {
+        auto editor_env = editor_env_.lock();
+
         auto cp_entity = BaseEntity::createFromJson(entity->outputToJson().value());
 
-        auto mouse_world_pos = mouse_->getMouseWorldPosition();
+        auto mouse_world_pos = editor_env->mouse->getMouseWorldPosition();
         if(auto transform = cp_entity->trans_) {
             transform->setPosition(static_cast<int>(mouse_world_pos.first), static_cast<int>(mouse_world_pos.second));
         }
         World::getInstance<World::IWorldModify>().addEntity(cp_entity);
 
-        current_operation_ = std::make_shared<Operation>();
-        current_operation_->entity_ = cp_entity;
-        current_operation_->after_ = cp_entity->outputToJson();
+        editor_env->current_operation = std::make_shared<Operation>();
+        editor_env->current_operation->entity_ = cp_entity;
+        editor_env->current_operation->after_ = cp_entity->outputToJson();
 
-        history_->addOperation(current_operation_);
+        editor_env->history->addOperation(editor_env->current_operation);
     }
 }
 
 void Command::handleCommand(Commands command) {
-    if (!current_entity_) {
+    auto editor_env = editor_env_.lock();
+
+    if (!editor_env->current_entity) {
         return;
     }
 
     switch (command) {
         case (Commands::RESIZE) :
             {
-                current_operation_ = std::make_shared<Operation>();
-                current_operation_->entity_ = current_entity_;
-                current_operation_->before_ = current_entity_->outputToJson();
+                editor_env->current_operation = std::make_shared<Operation>();
+                editor_env->current_operation->entity_ = editor_env->current_entity;
+                editor_env->current_operation->before_ = editor_env->current_entity->outputToJson();
 
-                current_command_ = Commands::RESIZE;
+                editor_env->current_command = Commands::RESIZE;
             }
             break;
         case (Commands::MOVE):
             {
-                current_operation_ = std::make_shared<Operation>();
-                current_operation_->entity_ = current_entity_;
-                current_operation_->before_ = current_entity_->outputToJson();
+                editor_env->current_operation = std::make_shared<Operation>();
+                editor_env->current_operation->entity_ = editor_env->current_entity;
+                editor_env->current_operation->before_ = editor_env->current_entity->outputToJson();
 
-                current_command_ = Command::Commands::MOVE;
+                editor_env->current_command = Command::Commands::MOVE;
             }
             break;
         case (Commands::TOGGLE_RENDERABLE):
             {
-                current_operation_ = std::make_shared<Operation>();
-                current_operation_->entity_ = current_entity_;
-                current_operation_->before_ = current_entity_->outputToJson();
+                editor_env->current_operation = std::make_shared<Operation>();
+                editor_env->current_operation->entity_ = editor_env->current_entity;
+                editor_env->current_operation->before_ = editor_env->current_entity->outputToJson();
 
-                World::getInstance<World::IWorldModify>().removeEntity(current_entity_);
-                if (current_entity_->renderableEntity_) {
-                    current_entity_->renderableEntity_ = {};
+                World::getInstance<World::IWorldModify>().removeEntity(editor_env->current_entity);
+                if (editor_env->current_entity->renderableEntity_) {
+                    editor_env->current_entity->renderableEntity_ = {};
                 } else {
-                    auto renderable = std::make_shared<RenderableEntity>(current_entity_->trans_,
-                                                                         current_entity_->movableEntity_);
+                    auto renderable = std::make_shared<RenderableEntity>(editor_env->current_entity->trans_,
+                                                                         editor_env->current_entity->movableEntity_);
                     renderable->loadTexture("box.png");
-                    current_entity_->renderableEntity_ = renderable;
+                    editor_env->current_entity->renderableEntity_ = renderable;
                 }
-                World::getInstance<World::IWorldModify>().addEntity(current_entity_);
-                current_operation_->after_ = current_entity_->outputToJson();
+                World::getInstance<World::IWorldModify>().addEntity(editor_env->current_entity);
+                editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();
 
-                history_->addOperation(current_operation_);
+                editor_env->history->addOperation(editor_env->current_operation);
                 break;
             }
         case (Commands::TOGGLE_COLLISION):
             {
-                current_operation_ = std::make_shared<Operation>();
-                current_operation_->entity_ = current_entity_;
-                current_operation_->before_ = current_entity_->outputToJson();
+                editor_env->current_operation = std::make_shared<Operation>();
+                editor_env->current_operation->entity_ = editor_env->current_entity;
+                editor_env->current_operation->before_ = editor_env->current_entity->outputToJson();
 
-                World::getInstance<World::IWorldModify>().removeEntity(current_entity_);
-                if (current_entity_->collision_) {
-                    current_entity_->collision_ = {};
+                World::getInstance<World::IWorldModify>().removeEntity(editor_env->current_entity);
+                if (editor_env->current_entity->collision_) {
+                    editor_env->current_entity->collision_ = {};
                 } else {
-                    auto collision = std::make_shared<CollisionStatic>(current_entity_->trans_);
-                    current_entity_->collision_ = collision;
+                    auto collision = std::make_shared<CollisionStatic>(editor_env->current_entity->trans_);
+                    editor_env->current_entity->collision_ = collision;
                 }
-                World::getInstance<World::IWorldModify>().addEntity(current_entity_);
-                current_operation_->after_ = current_entity_->outputToJson();
+                World::getInstance<World::IWorldModify>().addEntity(editor_env->current_entity);
+                editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();
 
-                history_->addOperation(current_operation_);
+                editor_env->history->addOperation(editor_env->current_operation);
                 break;
             }
         case (Commands::TOGGLE_MOVABLE):
             {
-                current_operation_ = std::make_shared<Operation>();
-                current_operation_->entity_ = current_entity_;
-                current_operation_->before_ = current_entity_->outputToJson();
+                editor_env->current_operation = std::make_shared<Operation>();
+                editor_env->current_operation->entity_ = editor_env->current_entity;
+                editor_env->current_operation->before_ = editor_env->current_entity->outputToJson();
 
-                World::getInstance<World::IWorldModify>().removeEntity(current_entity_);
-                if (current_entity_->movableEntity_) {
-                    current_entity_->movableEntity_ = {};
+                World::getInstance<World::IWorldModify>().removeEntity(editor_env->current_entity);
+                if (editor_env->current_entity->movableEntity_) {
+                    editor_env->current_entity->movableEntity_ = {};
                 } else {
-                    auto movable = std::make_shared<MovableEntity>(current_entity_->trans_, current_entity_->collision_);
-                    current_entity_->movableEntity_ = movable;
+                    auto movable = std::make_shared<MovableEntity>(editor_env->current_entity->trans_, editor_env->current_entity->collision_);
+                    editor_env->current_entity->movableEntity_ = movable;
                 }
-                World::getInstance<World::IWorldModify>().addEntity(current_entity_);
-                current_operation_->after_ = current_entity_->outputToJson();
+                World::getInstance<World::IWorldModify>().addEntity(editor_env->current_entity);
+                editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();
 
-                history_->addOperation(current_operation_);
+                editor_env->history->addOperation(editor_env->current_operation);
                 break;
             }
         case (Commands::TOGGLE_PHYSICS):
             {
-                current_operation_ = std::make_shared<Operation>();
-                current_operation_->entity_ = current_entity_;
-                current_operation_->before_ = current_entity_->outputToJson();
+                editor_env->current_operation = std::make_shared<Operation>();
+                editor_env->current_operation->entity_ = editor_env->current_entity;
+                editor_env->current_operation->before_ = editor_env->current_entity->outputToJson();
 
-                World::getInstance<World::IWorldModify>().removeEntity(current_entity_);
-                if (current_entity_->physics_) {
-                    current_entity_->physics_ = {};
+                World::getInstance<World::IWorldModify>().removeEntity(editor_env->current_entity);
+                if (editor_env->current_entity->physics_) {
+                    editor_env->current_entity->physics_ = {};
                 } else {
                     auto physics = std::make_shared<Physics>(
-                            current_entity_->statefulEntity_,
-                            current_entity_->movableEntity_,
-                            current_entity_->animatedEntity_,
-                            current_entity_->actions_,
-                            current_entity_->collision_);
-                    current_entity_->physics_ = physics;
+                            editor_env->current_entity->statefulEntity_,
+                            editor_env->current_entity->movableEntity_,
+                            editor_env->current_entity->animatedEntity_,
+                            editor_env->current_entity->actions_,
+                            editor_env->current_entity->collision_);
+                    editor_env->current_entity->physics_ = physics;
                 }
-                World::getInstance<World::IWorldModify>().addEntity(current_entity_);
-                current_operation_->after_ = current_entity_->outputToJson();
+                World::getInstance<World::IWorldModify>().addEntity(editor_env->current_entity);
+                editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();
 
-                history_->addOperation(current_operation_);
+                editor_env->history->addOperation(editor_env->current_operation);
                 break;
             }
         case (Commands::TOGGLE_ACTIONS):
             {
-                current_operation_ = std::make_shared<Operation>();
-                current_operation_->entity_ = current_entity_;
-                current_operation_->before_ = current_entity_->outputToJson();
+                editor_env->current_operation = std::make_shared<Operation>();
+                editor_env->current_operation->entity_ = editor_env->current_entity;
+                editor_env->current_operation->before_ = editor_env->current_entity->outputToJson();
 
-                World::getInstance<World::IWorldModify>().removeEntity(current_entity_);
-                if (current_entity_->actions_) {
-                    current_entity_->actions_ = {};
+                World::getInstance<World::IWorldModify>().removeEntity(editor_env->current_entity);
+                if (editor_env->current_entity->actions_) {
+                    editor_env->current_entity->actions_ = {};
                 } else {
-                    auto actions = std::make_shared<Actions>(current_entity_->death_);
-                    current_entity_->actions_ = actions;
+                    auto actions = std::make_shared<Actions>(editor_env->current_entity->death_);
+                    editor_env->current_entity->actions_ = actions;
                 }
-                World::getInstance<World::IWorldModify>().addEntity(current_entity_);
-                current_operation_->after_ = current_entity_->outputToJson();
+                World::getInstance<World::IWorldModify>().addEntity(editor_env->current_entity);
+                editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();
 
-                history_->addOperation(current_operation_);
+                editor_env->history->addOperation(editor_env->current_operation);
                 break;
             }
         case (Commands::RENDERABLE_SPRITE_CHANGE):
             {
-                current_operation_ = std::make_shared<Operation>();
-                current_operation_->entity_ = current_entity_;
-                current_operation_->before_ = current_entity_->outputToJson();
+                editor_env->current_operation = std::make_shared<Operation>();
+                editor_env->current_operation->entity_ = editor_env->current_entity;
+                editor_env->current_operation->before_ = editor_env->current_entity->outputToJson();
 
                 text_input_ = std::make_shared<TextInput>();
 
-                current_command_ = Command::Commands::RENDERABLE_SPRITE_CHANGE;
+                editor_env->current_command = Command::Commands::RENDERABLE_SPRITE_CHANGE;
                 break;
             }
         case (Commands::RENDERABLE_TILING_NONE):
-            if (current_entity_->renderableEntity_) {
-                current_operation_ = std::make_shared<Operation>();
-                current_operation_->entity_ = current_entity_;
-                current_operation_->before_ = current_entity_->outputToJson();
+            if (editor_env->current_entity->renderableEntity_) {
+                editor_env->current_operation = std::make_shared<Operation>();
+                editor_env->current_operation->entity_ = editor_env->current_entity;
+                editor_env->current_operation->before_ = editor_env->current_entity->outputToJson();
 
-                current_entity_->renderableEntity_->setTiling(false, false);
+                editor_env->current_entity->renderableEntity_->setTiling(false, false);
 
-                current_operation_->after_ = current_entity_->outputToJson();
-                history_->addOperation(current_operation_);
+                editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();
+                editor_env->history->addOperation(editor_env->current_operation);
             }
             break;
         case (Commands::RENDERABLE_TILING_X):
-            if (current_entity_->renderableEntity_) {
-                current_operation_ = std::make_shared<Operation>();
-                current_operation_->entity_ = current_entity_;
-                current_operation_->before_ = current_entity_->outputToJson();
+            if (editor_env->current_entity->renderableEntity_) {
+                editor_env->current_operation = std::make_shared<Operation>();
+                editor_env->current_operation->entity_ = editor_env->current_entity;
+                editor_env->current_operation->before_ = editor_env->current_entity->outputToJson();
 
-                current_entity_->renderableEntity_->setTiling(true, false);
+                editor_env->current_entity->renderableEntity_->setTiling(true, false);
 
-                current_operation_->after_ = current_entity_->outputToJson();
-                history_->addOperation(current_operation_);
+                editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();
+                editor_env->history->addOperation(editor_env->current_operation);
             }
             break;
         case (Commands::RENDERABLE_TILING_Y):
-            if (current_entity_->renderableEntity_) {
-                current_operation_ = std::make_shared<Operation>();
-                current_operation_->entity_ = current_entity_;
-                current_operation_->before_ = current_entity_->outputToJson();
+            if (editor_env->current_entity->renderableEntity_) {
+                editor_env->current_operation = std::make_shared<Operation>();
+                editor_env->current_operation->entity_ = editor_env->current_entity;
+                editor_env->current_operation->before_ = editor_env->current_entity->outputToJson();
 
-                current_entity_->renderableEntity_->setTiling(false, true);
+                editor_env->current_entity->renderableEntity_->setTiling(false, true);
 
-                current_operation_->after_ = current_entity_->outputToJson();
-                history_->addOperation(current_operation_);
+                editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();
+                editor_env->history->addOperation(editor_env->current_operation);
             }
             break;
         case (Commands::RENDERABLE_TILING_XY):
-            if (current_entity_->renderableEntity_) {
-                current_operation_ = std::make_shared<Operation>();
-                current_operation_->entity_ = current_entity_;
-                current_operation_->before_ = current_entity_->outputToJson();
+            if (editor_env->current_entity->renderableEntity_) {
+                editor_env->current_operation = std::make_shared<Operation>();
+                editor_env->current_operation->entity_ = editor_env->current_entity;
+                editor_env->current_operation->before_ = editor_env->current_entity->outputToJson();
 
-                current_entity_->renderableEntity_->setTiling(true, true);
+                editor_env->current_entity->renderableEntity_->setTiling(true, true);
 
-                current_operation_->after_ = current_entity_->outputToJson();
-                history_->addOperation(current_operation_);
+                editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();
+                editor_env->history->addOperation(editor_env->current_operation);
             }
             break;
 
@@ -329,40 +337,42 @@ void Command::handleCommand(Commands command) {
 }
 
 void Command::stopCommand() {
-    switch (current_command_) {
+    auto editor_env = editor_env_.lock();
+
+    switch (editor_env->current_command) {
         case Command::Commands::RESIZE:
             {
-                current_operation_->after_ = current_entity_->outputToJson();
+                editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();
 
-                history_->addOperation(current_operation_);
+                editor_env->history->addOperation(editor_env->current_operation);
                 break;
             }
         case Command::Commands::MOVE:
             {
-                current_operation_->after_ = current_entity_->outputToJson();
+                editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();
 
-                history_->addOperation(current_operation_);
+                editor_env->history->addOperation(editor_env->current_operation);
                 break;
             }
         case (Commands::RENDERABLE_SPRITE_CHANGE):
-            if (current_entity_->renderableEntity_ && text_input_) {
+            if (editor_env->current_entity->renderableEntity_ && text_input_) {
                 try {
                     auto texture_name = text_input_->getString();
-                    current_entity_->renderableEntity_->loadTexture(texture_name);
+                    editor_env->current_entity->renderableEntity_->loadTexture(texture_name);
 
-                    current_operation_->after_ = current_entity_->outputToJson();
+                    editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();
 
-                    history_->addOperation(current_operation_);
+                    editor_env->history->addOperation(editor_env->current_operation);
                 } catch (std::invalid_argument& e) {
                     LOGW("Unable to parse input text");
-                    current_operation_.reset();
+                    editor_env->current_operation.reset();
                 }
             }
             break;
         default:
             break;
     }
-    current_command_ = Commands::NONE;
+    editor_env->current_command = Commands::NONE;
 }
 
 void Command::closeTextInput() {

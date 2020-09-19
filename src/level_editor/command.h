@@ -8,6 +8,8 @@
 
 #include "operation.h"
 
+class EditorEnvironment;
+
 class Command {
   public:
     enum class Commands {
@@ -30,9 +32,7 @@ class Command {
         RENDERABLE_TILING_XY,
     };
 
-    Command(std::shared_ptr<History> history,
-            std::shared_ptr<Operation> current_operation,
-            std::shared_ptr<Mouse> mouse);
+    Command(std::weak_ptr<EditorEnvironment> editor_env);
 
     void setLayer(RenderableEntity::Layer layer);
 
@@ -50,13 +50,8 @@ class Command {
 
     RenderableEntity::Layer current_layer_ = RenderableEntity::Layer::MAIN;
 
-    std::shared_ptr<BaseEntity> current_entity_;
     std::shared_ptr<TextInput> text_input_;
 
   private:
-    std::shared_ptr<History> history_;
-    std::shared_ptr<Operation> current_operation_;
-    std::shared_ptr<Mouse> mouse_;
-
-    Commands current_command_;
+    std::weak_ptr<EditorEnvironment> editor_env_;
 };
