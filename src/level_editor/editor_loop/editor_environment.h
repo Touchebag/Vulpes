@@ -21,6 +21,10 @@ class EditorEnvironment {
         MAX_ENTITIES,
     };
 
+    static constexpr float VIEW_POS_X = 500.0;
+    static constexpr float VIEW_POS_Y = 500.0;
+    static constexpr float VIEW_SIZE = 1000.0;
+
     static std::shared_ptr<EditorEnvironment> create_environment(sf::RenderWindow& window);
 
     RenderableEntity::Layer change_layer(bool towards_screen);
@@ -41,6 +45,10 @@ class EditorEnvironment {
 
     std::shared_ptr<BaseEntity> current_entity;
     std::array<std::shared_ptr<BaseEntity>, EditorEntities::MAX_ENTITIES> editor_entities;
+
+    float view_pos_x;
+    float view_pos_y;
+    float view_size;
 
   private:
     EditorEnvironment(sf::RenderWindow& window);
