@@ -2,10 +2,13 @@
 
 #include "system/i_render.h"
 #include "system/render.h"
+#include "editor_loop/editor_environment.h"
 
 class EditorRender : public IRender {
   public:
     void render(sf::RenderWindow& window) override;
+
+    void setEditorEnvironment(std::weak_ptr<EditorEnvironment> editor_env);
 
     void addEntity(std::weak_ptr<RenderableEntity> entity) override;
 
@@ -22,6 +25,8 @@ class EditorRender : public IRender {
 
   private:
     Render render_;
+
+    std::weak_ptr<EditorEnvironment> editor_env_;
 
     bool render_hitboxes_ = false;
 };

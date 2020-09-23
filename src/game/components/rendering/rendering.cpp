@@ -134,7 +134,7 @@ void RenderableEntity::setTextureCoords(int pos_x, int pos_y, int width, int hei
         y_scale = static_cast<double>(height_) / static_cast<double>(height);
     } else if (width_ > 0) {
         x_scale = static_cast<double>(width_) / static_cast<double>(width);
-        y_scale = y_scale;
+        y_scale = x_scale;
     } else if (height_ > 0) {
         y_scale = static_cast<double>(height_) / static_cast<double>(height);
         x_scale = y_scale;
@@ -152,6 +152,11 @@ void RenderableEntity::setSize(int width, int height) {
 
 std::pair<int, int> RenderableEntity::getSize() {
     return {width_, height_};
+}
+
+std::pair<float, float> RenderableEntity::getScaledSize() {
+    auto size_rect = sprite_.getGlobalBounds();
+    return {size_rect.width, size_rect.height};
 }
 
 void RenderableEntity::setColor(sf::Color color) {

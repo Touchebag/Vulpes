@@ -13,13 +13,14 @@
 bool render_current_layer_only = false;
 
 int level_editor_main(sf::RenderWindow& window) {
+    auto editor_env = EditorEnvironment::create_environment(window);
+
     auto renderInst = std::dynamic_pointer_cast<EditorRender>(System::getRender());
+    renderInst->setEditorEnvironment(editor_env);
 
     if (!renderInst) {
         throw std::runtime_error("Could not cast render instance");
     }
-
-    auto editor_env = EditorEnvironment::create_environment(window);
 
     if (auto player = World::IWorldRead::getPlayer().lock()) {
         editor_env->view_pos_x = static_cast<float>(player->trans_->getX());
