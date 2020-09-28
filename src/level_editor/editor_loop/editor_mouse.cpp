@@ -41,28 +41,12 @@ void EditorMouse::handleMousePress(std::shared_ptr<EditorEnvironment> editor_env
             }
         }
 
-        auto current_entity_hud_text = editor_env->editor_entities[EditorEnvironment::EditorEntities::CURRENT_ENTITY_HUD_TEXT];
-
         if (editor_env->current_entity) {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
                 editor_env->command->handleCommand(Command::Commands::RESIZE);
             } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
                 editor_env->command->handleCommand(Command::Commands::MOVE);
             }
-
-            auto transform = editor_env->current_entity->trans_;
-            auto coll = editor_env->current_entity->collision_;
-
-            if (transform && coll) {
-                std::static_pointer_cast<RenderableText>(current_entity_hud_text->renderableEntity_)
-                    ->setText(std::string("X:") + std::to_string(transform->getX()) +
-                              " Y: " + std::to_string(transform->getY()) +
-                              "\nW:" + std::to_string(coll->getHitbox()->width_) +
-                              " H: " + std::to_string(coll->getHitbox()->height_));
-            }
-        } else {
-            std::static_pointer_cast<RenderableText>(current_entity_hud_text->renderableEntity_)
-                ->setText("");
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LAlt)) {
