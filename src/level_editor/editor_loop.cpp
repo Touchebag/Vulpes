@@ -167,6 +167,9 @@ int level_editor_main(sf::RenderWindow& window) {
             renderInst->render(window);
         }
 
+        // Get this before changing to HUD view for proper coordinate mapping
+        auto mouse_world_pos = editor_env->mouse->getMouseWorldPosition();
+
         sf::View old_viewport = renderInst->getView();
         sf::View viewport({editor_env->VIEW_POS_X, editor_env->VIEW_POS_Y}, {editor_env->VIEW_SIZE, editor_env->VIEW_SIZE});
         window.setView(viewport);
@@ -177,10 +180,9 @@ int level_editor_main(sf::RenderWindow& window) {
         }
 
         {
-            auto mouse_world_pos = editor_env->mouse->getMouseWorldPosition();
             std::static_pointer_cast<RenderableText>(editor_env->editor_entities[EditorEnvironment::EditorEntities::MOUSE_HUD_TEXT]->renderableEntity_)->setText(
-                    std::string("Mouse X: ") + std::to_string(mouse_world_pos.first) +
-                    "\nMouse Y: " + std::to_string(mouse_world_pos.second));
+                    std::string("Mouse X: ") + std::to_string(static_cast<int>(mouse_world_pos.first)) +
+                    "\nMouse Y: " + std::to_string(static_cast<int>(mouse_world_pos.second)));
         }
 
         // Needed for cursor positions to map correctly when zoomed

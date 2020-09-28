@@ -6,7 +6,7 @@ std::shared_ptr<EditorEnvironment> EditorEnvironment::create_environment(sf::Ren
 
     env->editor_entities[EditorEnvironment::EditorEntities::LAYER_HUD_TEXT] = editor_common::makeHudText({50, 20});
     env->editor_entities[EditorEnvironment::EditorEntities::MOUSE_HUD_TEXT] = editor_common::makeHudText({500, 20});
-    env->editor_entities[EditorEnvironment::EditorEntities::CURRENT_ENTITY_HUD_TEXT] = editor_common::makeHudText({50, 50});
+    env->editor_entities[EditorEnvironment::EditorEntities::CURRENT_ENTITY_HUD_TEXT] = editor_common::makeHudText({50, 100});
 
     env->view_pos_x = EditorEnvironment::VIEW_POS_X;
     env->view_pos_y = EditorEnvironment::VIEW_POS_Y;
