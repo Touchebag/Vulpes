@@ -107,6 +107,29 @@ void World::loadWorldFromJson(nlohmann::json j) {
         }
     }
 
+    if (j.contains("camera")) {
+        auto jcam = j["camera"];
+        if (!(jcam.contains("left") &&
+             jcam.contains("right") &&
+             jcam.contains("top") &&
+             jcam.contains("bottom"))) {
+            LOGW("World: missing camera parameters");
+            camera_box_.reset();
+        } else {
+            camera_box_ = {jcam["left"], jcam["right"], jcam["top"], jcam["bottom"]};
+        }
+    } else {
+        LOGD("World: missing camera data");
+        camera_box_.reset();
+    }
+
+    // Camera margins
+    if (camera_box_) {
+        System::getRender()->setCameraBox(camera_box_.value());
+    } else {
+        System::getRender()->setCameraBox({0.0f, 0.0f, 0.0f, 0.0f});
+    }
+
     for (auto it : j["entities"]) {
         auto ent = BaseEntity::createFromJson(it);
         addEntity(ent);
@@ -172,6 +195,18 @@ nlohmann::json World::saveWorldToJson() {
         }
 
         j["entrances"] = entrance_list;
+    }
+
+    if (camera_box_) {
+        nlohmann::json j_camera;
+        auto camera = camera_box_.value();
+
+        j_camera["top"] = camera.top_margin;
+        j_camera["bottom"] = camera.bottom_margin;
+        j_camera["left"] = camera.left_margin;
+        j_camera["right"] = camera.right_margin;
+
+        j["camera"] = j_camera;
     }
 
     return j;

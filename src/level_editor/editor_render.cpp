@@ -102,3 +102,7 @@ bool EditorRender::getParallaxEnabled() {
 void EditorRender::toggleHitboxRendering() {
     render_hitboxes_ = !render_hitboxes_;
 }
+
+void EditorRender::setCameraBox(CameraBox camera_box) {
+    render_.setCameraBox(camera_box);
+}

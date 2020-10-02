@@ -7,6 +7,7 @@
 #include "player.h"
 #include "json.hpp"
 #include "components/rendering/rendering_text.h"
+#include "i_render.h"
 
 class World {
 /* This class is intended to store all world objects like walls.
@@ -111,6 +112,8 @@ class World {
 
     // Meta data
     std::string current_room_name_;
+
+    std::optional<IRender::CameraBox> camera_box_;
 };
 
 template <> World::IWorldRead World::getInstance<World::IWorldRead>();

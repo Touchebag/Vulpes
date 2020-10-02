@@ -42,6 +42,21 @@ void Render::renderLayer(sf::RenderWindow& window, RenderableEntity::Layer layer
 }
 
 void Render::moveView(float x, float y) {
+    auto width_offset = view_width_ / 2.0f;
+    auto height_offset = view_height_ / 2.0f;
+
+    if (x - width_offset < camera_box_.left_margin) {
+        x = camera_box_.left_margin + width_offset;
+    } else if (x + width_offset > camera_box_.right_margin) {
+        x = camera_box_.right_margin - width_offset;
+    }
+
+    if (y - height_offset < camera_box_.top_margin) {
+        y = camera_box_.top_margin + height_offset;
+    } else if (y + height_offset > camera_box_.bottom_margin) {
+        y = camera_box_.bottom_margin - height_offset;
+    }
+
     setView(x, y, view_width_, view_height_);
 }
 
@@ -54,6 +69,10 @@ void Render::setView(float x, float y, float width, float height) {
     view_y_ = y;
     view_width_ = width;
     view_height_ = height;
+}
+
+void Render::setCameraBox(CameraBox camera_box) {
+    camera_box_ = camera_box;
 }
 
 sf::View Render::getView() {

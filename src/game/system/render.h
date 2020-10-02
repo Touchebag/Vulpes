@@ -17,6 +17,8 @@ class Render : public IRender {
     void setView(float x, float y, float width, float height) override;
     sf::View getView() override;
 
+    void setCameraBox(CameraBox camera_box) override;
+
   private:
     void drawHud(sf::RenderWindow& window);
 
@@ -24,6 +26,8 @@ class Render : public IRender {
     float view_y_;
     float view_width_;
     float view_height_;
+
+    CameraBox camera_box_;
 
     std::array<std::vector<std::weak_ptr<RenderableEntity>>, static_cast<int>(RenderableEntity::Layer::MAX_LAYERS)> layers_;
     std::vector<std::weak_ptr<RenderableEntity>> hud_layer_;
