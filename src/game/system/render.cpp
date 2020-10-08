@@ -75,6 +75,10 @@ void Render::setCameraBox(CameraBox camera_box) {
     camera_box_ = camera_box;
 }
 
+IRender::CameraBox Render::getCameraBox() {
+    return camera_box_;
+}
+
 sf::View Render::getView() {
     return {{view_x_, view_y_}, {view_width_, view_height_}};
 }

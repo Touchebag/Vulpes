@@ -40,6 +40,19 @@ void renderHitboxes(sf::RenderWindow& window, Collision::CollisionType coll_type
     }
 }
 
+void drawLine(float x1, float y1, float x2, float y2, sf::RenderWindow& window) {
+    sf::Vertex lines[] = {
+        sf::Vertex(sf::Vector2f(x1, y1)),
+        sf::Vertex(sf::Vector2f(x2, y2))
+    };
+
+    for (auto& it : lines) {
+        it.color = sf::Color::Red;
+    }
+
+    window.draw(lines, 2, sf::Lines);
+}
+
 } // namespace
 
 void EditorRender::render(sf::RenderWindow& window) {
@@ -61,6 +74,25 @@ void EditorRender::render(sf::RenderWindow& window) {
             renderHitboxes(window, it.first, it.second);
         }
     }
+
+    drawCameraBoundaries(window);
+}
+
+void EditorRender::drawCameraBoundaries(sf::RenderWindow& window) {
+    auto view_center = getView().getCenter();
+    auto view_size = getView().getSize();
+
+    auto view_left = view_center.x - (view_size.x / 2.0f);
+    auto view_right = view_center.x + (view_size.x / 2.0f);
+    auto view_top = view_center.y - (view_size.y / 2.0f);
+    auto view_bottom = view_center.y + (view_size.y / 2.0f);
+
+    auto camera = render_.getCameraBox();
+
+    drawLine(camera.left_margin, view_top, camera.left_margin, view_bottom, window);
+    drawLine(camera.right_margin, view_top, camera.right_margin, view_bottom, window);
+    drawLine(view_left, camera.top_margin, view_right, camera.top_margin, window);
+    drawLine(view_left, camera.bottom_margin, view_right, camera.bottom_margin, window);
 }
 
 void EditorRender::setEditorEnvironment(std::weak_ptr<EditorEnvironment> editor_env) {

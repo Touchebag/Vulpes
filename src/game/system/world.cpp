@@ -119,7 +119,7 @@ void World::loadWorldFromJson(nlohmann::json j) {
             camera_box_ = {jcam["left"], jcam["right"], jcam["top"], jcam["bottom"]};
         }
     } else {
-        LOGD("World: missing camera data");
+        LOGV("World: missing camera data");
         camera_box_.reset();
     }
 

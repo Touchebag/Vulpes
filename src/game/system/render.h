@@ -19,6 +19,8 @@ class Render : public IRender {
 
     void setCameraBox(CameraBox camera_box) override;
 
+    CameraBox getCameraBox();
+
   private:
     void drawHud(sf::RenderWindow& window);
 

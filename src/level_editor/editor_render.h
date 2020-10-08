@@ -26,6 +26,8 @@ class EditorRender : public IRender {
     void setCameraBox(CameraBox camera_box) override;
 
   private:
+    void drawCameraBoundaries(sf::RenderWindow& window);
+
     Render render_;
 
     std::weak_ptr<EditorEnvironment> editor_env_;
