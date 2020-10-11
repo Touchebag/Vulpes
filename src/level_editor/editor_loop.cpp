@@ -128,6 +128,39 @@ int level_editor_main(sf::RenderWindow& window) {
                             case sf::Keyboard::Key::Num1:
                                 renderInst->toggleHitboxRendering();
                                 break;
+                            // Move camera margins
+                            case sf::Keyboard::Key::Left:
+                                {
+                                    auto mouse_world_pos = editor_env->mouse->getMouseWorldPosition();
+                                    auto camera_box = renderInst->getCameraBox();
+                                    camera_box.left_margin = mouse_world_pos.first;
+                                    renderInst->setCameraBox(camera_box);
+                                    break;
+                                }
+                            case sf::Keyboard::Key::Right:
+                                {
+                                    auto mouse_world_pos = editor_env->mouse->getMouseWorldPosition();
+                                    auto camera_box = renderInst->getCameraBox();
+                                    camera_box.right_margin = mouse_world_pos.first;
+                                    renderInst->setCameraBox(camera_box);
+                                    break;
+                                }
+                            case sf::Keyboard::Key::Up:
+                                {
+                                    auto mouse_world_pos = editor_env->mouse->getMouseWorldPosition();
+                                    auto camera_box = renderInst->getCameraBox();
+                                    camera_box.top_margin = mouse_world_pos.second;
+                                    renderInst->setCameraBox(camera_box);
+                                    break;
+                                }
+                            case sf::Keyboard::Key::Down:
+                                {
+                                    auto mouse_world_pos = editor_env->mouse->getMouseWorldPosition();
+                                    auto camera_box = renderInst->getCameraBox();
+                                    camera_box.bottom_margin = mouse_world_pos.second;
+                                    renderInst->setCameraBox(camera_box);
+                                    break;
+                                }
                             default:
                                 break;
                         }

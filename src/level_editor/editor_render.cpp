@@ -136,5 +136,16 @@ void EditorRender::toggleHitboxRendering() {
 }
 
 void EditorRender::setCameraBox(CameraBox camera_box) {
+    if (camera_box.left_margin > camera_box.right_margin ||
+        camera_box.top_margin > camera_box.bottom_margin) {
+        LOGW("Invalid camera margins");
+        return;
+    }
+
+    World::IWorldModify::loadCameraData(camera_box);
     render_.setCameraBox(camera_box);
+}
+
+Render::CameraBox EditorRender::getCameraBox() {
+    return render_.camera_box_;
 }

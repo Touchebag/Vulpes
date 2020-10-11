@@ -52,6 +52,8 @@ class World {
         static void loadRoom(std::string room_name, int entrance_id);
 
         static void setEntrance(int entrance_id);
+
+        static void loadCameraData(IRender::CameraBox camera_box);
     };
 
     template <class T>

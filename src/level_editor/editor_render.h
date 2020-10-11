@@ -24,6 +24,7 @@ class EditorRender : public IRender {
     void toggleHitboxRendering();
 
     void setCameraBox(CameraBox camera_box) override;
+    CameraBox getCameraBox();
 
   private:
     void drawCameraBoundaries(sf::RenderWindow& window);

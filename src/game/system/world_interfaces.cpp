@@ -74,3 +74,7 @@ void World::IWorldModify::loadRoom(std::string room_name, int entrance_id) {
 void World::IWorldModify::setEntrance(int entrance_id) {
     World::getWorldInstance().setEntrance(entrance_id);
 }
+
+void World::IWorldModify::loadCameraData(IRender::CameraBox camera_box) {
+    World::getWorldInstance().camera_box_ = camera_box;
+}
