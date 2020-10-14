@@ -1,6 +1,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <unordered_set>
 #include <memory>
 #include <SFML/Window.hpp>
 
@@ -12,7 +13,7 @@ class Input {
 
     void keyEvent(sf::Keyboard::Key key, bool pressed);
 
-    void setKeyboardMap(std::unordered_map<sf::Keyboard::Key, Actions::Action> key_map);
+    void setKeyboardMap(std::unordered_map<sf::Keyboard::Key, std::unordered_set<Actions::Action>> key_map);
 
     void setActionsInstance(std::weak_ptr<Actions> actions);
 
@@ -21,7 +22,7 @@ class Input {
     std::weak_ptr<Actions> actions_instance_;
 
     // Input mappings from physical keys to logical buttons
-    std::unordered_map<sf::Keyboard::Key, Actions::Action> key_map_;
+    std::unordered_map<sf::Keyboard::Key, std::unordered_set<Actions::Action>> key_map_;
 
     Input() = default;
 };

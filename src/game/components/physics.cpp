@@ -136,6 +136,14 @@ void Physics::update() {
         }
 
         if (act->getActionState(Actions::Action::JUMP, true)) {
+            if (physics_props.can_jump_ && jumps_left_ > 0 && !physics_props.touching_wall_) {
+                y = constants_.jump_impulse;
+                jumps_left_--;
+                stateEnt->incomingEvent(state_utils::Event::JUMPING);
+            }
+        }
+
+        if (act->getActionState(Actions::Action::WALL_JUMP, true)) {
             if (physics_props.touching_wall_) {
                 stateEnt->incomingEvent(state_utils::Event::JUMPING);
                 facing_right.lockDirection(physics_props.direction_locked_);
@@ -145,10 +153,6 @@ void Physics::update() {
                 x = constants_.wall_jump_horizontal_impulse * dir;
                 y = constants_.wall_jump_vertical_impulse;
                 jumps_left_--;
-            } else if (physics_props.can_jump_ && jumps_left_ > 0) {
-                y = constants_.jump_impulse;
-                jumps_left_--;
-                stateEnt->incomingEvent(state_utils::Event::JUMPING);
             }
         }
 

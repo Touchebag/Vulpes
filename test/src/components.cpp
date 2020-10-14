@@ -3,6 +3,7 @@
 #include "base_entity.h"
 
 #include "components/actions/actions_player.h"
+
 #include "components/collision/collision_player_hurtbox.h"
 #include "components/collision/collision_transition.h"
 #include "components/collision/collision_health.h"
@@ -309,8 +310,6 @@ TEST(TestComponents, TestSaveLoadPlayerActions) {
     nlohmann::json j1;
 
     j1["type"] = "player";
-    j1["movement_x"] = true;
-    j1["jump"] = true;
 
     std::shared_ptr<ActionsPlayer> actions =
         std::dynamic_pointer_cast<ActionsPlayer>(Actions::createFromJson(j1, death, coll, state));
@@ -318,5 +317,19 @@ TEST(TestComponents, TestSaveLoadPlayerActions) {
     ASSERT_TRUE(actions);
 
     nlohmann::json j2 = actions->outputToJson().value();
+    ASSERT_TRUE(j1 == j2) << j1.dump() << std::endl << j2.dump() << std::endl;
+
+    j1["movement_x"] = true;
+    j1["dash"] = true;
+    j1["jump"] = true;
+    j1["wall_jump"] = true;
+    j1["attack"] = true;
+    j1["interact"] = true;
+
+    actions = std::dynamic_pointer_cast<ActionsPlayer>(Actions::createFromJson(j1, death, coll, state));
+    // Ensure dynamic cast valid
+    ASSERT_TRUE(actions);
+
+    j2 = actions->outputToJson().value();
     ASSERT_TRUE(j1 == j2) << j1.dump() << std::endl << j2.dump() << std::endl;
 }

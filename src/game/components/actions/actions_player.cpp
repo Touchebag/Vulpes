@@ -82,6 +82,10 @@ void ActionsPlayer::reloadFromJson(nlohmann::json j) {
         enableAction(Action::JUMP);
     }
 
+    if (j.contains(string_action_map.at(Action::WALL_JUMP))) {
+        enableAction(Action::WALL_JUMP);
+    }
+
     if (j.contains(string_action_map.at(Action::DASH))) {
         enableAction(Action::DASH);
     }
@@ -107,6 +111,10 @@ std::optional<nlohmann::json> ActionsPlayer::outputToJson() {
 
     if (isActionEnabled(Action::JUMP)) {
         j[string_action_map.at(Action::JUMP)] = true;
+    }
+
+    if (isActionEnabled(Action::WALL_JUMP)) {
+        j[string_action_map.at(Action::WALL_JUMP)] = true;
     }
 
     if (isActionEnabled(Action::DASH)) {

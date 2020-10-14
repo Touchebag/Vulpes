@@ -16,6 +16,8 @@ class Actions : public Component {
         MOVE_LEFT,
         MOVE_RIGHT,
         JUMP,
+
+        WALL_JUMP,
         DASH,
         ATTACK,
 

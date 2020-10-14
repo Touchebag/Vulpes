@@ -3,6 +3,7 @@ const Bimap<std::string, Actions::Action> string_action_map = {
     {"move_left", Actions::Action::MOVE_LEFT},
     {"move_right", Actions::Action::MOVE_RIGHT},
     {"jump", Actions::Action::JUMP},
+    {"wall_jump", Actions::Action::WALL_JUMP},
     {"dash", Actions::Action::DASH},
     {"attack", Actions::Action::ATTACK},
     {"interact", Actions::Action::INTERACT},
