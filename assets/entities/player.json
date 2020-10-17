@@ -3,6 +3,8 @@
         "type": "player",
         "movement_x": true,
         "jump": true,
+        "wall_jump": true,
+        "double_jump": true,
         "interact": true
     },
     "Animated": {

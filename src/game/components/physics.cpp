@@ -136,6 +136,13 @@ void Physics::update() {
         }
 
         if (act->getActionState(Actions::Action::JUMP, true)) {
+            if (physics_props.can_jump_ && physics_props.touching_ground_ && !physics_props.touching_wall_) {
+                y = constants_.jump_impulse;
+                stateEnt->incomingEvent(state_utils::Event::JUMPING);
+            }
+        }
+
+        if (act->getActionState(Actions::Action::DOUBLE_JUMP, true)) {
             if (physics_props.can_jump_ && jumps_left_ > 0 && !physics_props.touching_wall_) {
                 y = constants_.jump_impulse;
                 jumps_left_--;

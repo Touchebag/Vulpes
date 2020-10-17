@@ -73,6 +73,7 @@ void ActionsPlayer::addAction(Actions::Action action) {
 }
 
 void ActionsPlayer::reloadFromJson(nlohmann::json j) {
+    // TODO See if possible to use string action map for loop
     if (j.contains("movement_x")) {
         enableAction(Action::MOVE_RIGHT);
         enableAction(Action::MOVE_LEFT);
@@ -84,6 +85,10 @@ void ActionsPlayer::reloadFromJson(nlohmann::json j) {
 
     if (j.contains(string_action_map.at(Action::WALL_JUMP))) {
         enableAction(Action::WALL_JUMP);
+    }
+
+    if (j.contains(string_action_map.at(Action::DOUBLE_JUMP))) {
+        enableAction(Action::DOUBLE_JUMP);
     }
 
     if (j.contains(string_action_map.at(Action::DASH))) {
@@ -115,6 +120,10 @@ std::optional<nlohmann::json> ActionsPlayer::outputToJson() {
 
     if (isActionEnabled(Action::WALL_JUMP)) {
         j[string_action_map.at(Action::WALL_JUMP)] = true;
+    }
+
+    if (isActionEnabled(Action::DOUBLE_JUMP)) {
+        j[string_action_map.at(Action::DOUBLE_JUMP)] = true;
     }
 
     if (isActionEnabled(Action::DASH)) {

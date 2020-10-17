@@ -323,6 +323,7 @@ TEST(TestComponents, TestSaveLoadPlayerActions) {
     j1["dash"] = true;
     j1["jump"] = true;
     j1["wall_jump"] = true;
+    j1["double_jump"] = true;
     j1["attack"] = true;
     j1["interact"] = true;
 

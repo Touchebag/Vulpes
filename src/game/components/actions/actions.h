@@ -18,6 +18,7 @@ class Actions : public Component {
         JUMP,
 
         WALL_JUMP,
+        DOUBLE_JUMP,
         DASH,
         ATTACK,
 
