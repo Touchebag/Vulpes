@@ -10,6 +10,8 @@ const std::string TEXTURE_DIR = "textures";
 const std::string SPRITE_MAP_DIR = "sprite_maps";
 const std::string FONT_DIR = "fonts";
 
+const std::string ENTITY_NAME = "entity.json";
+
 namespace {
 
 bool stringEndsWith(const std::string &full_string, const std::string& suffix) {
@@ -68,7 +70,7 @@ std::optional<nlohmann::json> File::loadJson(std::string filepath) {
 }
 
 std::optional<nlohmann::json> File::loadEntityFromFile(std::string filepath) {
-    return loadJson(ENTITY_DIR + "/" + filepath);
+    return loadJson(ENTITY_DIR + "/" + filepath + "/" + ENTITY_NAME);
 }
 
 std::ifstream File::openSpriteMapFile(std::string filepath) {

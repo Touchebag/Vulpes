@@ -33,14 +33,14 @@ std::shared_ptr<BaseEntity> BaseEntity::createFromJson(nlohmann::json j) {
 
 void BaseEntity::reloadFromJson(nlohmann::json j) {
     if (j.contains("Entity")) {
-        auto file_name = j["Entity"];
-        if (auto j_entity = File::loadEntityFromFile(file_name)) {
+        auto entity_name = j["Entity"].get<std::string>();
+        if (auto j_entity = File::loadEntityFromFile(entity_name)) {
             j.insert(j_entity.value().begin(), j_entity.value().end());
         } else {
             throw std::invalid_argument("File not found");
         }
 
-        entity_file_ = file_name;
+        entity_file_ = entity_name;
     } else {
         entity_file_.clear();
     }

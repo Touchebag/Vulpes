@@ -137,7 +137,7 @@ void World::loadWorldFromJson(nlohmann::json j) {
 
     // Don't reload player between rooms
     if (!player_) {
-        player_ = Player::createFromJson(File::loadEntityFromFile("player.json").value());
+        player_ = Player::createFromJson(File::loadEntityFromFile("player").value());
         addPlayer(player_);
     }
 
