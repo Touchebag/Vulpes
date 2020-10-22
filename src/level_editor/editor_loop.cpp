@@ -130,37 +130,37 @@ int level_editor_main(sf::RenderWindow& window) {
                                 break;
                             // Move camera margins
                             case sf::Keyboard::Key::Left:
-                                {
+                                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
                                     auto mouse_world_pos = editor_env->mouse->getMouseWorldPosition();
                                     auto camera_box = renderInst->getCameraBox();
                                     camera_box.left_margin = mouse_world_pos.first;
                                     renderInst->setCameraBox(camera_box);
-                                    break;
                                 }
+                                break;
                             case sf::Keyboard::Key::Right:
-                                {
+                                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
                                     auto mouse_world_pos = editor_env->mouse->getMouseWorldPosition();
                                     auto camera_box = renderInst->getCameraBox();
                                     camera_box.right_margin = mouse_world_pos.first;
                                     renderInst->setCameraBox(camera_box);
-                                    break;
                                 }
+                                break;
                             case sf::Keyboard::Key::Up:
-                                {
+                                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
                                     auto mouse_world_pos = editor_env->mouse->getMouseWorldPosition();
                                     auto camera_box = renderInst->getCameraBox();
                                     camera_box.top_margin = mouse_world_pos.second;
                                     renderInst->setCameraBox(camera_box);
-                                    break;
                                 }
+                                break;
                             case sf::Keyboard::Key::Down:
-                                {
+                                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
                                     auto mouse_world_pos = editor_env->mouse->getMouseWorldPosition();
                                     auto camera_box = renderInst->getCameraBox();
                                     camera_box.bottom_margin = mouse_world_pos.second;
                                     renderInst->setCameraBox(camera_box);
-                                    break;
                                 }
+                                break;
                             default:
                                 break;
                         }
