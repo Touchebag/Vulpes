@@ -21,8 +21,7 @@
             "Closed",
             "Closed",
             "Closed"
-        ],
-        "sprite_map": "Enemy"
+        ]
     },
     "Collision": {
         "type": "enemy_hitbox",

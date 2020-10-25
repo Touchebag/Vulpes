@@ -31,8 +31,6 @@ class AnimatedEntity : public Component {
     void setRenderTexture();
 
     std::weak_ptr<RenderableEntity> renderableEntity_;
-    // Name of the loaded sprite map file
-    std::string sprite_map_;
 
     std::unordered_map<std::string, util::Rectangle> sprite_sheet_map_;
 

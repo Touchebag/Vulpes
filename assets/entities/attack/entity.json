@@ -4,7 +4,6 @@
         "file": "animation_and_die"
     },
     "Animated": {
-        "sprite_map": "Attack1",
         "frame_list": [
             "Attack1_1",
             "Attack1_1",

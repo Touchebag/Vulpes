@@ -26,8 +26,7 @@ nlohmann::json entity_json = nlohmann::json::parse(R"--(
         "frame_list": [
             "Idle0",
             "Idle9"
-        ],
-        "sprite_map": "Player.txt"
+        ]
     },
     "AI": {
         "file": "basic_enemy.json"

@@ -39,8 +39,7 @@
             "Idle9",
             "Idle9",
             "Idle9"
-        ],
-        "sprite_map": "Player"
+        ]
     },
     "Collision": {
         "type": "player_hurtbox",

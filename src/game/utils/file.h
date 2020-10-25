@@ -8,14 +8,14 @@
 
 class File {
   public:
-    static std::optional<nlohmann::json> loadEntityFromFile(std::string filepath);
+    static std::optional<nlohmann::json> loadEntityFromFile(std::string entity_name);
     static std::optional<nlohmann::json> loadRoom(std::string filepath);
-    static std::optional<nlohmann::json> loadStates(std::string filepath);
-    static std::optional<nlohmann::json> loadAiBehavior(std::string filepath);
+    static std::optional<nlohmann::json> loadStates(std::string entity_name);
+    static std::optional<nlohmann::json> loadAiBehavior(std::string entity_name);
     static std::optional<sf::Texture> loadTexture(std::string filepath);
     static std::optional<sf::Font> loadFont(std::string filepath);
 
-    static std::ifstream openSpriteMapFile(std::string filepath);
+    static std::ifstream openSpriteMapFile(std::string entity_name);
 
     static bool writeJsonToFile(std::string filepath, nlohmann::json world);
 

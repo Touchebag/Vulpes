@@ -4,13 +4,13 @@
 const std::string ASSET_DIR = "assets";
 const std::string ENTITY_DIR = "entities";
 const std::string ROOM_DIR = "rooms";
-const std::string STATE_DIR = "states";
-const std::string AI_DIR = "ai";
 const std::string TEXTURE_DIR = "textures";
-const std::string SPRITE_MAP_DIR = "sprite_maps";
+const std::string STATE_DIR = "states";
 const std::string FONT_DIR = "fonts";
+const std::string AI_DIR = "ai";
 
-const std::string ENTITY_NAME = "entity.json";
+const std::string ENTITY_FILE = "entity.json";
+const std::string SPRITE_MAP_FILE = "sprite_map.txt";
 
 namespace {
 
@@ -69,14 +69,12 @@ std::optional<nlohmann::json> File::loadJson(std::string filepath) {
     }
 }
 
-std::optional<nlohmann::json> File::loadEntityFromFile(std::string filepath) {
-    return loadJson(ENTITY_DIR + "/" + filepath + "/" + ENTITY_NAME);
+std::optional<nlohmann::json> File::loadEntityFromFile(std::string entity_name) {
+    return loadJson(ENTITY_DIR + "/" + entity_name + "/" + ENTITY_FILE);
 }
 
-std::ifstream File::openSpriteMapFile(std::string filepath) {
-    filepath = appendSuffix(filepath, ".txt");
-
-    return openFileForInput(SPRITE_MAP_DIR + "/" + filepath);
+std::ifstream File::openSpriteMapFile(std::string entity_name) {
+    return openFileForInput(ENTITY_DIR + "/" + entity_name + "/" + SPRITE_MAP_FILE);
 }
 
 bool File::writeJsonToFile(std::string filepath, nlohmann::json j) {

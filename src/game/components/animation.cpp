@@ -32,8 +32,6 @@ void AnimatedEntity::loadSpriteMap(const std::string& path) {
 
         sprite_sheet_map_.insert({name, {x_pos, y_pos, width, height}});
     }
-
-    sprite_map_ = path;
 }
 
 void AnimatedEntity::setFrameList(std::vector<std::string> frame_list) {
@@ -51,9 +49,12 @@ util::Rectangle AnimatedEntity::getSpriteRect() {
 }
 
 void AnimatedEntity::reloadFromJson(nlohmann::json j) {
-    sprite_map_ = j["sprite_map"].get<std::string>();
+    std::string main_entity_name = "common";
+    if (j.contains("main_entity_name")) {
+        main_entity_name = j["main_entity_name"].get<std::string>();
+    }
 
-    loadSpriteMap(sprite_map_);
+    loadSpriteMap(main_entity_name);
 
     nlohmann::json frame_names_array = j["frame_list"];
 
@@ -70,7 +71,6 @@ void AnimatedEntity::reloadFromJson(nlohmann::json j) {
 std::optional<nlohmann::json> AnimatedEntity::outputToJson() {
     nlohmann::json j;
 
-    j["sprite_map"] = sprite_map_;
     j["frame_list"] = original_frame_list_;
 
     return j;

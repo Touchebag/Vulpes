@@ -32,12 +32,9 @@ add_custom_command(TARGET COPY_ASSETS PRE_BUILD
                      copy_directory ${CMAKE_SOURCE_DIR}/${ASSETS_DIR} ${ASSETS_DIR})
 
 add_custom_target(COPY_TEST_ASSETS)
-file(GLOB_RECURSE TEST_ASSETS test/test_data/rooms/*.json)
-foreach(file ${TEST_ASSETS})
-    add_custom_command(TARGET COPY_TEST_ASSETS PRE_BUILD
-                         COMMAND ${CMAKE_COMMAND} -E
-                         copy ${file} ${ASSETS_DIR}/rooms/)
-endforeach()
+add_custom_command(TARGET COPY_TEST_ASSETS PRE_BUILD
+                     COMMAND ${CMAKE_COMMAND} -E
+                     copy_directory ${CMAKE_SOURCE_DIR}/test/test_assets ${ASSETS_DIR})
 add_dependencies(COPY_TEST_ASSETS COPY_ASSETS)
 
 # Game library
