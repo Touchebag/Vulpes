@@ -40,6 +40,8 @@ std::shared_ptr<BaseEntity> BaseEntity::createFromJson(nlohmann::json j) {
 }
 
 void BaseEntity::reloadFromJson(nlohmann::json j) {
+    // TODO Duplicate arguments in orignal json is overwritten by entity load
+    // Should be reversed instead
     if (j.contains("Entity")) {
         auto entity_name = j["Entity"].get<std::string>();
         if (auto j_entity = File::loadEntityFromFile(entity_name)) {

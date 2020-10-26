@@ -1,0 +1,10 @@
+{
+    "main": {
+        "actions": [
+            {
+                "condition": "collides (player)",
+                "action": "die"
+            }
+        ]
+    }
+}

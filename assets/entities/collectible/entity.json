@@ -1,8 +1,6 @@
 {
     "Actions": null,
-    "AI": {
-        "file": "collision_and_die"
-    },
+    "AI": null,
     "Death": null,
     "Renderable": {
         "height": 50,

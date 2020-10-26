@@ -2,6 +2,8 @@
 
 #include "utils/log.h"
 #include "utils/file.h"
+#include "utils/common.h"
+
 #include "system/world.h"
 
 #include "ai/logic_operators/greater.h"
@@ -56,23 +58,22 @@ void AI::update() {
 }
 
 void AI::reloadFromJson(nlohmann::json j) {
-    if (j.contains("file")) {
-        if (auto ai_json = File::loadAiBehavior(j["file"])) {
-            file_name_ = j["file"].get<std::string>();
+    std::string main_entity_name = util::COMMON_ASSET_DIR;
 
-            states_ = StateHandler<std::vector<std::pair<std::shared_ptr<const ai::condition::LogicalOperator>, Actions::Action>>>();
+    if (j.contains(util::MAIN_ENTITY_NAME)) {
+        main_entity_name = j[util::MAIN_ENTITY_NAME].get<std::string>();
+    }
 
-            auto ai_behavior = ai_json.value();
-            states_.reloadFromJson(ai_behavior);
-        }
-    } else {
-        throw std::invalid_argument("Cannot find AI file");
+    if (auto ai_json = File::loadAiBehavior(main_entity_name)) {
+        states_ = StateHandler<std::vector<std::pair<std::shared_ptr<const ai::condition::LogicalOperator>, Actions::Action>>>();
+
+        auto ai_behavior = ai_json.value();
+        states_.reloadFromJson(ai_behavior);
     }
 }
 
 std::optional<nlohmann::json> AI::outputToJson() {
     nlohmann::json j;
-    j["file"] = file_name_;
 
     return j;
 }

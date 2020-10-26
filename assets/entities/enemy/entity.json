@@ -1,8 +1,6 @@
 {
     "Actions": null,
-    "AI": {
-        "file": "basic_enemy"
-    },
+    "AI": null,
     "Animated": {
         "frame_list": [
             "Open",

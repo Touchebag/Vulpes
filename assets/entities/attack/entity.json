@@ -1,8 +1,6 @@
 {
     "Actions": null,
-    "AI": {
-        "file": "animation_and_die"
-    },
+    "AI": null,
     "Animated": {
         "frame_list": [
             "Attack1_1",

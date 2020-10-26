@@ -7,10 +7,10 @@ const std::string ROOM_DIR = "rooms";
 const std::string TEXTURE_DIR = "textures";
 const std::string STATE_DIR = "states";
 const std::string FONT_DIR = "fonts";
-const std::string AI_DIR = "ai";
 
 const std::string ENTITY_FILE = "entity.json";
 const std::string SPRITE_MAP_FILE = "sprite_map.txt";
+const std::string AI_FILE = "ai";
 
 namespace {
 
@@ -91,8 +91,8 @@ std::optional<nlohmann::json> File::loadRoom(std::string filepath) {
     return loadJson(ROOM_DIR + "/" + filepath);
 }
 
-std::optional<nlohmann::json> File::loadAiBehavior(std::string filepath) {
-    return loadJson(AI_DIR + "/" + filepath);
+std::optional<nlohmann::json> File::loadAiBehavior(std::string entity_name) {
+    return loadJson(ENTITY_DIR + "/" + entity_name + "/" + AI_FILE);
 }
 
 std::optional<sf::Texture> File::loadTexture(std::string filepath) {

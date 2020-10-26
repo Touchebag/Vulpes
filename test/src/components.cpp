@@ -28,9 +28,7 @@ nlohmann::json entity_json = nlohmann::json::parse(R"--(
             "Idle9"
         ]
     },
-    "AI": {
-        "file": "basic_enemy.json"
-    },
+    "AI": null,
     "Collision": {
         "type": "player_hitbox",
         "height": 200,
