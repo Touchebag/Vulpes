@@ -2,6 +2,7 @@
 
 #include "utils/log.h"
 #include "utils/file.h"
+#include "utils/common.h"
 
 #include <unistd.h>
 
@@ -17,7 +18,7 @@ std::shared_ptr<T> loadComponentFromJson(
     if (j.contains(component_name) && component) {
         if (!entity_name.empty()) {
             // TODO Check if main_entity_name is already defined and throw
-            j[component_name]["main_entity_name"] = entity_name;
+            j[component_name][util::MAIN_ENTITY_NAME] = entity_name;
         }
         component->reloadFromJson(j[component_name]);
     } else {

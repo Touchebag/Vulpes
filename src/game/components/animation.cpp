@@ -3,6 +3,7 @@
 #include "animation.h"
 #include "utils/log.h"
 #include "utils/file.h"
+#include "utils/common.h"
 
 AnimatedEntity::AnimatedEntity(std::weak_ptr<RenderableEntity> renderableEntity) :
     renderableEntity_(renderableEntity) {
@@ -49,9 +50,9 @@ util::Rectangle AnimatedEntity::getSpriteRect() {
 }
 
 void AnimatedEntity::reloadFromJson(nlohmann::json j) {
-    std::string main_entity_name = "common";
-    if (j.contains("main_entity_name")) {
-        main_entity_name = j["main_entity_name"].get<std::string>();
+    std::string main_entity_name = util::COMMON_ASSET_DIR;
+    if (j.contains(util::MAIN_ENTITY_NAME)) {
+        main_entity_name = j[util::MAIN_ENTITY_NAME].get<std::string>();
     }
 
     loadSpriteMap(main_entity_name);
