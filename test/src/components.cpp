@@ -74,9 +74,7 @@ nlohmann::json entity_json = nlohmann::json::parse(R"--(
         "tile_y": true,
         "layer": "main"
     },
-    "Stateful": {
-        "states": "player_state.json"
-    },
+    "Stateful": null,
     "Subentity": null,
     "Transform": {
         "pos_x": 350,

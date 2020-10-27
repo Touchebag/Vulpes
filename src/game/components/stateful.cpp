@@ -1,6 +1,7 @@
 #include "stateful.h"
 
 #include "utils/file.h"
+#include "utils/common.h"
 #include "json.hpp"
 #include "base_entity.h"
 
@@ -18,21 +19,22 @@ void StatefulEntity::update() {
 }
 
 void StatefulEntity::reloadFromJson(nlohmann::json j) {
-    state_file_path_ = j["states"].get<std::string>();
+    std::string main_entity_name = util::COMMON_ASSET_DIR;
+    if (j.contains(util::MAIN_ENTITY_NAME)) {
+        main_entity_name = j[util::MAIN_ENTITY_NAME].get<std::string>();
+    }
 
-    loadStates(state_file_path_);
+    loadStates(main_entity_name);
 }
 
 std::optional<nlohmann::json> StatefulEntity::outputToJson() {
     nlohmann::json j;
 
-    j["states"] = state_file_path_;
-
     return {j};
 }
 
-void StatefulEntity::loadStates(std::string file_path) {
-    auto j = File::loadStates(file_path);
+void StatefulEntity::loadStates(std::string entity_name) {
+    auto j = File::loadStates(entity_name);
 
     // TODO Error handling
     if (j) {

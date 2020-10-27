@@ -76,11 +76,8 @@
         "tile_y": false,
         "layer": "main"
     },
-    "Stateful": {
-        "states": "player_state"
-    },
-    "Subentity": {
-    },
+    "Stateful": null,
+    "Subentity": null,
     "Transform": {
         "pos_x": 350,
         "pos_y": 1300

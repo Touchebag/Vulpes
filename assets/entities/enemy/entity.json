@@ -55,9 +55,7 @@
         "tile_y": true,
         "layer": "main"
     },
-    "Stateful": {
-        "states": "enemy_state"
-    },
+    "Stateful": null,
     "Transform": {
         "pos_x": 550,
         "pos_y": 1600

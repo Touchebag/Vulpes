@@ -23,11 +23,9 @@ class StatefulEntity : public Component {
     const nlohmann::json& getEntity();
 
   private:
-    void loadStates(std::string file_path);
+    void loadStates(std::string entity_name);
 
     unsigned int frame_counter_;
-
-    std::string state_file_path_;
 
     std::weak_ptr<AnimatedEntity> animatedEntity_;
     std::weak_ptr<Subentity> subentity_;

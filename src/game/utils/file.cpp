@@ -5,12 +5,12 @@ const std::string ASSET_DIR = "assets";
 const std::string ENTITY_DIR = "entities";
 const std::string ROOM_DIR = "rooms";
 const std::string TEXTURE_DIR = "textures";
-const std::string STATE_DIR = "states";
 const std::string FONT_DIR = "fonts";
 
-const std::string ENTITY_FILE = "entity.json";
+const std::string ENTITY_FILE = "entity";
 const std::string SPRITE_MAP_FILE = "sprite_map.txt";
 const std::string AI_FILE = "ai";
+const std::string STATE_FILE = "state";
 
 namespace {
 
@@ -114,6 +114,6 @@ std::optional<sf::Font> File::loadFont(std::string filepath) {
         return {font};
     }
 }
-std::optional<nlohmann::json> File::loadStates(std::string filepath) {
-    return loadJson(STATE_DIR + "/" + filepath);
+std::optional<nlohmann::json> File::loadStates(std::string entity_name) {
+    return loadJson(ENTITY_DIR + "/" + entity_name + "/" + STATE_FILE);
 }
