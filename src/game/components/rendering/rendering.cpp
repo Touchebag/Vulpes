@@ -1,6 +1,7 @@
 #include "components/rendering/rendering.h"
 #include "utils/log.h"
 #include "utils/file.h"
+#include "utils/common.h"
 
 namespace {
 
@@ -26,7 +27,7 @@ RenderableEntity::RenderableEntity(std::weak_ptr<Transform> trans, std::weak_ptr
 }
 
 bool RenderableEntity::loadTexture(std::string file_path) {
-    if (std::optional<sf::Texture> texture = File::loadTexture(file_path)) {
+    if (std::optional<sf::Texture> texture = File::loadTexture(file_path, entity_name_)) {
         texture_ = texture.value();
     } else {
         LOGW("Error loading image %s", file_path.c_str());
@@ -71,6 +72,11 @@ void RenderableEntity::reloadFromJson(nlohmann::json j) {
         throw std::invalid_argument("Entity missing layer");
     }
 
+    if (j.contains(util::MAIN_ENTITY_NAME)) {
+        entity_name_ = j[util::MAIN_ENTITY_NAME];
+    } else {
+        entity_name_ = "";
+    }
     loadTexture(j["texture"].get<std::string>());
 }
 

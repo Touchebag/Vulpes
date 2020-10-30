@@ -77,5 +77,8 @@ class RenderableEntity {
     // Needed for level editor
     std::string texture_name_;
 
+    // Needed for texture loading
+    std::string entity_name_;
+
     sf::IntRect original_texture_rect_;
 };

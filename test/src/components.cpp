@@ -69,7 +69,7 @@ nlohmann::json entity_json = nlohmann::json::parse(R"--(
     "Renderable": {
         "height": 200,
         "width": 100,
-        "texture": "Player.png",
+        "texture": "box.png",
         "tile_x": true,
         "tile_y": true,
         "layer": "main"

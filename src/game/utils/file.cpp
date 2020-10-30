@@ -95,11 +95,18 @@ std::optional<nlohmann::json> File::loadAiBehavior(std::string entity_name) {
     return loadJson(ENTITY_DIR + "/" + entity_name + "/" + AI_FILE);
 }
 
-std::optional<sf::Texture> File::loadTexture(std::string filepath) {
-    filepath = appendSuffix(filepath, ".png");
+std::optional<sf::Texture> File::loadTexture(std::string file, std::string entity_name) {
+    std::string filepath;
+    if (entity_name.empty()) {
+        filepath += TEXTURE_DIR + "/";
+    } else {
+        filepath += ENTITY_DIR + "/" + entity_name  + "/" + TEXTURE_DIR + "/";
+    }
+
+    filepath += appendSuffix(file, ".png");
 
     sf::Texture texture;
-    if (!texture.loadFromFile(ASSET_DIR + "/" + TEXTURE_DIR + "/" + filepath)) {
+    if (!texture.loadFromFile(ASSET_DIR + "/" + filepath)) {
         return std::nullopt;
     } else {
         return {texture};
