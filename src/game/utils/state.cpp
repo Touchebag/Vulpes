@@ -82,10 +82,8 @@ State<state_utils::EntityContent> State<state_utils::EntityContent>::loadStateFr
 
     // Exceptions are not recoverable
     // Let propagate and crash
-    nlohmann::json frame_names_array = j["frame_names"];
-
-    for (auto it : frame_names_array) {
-        state_props.frame_names_.push_back(it.get<std::string>());
+    if (j.contains("animation")) {
+        state_props.animation_name = j["animation"];
     }
 
     if (props_json.contains("can_interact")) {

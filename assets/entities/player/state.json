@@ -3,9 +3,7 @@
         "next_states": [
             {"event": "start", "state": "idle"}
         ],
-        "frame_names": [
-            "Idle0"
-        ]
+        "animation": "idle"
     },
     "idle": {
         "properties": {
@@ -19,38 +17,7 @@
             {"event": "attacking", "state": "attack"},
             {"event": "damaged", "state": "taking_damage"}
         ],
-        "frame_names": [
-            "Idle0",
-            "Idle0",
-            "Idle0",
-            "Idle1",
-            "Idle1",
-            "Idle1",
-            "Idle2",
-            "Idle2",
-            "Idle2",
-            "Idle3",
-            "Idle3",
-            "Idle3",
-            "Idle4",
-            "Idle4",
-            "Idle4",
-            "Idle5",
-            "Idle5",
-            "Idle5",
-            "Idle6",
-            "Idle6",
-            "Idle6",
-            "Idle7",
-            "Idle7",
-            "Idle7",
-            "Idle8",
-            "Idle8",
-            "Idle8",
-            "Idle9",
-            "Idle9",
-            "Idle9"
-        ]
+        "animation": "idle"
     },
     "running": {
         "properties": {
@@ -64,56 +31,7 @@
             {"event": "attacking", "state": "attack"},
             {"event": "damaged", "state": "taking_damage"}
         ],
-        "frame_names": [
-            "Running0",
-            "Running0",
-            "Running0",
-            "Running0",
-            "Running1",
-            "Running1",
-            "Running1",
-            "Running1",
-            "Running2",
-            "Running2",
-            "Running2",
-            "Running2",
-            "Running3",
-            "Running3",
-            "Running3",
-            "Running3",
-            "Running4",
-            "Running4",
-            "Running4",
-            "Running4",
-            "Running5",
-            "Running5",
-            "Running5",
-            "Running5",
-            "Running6",
-            "Running6",
-            "Running6",
-            "Running6",
-            "Running7",
-            "Running7",
-            "Running7",
-            "Running7",
-            "Running8",
-            "Running8",
-            "Running8",
-            "Running8",
-            "Running9",
-            "Running9",
-            "Running9",
-            "Running9",
-            "Running10",
-            "Running10",
-            "Running10",
-            "Running10",
-            "Running11",
-            "Running11",
-            "Running11",
-            "Running11"
-        ]
+        "animation": "running"
     },
     "jumping": {
         "properties": {
@@ -128,9 +46,7 @@
             {"event": "dashing", "state": "dashing"},
             {"event": "damaged", "state": "taking_damage"}
         ],
-        "frame_names": [
-            "Jumping"
-        ]
+        "animation": "jumping"
     },
     "falling": {
         "properties": {
@@ -144,9 +60,7 @@
             {"event": "dashing", "state": "dashing"},
             {"event": "damaged", "state": "taking_damage"}
         ],
-        "frame_names": [
-            "Falling"
-        ]
+        "animation": "falling"
     },
     "wall_slide_rising": {
         "properties": {
@@ -163,9 +77,7 @@
             {"event": "airborne", "state": "wall_jump_grace_period"},
             {"event": "damaged", "state": "taking_damage"}
         ],
-        "frame_names": [
-            "Jumping"
-        ]
+        "animation": "jumping"
     },
     "wall_slide": {
         "properties": {
@@ -181,9 +93,7 @@
             {"event": "airborne", "state": "wall_jump_grace_period"},
             {"event": "damaged", "state": "taking_damage"}
         ],
-        "frame_names": [
-            "Wall_slide"
-        ]
+        "animation": "wall_slide"
     },
     "wall_jump_grace_period": {
         "properties": {
@@ -199,9 +109,7 @@
             {"event": "frame_timeout", "state": "falling"},
             {"event": "damaged", "state": "taking_damage"}
         ],
-        "frame_names": [
-            "Falling"
-        ]
+        "animation": "falling"
     },
     "wall_jump": {
         "properties": {
@@ -215,9 +123,7 @@
             {"event": "frame_timeout", "state": "jumping"},
             {"event": "damaged", "state": "taking_damage"}
         ],
-        "frame_names": [
-            "Jumping"
-        ]
+        "animation": "jumping"
     },
     "dashing": {
         "properties": {
@@ -234,9 +140,7 @@
             {"event": "frame_timeout", "state": "falling"},
             {"event": "damaged", "state": "taking_damage"}
         ],
-        "frame_names": [
-            "Dashing"
-        ]
+        "animation": "dashing"
     },
     "attack": {
         "properties": {
@@ -253,9 +157,7 @@
             {"event": "frame_timeout", "state": "attack_end_lag"},
             {"event": "damaged", "state": "taking_damage"}
         ],
-        "frame_names": [
-            "Idle0"
-        ]
+        "animation": "idle"
     },
     "attack_end_lag": {
         "properties": {
@@ -269,9 +171,7 @@
             {"event": "frame_timeout", "state": "idle"},
             {"event": "damaged", "state": "taking_damage"}
         ],
-        "frame_names": [
-            "Idle0"
-        ]
+        "animation": "idle"
     },
     "taking_damage": {
         "properties": {
@@ -283,8 +183,6 @@
         "next_states": [
             {"event": "frame_timeout", "state": "idle"}
         ],
-        "frame_names": [
-            "Falling"
-        ]
+        "animation": "falling"
     }
 }

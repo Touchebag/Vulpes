@@ -9,8 +9,9 @@ AnimatedEntity::AnimatedEntity(std::weak_ptr<RenderableEntity> renderableEntity)
     renderableEntity_(renderableEntity) {
 }
 
-void AnimatedEntity::loadSpriteMap(const std::string& path) {
-    auto fs = File::openSpriteMapFile(path);
+std::unordered_map<std::string, util::Rectangle> AnimatedEntity::loadSpriteMap(const std::string& entity_name) {
+    auto fs = File::openSpriteMapFile(entity_name);
+    std::unordered_map<std::string, util::Rectangle> sprite_map;
 
     std::vector<std::string> map_str(std::istream_iterator<std::string>{fs},
                                      std::istream_iterator<std::string>());
@@ -31,18 +32,57 @@ void AnimatedEntity::loadSpriteMap(const std::string& path) {
         ++it;
         int height = std::stoi(*it);
 
-        sprite_sheet_map_.insert({name, {x_pos, y_pos, width, height}});
+        sprite_map.insert({name, {x_pos, y_pos, width, height}});
     }
+
+    return sprite_map;
 }
 
-void AnimatedEntity::setFrameList(std::vector<std::string> frame_list) {
-    frame_list_ = frame_list;
+void AnimatedEntity::loadFrameList(
+        const std::string& entity_name,
+        const std::unordered_map<std::string, std::vector<std::string>>& list_frame_map) {
+    // Map of frame name to texture coordinates
+    auto sprite_map = loadSpriteMap(entity_name);
+
+    for (auto it : list_frame_map) {
+        // List of coordinates
+        std::vector<util::Rectangle> coord_list;
+
+        for (auto frame_it : it.second) {
+            // Convert names to coords
+            coord_list.push_back(sprite_map.at(frame_it));
+        }
+
+        sprite_sheet_map_.emplace(it.first, std::make_shared<std::vector<util::Rectangle>>(coord_list));
+    }
+
+    if (sprite_sheet_map_.size() < 1) {
+        LOGE("No animations loaded");
+        throw std::invalid_argument("");
+    }
+
+    current_frame_list_ = sprite_sheet_map_.begin()->second;
+}
+
+void AnimatedEntity::setFrameList(std::string animation_name) {
+    try {
+        if (animation_name.empty()) {
+            return;
+        }
+        current_frame_list_ = sprite_sheet_map_.at(animation_name);
+    } catch (std::out_of_range& e) {
+        LOGE("Animation: name %s not found", animation_name.c_str());
+        throw e;
+    }
 }
 
 util::Rectangle AnimatedEntity::getSpriteRect() {
     try {
-        auto sprite = frame_list_.at(current_frame_);
-        return sprite_sheet_map_.at(sprite);
+        if (current_frame_list_) {
+            return current_frame_list_->at(current_frame_);
+        } else {
+            throw std::runtime_error("Current frame list empty");
+        }
     } catch (std::out_of_range& e) {
         LOGE("Could not find sprite map entry");
         throw e;
@@ -55,16 +95,38 @@ void AnimatedEntity::reloadFromJson(nlohmann::json j) {
         main_entity_name = j[util::MAIN_ENTITY_NAME].get<std::string>();
     }
 
-    loadSpriteMap(main_entity_name);
+    // Load the animation names as lists of frame names
+    std::unordered_map<std::string, std::vector<std::string>> name_frames_map;
 
-    nlohmann::json frame_names_array = j["frame_list"];
+    // If there is a frame list directly, do not load from file
+    if (j.contains("frame_list")) {
+        nlohmann::json frame_names_array = j["frame_list"];
 
-    frame_list_.clear();
-    for (auto it : frame_names_array) {
-        frame_list_.push_back(it.get<std::string>());
+        std::vector<std::string> frame_list;
+        for (auto it : frame_names_array) {
+            frame_list.push_back(it.get<std::string>());
+        }
+
+        name_frames_map.emplace("default", frame_list);
+
+        original_frame_list_ = frame_list;
+    } else {
+        // TODO Error handling
+        nlohmann::json j_anim_list = File::loadAnimations(main_entity_name).value();
+
+        for (auto animation : j_anim_list) {
+            std::vector<std::string> frame_list;
+            for (auto it : animation["frame_list"]) {
+                frame_list.push_back(it.get<std::string>());
+            }
+
+            name_frames_map.emplace(animation["name"], frame_list);
+        }
+
+        original_frame_list_.reset();
     }
 
-    original_frame_list_ = frame_list_;
+    loadFrameList(main_entity_name, name_frames_map);
 
     setRenderTexture();
 }
@@ -72,14 +134,18 @@ void AnimatedEntity::reloadFromJson(nlohmann::json j) {
 std::optional<nlohmann::json> AnimatedEntity::outputToJson() {
     nlohmann::json j;
 
-    j["frame_list"] = original_frame_list_;
+    if (original_frame_list_) {
+        j["frame_list"] = original_frame_list_.value();
+    }
 
     return j;
 }
 
 void AnimatedEntity::update() {
-    if (++current_frame_ >= static_cast<int>(frame_list_.size())) {
-        current_frame_ = 0;
+    if (current_frame_list_) {
+        if (++current_frame_ >= static_cast<int>(current_frame_list_->size())) {
+            current_frame_ = 0;
+        }
     }
 
     setRenderTexture();
@@ -95,5 +161,5 @@ void AnimatedEntity::setRenderTexture() {
 }
 
 bool AnimatedEntity::hasAnimationLooped() {
-    return current_frame_ == static_cast<int>(frame_list_.size()) - 1;
+    return current_frame_ == static_cast<int>(current_frame_list_->size()) - 1;
 }

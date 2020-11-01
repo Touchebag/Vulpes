@@ -329,3 +329,19 @@ TEST(TestComponents, TestSaveLoadPlayerActions) {
     j2 = actions->outputToJson().value();
     ASSERT_TRUE(j1 == j2) << j1.dump() << std::endl << j2.dump() << std::endl;
 }
+
+TEST(TestComponents, TestSaveLoadAnimationFile) {
+    std::shared_ptr<Transform> trans = std::make_shared<Transform>();
+    std::shared_ptr<Collision> coll = std::make_shared<CollisionPlayerHurtbox>(trans);
+    std::shared_ptr<MovableEntity> move = std::make_shared<MovableEntity>(trans, coll);
+    std::shared_ptr<RenderableEntity> render = std::make_shared<RenderableEntity>(trans, move);
+
+    // When empty it will default to loading file
+    nlohmann::json j1;
+
+    std::shared_ptr<AnimatedEntity> anim = std::make_shared<AnimatedEntity>(render);;
+    anim->reloadFromJson(j1);
+
+    nlohmann::json j2 = anim->outputToJson().value();
+    ASSERT_TRUE(j1 == j2) << j1.dump() << std::endl << j2.dump() << std::endl;
+}

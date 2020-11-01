@@ -12,6 +12,7 @@ class File {
     static std::optional<nlohmann::json> loadRoom(std::string filepath);
     static std::optional<nlohmann::json> loadStates(std::string entity_name);
     static std::optional<nlohmann::json> loadAiBehavior(std::string entity_name);
+    static std::optional<nlohmann::json> loadAnimations(std::string entity_name);
     static std::optional<sf::Texture> loadTexture(std::string file, std::string entity_name = "");
     static std::optional<sf::Font> loadFont(std::string filepath);
 

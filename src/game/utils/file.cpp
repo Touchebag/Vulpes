@@ -11,6 +11,7 @@ const std::string ENTITY_FILE = "entity";
 const std::string SPRITE_MAP_FILE = "sprite_map.txt";
 const std::string AI_FILE = "ai";
 const std::string STATE_FILE = "state";
+const std::string ANIMATIONS_FILE = "animations";
 
 namespace {
 
@@ -93,6 +94,11 @@ std::optional<nlohmann::json> File::loadRoom(std::string filepath) {
 
 std::optional<nlohmann::json> File::loadAiBehavior(std::string entity_name) {
     return loadJson(ENTITY_DIR + "/" + entity_name + "/" + AI_FILE);
+}
+
+std::optional<nlohmann::json> File::loadAnimations(std::string entity_name) {
+    auto file = appendSuffix(ANIMATIONS_FILE, ".json");
+    return loadJson(ENTITY_DIR + "/" + entity_name + "/" + file);
 }
 
 std::optional<sf::Texture> File::loadTexture(std::string file, std::string entity_name) {

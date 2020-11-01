@@ -37,7 +37,7 @@
     "Death": null,
     "Movable": null,
     "Renderable": {
-        "texture": "Attack1",
+        "texture": "Attack",
         "height": 350,
         "layer": "main"
     },

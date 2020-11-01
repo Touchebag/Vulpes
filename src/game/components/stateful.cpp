@@ -48,7 +48,7 @@ void StatefulEntity::incomingEvent(state_utils::Event event) {
     if (auto ns = new_state.lock()) {
         frame_counter_ = ns->getData().state_props.frame_timer_;
         if (auto tmp = animatedEntity_.lock()) {
-            tmp->setFrameList(ns->getData().state_props.frame_names_);
+            tmp->setFrameList(ns->getData().state_props.animation_name);
         }
 
         if (!getEntity().empty()) {
