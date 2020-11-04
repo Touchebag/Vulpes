@@ -9,15 +9,15 @@ Menu::Menu(std::weak_ptr<EditorEnvironment> editor_environment) :
     if (editor_env->current_entity) {
         auto main_entry = std::make_shared<MenuEntry>("Main");
 
-        main_entry_->addEntry(menu_entries::makeRenderableEntry(editor_env->current_entity));
+        main_entry->addEntry(menu_entries::makeRenderableEntry(editor_env->current_entity));
 
-        main_entry_->addEntry(menu_entries::makeCollisionEntry(editor_env->current_entity));
+        main_entry->addEntry(menu_entries::makeCollisionEntry(editor_env->current_entity));
 
-        main_entry_->addEntry(menu_entries::makeMovableEntry(editor_env->current_entity));
+        main_entry->addEntry(menu_entries::makeMovableEntry(editor_env->current_entity));
 
-        main_entry_->addEntry(menu_entries::makePhysicsEntry(editor_env->current_entity));
+        main_entry->addEntry(menu_entries::makePhysicsEntry(editor_env->current_entity));
 
-        main_entry_->addEntry(menu_entries::makeActionsEntry(editor_env->current_entity));
+        main_entry->addEntry(menu_entries::makeActionsEntry(editor_env->current_entity));
 
         current_entry_ = main_entry;
         main_entry_ = main_entry;
