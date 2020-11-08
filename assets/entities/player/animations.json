@@ -110,5 +110,42 @@
         "frame_list": [
             "Dashing"
         ]
+    },
+    {
+        "name": "door_transition",
+        "frame_list": [
+            "Door_transition0",
+            "Door_transition0",
+            "Door_transition0",
+            "Door_transition0",
+            "Door_transition0",
+            "Door_transition0",
+            "Door_transition0",
+            "Door_transition0",
+            "Door_transition1",
+            "Door_transition1",
+            "Door_transition1",
+            "Door_transition1",
+            "Door_transition1",
+            "Door_transition1",
+            "Door_transition1",
+            "Door_transition1",
+            "Door_transition2",
+            "Door_transition2",
+            "Door_transition2",
+            "Door_transition2",
+            "Door_transition2",
+            "Door_transition2",
+            "Door_transition2",
+            "Door_transition2",
+            "Door_transition3",
+            "Door_transition3",
+            "Door_transition3",
+            "Door_transition3",
+            "Door_transition3",
+            "Door_transition3",
+            "Door_transition3",
+            "Door_transition3"
+        ]
     }
 ]
