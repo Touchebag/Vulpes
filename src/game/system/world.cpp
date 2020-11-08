@@ -25,6 +25,10 @@ std::vector<std::shared_ptr<BaseEntity>>& World::getWorldObjects() {
 }
 
 void World::update() {
+    if (System::getCutscene()) {
+        System::getCutscene()->update();
+    }
+
     // TODO Check for death
     player_->update();
 
