@@ -72,7 +72,6 @@ void AnimatedEntity::setFrameList(std::string animation_name) {
         current_frame_list_ = sprite_sheet_map_.at(animation_name);
     } catch (std::out_of_range& e) {
         LOGE("Animation: name %s not found", animation_name.c_str());
-        throw e;
     }
 }
 

@@ -23,7 +23,7 @@ class World {
 
         static util::Point getPlayerPosition();
 
-        static std::weak_ptr<Player> getPlayer();
+        static std::weak_ptr<const Player> getPlayer();
 
         static bool hasInteractTriggered();
 
@@ -46,6 +46,7 @@ class World {
         static void clearWorld();
 
         static std::vector<std::shared_ptr<BaseEntity>>& getWorldObjects();
+        static std::weak_ptr<Player> getPlayer();
 
         static void triggerInterract();
 

@@ -12,7 +12,7 @@ util::Point World::IWorldRead::getPlayerPosition() {
     return World::getWorldInstance().getPlayerPosition();
 }
 
-std::weak_ptr<Player> World::IWorldRead::getPlayer() {
+std::weak_ptr<const Player> World::IWorldRead::getPlayer() {
     return World::getWorldInstance().getPlayer();
 }
 
@@ -60,6 +60,10 @@ void World::IWorldModify::clearWorld() {
 
 std::vector<std::shared_ptr<BaseEntity>>& World::IWorldModify::getWorldObjects() {
     return World::getWorldInstance().getWorldObjects();
+}
+
+std::weak_ptr<Player> World::IWorldModify::getPlayer() {
+    return World::getWorldInstance().getPlayer();
 }
 
 void World::IWorldModify::triggerInterract() {

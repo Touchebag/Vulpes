@@ -17,7 +17,7 @@ void EditorMouse::handleMousePress(std::shared_ptr<EditorEnvironment> editor_env
         std::shared_ptr<CollisionStatic> tmp_coll = std::make_shared<CollisionStatic>(tmp_trans);
         tmp_coll->setHitbox(50, 50);
 
-        auto player = World::getInstance<World::IWorldRead>().getPlayer().lock();
+        auto player = World::getInstance<World::IWorldModify>().getPlayer().lock();
         if (player && player->collision_ && player->collision_->collides(tmp_coll)) {
             editor_env->current_entity = player;
         } else {
