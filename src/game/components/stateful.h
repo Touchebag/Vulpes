@@ -16,6 +16,8 @@ class StatefulEntity : public Component {
     void reloadFromJson(nlohmann::json j) override;
     std::optional<nlohmann::json> outputToJson() override;
 
+    void resetState();
+
     void incomingEvent(state_utils::Event event);
 
     const state_utils::StateProperties& getStateProperties();

@@ -42,6 +42,12 @@ void StatefulEntity::loadStates(std::string entity_name) {
     }
 }
 
+void StatefulEntity::resetState() {
+    state_handler_.resetState();
+
+    incomingEvent(state_utils::Event::START);
+}
+
 void StatefulEntity::incomingEvent(state_utils::Event event) {
     auto new_state = state_handler_.incomingEvent(event);
 

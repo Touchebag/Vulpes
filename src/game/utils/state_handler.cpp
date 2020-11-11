@@ -4,6 +4,12 @@
 #include "components/actions/actions.h"
 
 template <class T>
+void StateHandler<T>::resetState() {
+    // TODO Error handling
+    current_state_ = state_list_.at("main");
+}
+
+template <class T>
 void StateHandler<T>::reloadFromJson(const nlohmann::json& j) {
     for (auto state = j.begin(); state != j.end(); ++state) {
         state_list_.insert(std::make_pair(state.key(),
@@ -11,8 +17,7 @@ void StateHandler<T>::reloadFromJson(const nlohmann::json& j) {
                         State<T>::loadStateFromJson(state.value()))));
     }
 
-    // TODO Error handling
-    current_state_ = state_list_.at("main");
+    resetState();
 }
 
 template <class T>

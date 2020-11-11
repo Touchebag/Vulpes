@@ -7,14 +7,15 @@ void Cutscene::addPlayer(std::shared_ptr<Player> player) {
 
     temp_player.entity = player;
 
-    // TODO Action still listening to inputs
-    // call setInactive?
     temp_player.actions = player->actions_;
     // TODO Replace with cutscene version
     player->actions_.reset();
 
     temp_player.state = player->statefulEntity_;
     player->statefulEntity_.reset();
+
+    temp_player.physics = player->physics_;
+    player->physics_.reset();
 
     player_ = std::make_shared<EntityInformation>(temp_player);
 }

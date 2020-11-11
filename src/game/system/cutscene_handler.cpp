@@ -7,8 +7,15 @@
 namespace {
 
 void resetEntity(std::shared_ptr<Cutscene::EntityInformation> entity_info) {
-    entity_info->entity->actions_ = entity_info->actions;
-    entity_info->entity->statefulEntity_ = entity_info->state;
+    auto entity = entity_info->entity;
+
+    entity->actions_ = entity_info->actions;
+    entity->statefulEntity_ = entity_info->state;
+    entity->physics_ = entity_info->physics;
+
+    if (entity->statefulEntity_) {
+        entity->statefulEntity_->resetState();
+    }
 }
 
 } // namespace
