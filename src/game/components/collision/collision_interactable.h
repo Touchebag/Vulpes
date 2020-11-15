@@ -15,4 +15,5 @@ class CollisionInteractable : public Collision {
 
   private:
     std::optional<std::pair<std::string, int>> transition_;
+    std::optional<std::string> cutscene_;
 };

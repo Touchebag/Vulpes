@@ -8,6 +8,8 @@ class CutsceneHandler {
   public:
     void startCutscene(std::string name);
 
+    bool isCutscenePlaying();
+
     void update();
 
   private:

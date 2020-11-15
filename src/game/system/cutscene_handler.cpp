@@ -42,6 +42,10 @@ void CutsceneHandler::startCutscene(std::string cutscene_file) {
     current_cutscene_ = cutscene;
 }
 
+bool CutsceneHandler::isCutscenePlaying() {
+    return static_cast<bool>(current_cutscene_);
+}
+
 void CutsceneHandler::update() {
     if (!current_cutscene_) {
         return;

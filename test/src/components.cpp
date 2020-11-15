@@ -273,6 +273,16 @@ TEST(TestComponents, TestSaveLoadInteractable) {
 
     nlohmann::json j2 = coll->outputToJson().value();
     ASSERT_TRUE(j1 == j2) << j1.dump() << std::endl << j2.dump() << std::endl;
+
+    // Test with cutscene
+    j1["cutscene"] = "test_cutscene";
+
+    coll = std::dynamic_pointer_cast<CollisionInteractable>(Collision::createFromJson(j1, trans));
+    // Ensure dynamic cast valid
+    ASSERT_TRUE(coll);
+
+    j2 = coll->outputToJson().value();
+    ASSERT_TRUE(j1 == j2) << j1.dump() << std::endl << j2.dump() << std::endl;
 }
 
 TEST(TestComponents, TestSaveLoadSlope) {
