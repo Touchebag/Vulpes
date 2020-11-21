@@ -25,6 +25,10 @@ std::vector<std::shared_ptr<BaseEntity>>& World::getWorldObjects() {
 }
 
 void World::update() {
+    if (System::getCutscene()) {
+        System::getCutscene()->update();
+    }
+
     // TODO Check for death
     player_->update();
 
@@ -53,7 +57,8 @@ void World::update() {
         player_health_->setText(std::to_string(player_->damageable_->getHealth()));
     }
 
-    if (new_room_) {
+    // Do not load a new room if cutscene is playing
+    if (new_room_ && !System::getCutscene()->isCutscenePlaying()) {
         loadRoom(new_room_->first, new_room_->second);
         new_room_.reset();
     }

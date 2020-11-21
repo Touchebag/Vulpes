@@ -1,6 +1,7 @@
 #include "collision_interactable.h"
 
 #include "system/world.h"
+#include "system/system.h"
 
 #include "utils/log.h"
 
@@ -20,6 +21,10 @@ void CollisionInteractable::reloadFromJson(nlohmann::json j) {
 
         transition_ = {transition};
     }
+
+    if (j.contains("cutscene")) {
+        cutscene_ = j["cutscene"];
+    }
 }
 
 std::optional<nlohmann::json> CollisionInteractable::outputToJson() {
@@ -35,6 +40,10 @@ std::optional<nlohmann::json> CollisionInteractable::outputToJson() {
         j["transition"] = transition_json;
     }
 
+    if (cutscene_) {
+        j["cutscene"] = cutscene_.value();
+    }
+
     return j;
 }
 
@@ -44,6 +53,9 @@ void CollisionInteractable::update() {
             if (collides(it)) {
                 if (transition_) {
                     World::IWorldModify::loadRoom(transition_.value().first, transition_.value().second);
+                }
+                if (cutscene_) {
+                    System::getCutscene()->startCutscene(cutscene_.value());
                 }
             }
         }

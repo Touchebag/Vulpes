@@ -366,6 +366,7 @@
                     "id": 1,
                     "name": "room2"
                 },
+                "cutscene": "door_transition",
                 "type": "interactable",
                 "width": 220
             },

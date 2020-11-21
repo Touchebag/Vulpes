@@ -8,6 +8,7 @@ template <class T>
 class StateHandler {
   public:
     void reloadFromJson(const nlohmann::json& j);
+    void resetState();
 
     std::weak_ptr<State<T>> incomingEvent(state_utils::Event event);
 
