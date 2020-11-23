@@ -18,6 +18,8 @@ int level_editor_main(sf::RenderWindow& window) {
     auto renderInst = std::dynamic_pointer_cast<EditorRender>(System::getRender());
     renderInst->setEditorEnvironment(editor_env);
 
+    auto cameraInst = System::getCamera();
+
     if (!renderInst) {
         throw std::runtime_error("Could not cast render instance");
     }
@@ -132,7 +134,7 @@ int level_editor_main(sf::RenderWindow& window) {
                             case sf::Keyboard::Key::Left:
                                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
                                     auto mouse_world_pos = editor_env->mouse->getMouseWorldPosition();
-                                    auto camera_box = renderInst->getCameraBox();
+                                    auto camera_box = cameraInst->getCameraBox();
                                     camera_box.left_margin = mouse_world_pos.first;
                                     renderInst->setCameraBox(camera_box);
                                 }
@@ -140,7 +142,7 @@ int level_editor_main(sf::RenderWindow& window) {
                             case sf::Keyboard::Key::Right:
                                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
                                     auto mouse_world_pos = editor_env->mouse->getMouseWorldPosition();
-                                    auto camera_box = renderInst->getCameraBox();
+                                    auto camera_box = cameraInst->getCameraBox();
                                     camera_box.right_margin = mouse_world_pos.first;
                                     renderInst->setCameraBox(camera_box);
                                 }
@@ -148,7 +150,7 @@ int level_editor_main(sf::RenderWindow& window) {
                             case sf::Keyboard::Key::Up:
                                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
                                     auto mouse_world_pos = editor_env->mouse->getMouseWorldPosition();
-                                    auto camera_box = renderInst->getCameraBox();
+                                    auto camera_box = cameraInst->getCameraBox();
                                     camera_box.top_margin = mouse_world_pos.second;
                                     renderInst->setCameraBox(camera_box);
                                 }
@@ -156,7 +158,7 @@ int level_editor_main(sf::RenderWindow& window) {
                             case sf::Keyboard::Key::Down:
                                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
                                     auto mouse_world_pos = editor_env->mouse->getMouseWorldPosition();
-                                    auto camera_box = renderInst->getCameraBox();
+                                    auto camera_box = cameraInst->getCameraBox();
                                     camera_box.bottom_margin = mouse_world_pos.second;
                                     renderInst->setCameraBox(camera_box);
                                 }
@@ -192,7 +194,7 @@ int level_editor_main(sf::RenderWindow& window) {
 
         window.clear();
 
-        renderInst->setView(static_cast<float>(editor_env->view_pos_x), static_cast<float>(editor_env->view_pos_y), editor_env->view_size, editor_env->view_size);
+        cameraInst->setView(static_cast<float>(editor_env->view_pos_x), static_cast<float>(editor_env->view_pos_y), editor_env->view_size, editor_env->view_size);
 
         if (render_current_layer_only) {
             renderInst->renderLayer(window, editor_env->current_layer);
@@ -203,7 +205,7 @@ int level_editor_main(sf::RenderWindow& window) {
         // Get this before changing to HUD view for proper coordinate mapping
         auto mouse_world_pos = editor_env->mouse->getMouseWorldPosition();
 
-        sf::View old_viewport = renderInst->getView();
+        sf::View old_viewport = window.getView();
         sf::View viewport({editor_env->VIEW_POS_X, editor_env->VIEW_POS_Y}, {editor_env->VIEW_SIZE, editor_env->VIEW_SIZE});
         window.setView(viewport);
 

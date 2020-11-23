@@ -2,6 +2,8 @@
 
 #include "components/collision/collision.h"
 #include "system/world.h"
+#include "system/camera.h"
+#include "system/system.h"
 
 #include "utils/log.h"
 
@@ -79,15 +81,20 @@ void EditorRender::render(sf::RenderWindow& window) {
 }
 
 void EditorRender::drawCameraBoundaries(sf::RenderWindow& window) {
-    auto view_center = getView().getCenter();
-    auto view_size = getView().getSize();
+    auto viewport = System::getCamera()->getView();
+    sf::View view = {{viewport.x_pos, viewport.y_pos}, {viewport.width, viewport.height}};
+
+    auto view_center = view.getCenter();
+    auto view_size = view.getSize();
 
     auto view_left = view_center.x - (view_size.x / 2.0f);
     auto view_right = view_center.x + (view_size.x / 2.0f);
     auto view_top = view_center.y - (view_size.y / 2.0f);
     auto view_bottom = view_center.y + (view_size.y / 2.0f);
 
-    auto camera = render_.getCameraBox();
+    auto camera = System::getCamera()->getCameraBox();
+
+    window.setView(view);
 
     drawLine(camera.left_margin, view_top, camera.left_margin, view_bottom, window);
     drawLine(camera.right_margin, view_top, camera.right_margin, view_bottom, window);
@@ -101,22 +108,6 @@ void EditorRender::setEditorEnvironment(std::weak_ptr<EditorEnvironment> editor_
 
 void EditorRender::addEntity(std::weak_ptr<RenderableEntity> entity) {
     render_.addEntity(entity);
-}
-
-void EditorRender::moveView(float x, float y) {
-    render_.moveView(x, y);
-}
-
-void EditorRender::resizeView(float width, float height) {
-    render_.resizeView(width, height);
-}
-
-void EditorRender::setView(float x, float y, float width, float height) {
-    render_.setView(x, y, width, height);
-}
-
-sf::View EditorRender::getView() {
-    return render_.getView();
 }
 
 void EditorRender::renderLayer(sf::RenderWindow& window, RenderableEntity::Layer layer) {
@@ -135,7 +126,7 @@ void EditorRender::toggleHitboxRendering() {
     render_hitboxes_ = !render_hitboxes_;
 }
 
-void EditorRender::setCameraBox(CameraBox camera_box) {
+void EditorRender::setCameraBox(Camera::CameraBoundingBox camera_box) {
     if (camera_box.left_margin > camera_box.right_margin ||
         camera_box.top_margin > camera_box.bottom_margin) {
         LOGW("Invalid camera margins");
@@ -143,9 +134,5 @@ void EditorRender::setCameraBox(CameraBox camera_box) {
     }
 
     World::IWorldModify::loadCameraData(camera_box);
-    render_.setCameraBox(camera_box);
-}
-
-Render::CameraBox EditorRender::getCameraBox() {
-    return render_.camera_box_;
+    System::getCamera()->setCameraBox(camera_box);
 }

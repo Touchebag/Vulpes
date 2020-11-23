@@ -12,19 +12,13 @@ class EditorRender : public IRender {
 
     void addEntity(std::weak_ptr<RenderableEntity> entity) override;
 
-    void moveView(float x, float y) override;
-    void resizeView(float width, float height) override;
-    void setView(float x, float y, float width, float height) override;
-    sf::View getView() override;
-
     void renderLayer(sf::RenderWindow& window, RenderableEntity::Layer layer);
     void setParallaxEnabled(bool enable);
     bool getParallaxEnabled();
 
     void toggleHitboxRendering();
 
-    void setCameraBox(CameraBox camera_box) override;
-    CameraBox getCameraBox();
+    void setCameraBox(Camera::CameraBoundingBox camera_box);
 
   private:
     void drawCameraBoundaries(sf::RenderWindow& window);

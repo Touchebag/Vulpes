@@ -7,7 +7,7 @@
 #include "player.h"
 #include "json.hpp"
 #include "components/rendering/rendering_text.h"
-#include "i_render.h"
+#include "camera.h"
 
 class World {
 /* This class is intended to store all world objects like walls.
@@ -54,7 +54,7 @@ class World {
 
         static void setEntrance(int entrance_id);
 
-        static void loadCameraData(IRender::CameraBox camera_box);
+        static void loadCameraData(Camera::CameraBoundingBox camera_box);
     };
 
     template <class T>
@@ -114,9 +114,11 @@ class World {
     bool interact_triggered_ = false;
 
     // Meta data
+    // Needed for saving world to file
+    // TODO Store all meta data directly as json?
     std::string current_room_name_;
 
-    std::optional<IRender::CameraBox> camera_box_;
+    std::optional<Camera::CameraBoundingBox> camera_box_;
 };
 
 template <> World::IWorldRead World::getInstance<World::IWorldRead>();

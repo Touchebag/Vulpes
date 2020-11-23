@@ -13,6 +13,10 @@ std::shared_ptr<IRender> System::getRender() {
     return render;
 }
 
+std::shared_ptr<Camera> System::getCamera() {
+    return System::getInstance().camera_instance_;
+}
+
 std::shared_ptr<CutsceneHandler> System::getCutscene() {
     return System::getInstance().cutscene_handler_;
 }

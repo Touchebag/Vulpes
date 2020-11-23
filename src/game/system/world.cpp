@@ -130,9 +130,9 @@ void World::loadWorldFromJson(nlohmann::json j) {
 
     // Camera margins
     if (camera_box_) {
-        System::getRender()->setCameraBox(camera_box_.value());
+        System::getCamera()->setCameraBox(camera_box_.value());
     } else {
-        System::getRender()->setCameraBox({0.0f, 0.0f, 0.0f, 0.0f});
+        System::getCamera()->setCameraBox({0.0f, 0.0f, 0.0f, 0.0f});
     }
 
     for (auto it : j["entities"]) {

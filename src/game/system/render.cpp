@@ -1,5 +1,8 @@
 #include "system/render.h"
 
+#include "system/system.h"
+#include "system/camera.h"
+
 namespace {
 
 std::map<RenderableEntity::Layer, float> parallax_map = {
@@ -35,60 +38,21 @@ void Render::renderLayer(sf::RenderWindow& window, RenderableEntity::Layer layer
         parallax_mulitiplier = parallax_map[layer];
     }
 
-    sf::View viewport({view_x_ * parallax_mulitiplier, view_y_ * parallax_mulitiplier}, {view_width_, view_height_});
+    auto view = System::getCamera()->getView();
+    sf::View viewport({view.x_pos * parallax_mulitiplier, view.y_pos * parallax_mulitiplier}, {view.width, view.height});
     window.setView(viewport);
 
     renderAllEntitesInVector(layers_[static_cast<int>(layer)], window);
 }
 
-void Render::moveView(float x, float y) {
-    auto width_offset = view_width_ / 2.0f;
-    auto height_offset = view_height_ / 2.0f;
-
-    if (x - width_offset < camera_box_.left_margin) {
-        x = camera_box_.left_margin + width_offset;
-    } else if (x + width_offset > camera_box_.right_margin) {
-        x = camera_box_.right_margin - width_offset;
-    }
-
-    if (y - height_offset < camera_box_.top_margin) {
-        y = camera_box_.top_margin + height_offset;
-    } else if (y + height_offset > camera_box_.bottom_margin) {
-        y = camera_box_.bottom_margin - height_offset;
-    }
-
-    setView(x, y, view_width_, view_height_);
-}
-
-void Render::resizeView(float width, float height) {
-    setView(view_x_, view_y_, width, height);
-}
-
-void Render::setView(float x, float y, float width, float height) {
-    view_x_ = x;
-    view_y_ = y;
-    view_width_ = width;
-    view_height_ = height;
-}
-
-void Render::setCameraBox(CameraBox camera_box) {
-    camera_box_ = camera_box;
-}
-
-IRender::CameraBox Render::getCameraBox() {
-    return camera_box_;
-}
-
-sf::View Render::getView() {
-    return {{view_x_, view_y_}, {view_width_, view_height_}};
-}
-
 void Render::drawHud(sf::RenderWindow& window) {
+    auto current_view = window.getView();
+
     // Set static view for HUD
     window.setView({{500, 500}, {1000, 1000}});
     renderAllEntitesInVector(hud_layer_, window);
 
-    window.setView(getView());
+    window.setView(current_view);
 }
 
 void Render::render(sf::RenderWindow& window) {

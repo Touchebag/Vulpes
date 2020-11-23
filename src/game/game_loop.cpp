@@ -36,7 +36,7 @@ int game_main(sf::RenderWindow& window) {
 
     {
         auto view_size = window.getView().getSize();
-        renderInst->setView(0, 0, view_size.x, view_size.y);
+        System::getCamera()->setView(0, 0, view_size.x, view_size.y);
     }
 
     while (window.isOpen()) {
@@ -58,7 +58,7 @@ int game_main(sf::RenderWindow& window) {
                         window.close();
                         break;
                     case sf::Event::Resized:
-                        renderInst->resizeView(static_cast<float>(event.size.width), static_cast<float>(event.size.height));
+                        System::getCamera()->resizeView(static_cast<float>(event.size.width), static_cast<float>(event.size.height));
                         break;
                     case sf::Event::KeyPressed:
                         if (event.key.code == sf::Keyboard::Key::P) {
@@ -83,7 +83,7 @@ int game_main(sf::RenderWindow& window) {
         }
 
         auto view_pos = worldInstRead.getPlayerPosition();
-        renderInst->moveView(static_cast<float>(view_pos.x), static_cast<float>(view_pos.y));
+        System::getCamera()->moveView(static_cast<float>(view_pos.x), static_cast<float>(view_pos.y));
 
         renderInst->render(window);
 

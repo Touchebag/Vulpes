@@ -21,6 +21,8 @@ void resetEntity(std::shared_ptr<Cutscene::EntityInformation> entity_info) {
 } // namespace
 
 void CutsceneHandler::startCutscene(std::string cutscene_file) {
+    (void)cutscene_file;
+
     frame_counter_ = 0;
 
     std::shared_ptr<Cutscene> cutscene = std::make_shared<Cutscene>();
@@ -74,7 +76,6 @@ void CutsceneHandler::execute_event(const Cutscene::CutsceneEvent& event) {
         case Cutscene::CutsceneEventType::END_CUTSCENE:
             {
                 // TODO Restore all entities
-                LOGD("END_CUTSCENE");
                 resetEntity(current_cutscene_->getEntity(-1));
                 current_cutscene_.reset();
                 break;
