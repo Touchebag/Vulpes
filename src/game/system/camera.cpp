@@ -1,5 +1,7 @@
 #include "camera.h"
 
+#include "system/world.h"
+
 void Camera::setCameraBox(Camera::CameraBoundingBox camera_box) {
     camera_box_ = camera_box;
 }
@@ -42,4 +44,36 @@ void Camera::moveView(float x, float y) {
 void Camera::resizeView(float width, float height) {
     view_.width = width;
     view_.height = height;
+}
+
+void Camera::update() {
+    updateTargetView();
+
+    // TODO Also add resize
+    auto movement = calculateMovementToTarget();
+    moveView(view_.x_pos + movement.x_pos, view_.y_pos + movement.y_pos);
+}
+
+Camera::CameraView Camera::calculateMovementToTarget() {
+    CameraView changes;
+
+    changes.x_pos = std::min(std::max((target_view_.x_pos - view_.x_pos) * 0.002f, -0.8f), 0.8f);
+    changes.y_pos = std::min(std::max((target_view_.y_pos - view_.y_pos) * 0.002f, -0.8f), 0.8f);
+
+    return changes;
+}
+
+void Camera::updateTargetView() {
+    // TODO Error handling
+    auto player = World::getInstance<World::IWorldRead>().getPlayer().lock();
+
+    if (player) {
+        auto p_trans = player->trans_;
+        auto p_move = player->movableEntity_;
+
+        if (p_trans && p_move) {
+            target_view_.x_pos = static_cast<float>(p_trans->getX() + (p_move->getVelX() * 30.0));
+            target_view_.y_pos = static_cast<float>(p_trans->getY() + (p_move->getVelY() * 30.0));
+        }
+    }
 }

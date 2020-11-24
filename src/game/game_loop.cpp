@@ -12,8 +12,9 @@
 #define PHYSICS_FRAME_RATE 60
 #define MS_PER_FRAME 1000 / PHYSICS_FRAME_RATE
 
+#define VIEW_SIZE_SCALING 1.0f
+
 int game_main(sf::RenderWindow& window) {
-    auto worldInstRead = World::getInstance<World::IWorldRead>();
     auto worldInstWrite = World::getInstance<World::IWorldModify>();
 
     sf::Time frames;
@@ -36,7 +37,7 @@ int game_main(sf::RenderWindow& window) {
 
     {
         auto view_size = window.getView().getSize();
-        System::getCamera()->setView(0, 0, view_size.x, view_size.y);
+        System::getCamera()->setView(0, 0, view_size.x * VIEW_SIZE_SCALING, view_size.y * VIEW_SIZE_SCALING);
     }
 
     while (window.isOpen()) {
@@ -58,7 +59,7 @@ int game_main(sf::RenderWindow& window) {
                         window.close();
                         break;
                     case sf::Event::Resized:
-                        System::getCamera()->resizeView(static_cast<float>(event.size.width), static_cast<float>(event.size.height));
+                        System::getCamera()->resizeView(static_cast<float>(event.size.width) * VIEW_SIZE_SCALING, static_cast<float>(event.size.height) * VIEW_SIZE_SCALING);
                         break;
                     case sf::Event::KeyPressed:
                         if (event.key.code == sf::Keyboard::Key::P) {
@@ -82,8 +83,7 @@ int game_main(sf::RenderWindow& window) {
             frames -= sf::milliseconds(MS_PER_FRAME);
         }
 
-        auto view_pos = worldInstRead.getPlayerPosition();
-        System::getCamera()->moveView(static_cast<float>(view_pos.x), static_cast<float>(view_pos.y));
+        System::getCamera()->update();
 
         renderInst->render(window);
 
