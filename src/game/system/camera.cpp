@@ -2,6 +2,13 @@
 
 #include "system/world.h"
 
+#include "utils/log.h"
+
+#define MAX_X_SPEED 0.35f
+#define MAX_Y_SPEED 0.2f
+#define MAX_X_ACCELERATION 0.001f
+#define MAX_Y_ACCELERATION 0.05f
+
 void Camera::setCameraBox(Camera::CameraBoundingBox camera_box) {
     camera_box_ = camera_box;
 }
@@ -15,6 +22,10 @@ void Camera::setView(float x, float y, float width, float height) {
     view_.y_pos = y;
     view_.width = width;
     view_.height = height;
+}
+
+void Camera::setView(CameraView view) {
+    view_ = view;
 }
 
 Camera::CameraView Camera::getView() {
@@ -51,14 +62,18 @@ void Camera::update() {
 
     // TODO Also add resize
     auto movement = calculateMovementToTarget();
+    movement.x_pos = current_speed_.x_pos + std::max(std::min(movement.x_pos - current_speed_.x_pos, MAX_X_ACCELERATION), -MAX_X_ACCELERATION);
+    movement.y_pos = current_speed_.y_pos + std::max(std::min(movement.y_pos - current_speed_.y_pos, MAX_Y_ACCELERATION), -MAX_Y_ACCELERATION);
+
     moveView(view_.x_pos + movement.x_pos, view_.y_pos + movement.y_pos);
+    current_speed_ = movement;
 }
 
 Camera::CameraView Camera::calculateMovementToTarget() {
     CameraView changes;
 
-    changes.x_pos = std::min(std::max((target_view_.x_pos - view_.x_pos) * 0.002f, -0.8f), 0.8f);
-    changes.y_pos = std::min(std::max((target_view_.y_pos - view_.y_pos) * 0.002f, -0.8f), 0.8f);
+    changes.x_pos = std::min(std::max((target_view_.x_pos - view_.x_pos) * 0.002f, -MAX_X_SPEED), MAX_X_SPEED);
+    changes.y_pos = std::min(std::max((target_view_.y_pos - view_.y_pos) * 0.002f, -MAX_Y_SPEED), MAX_Y_SPEED);
 
     return changes;
 }
@@ -72,8 +87,8 @@ void Camera::updateTargetView() {
         auto p_move = player->movableEntity_;
 
         if (p_trans && p_move) {
-            target_view_.x_pos = static_cast<float>(p_trans->getX() + (p_move->getVelX() * 30.0));
-            target_view_.y_pos = static_cast<float>(p_trans->getY() + (p_move->getVelY() * 30.0));
+            target_view_.x_pos = static_cast<float>(p_trans->getX() + (p_move->getVelX() * 20.0));
+            target_view_.y_pos = static_cast<float>(p_trans->getY() + (p_move->getVelY() * 25.0));
         }
     }
 }

@@ -25,6 +25,7 @@ class Camera {
     void moveView(float x, float y);
     void resizeView(float width, float height);
     void setView(float x, float y, float width, float height);
+    void setView(CameraView view);
     CameraView getView();
 
     void setCameraBox(CameraBoundingBox camera_box);
@@ -40,4 +41,7 @@ class Camera {
     CameraBoundingBox camera_box_;
 
     CameraView target_view_;
+
+    // Used for acceleration smoothing
+    CameraView current_speed_;
 };
