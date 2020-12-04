@@ -4,10 +4,13 @@
 
 #include "utils/log.h"
 
-#define MAX_X_SPEED 0.35f
-#define MAX_Y_SPEED 0.2f
-#define MAX_X_ACCELERATION 0.001f
-#define MAX_Y_ACCELERATION 0.05f
+#define FRACTION_OF_DISTANCE 0.15f
+
+#define MAX_X_SPEED 30.0f
+#define MAX_Y_SPEED 40.0f
+
+#define MAX_X_ACCELERATION 5.0f
+#define MAX_Y_ACCELERATION 5.0f
 
 void Camera::setCameraBox(Camera::CameraBoundingBox camera_box) {
     camera_box_ = camera_box;
@@ -72,8 +75,10 @@ void Camera::update() {
 Camera::CameraView Camera::calculateMovementToTarget() {
     CameraView changes;
 
-    changes.x_pos = std::min(std::max((target_view_.x_pos - view_.x_pos) * 0.002f, -MAX_X_SPEED), MAX_X_SPEED);
-    changes.y_pos = std::min(std::max((target_view_.y_pos - view_.y_pos) * 0.002f, -MAX_Y_SPEED), MAX_Y_SPEED);
+    // How much distance to close per frame
+    // TODO If player is outside of screen snap immediately or increase speed
+    changes.x_pos = std::min(std::max((target_view_.x_pos - view_.x_pos) * FRACTION_OF_DISTANCE, -MAX_X_SPEED), MAX_X_SPEED);
+    changes.y_pos = std::min(std::max((target_view_.y_pos - view_.y_pos) * FRACTION_OF_DISTANCE, -MAX_Y_SPEED), MAX_Y_SPEED);
 
     return changes;
 }
@@ -88,7 +93,7 @@ void Camera::updateTargetView() {
 
         if (p_trans && p_move) {
             target_view_.x_pos = static_cast<float>(p_trans->getX() + (p_move->getVelX() * 20.0));
-            target_view_.y_pos = static_cast<float>(p_trans->getY() + (p_move->getVelY() * 25.0));
+            target_view_.y_pos = static_cast<float>(p_trans->getY() + (p_move->getVelY() * 20.0));
         }
     }
 }

@@ -81,9 +81,9 @@ int game_main(sf::RenderWindow& window) {
             worldInstWrite.update();
 
             frames -= sf::milliseconds(MS_PER_FRAME);
-        }
 
-        System::getCamera()->update();
+            System::getCamera()->update();
+        }
 
         renderInst->render(window);
 
