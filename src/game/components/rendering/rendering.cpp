@@ -176,7 +176,11 @@ void RenderableEntity::clearColor() {
 void RenderableEntity::render(sf::RenderWindow& window) {
     if (auto trans = trans_.lock()) {
         sprite_.setPosition(static_cast<float>(trans->getX()), static_cast<float>(trans->getY()));
-        window.draw(sprite_);
+        if (shader_) {
+            window.draw(sprite_, shader_.get());
+        } else {
+            window.draw(sprite_);
+        }
     } else {
         LOGW("Rendering: Missing transform");
     }
@@ -198,4 +202,10 @@ std::optional<std::string> RenderableEntity::getLayerString(RenderableEntity::La
     }
 
     return std::nullopt;
+}
+
+void RenderableEntity::loadShader(std::string shader_name) {
+    auto shader = File::loadShader(shader_name);
+
+    shader_ = shader;
 }

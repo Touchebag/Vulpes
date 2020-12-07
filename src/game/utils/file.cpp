@@ -6,6 +6,7 @@ const std::string ENTITY_DIR = "entities";
 const std::string ROOM_DIR = "rooms";
 const std::string TEXTURE_DIR = "textures";
 const std::string FONT_DIR = "fonts";
+const std::string SHADER_DIR = "shaders";
 
 const std::string ENTITY_FILE = "entity";
 const std::string SPRITE_MAP_FILE = "sprite_map.txt";
@@ -127,6 +128,22 @@ std::optional<sf::Font> File::loadFont(std::string filepath) {
         return {font};
     }
 }
+
 std::optional<nlohmann::json> File::loadStates(std::string entity_name) {
     return loadJson(ENTITY_DIR + "/" + entity_name + "/" + STATE_FILE);
+}
+
+std::shared_ptr<sf::Shader> File::loadShader(std::string shader_name) {
+    if (!sf::Shader::isAvailable()) {
+        LOGW("Shaders unavailable, skipping");
+        return {};
+    }
+
+    std::shared_ptr<sf::Shader> shader = std::make_shared<sf::Shader>();
+    if (!shader->loadFromFile(ASSET_DIR + "/" + SHADER_DIR + "/" + shader_name, sf::Shader::Fragment)) {
+        LOGE("Failed to load shader %s", shader_name.c_str());
+        throw std::runtime_error("Couldn't load shader");
+    }
+
+    return shader;
 }

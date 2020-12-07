@@ -58,6 +58,8 @@ class RenderableEntity {
 
     static std::optional<std::string> getLayerString(Layer layer);
 
+    void loadShader(std::string shader_name);
+
     bool tiling_x_ = true;
     bool tiling_y_ = true;
 
@@ -81,4 +83,6 @@ class RenderableEntity {
     std::string entity_name_;
 
     sf::IntRect original_texture_rect_;
+
+    std::shared_ptr<sf::Shader> shader_;
 };

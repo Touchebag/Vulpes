@@ -16,6 +16,8 @@ class File {
     static std::optional<sf::Texture> loadTexture(std::string file, std::string entity_name = "");
     static std::optional<sf::Font> loadFont(std::string filepath);
 
+    static std::shared_ptr<sf::Shader> loadShader(std::string filepath);
+
     static std::ifstream openSpriteMapFile(std::string entity_name);
 
     static bool writeJsonToFile(std::string filepath, nlohmann::json world);
