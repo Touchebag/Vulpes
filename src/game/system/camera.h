@@ -36,6 +36,8 @@ class Camera {
     void moveView(float x, float y);
     void resizeView(float width, float height);
 
+    std::pair<float, float> calculatePlayerPositionRatio(int x_pos, int y_pos);
+
     void updateTargetView();
 
     float aspect_ratio_ = 1.0f;
