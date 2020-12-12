@@ -35,6 +35,10 @@ Camera::CameraView Camera::getView() {
     return view_;
 }
 
+void Camera::setWindowSize(int width, int height) {
+    aspect_ratio_ = static_cast<float>(width) / static_cast<float>(height);
+}
+
 void Camera::moveView(float x, float y) {
     auto width_offset = view_.width / 2.0f;
     auto height_offset = view_.height / 2.0f;
@@ -69,6 +73,8 @@ void Camera::update() {
     movement.y_pos = current_speed_.y_pos + std::max(std::min(movement.y_pos - current_speed_.y_pos, MAX_Y_ACCELERATION), -MAX_Y_ACCELERATION);
 
     moveView(view_.x_pos + movement.x_pos, view_.y_pos + movement.y_pos);
+
+    resizeView(target_view_.width, target_view_.height);
     current_speed_ = movement;
 }
 
@@ -96,4 +102,8 @@ void Camera::updateTargetView() {
             target_view_.y_pos = static_cast<float>(p_trans->getY() + (p_move->getVelY() * 20.0));
         }
     }
+
+    // Using height as base for nicer view
+    target_view_.height = 1000.0f;
+    target_view_.width = target_view_.height * aspect_ratio_;
 }

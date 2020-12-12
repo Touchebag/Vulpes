@@ -12,8 +12,6 @@
 #define PHYSICS_FRAME_RATE 60
 #define MS_PER_FRAME 1000 / PHYSICS_FRAME_RATE
 
-#define VIEW_SIZE_SCALING 1.0f
-
 int game_main(sf::RenderWindow& window) {
     auto worldInstWrite = World::getInstance<World::IWorldModify>();
 
@@ -35,11 +33,6 @@ int game_main(sf::RenderWindow& window) {
 
     std::shared_ptr<IRender> renderInst = System::getRender();
 
-    {
-        auto view_size = window.getView().getSize();
-        System::getCamera()->setView(0, 0, view_size.x * VIEW_SIZE_SCALING, view_size.y * VIEW_SIZE_SCALING);
-    }
-
     while (window.isOpen()) {
         frames += frame_time.getElapsedTime();
         frame_time.restart();
@@ -59,7 +52,7 @@ int game_main(sf::RenderWindow& window) {
                         window.close();
                         break;
                     case sf::Event::Resized:
-                        System::getCamera()->resizeView(static_cast<float>(event.size.width) * VIEW_SIZE_SCALING, static_cast<float>(event.size.height) * VIEW_SIZE_SCALING);
+                        System::getCamera()->setWindowSize(event.size.width, event.size.height);
                         break;
                     case sf::Event::KeyPressed:
                         if (event.key.code == sf::Keyboard::Key::P) {

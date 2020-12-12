@@ -84,6 +84,9 @@ int level_editor_main(sf::RenderWindow& window) {
                     case sf::Event::Closed:
                         window.close();
                         break;
+                    case sf::Event::Resized:
+                        System::getCamera()->setWindowSize(event.size.width, event.size.height);
+                        break;
                     case sf::Event::MouseWheelScrolled:
                         EditorMouse::handleMouseScroll(editor_env);
                         break;

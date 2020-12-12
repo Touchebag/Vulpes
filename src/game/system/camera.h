@@ -22,18 +22,23 @@ class Camera {
 
     void update();
 
-    void moveView(float x, float y);
-    void resizeView(float width, float height);
     void setView(float x, float y, float width, float height);
     void setView(CameraView view);
     CameraView getView();
+
+    void setWindowSize(int width, int height);
 
     void setCameraBox(CameraBoundingBox camera_box);
 
     CameraBoundingBox getCameraBox();
 
   private:
+    void moveView(float x, float y);
+    void resizeView(float width, float height);
+
     void updateTargetView();
+
+    float aspect_ratio_ = 1.0f;
 
     CameraView calculateMovementToTarget();
 
