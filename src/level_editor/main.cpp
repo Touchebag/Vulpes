@@ -6,6 +6,8 @@
 
 int main(int argc, char** argv) {
     sf::RenderWindow window(sf::VideoMode(1000,1000), "Level Editor");
+    System::getCamera()->setView(0.0, 0.0, 1000.0, 1000.0);
+
     window.setKeyRepeatEnabled(false);
 
     std::string level_file;

@@ -51,4 +51,7 @@ class Camera {
 
     // Used for acceleration smoothing
     CameraView current_speed_;
+
+    // Used to delay view shrinking when idle
+    int idle_frame_counter_ = 0;
 };

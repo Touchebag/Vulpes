@@ -256,6 +256,11 @@ void World::loadRoom(std::string room_name, int entrance_id) {
 void World::setEntrance(int entrance_id) {
     if (entrance_id < static_cast<int>(entrances_.size())) {
         player_->trans_->setPosition(entrances_.at(entrance_id));
+
+        auto view = System::getCamera()->getView();
+        view.x_pos = static_cast<float>(player_->trans_->getX());
+        view.y_pos = static_cast<float>(player_->trans_->getY());
+        System::getCamera()->setView(view);
     } else {
         throw std::invalid_argument("Entrance id not found");
     }

@@ -3,14 +3,18 @@
 #include "system/world.h"
 
 #include "utils/log.h"
+#include "utils/common.h"
 
 #define FRACTION_OF_DISTANCE 0.15f
+#define RESIZE_FRACTION 0.02f
 
-#define X_RATIO_MULTIPLIER 600.0f;
-#define Y_RATIO_MULTIPLIER 600.0f;
+#define X_RATIO_MULTIPLIER 600.0f
+#define Y_RATIO_MULTIPLIER 600.0f
 
 #define MAX_X_ACCELERATION 5.0f
 #define MAX_Y_ACCELERATION 5.0f
+#define MAX_WIDTH_ACCELERATION 0.5f
+#define MAX_HEIGHT_ACCELERATION 0.5f
 
 void Camera::setCameraBox(Camera::CameraBoundingBox camera_box) {
     camera_box_ = camera_box;
@@ -37,6 +41,12 @@ Camera::CameraView Camera::getView() {
 
 void Camera::setWindowSize(int width, int height) {
     aspect_ratio_ = static_cast<float>(width) / static_cast<float>(height);
+
+    auto view = getView();
+    view.width = static_cast<float>(width);
+    view.height = static_cast<float>(height);
+
+    setView(view);
 }
 
 void Camera::moveView(float x, float y) {
@@ -64,7 +74,14 @@ void Camera::resizeView(float width, float height) {
     view_.height = height;
 }
 
+// Calculates the player position as a ratio of the current view
+// This allows for consistent camera movement regardless of the current view/aspect ratio
 std::pair<float, float> Camera::calculatePlayerPositionRatio(int x_pos, int y_pos) {
+    // To prevent division by zero
+    if (view_.width == 0.0 || view_.height == 0.0) {
+        return {0.5, 0.5};
+    }
+
     auto view_left = view_.x_pos - (view_.width / 2);
     auto view_top = view_.y_pos - (view_.height / 2);
 
@@ -78,13 +95,14 @@ std::pair<float, float> Camera::calculatePlayerPositionRatio(int x_pos, int y_po
 void Camera::update() {
     updateTargetView();
 
-    // TODO Also add resize
     auto movement = calculateMovementToTarget();
     movement.x_pos = current_speed_.x_pos + std::max(std::min(movement.x_pos - current_speed_.x_pos, MAX_X_ACCELERATION), -MAX_X_ACCELERATION);
     movement.y_pos = current_speed_.y_pos + std::max(std::min(movement.y_pos - current_speed_.y_pos, MAX_Y_ACCELERATION), -MAX_Y_ACCELERATION);
+    movement.width = current_speed_.width + std::max(std::min(movement.width - current_speed_.width, MAX_WIDTH_ACCELERATION), -MAX_WIDTH_ACCELERATION);
+    movement.height = current_speed_.height + std::max(std::min(movement.height - current_speed_.height, MAX_HEIGHT_ACCELERATION), -MAX_HEIGHT_ACCELERATION);
 
     moveView(view_.x_pos + movement.x_pos, view_.y_pos + movement.y_pos);
-    resizeView(target_view_.width, target_view_.height);
+    resizeView(view_.width + movement.width, view_.height + movement.height);
 
     current_speed_ = movement;
 }
@@ -93,9 +111,10 @@ Camera::CameraView Camera::calculateMovementToTarget() {
     CameraView changes;
 
     // How much distance to close per frame
-    // TODO If player is outside of screen snap immediately or increase speed
-    changes.x_pos = (target_view_.x_pos - view_.x_pos) * FRACTION_OF_DISTANCE;
-    changes.y_pos = (target_view_.y_pos - view_.y_pos) * FRACTION_OF_DISTANCE;
+    changes.x_pos  = (target_view_.x_pos  - view_.x_pos)  * FRACTION_OF_DISTANCE;
+    changes.y_pos  = (target_view_.y_pos  - view_.y_pos)  * FRACTION_OF_DISTANCE;
+    changes.width  = (target_view_.width  - view_.width)  * RESIZE_FRACTION;
+    changes.height = (target_view_.height - view_.height) * RESIZE_FRACTION;
 
     return changes;
 }
@@ -112,10 +131,20 @@ void Camera::updateTargetView() {
             auto ratio = calculatePlayerPositionRatio(p_trans->getX(), p_trans->getY());
             target_view_.x_pos = view_.x_pos + ratio.first * X_RATIO_MULTIPLIER;
             target_view_.y_pos = view_.y_pos + ratio.second * Y_RATIO_MULTIPLIER;
+
+            // Check if player is moving
+            if (!(util::closeToZero(p_move->getVelX(), 0.01) && util::closeToZero(p_move->getVelY(), 0.01))) {
+                // Using height as base for nicer view
+                target_view_.height = 2000.0f;
+                target_view_.width = target_view_.height * aspect_ratio_;
+                idle_frame_counter_ = 210;
+            } else if (idle_frame_counter_ <= 0) {
+                // Using height as base for nicer view
+                target_view_.height = 1000.0f;
+                target_view_.width = target_view_.height * aspect_ratio_;
+            } else {
+                idle_frame_counter_--;
+            }
         }
     }
-
-    // Using height as base for nicer view
-    target_view_.height = 1000.0f;
-    target_view_.width = target_view_.height * aspect_ratio_;
 }

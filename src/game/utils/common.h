@@ -39,4 +39,8 @@ struct Rectangle {
     int height;
 };
 
+inline bool closeToZero(double value, double threshold) {
+    return std::abs(value) < threshold;
+}
+
 } // namespace
