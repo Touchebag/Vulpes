@@ -23,7 +23,7 @@ find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
 set(SFML_LIBS sfml-graphics sfml-window sfml-system)
 
 # GTest
-find_package(GTest REQUIRED)
+find_package(GTest)
 
 # Assets
 add_custom_target(COPY_ASSETS)
@@ -83,17 +83,19 @@ target_link_libraries(${EDITOR_TARGET} ${EDITOR_LIB_TARGET} ${GAME_LIB_TARGET} $
 #
 # target_link_libraries(${STATE_GRAPH_TARGET} ${COMMON_TARGET} ${SFML_LIBS})
 
-# Test target
-file(GLOB_RECURSE TEST_SOURCES test/src/*.cpp)
-# Remove mocked classes
-list(REMOVE_ITEM TEST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/level_editor/mouse.cpp)
-list(REMOVE_ITEM TEST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/level_editor/main.cpp)
+if (GTest_FOUND)
+    # Test target
+    file(GLOB_RECURSE TEST_SOURCES test/src/*.cpp)
+    # Remove mocked classes
+    list(REMOVE_ITEM TEST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/level_editor/mouse.cpp)
+    list(REMOVE_ITEM TEST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/level_editor/main.cpp)
 
-add_executable(${TEST_TARGET} ${TEST_SOURCES})
-target_compile_options(${TEST_TARGET} PUBLIC ${CC_OPTIONS})
-target_include_directories(${TEST_TARGET} PUBLIC src/ libs/nlohmann ${GTEST_INCLUDE_DIRS})
+    add_executable(${TEST_TARGET} ${TEST_SOURCES})
+    target_compile_options(${TEST_TARGET} PUBLIC ${CC_OPTIONS})
+    target_include_directories(${TEST_TARGET} PUBLIC src/ libs/nlohmann ${GTEST_INCLUDE_DIRS})
 
-target_link_libraries(${TEST_TARGET} ${GAME_LIB_TARGET} ${EDITOR_LIB_TARGET} ${SFML_LIBS} ${GTEST_BOTH_LIBRARIES})
+    target_link_libraries(${TEST_TARGET} ${GAME_LIB_TARGET} ${EDITOR_LIB_TARGET} ${SFML_LIBS} ${GTEST_BOTH_LIBRARIES})
 
-add_dependencies(${TEST_TARGET} COPY_TEST_ASSETS)
+    add_dependencies(${TEST_TARGET} COPY_TEST_ASSETS)
+endif()
 
