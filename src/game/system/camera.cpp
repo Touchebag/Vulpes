@@ -158,4 +158,19 @@ void Camera::updateTargetView() {
             }
         }
     }
+
+    auto half_width = view_.width / 2.0f;
+    auto half_height = view_.height / 2.0f;
+
+    if (target_view_.x_pos < camera_box_.left_margin + half_width) {
+        target_view_.x_pos = camera_box_.left_margin + half_width;
+    } else if (target_view_.x_pos > camera_box_.right_margin - half_width) {
+        target_view_.x_pos = camera_box_.right_margin - half_width;
+    }
+
+    if (target_view_.y_pos < camera_box_.top_margin + half_height) {
+        target_view_.y_pos = camera_box_.top_margin + half_height;
+    } else if (target_view_.y_pos > camera_box_.bottom_margin - half_height) {
+        target_view_.y_pos = camera_box_.bottom_margin - half_height;
+    }
 }
