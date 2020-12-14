@@ -70,6 +70,17 @@ void Camera::moveView(float x, float y) {
 }
 
 void Camera::resizeView(float width, float height) {
+    auto camera_box_width = camera_box_.right_margin - camera_box_.left_margin;
+    auto camera_box_height = camera_box_.bottom_margin - camera_box_.top_margin;
+    if (width > camera_box_width) {
+        width = camera_box_width;
+        height = width / aspect_ratio_;
+    }
+    if (height > camera_box_height) {
+        height = camera_box_height;
+        width = height * aspect_ratio_;
+    }
+
     view_.width = width;
     view_.height = height;
 }
@@ -79,7 +90,7 @@ void Camera::resizeView(float width, float height) {
 std::pair<float, float> Camera::calculatePlayerPositionRatio(int x_pos, int y_pos) {
     // To prevent division by zero
     if (view_.width == 0.0 || view_.height == 0.0) {
-        return {0.5, 0.5};
+        return {0.0, 0.0};
     }
 
     auto view_left = view_.x_pos - (view_.width / 2);
@@ -101,8 +112,8 @@ void Camera::update() {
     movement.width = current_speed_.width + std::max(std::min(movement.width - current_speed_.width, MAX_WIDTH_ACCELERATION), -MAX_WIDTH_ACCELERATION);
     movement.height = current_speed_.height + std::max(std::min(movement.height - current_speed_.height, MAX_HEIGHT_ACCELERATION), -MAX_HEIGHT_ACCELERATION);
 
-    moveView(view_.x_pos + movement.x_pos, view_.y_pos + movement.y_pos);
     resizeView(view_.width + movement.width, view_.height + movement.height);
+    moveView(view_.x_pos + movement.x_pos, view_.y_pos + movement.y_pos);
 
     current_speed_ = movement;
 }
