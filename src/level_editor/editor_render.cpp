@@ -72,6 +72,10 @@ void EditorRender::render(sf::RenderWindow& window) {
     }
 
     if (render_hitboxes_) {
+        auto viewport = System::getCamera()->getView();
+        sf::View view = {{viewport.x_pos, viewport.y_pos}, {viewport.width, viewport.height}};
+        window.setView(view);
+
         for (auto it : type_color_map) {
             renderHitboxes(window, it.first, it.second);
         }
