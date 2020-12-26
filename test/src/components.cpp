@@ -59,12 +59,15 @@ nlohmann::json entity_json = nlohmann::json::parse(R"--(
         "low_jump_multiplier": 2.5,
         "max_vertical_speed": 20.0,
         "min_vertical_speed": -80.0,
+        "max_air_dive_speed": 80.0,
         "jump_impulse": -30.0,
         "wall_slide_friction": 0.85,
         "wall_jump_horizontal_impulse": 30.0,
         "wall_jump_vertical_impulse": -25.0,
         "dash_speed": 100.0,
-        "dash_friction": 0.8
+        "dash_friction": 0.8,
+        "air_dive_multiplier": 5.0,
+        "air_dive_impulse": -30.0
     },
     "Renderable": {
         "height": 200,

@@ -99,10 +99,15 @@ void Physics::update() {
             x *= constants_.air_friction;
         }
 
+        auto fall_mult = constants_.fall_multiplier;
+        if (physics_props.air_diving_) {
+            fall_mult *= constants_.air_dive_multiplier;
+        }
+
         if (!physics_props.movement_locked_y_) {
             // Gravity
             if (y > 0.0 && !physics_props.touching_wall_) {
-                y += constants_.gravity * constants_.fall_multiplier;
+                y += constants_.gravity * fall_mult;
             } else if (y < 0.0
                        && !(act->getActionState(Actions::Action::JUMP))
                        && !physics_props.touching_wall_) {
@@ -169,7 +174,17 @@ void Physics::update() {
             stateEnt->incomingEvent(state_utils::Event::ATTACKING);
         }
 
-        y = std::max(std::min(y, constants_.max_vertical_speed), constants_.min_vertical_speed);
+        if (act->getActionState(Actions::Action::AIR_DIVE, true) && physics_props.can_air_dive_) {
+            stateEnt->incomingEvent(state_utils::Event::AIR_DIVING);
+            y = constants_.air_dive_impulse;
+        }
+
+        if (physics_props.air_diving_) {
+            // Air dive only falls
+            y = std::min(y, constants_.max_air_dive_speed);
+        } else {
+            y = std::max(std::min(y, constants_.max_vertical_speed), constants_.min_vertical_speed);
+        }
         auto max_movement = movable->getMaximumMovement(x, y);
 
         auto move_attr = movable->getMovementAttributes();
@@ -236,6 +251,12 @@ void Physics::reloadFromJson(nlohmann::json j) {
     if (j.contains("min_vertical_speed")) {
         constants.min_vertical_speed = j["min_vertical_speed"].get<double>();
     }
+    if (j.contains("max_air_dive_speed")) {
+        constants.max_air_dive_speed = j["max_air_dive_speed"].get<double>();
+    }
+    if (j.contains("air_dive_multiplier")) {
+        constants.air_dive_multiplier = j["air_dive_multiplier"].get<double>();
+    }
     if (j.contains("jump_impulse")) {
         constants.jump_impulse = j["jump_impulse"].get<double>();
     }
@@ -253,6 +274,9 @@ void Physics::reloadFromJson(nlohmann::json j) {
     }
     if (j.contains("dash_friction")) {
         constants.dash_friction = j["dash_friction"].get<double>();
+    }
+    if (j.contains("air_dive_impulse")) {
+        constants.air_dive_impulse = j["air_dive_impulse"].get<double>();
     }
 
     setPhysicsConstants(constants);
@@ -273,6 +297,8 @@ std::optional<nlohmann::json> Physics::outputToJson() {
     saveConstantToJson(j, "low_jump_multiplier", constants_.low_jump_multiplier, default_constants.low_jump_multiplier);
     saveConstantToJson(j, "min_vertical_speed", constants_.min_vertical_speed, default_constants.min_vertical_speed);
     saveConstantToJson(j, "max_vertical_speed", constants_.max_vertical_speed, default_constants.max_vertical_speed);
+    saveConstantToJson(j, "max_air_dive_speed", constants_.max_air_dive_speed, default_constants.max_air_dive_speed);
+    saveConstantToJson(j, "air_dive_multiplier", constants_.air_dive_multiplier, default_constants.air_dive_multiplier);
 
     saveConstantToJson(j, "jump_impulse", constants_.jump_impulse, default_constants.jump_impulse);
     saveConstantToJson(j, "wall_slide_friction", constants_.wall_slide_friction, default_constants.wall_slide_friction);
@@ -280,5 +306,6 @@ std::optional<nlohmann::json> Physics::outputToJson() {
     saveConstantToJson(j, "wall_jump_vertical_impulse", constants_.wall_jump_vertical_impulse, default_constants.wall_jump_vertical_impulse);
     saveConstantToJson(j, "dash_speed", constants_.dash_speed, default_constants.dash_speed);
     saveConstantToJson(j, "dash_friction", constants_.dash_friction, default_constants.dash_friction);
+    saveConstantToJson(j, "air_dive_impulse", constants_.air_dive_impulse, default_constants.air_dive_impulse);
     return j;
 }

@@ -17,10 +17,12 @@ class Actions : public Component {
         MOVE_RIGHT,
         JUMP,
 
+        // Upgrades
         WALL_JUMP,
         DOUBLE_JUMP,
         DASH,
         ATTACK,
+        AIR_DIVE,
 
         INTERACT,
 

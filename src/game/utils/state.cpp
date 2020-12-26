@@ -69,11 +69,17 @@ State<state_utils::EntityContent> State<state_utils::EntityContent>::loadStateFr
     if (props_json.contains("dashing")) {
         physics_props.dashing_ = props_json["dashing"].get<bool>();
     }
+    if (props_json.contains("air_diving")) {
+        physics_props.air_diving_ = props_json["air_diving"].get<bool>();
+    }
     if (props_json.contains("can_jump")) {
         physics_props.can_jump_ = props_json["can_jump"].get<bool>();
     }
     if (props_json.contains("can_dash")) {
         physics_props.can_dash_ = props_json["can_dash"].get<bool>();
+    }
+    if (props_json.contains("can_air_dive")) {
+        physics_props.can_air_dive_ = props_json["can_air_dive"].get<bool>();
     }
 
     if (j.contains("frame_timer")) {

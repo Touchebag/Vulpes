@@ -31,7 +31,12 @@ void ActionsPlayer::update() {
             if (auto other_coll = it.lock()) {
                 if (coll->collides(other_coll)) {
                     if (auto collectible = std::dynamic_pointer_cast<const CollisionCollectible>(other_coll)) {
-                        enableAction(id_actions_map.at(collectible->getId()));
+                        try {
+                            enableAction(id_actions_map.at(collectible->getId()));
+                        } catch (std::out_of_range& e) {
+                            LOGE("Invalid action id %i", collectible->getId());
+                            throw e;
+                        }
                     }
                 }
             }
@@ -65,7 +70,12 @@ void ActionsPlayer::addAction(Actions::Action action) {
     int action_number = static_cast<int>(action);
 
     if (action_number < static_cast<int>(Action::NUM_ACTIONS) && !isActionEnabled(action)) {
-        LOGD("Action disabled: %s", string_action_map.at(action).c_str());
+        try {
+            LOGD("Action disabled: %s", string_action_map.at(action).c_str());
+        } catch (std::out_of_range& e) {
+            LOGE("Invalid action %i", action_number);
+            throw e;
+        }
         return;
     }
 
@@ -102,6 +112,10 @@ void ActionsPlayer::reloadFromJson(nlohmann::json j) {
     if (j.contains(string_action_map.at(Action::INTERACT))) {
         enableAction(Action::INTERACT);
     }
+
+    if (j.contains(string_action_map.at(Action::AIR_DIVE))) {
+        enableAction(Action::AIR_DIVE);
+    }
 }
 
 std::optional<nlohmann::json> ActionsPlayer::outputToJson() {
@@ -136,6 +150,10 @@ std::optional<nlohmann::json> ActionsPlayer::outputToJson() {
 
     if (isActionEnabled(Action::INTERACT)) {
         j[string_action_map.at(Action::INTERACT)] = true;
+    }
+
+    if (isActionEnabled(Action::AIR_DIVE)) {
+        j[string_action_map.at(Action::AIR_DIVE)] = true;
     }
 
     return j;

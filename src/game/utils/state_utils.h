@@ -21,6 +21,7 @@ enum class Event {
     JUMPING,
     FALLING,
     DASHING,
+    AIR_DIVING,
 
     // Actions
     ATTACKING,
@@ -48,6 +49,7 @@ const std::map<std::string, Event> string_event_map {
     {"jumping", Event::JUMPING},
     {"falling", Event::FALLING},
     {"dashing", Event::DASHING},
+    {"air_diving", Event::AIR_DIVING},
 
     {"attacking", Event::ATTACKING},
 
@@ -66,8 +68,10 @@ struct PhysicsProperties {
     bool touching_ground_ = true;
     bool touching_wall_ = false;
     bool dashing_ = false;
+    bool air_diving_ = false;
     bool can_jump_ = true;
     bool can_dash_ = true;
+    bool can_air_dive_ = false;
 };
 
 struct StateProperties {
