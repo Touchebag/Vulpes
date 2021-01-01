@@ -89,6 +89,7 @@ class World {
     void loadRoom(std::string room_name, int entrance_id);
 
     void setEntrance(int entrance_id);
+    void setShiftedPlayerPosition(Collision::CollisionType c_type);
 
     std::vector<std::shared_ptr<BaseEntity>>::iterator deleteEntity(std::vector<std::shared_ptr<BaseEntity>>::iterator it);
 

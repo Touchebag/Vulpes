@@ -253,13 +253,38 @@ void World::loadRoom(std::string room_name, int entrance_id) {
     setEntrance(entrance_id);
 }
 
+void World::setShiftedPlayerPosition(Collision::CollisionType ctype) {
+    auto world_colls = World::getInstance<World::IWorldRead>().getCollisions(ctype);
+    auto p_trans = player_->trans_;
+
+    for (auto it = world_colls.begin(); it != world_colls.end(); ++it) {
+        if (player_->collision_->collides(*it)) {
+            // If this entrance would put the player inside an object
+            // move player to spawn on top of object
+            auto other_coll = it->lock();
+            auto other_hbox = other_coll->getHitbox();
+            auto other_trans = other_coll->getTransform().lock();
+
+            auto new_y_pos = other_trans->getY() - (other_hbox->height_ / 2) -
+                player_->collision_->getHitbox()->height_ / 2;
+
+            p_trans->setPosition(p_trans->getX(), new_y_pos);
+        }
+    }
+}
+
 void World::setEntrance(int entrance_id) {
     if (entrance_id < static_cast<int>(entrances_.size())) {
-        player_->trans_->setPosition(entrances_.at(entrance_id));
+        auto p_trans = player_->trans_;
+        p_trans->setPosition(entrances_.at(entrance_id));
+
+        // This is to avoid spawning inside objects
+        setShiftedPlayerPosition(Collision::CollisionType::STATIC);
+        setShiftedPlayerPosition(Collision::CollisionType::SEMI_SOLID);
 
         auto view = System::getCamera()->getView();
-        view.x_pos = static_cast<float>(player_->trans_->getX());
-        view.y_pos = static_cast<float>(player_->trans_->getY());
+        view.x_pos = static_cast<float>(p_trans->getX());
+        view.y_pos = static_cast<float>(p_trans->getY());
         System::getCamera()->setView(view);
     } else {
         throw std::invalid_argument("Entrance id not found");
