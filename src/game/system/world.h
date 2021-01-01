@@ -28,6 +28,8 @@ class World {
         static bool hasInteractTriggered();
 
         static std::string getCurrentRoomName();
+
+        static std::vector<util::Point> getEntrances();
     };
 
     class IWorldModify {

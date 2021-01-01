@@ -35,10 +35,21 @@ void renderHitboxes(sf::RenderWindow& window, Collision::CollisionType coll_type
             }
 
             sf::RectangleShape rectangle(sf::Vector2f(static_cast<float>(hitbox->width_), static_cast<float>(hitbox->height_)));
-            rectangle.setPosition(static_cast<float>(trans->getX() - ((hitbox->width_) / 2)), static_cast<float>(trans->getY() - (hitbox->height_) / 2));
+            rectangle.setPosition(static_cast<float>(trans->getX() - ((hitbox->width_) / 2.0)), static_cast<float>(trans->getY() - (hitbox->height_) / 2.0));
             rectangle.setFillColor(color);
             window.draw(rectangle);
         }
+    }
+}
+
+void renderEntrances(sf::RenderWindow& window, const std::vector<util::Point>& entrances) {
+    constexpr int width = 50.0f;
+    constexpr int height = 200.0f;
+    for (auto it : entrances) {
+        sf::RectangleShape rectangle(sf::Vector2f(width, height));
+        rectangle.setPosition(static_cast<float>(it.x - ((width) / 2.0)), static_cast<float>(it.y - (height) / 2.0));
+        rectangle.setFillColor(sf::Color(255, 255, 255, 128));
+        window.draw(rectangle);
     }
 }
 
@@ -71,14 +82,18 @@ void EditorRender::render(sf::RenderWindow& window) {
         }
     }
 
-    if (render_hitboxes_) {
-        auto viewport = System::getCamera()->getView();
-        sf::View view = {{viewport.x_pos, viewport.y_pos}, {viewport.width, viewport.height}};
-        window.setView(view);
+    auto viewport = System::getCamera()->getView();
+    sf::View view = {{viewport.x_pos, viewport.y_pos}, {viewport.width, viewport.height}};
+    window.setView(view);
 
+    if (render_hitboxes_) {
         for (auto it : type_color_map) {
             renderHitboxes(window, it.first, it.second);
         }
+    }
+
+    if (render_entrances_) {
+        renderEntrances(window, World::IWorldRead::getEntrances());
     }
 
     drawCameraBoundaries(window);
@@ -128,6 +143,10 @@ bool EditorRender::getParallaxEnabled() {
 
 void EditorRender::toggleHitboxRendering() {
     render_hitboxes_ = !render_hitboxes_;
+}
+
+void EditorRender::toggleEntranceRendering() {
+    render_entrances_ = !render_entrances_;
 }
 
 void EditorRender::setCameraBox(Camera::CameraBoundingBox camera_box) {

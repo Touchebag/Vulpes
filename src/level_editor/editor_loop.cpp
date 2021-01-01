@@ -133,6 +133,9 @@ int level_editor_main(sf::RenderWindow& window) {
                             case sf::Keyboard::Key::Num1:
                                 renderInst->toggleHitboxRendering();
                                 break;
+                            case sf::Keyboard::Key::Num2:
+                                renderInst->toggleEntranceRendering();
+                                break;
                             // Move camera margins
                             case sf::Keyboard::Key::Left:
                                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {

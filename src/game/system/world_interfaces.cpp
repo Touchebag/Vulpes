@@ -24,6 +24,10 @@ std::string World::IWorldRead::getCurrentRoomName() {
     return World::getWorldInstance().current_room_name_;
 }
 
+std::vector<util::Point> World::IWorldRead::getEntrances() {
+    return World::getWorldInstance().entrances_;
+}
+
 /*--- Modify ---*/
 
 void World::IWorldModify::addEntity(std::shared_ptr<BaseEntity> entity) {
