@@ -8,7 +8,7 @@
 #include "components/rendering/rendering.h"
 
 // This class keeps the sprite sheet coordinates of the currently loaded texture
-class AnimatedEntity : public Component {
+class AnimatedEntity : public ComponentWithFile {
   public:
     AnimatedEntity(std::weak_ptr<RenderableEntity> renderableEntity);
 
@@ -18,6 +18,7 @@ class AnimatedEntity : public Component {
     util::Rectangle getSpriteRect();
 
     void reloadFromJson(nlohmann::json j) override;
+    void reloadFromJson(nlohmann::json j, File file_instance) override;
     std::optional<nlohmann::json> outputToJson() override;
 
     void update() override;
@@ -26,8 +27,8 @@ class AnimatedEntity : public Component {
     bool hasAnimationLooped();
 
   private:
-    std::unordered_map<std::string, util::Rectangle> loadSpriteMap(const std::string& path);
-    void loadFrameList(const std::string& entity_name,
+    std::unordered_map<std::string, util::Rectangle> loadSpriteMap(File file_instance);
+    void loadFrameList(File file_instance,
                        const std::unordered_map<std::string, std::vector<std::string>>& list_frame_map);
 
     void setRenderTexture();

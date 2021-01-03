@@ -26,8 +26,8 @@ RenderableEntity::RenderableEntity(std::weak_ptr<Transform> trans, std::weak_ptr
     movable_(movable) {
 }
 
-bool RenderableEntity::loadTexture(std::string file_path) {
-    if (std::optional<sf::Texture> texture = File::loadTexture(file_path, entity_name_)) {
+bool RenderableEntity::loadTexture(std::string file_path, File file_instance) {
+    if (std::optional<sf::Texture> texture = file_instance.loadTexture(file_path)) {
         texture_ = texture.value();
     } else {
         LOGW("Error loading image %s", file_path.c_str());
@@ -45,6 +45,10 @@ bool RenderableEntity::loadTexture(std::string file_path) {
 }
 
 void RenderableEntity::reloadFromJson(nlohmann::json j) {
+    reloadFromJson(j, File());
+}
+
+void RenderableEntity::reloadFromJson(nlohmann::json j, File file_instance) {
     if (j.contains("height")) {
         height_ = j["height"];
     }
@@ -72,12 +76,7 @@ void RenderableEntity::reloadFromJson(nlohmann::json j) {
         throw std::invalid_argument("Entity missing layer");
     }
 
-    if (j.contains(util::MAIN_ENTITY_NAME)) {
-        entity_name_ = j[util::MAIN_ENTITY_NAME];
-    } else {
-        entity_name_ = "";
-    }
-    loadTexture(j["texture"].get<std::string>());
+    loadTexture(j["texture"].get<std::string>(), file_instance);
 }
 
 void RenderableEntity::recalculateTextureRect() {
@@ -205,7 +204,11 @@ std::optional<std::string> RenderableEntity::getLayerString(RenderableEntity::La
 }
 
 void RenderableEntity::loadShader(std::string shader_name) {
-    auto shader = File::loadShader(shader_name);
+    auto shader = File().loadShader(shader_name);
 
     shader_ = shader;
+}
+
+void RenderableEntity::update() {
+    LOGW("RenderableEntity::update, this should not be called");
 }

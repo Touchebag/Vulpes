@@ -15,7 +15,7 @@ class WorldTestFixture : public ::testing::Test {
 };
 
 TEST_F(WorldTestFixture, SaveLoadWorld) {
-    nlohmann::json world_json = File::loadRoom("test_world_2.json").value();
+    nlohmann::json world_json = File().loadRoom("test_world_2.json").value();
 
     World::getInstance<World::IWorldModify>().loadWorldFromJson(world_json);
     nlohmann::json world_json_2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
@@ -25,7 +25,7 @@ TEST_F(WorldTestFixture, SaveLoadWorld) {
 }
 
 TEST_F(WorldTestFixture, SaveLoadWorldFailure) {
-    nlohmann::json world_json = File::loadRoom("test_world_2.json").value();
+    nlohmann::json world_json = File().loadRoom("test_world_2.json").value();
 
     World::getInstance<World::IWorldModify>().loadWorldFromJson(world_json);
 
@@ -57,7 +57,7 @@ TEST_F(WorldTestFixture, SaveLoadWorldFailure) {
 }
 
 TEST_F(WorldTestFixture, EnsureHudNotSaved) {
-    nlohmann::json world_json = File::loadRoom("test_world_2.json").value();
+    nlohmann::json world_json = File().loadRoom("test_world_2.json").value();
 
     World::getInstance<World::IWorldModify>().loadWorldFromJson(world_json);
 

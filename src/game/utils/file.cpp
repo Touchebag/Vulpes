@@ -26,6 +26,11 @@ bool stringEndsWith(const std::string &full_string, const std::string& suffix) {
 
 } // namespace
 
+File::File(std::string ns) :
+    current_namespace_(ns) ,
+    default_constructed_(false) {
+}
+
 std::string File::appendSuffix(std::string filepath, const std::string& suffix) {
     if (!stringEndsWith(filepath, suffix)) {
         filepath.append(suffix);
@@ -71,12 +76,12 @@ std::optional<nlohmann::json> File::loadJson(std::string filepath) {
     }
 }
 
-std::optional<nlohmann::json> File::loadEntityFromFile(std::string entity_name) {
-    return loadJson(ENTITY_DIR + "/" + entity_name + "/" + ENTITY_FILE);
+std::optional<nlohmann::json> File::loadEntityFromFile() {
+    return loadJson(ENTITY_DIR + "/" + current_namespace_ + "/" + ENTITY_FILE);
 }
 
-std::ifstream File::openSpriteMapFile(std::string entity_name) {
-    return openFileForInput(ENTITY_DIR + "/" + entity_name + "/" + SPRITE_MAP_FILE);
+std::ifstream File::openSpriteMapFile() {
+    return openFileForInput(ENTITY_DIR + "/" + current_namespace_ + "/" + SPRITE_MAP_FILE);
 }
 
 bool File::writeJsonToFile(std::string filepath, nlohmann::json j) {
@@ -93,21 +98,22 @@ std::optional<nlohmann::json> File::loadRoom(std::string filepath) {
     return loadJson(ROOM_DIR + "/" + filepath);
 }
 
-std::optional<nlohmann::json> File::loadAiBehavior(std::string entity_name) {
-    return loadJson(ENTITY_DIR + "/" + entity_name + "/" + AI_FILE);
+std::optional<nlohmann::json> File::loadAiBehavior() {
+    return loadJson(ENTITY_DIR + "/" + current_namespace_ + "/" + AI_FILE);
 }
 
-std::optional<nlohmann::json> File::loadAnimations(std::string entity_name) {
+std::optional<nlohmann::json> File::loadAnimations() {
     auto file = appendSuffix(ANIMATIONS_FILE, ".json");
-    return loadJson(ENTITY_DIR + "/" + entity_name + "/" + file);
+    return loadJson(ENTITY_DIR + "/" + current_namespace_ + "/" + file);
 }
 
-std::optional<sf::Texture> File::loadTexture(std::string file, std::string entity_name) {
+std::optional<sf::Texture> File::loadTexture(std::string file) {
     std::string filepath;
-    if (entity_name.empty()) {
+    // If default constructed (i.e. no entity specified) use outer texture dir
+    if (default_constructed_) {
         filepath += TEXTURE_DIR + "/";
     } else {
-        filepath += ENTITY_DIR + "/" + entity_name  + "/" + TEXTURE_DIR + "/";
+        filepath += ENTITY_DIR + "/" + current_namespace_ + "/" + TEXTURE_DIR + "/";
     }
 
     filepath += appendSuffix(file, ".png");
@@ -129,8 +135,8 @@ std::optional<sf::Font> File::loadFont(std::string filepath) {
     }
 }
 
-std::optional<nlohmann::json> File::loadStates(std::string entity_name) {
-    return loadJson(ENTITY_DIR + "/" + entity_name + "/" + STATE_FILE);
+std::optional<nlohmann::json> File::loadStates() {
+    return loadJson(ENTITY_DIR + "/" + current_namespace_ + "/" + STATE_FILE);
 }
 
 std::shared_ptr<sf::Shader> File::loadShader(std::string shader_name) {

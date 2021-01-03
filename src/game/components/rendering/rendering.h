@@ -7,7 +7,7 @@
 #include "components/transform.h"
 #include "components/movement.h"
 
-class RenderableEntity {
+class RenderableEntity : ComponentWithFile {
   public:
     enum class Layer {
         BACKGROUND,
@@ -34,10 +34,11 @@ class RenderableEntity {
     RenderableEntity(std::weak_ptr<Transform> trans, std::weak_ptr<MovableEntity> movable);
     virtual ~RenderableEntity() = default;
 
-    virtual bool loadTexture(std::string file_path);
+    virtual bool loadTexture(std::string file_path, File file_instance);
 
-    virtual void reloadFromJson(nlohmann::json j);
-    virtual std::optional<nlohmann::json> outputToJson();
+    virtual void reloadFromJson(nlohmann::json j) override ;
+    virtual void reloadFromJson(nlohmann::json j, File file_instance) override ;
+    virtual std::optional<nlohmann::json> outputToJson() override ;
 
     virtual void recalculateTextureRect();
     virtual void setTiling(bool tiling_x, bool tiling_y);
@@ -52,6 +53,8 @@ class RenderableEntity {
     virtual void clearColor();
 
     virtual void render(sf::RenderWindow& window);
+
+    virtual void update() override;
 
     Layer getLayer();
     void setLayer(Layer layer);

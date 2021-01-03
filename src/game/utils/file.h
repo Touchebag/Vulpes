@@ -8,25 +8,37 @@
 
 class File {
   public:
-    static std::optional<nlohmann::json> loadEntityFromFile(std::string entity_name);
-    static std::optional<nlohmann::json> loadRoom(std::string filepath);
-    static std::optional<nlohmann::json> loadStates(std::string entity_name);
-    static std::optional<nlohmann::json> loadAiBehavior(std::string entity_name);
-    static std::optional<nlohmann::json> loadAnimations(std::string entity_name);
-    static std::optional<sf::Texture> loadTexture(std::string file, std::string entity_name = "");
-    static std::optional<sf::Font> loadFont(std::string filepath);
+    File() = default;
+    File(std::string ns);
 
-    static std::shared_ptr<sf::Shader> loadShader(std::string filepath);
+    File(const File&) = default;
+    File(File&&) = default;
+    File& operator=(const File&) = default;
+    File& operator=(File&&) = default;
 
-    static std::ifstream openSpriteMapFile(std::string entity_name);
+    std::optional<nlohmann::json> loadEntityFromFile();
+    std::optional<nlohmann::json> loadAiBehavior();
+    std::optional<nlohmann::json> loadStates();
+    std::optional<nlohmann::json> loadAnimations();
+    std::optional<sf::Texture> loadTexture(std::string file);
+    std::optional<sf::Font> loadFont(std::string filepath);
+    std::optional<nlohmann::json> loadRoom(std::string filepath);
 
-    static bool writeJsonToFile(std::string filepath, nlohmann::json world);
+    std::ifstream openSpriteMapFile();
+
+    std::shared_ptr<sf::Shader> loadShader(std::string filepath);
+
+    bool writeJsonToFile(std::string filepath, nlohmann::json world);
 
     // This will append a suffix to a file name iff it is not already there
     static std::string appendSuffix(std::string filepath, const std::string& suffix);
   private:
-    static std::optional<nlohmann::json> loadJson(std::string filepath);
 
-    static std::ifstream openFileForInput(std::string filepath);
-    static std::ofstream openFileForOutput(std::string filepath);
+    std::optional<nlohmann::json> loadJson(std::string filepath);
+
+    std::ifstream openFileForInput(std::string filepath);
+    std::ofstream openFileForOutput(std::string filepath);
+
+    std::string current_namespace_ = "_default";
+    bool default_constructed_ = true;
 };

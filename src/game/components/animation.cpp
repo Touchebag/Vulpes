@@ -9,8 +9,8 @@ AnimatedEntity::AnimatedEntity(std::weak_ptr<RenderableEntity> renderableEntity)
     renderableEntity_(renderableEntity) {
 }
 
-std::unordered_map<std::string, util::Rectangle> AnimatedEntity::loadSpriteMap(const std::string& entity_name) {
-    auto fs = File::openSpriteMapFile(entity_name);
+std::unordered_map<std::string, util::Rectangle> AnimatedEntity::loadSpriteMap(File file_instance) {
+    auto fs = file_instance.openSpriteMapFile();
     std::unordered_map<std::string, util::Rectangle> sprite_map;
 
     std::vector<std::string> map_str(std::istream_iterator<std::string>{fs},
@@ -39,10 +39,10 @@ std::unordered_map<std::string, util::Rectangle> AnimatedEntity::loadSpriteMap(c
 }
 
 void AnimatedEntity::loadFrameList(
-        const std::string& entity_name,
+        File file_instance,
         const std::unordered_map<std::string, std::vector<std::string>>& list_frame_map) {
     // Map of frame name to texture coordinates
-    auto sprite_map = loadSpriteMap(entity_name);
+    auto sprite_map = loadSpriteMap(file_instance);
 
     for (auto it : list_frame_map) {
         // List of coordinates
@@ -89,11 +89,10 @@ util::Rectangle AnimatedEntity::getSpriteRect() {
 }
 
 void AnimatedEntity::reloadFromJson(nlohmann::json j) {
-    std::string main_entity_name = util::COMMON_ASSET_DIR;
-    if (j.contains(util::MAIN_ENTITY_NAME)) {
-        main_entity_name = j[util::MAIN_ENTITY_NAME].get<std::string>();
-    }
+    reloadFromJson(j, File());
+}
 
+void AnimatedEntity::reloadFromJson(nlohmann::json j, File file_instance) {
     // Load the animation names as lists of frame names
     std::unordered_map<std::string, std::vector<std::string>> name_frames_map;
 
@@ -111,7 +110,7 @@ void AnimatedEntity::reloadFromJson(nlohmann::json j) {
         original_frame_list_ = frame_list;
     } else {
         // TODO Error handling
-        nlohmann::json j_anim_list = File::loadAnimations(main_entity_name).value();
+        nlohmann::json j_anim_list = file_instance.loadAnimations().value();
 
         for (auto animation : j_anim_list) {
             std::vector<std::string> frame_list;
@@ -125,7 +124,7 @@ void AnimatedEntity::reloadFromJson(nlohmann::json j) {
         original_frame_list_.reset();
     }
 
-    loadFrameList(main_entity_name, name_frames_map);
+    loadFrameList(file_instance, name_frames_map);
 
     setRenderTexture();
 }

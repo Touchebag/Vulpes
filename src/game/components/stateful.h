@@ -7,13 +7,14 @@
 #include "components/subentity.h"
 #include "utils/state_handler.h"
 
-class StatefulEntity : public Component {
+class StatefulEntity : public ComponentWithFile {
   public:
     StatefulEntity(std::weak_ptr<AnimatedEntity> animatedEntity, std::weak_ptr<Subentity> subentity);
 
     void update() override;
 
     void reloadFromJson(nlohmann::json j) override;
+    void reloadFromJson(nlohmann::json j, File file_instance) override;
     std::optional<nlohmann::json> outputToJson() override;
 
     void resetState();
@@ -25,7 +26,7 @@ class StatefulEntity : public Component {
     const nlohmann::json& getEntity();
 
   private:
-    void loadStates(std::string entity_name);
+    void loadStates(File file_instance);
 
     unsigned int frame_counter_;
 

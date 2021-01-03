@@ -12,15 +12,26 @@ template <class T>
 std::shared_ptr<T> loadComponentFromJson(
         nlohmann::json j,
         const std::string& component_name,
-        const std::string& entity_name,
         std::shared_ptr<T> component) {
     // TODO Error handling
     if (j.contains(component_name) && component) {
-        if (!entity_name.empty()) {
-            // TODO Check if main_entity_name is already defined and throw
-            j[component_name][util::MAIN_ENTITY_NAME] = entity_name;
-        }
         component->reloadFromJson(j[component_name]);
+    } else {
+        component.reset();
+    }
+
+    return component;
+}
+
+template <class T>
+std::shared_ptr<T> loadComponentFromJson(
+        nlohmann::json j,
+        const File& file_instance,
+        const std::string& component_name,
+        std::shared_ptr<T> component) {
+    // TODO Error handling
+    if (j.contains(component_name) && component) {
+        component->reloadFromJson(j[component_name], file_instance);
     } else {
         component.reset();
     }
@@ -42,9 +53,13 @@ std::shared_ptr<BaseEntity> BaseEntity::createFromJson(nlohmann::json j) {
 void BaseEntity::reloadFromJson(nlohmann::json j) {
     // TODO Duplicate arguments in orignal json is overwritten by entity load
     // Should be reversed instead
+    File file_instance;
+
     if (j.contains("Entity")) {
         auto entity_name = j["Entity"].get<std::string>();
-        if (auto j_entity = File::loadEntityFromFile(entity_name)) {
+        file_instance = File(entity_name);
+
+        if (auto j_entity = file_instance.loadEntityFromFile()) {
             j.insert(j_entity.value().begin(), j_entity.value().end());
         } else {
             throw std::invalid_argument("File not found");
@@ -55,7 +70,7 @@ void BaseEntity::reloadFromJson(nlohmann::json j) {
         entity_file_.clear();
     }
 
-    trans_ = loadComponentFromJson(j, "Transform", entity_file_, std::make_shared<Transform>());
+    trans_ = loadComponentFromJson(j, "Transform", std::make_shared<Transform>());
 
     if (j.contains("Collision")) {
         collision_ = Collision::createFromJson(j["Collision"], trans_);
@@ -63,21 +78,21 @@ void BaseEntity::reloadFromJson(nlohmann::json j) {
         collision_.reset();
     }
 
-    movableEntity_ = loadComponentFromJson(j, "Movable", entity_file_, std::make_shared<MovableEntity>(trans_, collision_));
+    movableEntity_ = loadComponentFromJson(j, "Movable", std::make_shared<MovableEntity>(trans_, collision_));
 
-    renderableEntity_ = loadComponentFromJson<RenderableEntity>(j, "Renderable", entity_file_, std::make_shared<RenderableEntity>(trans_, movableEntity_));
+    renderableEntity_ = loadComponentFromJson<RenderableEntity>(j, file_instance, "Renderable", std::make_shared<RenderableEntity>(trans_, movableEntity_));
 
-    animatedEntity_ = loadComponentFromJson(j, "Animated", entity_file_, std::make_shared<AnimatedEntity>(renderableEntity_));
+    animatedEntity_ = loadComponentFromJson(j, file_instance, "Animated", std::make_shared<AnimatedEntity>(renderableEntity_));
 
-    subentity_ = loadComponentFromJson(j, "Subentity", entity_file_, std::make_shared<Subentity>(trans_, movableEntity_));
+    subentity_ = loadComponentFromJson(j, "Subentity", std::make_shared<Subentity>(trans_, movableEntity_));
 
-    statefulEntity_ = loadComponentFromJson(j, "Stateful", entity_file_, std::make_shared<StatefulEntity>(animatedEntity_, subentity_));
+    statefulEntity_ = loadComponentFromJson(j, file_instance, "Stateful", std::make_shared<StatefulEntity>(animatedEntity_, subentity_));
 
     if (statefulEntity_) {
         statefulEntity_->incomingEvent(state_utils::Event::START);
     }
 
-    death_ = loadComponentFromJson(j, "Death", entity_file_, std::make_shared<Death>());
+    death_ = loadComponentFromJson(j, "Death", std::make_shared<Death>());
 
     if (j.contains("Actions")) {
         actions_ = Actions::createFromJson(j["Actions"], death_, collision_, statefulEntity_);
@@ -85,9 +100,9 @@ void BaseEntity::reloadFromJson(nlohmann::json j) {
         actions_.reset();
     }
 
-    physics_ = loadComponentFromJson(j, "Physics", entity_file_, std::make_shared<Physics>(statefulEntity_, movableEntity_, animatedEntity_, actions_, collision_));
+    physics_ = loadComponentFromJson(j, "Physics", std::make_shared<Physics>(statefulEntity_, movableEntity_, animatedEntity_, actions_, collision_));
 
-    ai_ = loadComponentFromJson(j, "AI", entity_file_, std::make_shared<AI>(actions_, trans_, collision_, animatedEntity_));
+    ai_ = loadComponentFromJson(j, file_instance, "AI", std::make_shared<AI>(actions_, trans_, collision_, animatedEntity_));
 
     if (j.contains("Damageable")) {
         damageable_ = Damageable::createFromJson(j["Damageable"], collision_, death_, statefulEntity_, renderableEntity_, movableEntity_);

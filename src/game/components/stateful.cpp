@@ -19,12 +19,11 @@ void StatefulEntity::update() {
 }
 
 void StatefulEntity::reloadFromJson(nlohmann::json j) {
-    std::string main_entity_name = util::COMMON_ASSET_DIR;
-    if (j.contains(util::MAIN_ENTITY_NAME)) {
-        main_entity_name = j[util::MAIN_ENTITY_NAME].get<std::string>();
-    }
+    reloadFromJson(j, File());
+}
 
-    loadStates(main_entity_name);
+void StatefulEntity::reloadFromJson(nlohmann::json /* j */, File file_instance) {
+    loadStates(file_instance);
 }
 
 std::optional<nlohmann::json> StatefulEntity::outputToJson() {
@@ -33,12 +32,12 @@ std::optional<nlohmann::json> StatefulEntity::outputToJson() {
     return {j};
 }
 
-void StatefulEntity::loadStates(std::string entity_name) {
-    auto j = File::loadStates(entity_name);
+void StatefulEntity::loadStates(File file_instance) {
+    auto states = file_instance.loadStates();
 
     // TODO Error handling
-    if (j) {
-        state_handler_.reloadFromJson(j.value());
+    if (states) {
+        state_handler_.reloadFromJson(states.value());
     }
 }
 

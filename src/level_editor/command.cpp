@@ -90,7 +90,7 @@ void Command::add(std::shared_ptr<BaseEntity> entity) {
     entity->trans_ = trans;
 
     render->setSize(50, 50);
-    render->loadTexture("box.png");
+    render->loadTexture("box.png", File());
     entity->renderableEntity_ = render;
 
     World::getInstance<World::IWorldModify>().addEntity(entity);
@@ -180,7 +180,7 @@ void Command::handleCommand(Commands command) {
                 } else {
                     auto renderable = std::make_shared<RenderableEntity>(editor_env->current_entity->trans_,
                                                                          editor_env->current_entity->movableEntity_);
-                    renderable->loadTexture("box.png");
+                    renderable->loadTexture("box.png", File());
                     editor_env->current_entity->renderableEntity_ = renderable;
                 }
                 World::getInstance<World::IWorldModify>().addEntity(editor_env->current_entity);
@@ -358,7 +358,7 @@ void Command::stopCommand() {
             if (editor_env->current_entity->renderableEntity_ && text_input_) {
                 try {
                     auto texture_name = text_input_->getString();
-                    editor_env->current_entity->renderableEntity_->loadTexture(texture_name);
+                    editor_env->current_entity->renderableEntity_->loadTexture(texture_name, File());
 
                     editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();
 

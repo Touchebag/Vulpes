@@ -78,7 +78,7 @@ void World::clearWorld() {
 }
 
 void World::loadWorldFromFile(std::string path) {
-    std::optional<nlohmann::json> j = File::loadRoom(path);
+    std::optional<nlohmann::json> j = File().loadRoom(path);
 
     if (!j) {
         LOGE("Unable to load json from file %s", path.c_str());
@@ -164,7 +164,7 @@ void World::saveWorldToFile(std::string file) {
 
     file = File::appendSuffix(file, ".json");
 
-    if (File::writeJsonToFile(file, j)) {
+    if (File().writeJsonToFile(file, j)) {
         LOGD("World saved successfully");
     } else {
         LOGE("Failed to save json to file");

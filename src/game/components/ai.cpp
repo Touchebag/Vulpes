@@ -58,13 +58,11 @@ void AI::update() {
 }
 
 void AI::reloadFromJson(nlohmann::json j) {
-    std::string main_entity_name = util::COMMON_ASSET_DIR;
+    reloadFromJson(j, File());
+}
 
-    if (j.contains(util::MAIN_ENTITY_NAME)) {
-        main_entity_name = j[util::MAIN_ENTITY_NAME].get<std::string>();
-    }
-
-    if (auto ai_json = File::loadAiBehavior(main_entity_name)) {
+void AI::reloadFromJson(nlohmann::json /* j */, File file) {
+    if (auto ai_json = file.loadAiBehavior()) {
         states_ = StateHandler<std::vector<std::pair<std::shared_ptr<const ai::condition::LogicalOperator>, Actions::Action>>>();
 
         auto ai_behavior = ai_json.value();

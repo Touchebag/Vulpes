@@ -7,7 +7,7 @@
 #include "utils/state_handler.h"
 #include "ai/logic_operators/logic_operator.h"
 
-class AI : public Component{
+class AI : public ComponentWithFile {
   public:
     AI(std::weak_ptr<Actions> actions,
        std::weak_ptr<Transform> transform,
@@ -17,6 +17,7 @@ class AI : public Component{
     void update() override;
 
     void reloadFromJson(nlohmann::json j) override;
+    void reloadFromJson(nlohmann::json j, File file_instance) override;
     std::optional<nlohmann::json> outputToJson() override;
 
   private:
