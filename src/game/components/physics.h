@@ -41,8 +41,7 @@ class Physics : public Component {
     Physics(std::weak_ptr<StatefulEntity> statefulEntity,
             std::weak_ptr<MovableEntity> movableEntity,
             std::weak_ptr<AnimatedEntity> animatedEntity,
-            std::weak_ptr<Actions> actions,
-            std::weak_ptr<Collision> collision);
+            std::weak_ptr<Actions> actions);
 
     void update() override;
 
@@ -56,7 +55,6 @@ class Physics : public Component {
     std::weak_ptr<MovableEntity> movableEntity_;
     std::weak_ptr<AnimatedEntity> animatedEntity_;
     std::weak_ptr<Actions> actions_;
-    std::weak_ptr<Collision> collision_;
 
     // TODO Store in some separate component
     int jumps_left_ = 0;

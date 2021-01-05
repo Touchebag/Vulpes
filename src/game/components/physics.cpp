@@ -35,12 +35,11 @@ void saveConstantToJson(nlohmann::json& j, std::string name, double constant, do
 
 } // namespace
 
-Physics::Physics(std::weak_ptr<StatefulEntity> statefulEntity, std::weak_ptr<MovableEntity> movableEntity, std::weak_ptr<AnimatedEntity> animatedEntity, std::weak_ptr<Actions> actions, std::weak_ptr<Collision> collision) :
+Physics::Physics(std::weak_ptr<StatefulEntity> statefulEntity, std::weak_ptr<MovableEntity> movableEntity, std::weak_ptr<AnimatedEntity> animatedEntity, std::weak_ptr<Actions> actions) :
                  statefulEntity_(statefulEntity),
                  movableEntity_(movableEntity),
                  animatedEntity_(animatedEntity),
-                 actions_(actions),
-                 collision_(collision) {
+                 actions_(actions) {
 }
 
 void Physics::update() {

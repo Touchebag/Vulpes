@@ -284,8 +284,7 @@ TEST_F(CommandTestFixture, TogglePhysics) {
                            entity->statefulEntity_,
                            entity->movableEntity_,
                            entity->animatedEntity_,
-                           entity->actions_,
-                           entity->collision_);
+                           entity->actions_);
     editor_env->command->add(entity);
 
     assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);

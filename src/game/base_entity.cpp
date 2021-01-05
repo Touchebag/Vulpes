@@ -100,7 +100,7 @@ void BaseEntity::reloadFromJson(nlohmann::json j) {
         actions_.reset();
     }
 
-    physics_ = loadComponentFromJson(j, "Physics", std::make_shared<Physics>(statefulEntity_, movableEntity_, animatedEntity_, actions_, collision_));
+    physics_ = loadComponentFromJson(j, "Physics", std::make_shared<Physics>(statefulEntity_, movableEntity_, animatedEntity_, actions_));
 
     ai_ = loadComponentFromJson(j, file_instance, "AI", std::make_shared<AI>(actions_, trans_, collision_, animatedEntity_));
 

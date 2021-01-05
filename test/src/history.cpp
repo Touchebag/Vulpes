@@ -259,8 +259,7 @@ TEST_F(HistoryTestFixture, TogglePhysics) {
                            entity->statefulEntity_,
                            entity->movableEntity_,
                            entity->animatedEntity_,
-                           entity->actions_,
-                           entity->collision_);
+                           entity->actions_);
     editor_env->command->add(entity);
 
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();

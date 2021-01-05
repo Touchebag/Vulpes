@@ -241,8 +241,7 @@ void Command::handleCommand(Commands command) {
                             editor_env->current_entity->statefulEntity_,
                             editor_env->current_entity->movableEntity_,
                             editor_env->current_entity->animatedEntity_,
-                            editor_env->current_entity->actions_,
-                            editor_env->current_entity->collision_);
+                            editor_env->current_entity->actions_);
                     editor_env->current_entity->physics_ = physics;
                 }
                 World::getInstance<World::IWorldModify>().addEntity(editor_env->current_entity);
