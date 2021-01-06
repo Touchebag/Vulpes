@@ -3,7 +3,7 @@
 #include "utils/log.h"
 #include "system/world.h"
 #include "damageable_player.h"
-#include "components/collision/damage/collision_damage.h"
+#include "components/collision/collideables/damage/collideable_damage.h"
 
 namespace {
 

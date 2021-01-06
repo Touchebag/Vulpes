@@ -1,4 +1,4 @@
-#include "collision_collectible.h"
+#include "collideable_collectible.h"
 
 CollisionCollectible::CollisionCollectible(std::weak_ptr<Transform> trans) :
     Collision(trans) {

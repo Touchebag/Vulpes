@@ -1,4 +1,4 @@
-#include "collision_player_hurtbox.h"
+#include "collideable_player_hurtbox.h"
 
 CollisionPlayerHurtbox::CollisionPlayerHurtbox(std::weak_ptr<Transform> trans) :
     Collision(trans) {

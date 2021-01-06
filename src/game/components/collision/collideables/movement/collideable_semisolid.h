@@ -1,6 +1,6 @@
 #pragma once
 
-#include "i_collision_movement.h"
+#include "i_collideable_movement.h"
 
 class CollisionSemiSolid : public ICollisionMovement {
   public:

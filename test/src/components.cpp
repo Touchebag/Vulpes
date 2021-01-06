@@ -4,18 +4,18 @@
 
 #include "components/actions/actions_player.h"
 
-#include "components/collision/collision_player_hurtbox.h"
-#include "components/collision/collision_transition.h"
-#include "components/collision/collision_health.h"
-#include "components/collision/collision_collectible.h"
-#include "components/collision/collision_interactable.h"
+#include "components/collision/collideables/collideable_player_hurtbox.h"
+#include "components/collision/collideables/collideable_transition.h"
+#include "components/collision/collideables/collideable_health.h"
+#include "components/collision/collideables/collideable_collectible.h"
+#include "components/collision/collideables/collideable_interactable.h"
 
-#include "components/collision/movement/collision_static.h"
-#include "components/collision/movement/collision_semisolid.h"
-#include "components/collision/movement/collision_slope.h"
+#include "components/collision/collideables/movement/collideable_static.h"
+#include "components/collision/collideables/movement/collideable_semisolid.h"
+#include "components/collision/collideables/movement/collideable_slope.h"
 
-#include "components/collision/damage/collision_player_hitbox.h"
-#include "components/collision/damage/collision_enemy_hitbox.h"
+#include "components/collision/collideables/damage/collideable_player_hitbox.h"
+#include "components/collision/collideables/damage/collideable_enemy_hitbox.h"
 
 #include "components/damageable/damageable_player.h"
 

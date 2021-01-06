@@ -6,8 +6,8 @@
 #include "system/world.h"
 #include "utils/log.h"
 
-#include "components/collision/collision_collectible.h"
-#include "components/collision/collision_interactable.h"
+#include "components/collision/collideables/collideable_collectible.h"
+#include "components/collision/collideables/collideable_interactable.h"
 
 namespace {
 

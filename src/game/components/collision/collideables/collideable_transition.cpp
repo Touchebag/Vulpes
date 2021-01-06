@@ -1,4 +1,4 @@
-#include "collision_transition.h"
+#include "collideable_transition.h"
 
 #include "system/world.h"
 #include "utils/log.h"

@@ -1,6 +1,6 @@
 #include "editor_mouse.h"
 
-#include "components/collision/movement/collision_static.h"
+#include "components/collision/collideables/movement/collideable_static.h"
 
 void EditorMouse::handleMousePress(std::shared_ptr<EditorEnvironment> editor_env) {
     if (editor_env->event.mouseButton.button == sf::Mouse::Button::Left) {

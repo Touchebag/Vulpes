@@ -1,4 +1,4 @@
-#include "collision_health.h"
+#include "collideable_health.h"
 
 CollisionHealth::CollisionHealth(std::weak_ptr<Transform> trans) :
     Collision(trans) {

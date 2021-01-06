@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "components/collision/movement/collision_static.h"
+#include "components/collision/collideables/movement/collideable_static.h"
 #include "components/transform.h"
 
 class StaticCollisionTestFixture : public ::testing::Test {

@@ -1,4 +1,4 @@
-#include "collision_interactable.h"
+#include "collideable_interactable.h"
 
 #include "system/world.h"
 #include "system/system.h"

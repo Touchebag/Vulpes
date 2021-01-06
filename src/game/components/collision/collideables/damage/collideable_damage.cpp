@@ -1,4 +1,4 @@
-#include "collision_damage.h"
+#include "collideable_damage.h"
 
 CollisionDamage::CollisionDamage(std::weak_ptr<Transform> trans) :
     Collision(trans) {

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "components/collision/collision.h"
-#include "collision_damage.h"
+#include "collideable_damage.h"
 
 class CollisionPlayerHitbox : public CollisionDamage {
   public:

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "collision_damage.h"
+#include "collideable_damage.h"
 
 class CollisionEnemyHitbox : public CollisionDamage {
   public:

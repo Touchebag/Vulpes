@@ -2,18 +2,18 @@
 
 #include "utils/log.h"
 
-#include "collision_player_hurtbox.h"
-#include "collision_transition.h"
-#include "collision_health.h"
-#include "collision_collectible.h"
-#include "collision_interactable.h"
+#include "collideables/collideable_player_hurtbox.h"
+#include "collideables/collideable_transition.h"
+#include "collideables/collideable_health.h"
+#include "collideables/collideable_collectible.h"
+#include "collideables/collideable_interactable.h"
 
-#include "movement/collision_static.h"
-#include "movement/collision_semisolid.h"
-#include "movement/collision_slope.h"
+#include "collideables/movement/collideable_static.h"
+#include "collideables/movement/collideable_semisolid.h"
+#include "collideables/movement/collideable_slope.h"
 
-#include "damage/collision_player_hitbox.h"
-#include "damage/collision_enemy_hitbox.h"
+#include "collideables/damage/collideable_player_hitbox.h"
+#include "collideables/damage/collideable_enemy_hitbox.h"
 
 #include "collision_utils.h"
 

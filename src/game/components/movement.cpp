@@ -1,6 +1,6 @@
 #include "movement.h"
 
-#include "collision/movement/i_collision_movement.h"
+#include "collision/collideables/movement/i_collideable_movement.h"
 #include "system/world.h"
 #include "utils/log.h"
 

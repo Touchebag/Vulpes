@@ -1,4 +1,4 @@
-#include "collision_slope.h"
+#include "collideable_slope.h"
 
 #include "components/collision/collision_utils.h"
 #include "utils/log.h"

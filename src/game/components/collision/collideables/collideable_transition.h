@@ -1,6 +1,6 @@
 #pragma once
 
-#include "collision.h"
+#include "components/collision/collision.h"
 
 class CollisionTransition : public Collision {
   public:

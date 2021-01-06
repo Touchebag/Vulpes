@@ -4,7 +4,7 @@
 
 #include "operation.h"
 #include "editor_loop/editor_environment.h"
-#include "components/collision/movement/collision_static.h"
+#include "components/collision/collideables/movement/collideable_static.h"
 #include "utils/log.h"
 
 Command::Command(std::weak_ptr<EditorEnvironment> editor_env) :

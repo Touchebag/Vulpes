@@ -1,7 +1,7 @@
 #include "damageable_player.h"
 
 #include "system/world.h"
-#include "components/collision/collision_health.h"
+#include "components/collision/collideables/collideable_health.h"
 
 DamageablePlayer::DamageablePlayer(std::weak_ptr<Collision> hurtbox,
                                    std::weak_ptr<Death> death,

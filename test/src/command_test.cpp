@@ -3,7 +3,7 @@
 #include "level_editor/editor_loop/editor_environment.h"
 #include "mocks/mock_mouse.h"
 
-#include "components/collision/movement/collision_static.h"
+#include "components/collision/collideables/movement/collideable_static.h"
 
 class CommandTestFixture : public ::testing::Test {
   public:

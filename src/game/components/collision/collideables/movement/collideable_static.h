@@ -1,6 +1,6 @@
 #pragma once
 
-#include "components/collision/movement/i_collision_movement.h"
+#include "components/collision/collideables/movement/i_collideable_movement.h"
 
 class CollisionStatic : public ICollisionMovement {
   public:

@@ -1,4 +1,4 @@
-#include "collision_player_hitbox.h"
+#include "collideable_player_hitbox.h"
 
 #include "components/collision/attack_attributes.h"
 
