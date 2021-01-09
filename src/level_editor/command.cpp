@@ -79,7 +79,7 @@ void Command::add(std::shared_ptr<BaseEntity> entity) {
     auto editor_env = editor_env_.lock();
 
     std::shared_ptr<Transform> trans = std::make_shared<Transform>();
-    std::shared_ptr<CollisionStatic> coll = std::make_shared<CollisionStatic>(trans);
+    std::shared_ptr<CollideableStatic> coll = std::make_shared<CollideableStatic>(trans);
     std::shared_ptr<RenderableEntity> render = std::make_shared<RenderableEntity>(trans, std::weak_ptr<MovableEntity>());
 
     coll->setHitbox(50, 50);
@@ -199,8 +199,9 @@ void Command::handleCommand(Commands command) {
                 if (editor_env->current_entity->collision_) {
                     editor_env->current_entity->collision_ = {};
                 } else {
-                    auto collision = std::make_shared<CollisionStatic>(editor_env->current_entity->trans_);
-                    editor_env->current_entity->collision_ = collision;
+                    auto collision = std::make_shared<CollideableStatic>(editor_env->current_entity->trans_);
+                    editor_env->current_entity->collision_ = std::make_shared<Collision>(editor_env->current_entity->trans_);
+                    editor_env->current_entity->collision_->setCollideable(collision);
                 }
                 World::getInstance<World::IWorldModify>().addEntity(editor_env->current_entity);
                 editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();

@@ -2,9 +2,9 @@
 
 #include "components/collision/collision.h"
 
-class CollisionPlayerHurtbox : public Collision {
+class CollideablePlayerHurtbox : public Collideable {
   public:
-    CollisionPlayerHurtbox(std::weak_ptr<Transform> trans);
+    CollideablePlayerHurtbox(std::weak_ptr<Transform> trans);
 
     CollisionType getType() const override;
 };

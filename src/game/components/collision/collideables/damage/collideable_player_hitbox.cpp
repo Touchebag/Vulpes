@@ -2,16 +2,16 @@
 
 #include "components/collision/attack_attributes.h"
 
-CollisionPlayerHitbox::CollisionPlayerHitbox(std::weak_ptr<Transform> trans) :
-    CollisionDamage(trans) {
+CollideablePlayerHitbox::CollideablePlayerHitbox(std::weak_ptr<Transform> trans) :
+    CollideableDamage(trans) {
 }
 
-void CollisionPlayerHitbox::reloadFromJson(nlohmann::json j) {
+void CollideablePlayerHitbox::reloadFromJson(nlohmann::json j) {
     if (!j.contains("type") || !(j["type"].get<std::string>() == "player_hitbox")) {
         throw std::invalid_argument("Player hitbox invalid type" + j["type"].get<std::string>());
     }
 
-    Collision::reloadFromJson(j);
+    Collideable::reloadFromJson(j);
 
     if (!j.contains("attack")) {
         return;
@@ -20,14 +20,14 @@ void CollisionPlayerHitbox::reloadFromJson(nlohmann::json j) {
     attack_attributes_ = collision::parseAttackAttributes(j["attack"]);
 }
 
-std::optional<nlohmann::json> CollisionPlayerHitbox::outputToJson() {
-    nlohmann::json j = Collision::outputToJson().value();
+std::optional<nlohmann::json> CollideablePlayerHitbox::outputToJson() {
+    nlohmann::json j = Collideable::outputToJson().value();
 
     j["attack"] = collision::dumpAttackAttributes(attack_attributes_);
 
     return j;
 }
 
-Collision::CollisionType CollisionPlayerHitbox::getType() const {
-    return Collision::CollisionType::PLAYER_HITBOX;
+Collideable::CollisionType CollideablePlayerHitbox::getType() const {
+    return Collideable::CollisionType::PLAYER_HITBOX;
 }

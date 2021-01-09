@@ -253,7 +253,7 @@ void World::loadRoom(std::string room_name, int entrance_id) {
     setEntrance(entrance_id);
 }
 
-void World::setShiftedPlayerPosition(Collision::CollisionType ctype) {
+void World::setShiftedPlayerPosition(Collideable::CollisionType ctype) {
     auto world_colls = World::getInstance<World::IWorldRead>().getCollisions(ctype);
     auto p_trans = player_->trans_;
 
@@ -279,8 +279,8 @@ void World::setEntrance(int entrance_id) {
         p_trans->setPosition(entrances_.at(entrance_id));
 
         // This is to avoid spawning inside objects
-        setShiftedPlayerPosition(Collision::CollisionType::STATIC);
-        setShiftedPlayerPosition(Collision::CollisionType::SEMI_SOLID);
+        setShiftedPlayerPosition(Collideable::CollisionType::STATIC);
+        setShiftedPlayerPosition(Collideable::CollisionType::SEMI_SOLID);
 
         auto view = System::getCamera()->getView();
         view.x_pos = static_cast<float>(p_trans->getX());

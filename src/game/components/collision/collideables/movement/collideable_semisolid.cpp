@@ -3,23 +3,23 @@
 #include "components/collision/collision_utils.h"
 #include "utils/log.h"
 
-CollisionSemiSolid::CollisionSemiSolid(std::weak_ptr<Transform> trans) :
-    ICollisionMovement(trans) {
+CollideableSemiSolid::CollideableSemiSolid(std::weak_ptr<Transform> trans) :
+    ICollideableMovement(trans) {
 }
 
-Collision::CollisionType CollisionSemiSolid::getType() const {
-    return Collision::CollisionType::SEMI_SOLID;
+Collideable::CollisionType CollideableSemiSolid::getType() const {
+    return Collideable::CollisionType::SEMI_SOLID;
 }
 
-// TODO Mostly duplicated code with CollisionStatic
+// TODO Mostly duplicated code with CollideableStatic
 // See if can be broken out
-std::pair<double, double> CollisionSemiSolid::getMaximumMovement(double stepX, double stepY,
-        std::shared_ptr<const Collision> other_coll) const {
+std::pair<double, double> CollideableSemiSolid::getMaximumMovement(double stepX, double stepY,
+        std::shared_ptr<const Collideable> other_coll) const {
     auto other_trans = other_coll->getTransform().lock();
     auto other_hbox = other_coll->getHitbox();
 
     if (!other_trans) {
-        LOGW("CollisionStatic: unable to lock other");
+        LOGW("CollideableStatic: unable to lock other");
         return {stepX, stepY};
     }
 
@@ -77,7 +77,7 @@ std::pair<double, double> CollisionSemiSolid::getMaximumMovement(double stepX, d
             }
         }
     } else {
-        LOGW("CollisionStatic: Missing transform");
+        LOGW("CollideableStatic: Missing transform");
     }
 
     return {retX, retY};

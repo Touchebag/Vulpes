@@ -1,11 +1,11 @@
 #include "collideable_health.h"
 
-CollisionHealth::CollisionHealth(std::weak_ptr<Transform> trans) :
-    Collision(trans) {
+CollideableHealth::CollideableHealth(std::weak_ptr<Transform> trans) :
+    Collideable(trans) {
 }
 
-void CollisionHealth::reloadFromJson(nlohmann::json j) {
-    Collision::reloadFromJson(j);
+void CollideableHealth::reloadFromJson(nlohmann::json j) {
+    Collideable::reloadFromJson(j);
 
     if (!j.contains("health")) {
         return;
@@ -14,18 +14,18 @@ void CollisionHealth::reloadFromJson(nlohmann::json j) {
     health_ = j["health"].get<int>();
 }
 
-std::optional<nlohmann::json> CollisionHealth::outputToJson() {
-    nlohmann::json j = Collision::outputToJson().value();
+std::optional<nlohmann::json> CollideableHealth::outputToJson() {
+    nlohmann::json j = Collideable::outputToJson().value();
 
     j["health"] = health_;
 
     return j;
 }
 
-int CollisionHealth::getHealth() const {
+int CollideableHealth::getHealth() const {
     return health_;
 }
 
-Collision::CollisionType CollisionHealth::getType() const {
-    return Collision::CollisionType::HEALTH;
+Collideable::CollisionType CollideableHealth::getType() const {
+    return Collideable::CollisionType::HEALTH;
 }

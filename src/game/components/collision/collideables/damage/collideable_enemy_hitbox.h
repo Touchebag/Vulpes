@@ -2,9 +2,9 @@
 
 #include "collideable_damage.h"
 
-class CollisionEnemyHitbox : public CollisionDamage {
+class CollideableEnemyHitbox : public CollideableDamage {
   public:
-    CollisionEnemyHitbox(std::weak_ptr<Transform> trans);
+    CollideableEnemyHitbox(std::weak_ptr<Transform> trans);
 
     void reloadFromJson(nlohmann::json j) override;
     std::optional<nlohmann::json> outputToJson() override;

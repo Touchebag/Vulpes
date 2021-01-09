@@ -5,12 +5,12 @@
 
 #include "utils/log.h"
 
-CollisionInteractable::CollisionInteractable(std::weak_ptr<Transform> trans) :
-    Collision(trans) {
+CollideableInteractable::CollideableInteractable(std::weak_ptr<Transform> trans) :
+    Collideable(trans) {
 }
 
-void CollisionInteractable::reloadFromJson(nlohmann::json j) {
-    Collision::reloadFromJson(j);
+void CollideableInteractable::reloadFromJson(nlohmann::json j) {
+    Collideable::reloadFromJson(j);
 
     if (j.contains("transition")) {
         auto transition_json = j["transition"];
@@ -27,8 +27,8 @@ void CollisionInteractable::reloadFromJson(nlohmann::json j) {
     }
 }
 
-std::optional<nlohmann::json> CollisionInteractable::outputToJson() {
-    nlohmann::json j = Collision::outputToJson().value();
+std::optional<nlohmann::json> CollideableInteractable::outputToJson() {
+    nlohmann::json j = Collideable::outputToJson().value();
 
     if (transition_) {
         nlohmann::json transition_json;
@@ -47,9 +47,9 @@ std::optional<nlohmann::json> CollisionInteractable::outputToJson() {
     return j;
 }
 
-void CollisionInteractable::update() {
+void CollideableInteractable::update() {
     if (World::IWorldRead::hasInteractTriggered()) {
-        for (auto it : World::IWorldRead::getCollisions(Collision::CollisionType::PLAYER_HURTBOX)) {
+        for (auto it : World::IWorldRead::getCollisions(Collideable::CollisionType::PLAYER_HURTBOX)) {
             if (collides(it)) {
                 if (transition_) {
                     World::IWorldModify::loadRoom(transition_.value().first, transition_.value().second);
@@ -62,6 +62,6 @@ void CollisionInteractable::update() {
     }
 }
 
-Collision::CollisionType CollisionInteractable::getType() const {
-    return Collision::CollisionType::INTERACTABLE;
+Collideable::CollisionType CollideableInteractable::getType() const {
+    return Collideable::CollisionType::INTERACTABLE;
 }

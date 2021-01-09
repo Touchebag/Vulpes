@@ -1,9 +1,9 @@
 #include "collideable_damage.h"
 
-CollisionDamage::CollisionDamage(std::weak_ptr<Transform> trans) :
-    Collision(trans) {
+CollideableDamage::CollideableDamage(std::weak_ptr<Transform> trans) :
+    Collideable(trans) {
 }
 
-const collision::AttackAttributes CollisionDamage::getAttributes() const {
+const collision::AttackAttributes CollideableDamage::getAttributes() const {
     return attack_attributes_;
 }

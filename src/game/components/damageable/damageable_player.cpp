@@ -29,10 +29,10 @@ void DamageablePlayer::update() {
     Damageable::update();
 
     if (auto coll = hurtbox_.lock()) {
-        for (auto& it : World::IWorldRead::getCollisions(Collision::CollisionType::HEALTH)) {
+        for (auto& it : World::IWorldRead::getCollisions(Collideable::CollisionType::HEALTH)) {
             if (auto other_coll = it.lock()) {
                 if (coll->collides(other_coll)) {
-                    if (auto health_collision = std::dynamic_pointer_cast<const CollisionHealth>(other_coll)) {
+                    if (auto health_collision = std::dynamic_pointer_cast<const CollideableHealth>(other_coll)) {
                         health_ += health_collision->getHealth();
                     }
                 }

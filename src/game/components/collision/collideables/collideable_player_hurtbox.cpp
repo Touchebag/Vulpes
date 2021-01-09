@@ -1,9 +1,9 @@
 #include "collideable_player_hurtbox.h"
 
-CollisionPlayerHurtbox::CollisionPlayerHurtbox(std::weak_ptr<Transform> trans) :
-    Collision(trans) {
+CollideablePlayerHurtbox::CollideablePlayerHurtbox(std::weak_ptr<Transform> trans) :
+    Collideable(trans) {
 }
 
-Collision::CollisionType CollisionPlayerHurtbox::getType() const {
-    return Collision::CollisionType::PLAYER_HURTBOX;
+Collideable::CollisionType CollideablePlayerHurtbox::getType() const {
+    return Collideable::CollisionType::PLAYER_HURTBOX;
 }

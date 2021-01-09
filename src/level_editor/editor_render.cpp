@@ -9,19 +9,19 @@
 
 namespace {
 
-const std::array<std::pair<Collision::CollisionType, sf::Color>, 9> type_color_map = {{
-    {Collision::CollisionType::STATIC, sf::Color(0, 128, 0, 200)},
-    {Collision::CollisionType::SEMI_SOLID, sf::Color(0, 255, 255, 200)},
-    {Collision::CollisionType::SLOPE, sf::Color(0, 0, 128, 200)},
-    {Collision::CollisionType::ENEMY_HITBOX, sf::Color(255, 0, 0, 200)},
-    {Collision::CollisionType::PLAYER_HURTBOX, sf::Color(255, 255, 0, 200)},
-    {Collision::CollisionType::PLAYER_HITBOX, sf::Color(255, 128, 0, 200)},
-    {Collision::CollisionType::TRANSITION, sf::Color(128, 128, 128, 200)},
-    {Collision::CollisionType::INTERACTABLE, sf::Color(255, 128, 0, 200)},
-    {Collision::CollisionType::COLLECTIBLE, sf::Color(255, 0, 255, 200)},
+const std::array<std::pair<Collideable::CollisionType, sf::Color>, 9> type_color_map = {{
+    {Collideable::CollisionType::STATIC, sf::Color(0, 128, 0, 200)},
+    {Collideable::CollisionType::SEMI_SOLID, sf::Color(0, 255, 255, 200)},
+    {Collideable::CollisionType::SLOPE, sf::Color(0, 0, 128, 200)},
+    {Collideable::CollisionType::ENEMY_HITBOX, sf::Color(255, 0, 0, 200)},
+    {Collideable::CollisionType::PLAYER_HURTBOX, sf::Color(255, 255, 0, 200)},
+    {Collideable::CollisionType::PLAYER_HITBOX, sf::Color(255, 128, 0, 200)},
+    {Collideable::CollisionType::TRANSITION, sf::Color(128, 128, 128, 200)},
+    {Collideable::CollisionType::INTERACTABLE, sf::Color(255, 128, 0, 200)},
+    {Collideable::CollisionType::COLLECTIBLE, sf::Color(255, 0, 255, 200)},
 }};
 
-void renderHitboxes(sf::RenderWindow& window, Collision::CollisionType coll_type, sf::Color color) {
+void renderHitboxes(sf::RenderWindow& window, Collideable::CollisionType coll_type, sf::Color color) {
     auto colls = World::IWorldRead::getCollisions(coll_type);
 
     for (auto it : colls) {

@@ -4,15 +4,28 @@
 
 #include "components/component.h"
 #include "components/transform.h"
-#include "hitbox.h"
-#include "collideable.h"
+#include "components/collision/hitbox.h"
 
-class Collision : public Component {
+class Collision;
+
+class Collideable : public Component {
   public:
-    // TODO Remove
-    friend Collideable;
+    enum class CollisionType {
+        STATIC,
+        SEMI_SOLID,
+        SLOPE,
+        PLAYER_HURTBOX,
+        PLAYER_HITBOX,
+        ENEMY_HITBOX,
+        TRANSITION,
+        HEALTH,
+        COLLECTIBLE,
+        INTERACTABLE,
 
-    Collision(std::weak_ptr<Transform> trans);
+        MAX_NUM
+    };
+
+    Collideable(std::weak_ptr<Transform> trans);
 
     // Component interface
     void update() override;
@@ -21,7 +34,7 @@ class Collision : public Component {
     virtual std::optional<nlohmann::json> outputToJson() override;
 
     // Load derived classes from json
-    static std::shared_ptr<Collision> createFromJson(nlohmann::json j, std::weak_ptr<Transform> trans);
+    static std::shared_ptr<Collideable> createFromJson(nlohmann::json j, std::weak_ptr<Transform> trans);
 
     // Collision interface
     bool collides(std::weak_ptr<const Collision> other_entity);
@@ -33,14 +46,9 @@ class Collision : public Component {
     std::weak_ptr<const Transform> getTransform() const;
 
     // Type-specific functions
-    virtual Collideable::CollisionType getType() const;
-
-    std::shared_ptr<Collideable> getCollideable() const;
-    void setCollideable(std::shared_ptr<Collideable> coll);
+    virtual CollisionType getType() const = 0;
 
   protected:
-    std::shared_ptr<Collideable> collideable_;
-
     std::weak_ptr<Transform> trans_;
 
     std::shared_ptr<Hitbox> hbox_;

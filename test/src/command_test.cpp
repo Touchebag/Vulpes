@@ -179,7 +179,8 @@ TEST_F(CommandTestFixture, ResizeObjectl) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
     editor_env->command->add(entity);
     entity->trans_->setPosition(0, 0);
-    entity->collision_ = std::make_shared<CollisionStatic>(entity->trans_);
+    entity->collision_ = std::make_shared<Collision>(entity->trans_);
+    entity->collision_->setCollideable(std::make_shared<CollideableStatic>(entity->trans_));
 
     editor_env->mouse->saveMousePosition();
 
@@ -244,7 +245,8 @@ TEST_F(CommandTestFixture, ToggleCollision) {
     assertWorldEmpty();
 
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    entity->collision_ = std::make_shared<CollisionStatic>(entity->trans_);
+    entity->collision_ = std::make_shared<Collision>(entity->trans_);
+    entity->collision_->setCollideable(std::make_shared<CollideableStatic>(entity->trans_));
     editor_env->command->add(entity);
 
     assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);

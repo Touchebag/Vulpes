@@ -211,7 +211,8 @@ TEST_F(HistoryTestFixture, ToggleRenderable) {
 
 TEST_F(HistoryTestFixture, ToggleCollision) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    entity->collision_ = std::make_shared<CollisionStatic>(entity->trans_);
+    entity->collision_ = std::make_shared<Collision>(entity->trans_);
+    entity->collision_->setCollideable(std::make_shared<CollideableStatic>(entity->trans_));
     editor_env->command->add(entity);
 
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();

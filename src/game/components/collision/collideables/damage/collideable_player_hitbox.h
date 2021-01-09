@@ -1,11 +1,11 @@
 #pragma once
 
-#include "components/collision/collision.h"
+#include "components/collision/collideable.h"
 #include "collideable_damage.h"
 
-class CollisionPlayerHitbox : public CollisionDamage {
+class CollideablePlayerHitbox : public CollideableDamage {
   public:
-    CollisionPlayerHitbox(std::weak_ptr<Transform> trans);
+    CollideablePlayerHitbox(std::weak_ptr<Transform> trans);
 
     void reloadFromJson(nlohmann::json j) override;
     std::optional<nlohmann::json> outputToJson() override;

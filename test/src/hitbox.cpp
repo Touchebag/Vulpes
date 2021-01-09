@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include "components/collision/collision.h"
 #include "components/collision/collideables/movement/collideable_static.h"
 #include "components/transform.h"
 
@@ -15,8 +16,9 @@ class StaticCollisionTestFixture : public ::testing::Test {
 };
 
 TEST_F(StaticCollisionTestFixture, CollideAtOrigin) {
-    std::shared_ptr<CollisionStatic> c1 = std::make_shared<CollisionStatic>(trans1_);
-    std::shared_ptr<CollisionStatic> c2 = std::make_shared<CollisionStatic>(trans2_);
+    std::shared_ptr<CollideableStatic> c1 = std::make_shared<CollideableStatic>(trans1_);
+    std::shared_ptr<Collision> c2 = std::make_shared<Collision>(trans2_);
+    c2->setCollideable(std::make_shared<CollideableStatic>(trans2_));
 
     c1->setHitbox(10, 20);
     c2->setHitbox(5, 30);
@@ -25,8 +27,9 @@ TEST_F(StaticCollisionTestFixture, CollideAtOrigin) {
 }
 
 TEST_F(StaticCollisionTestFixture, CollideAtOffset) {
-    std::shared_ptr<CollisionStatic> c1 = std::make_shared<CollisionStatic>(trans1_);
-    std::shared_ptr<CollisionStatic> c2 = std::make_shared<CollisionStatic>(trans2_);
+    std::shared_ptr<CollideableStatic> c1 = std::make_shared<CollideableStatic>(trans1_);
+    std::shared_ptr<Collision> c2 = std::make_shared<Collision>(trans2_);
+    c2->setCollideable(std::make_shared<CollideableStatic>(trans2_));
 
     c1->setHitbox(10, 20);
     trans1_->setPosition(5, 10);
@@ -37,8 +40,9 @@ TEST_F(StaticCollisionTestFixture, CollideAtOffset) {
 }
 
 TEST_F(StaticCollisionTestFixture, NotColliding) {
-    std::shared_ptr<CollisionStatic> c1 = std::make_shared<CollisionStatic>(trans1_);
-    std::shared_ptr<CollisionStatic> c2 = std::make_shared<CollisionStatic>(trans2_);
+    std::shared_ptr<CollideableStatic> c1 = std::make_shared<CollideableStatic>(trans1_);
+    std::shared_ptr<Collision> c2 = std::make_shared<Collision>(trans2_);
+    c2->setCollideable(std::make_shared<CollideableStatic>(trans2_));
 
     c1->setHitbox(10, 10);
     trans1_->setPosition(20, 50);
@@ -49,8 +53,9 @@ TEST_F(StaticCollisionTestFixture, NotColliding) {
 }
 
 TEST_F(StaticCollisionTestFixture, NotCollidingTouching) {
-    std::shared_ptr<CollisionStatic> c1 = std::make_shared<CollisionStatic>(trans1_);
-    std::shared_ptr<CollisionStatic> c2 = std::make_shared<CollisionStatic>(trans2_);
+    std::shared_ptr<CollideableStatic> c1 = std::make_shared<CollideableStatic>(trans1_);
+    std::shared_ptr<Collision> c2 = std::make_shared<Collision>(trans2_);
+    c2->setCollideable(std::make_shared<CollideableStatic>(trans2_));
 
     c1->setHitbox(10, 10);
     trans1_->setPosition(5, 5);
