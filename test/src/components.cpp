@@ -206,7 +206,6 @@ TEST(TestComponents, TestSaveLoadHealthCollectible) {
 TEST(TestComponents, TestSaveLoadPlayerDamageable) {
     std::shared_ptr<Transform> trans = std::make_shared<Transform>();
     std::shared_ptr<Collision> coll = std::make_shared<Collision>(trans);
-    coll->setCollideable(std::make_shared<CollideablePlayerHurtbox>(trans));
     std::shared_ptr<MovableEntity> move = std::make_shared<MovableEntity>(trans, coll);
     std::shared_ptr<Death> death = std::make_shared<Death>();
     std::shared_ptr<Subentity> subent = std::make_shared<Subentity>(trans, move);
@@ -309,7 +308,6 @@ TEST(TestComponents, TestSaveLoadSlope) {
 TEST(TestComponents, TestSaveLoadPlayerActions) {
     std::shared_ptr<Transform> trans = std::make_shared<Transform>();
     std::shared_ptr<Collision> coll = std::make_shared<Collision>(trans);
-    coll->setCollideable(std::make_shared<CollideablePlayerHurtbox>(trans));
     std::shared_ptr<MovableEntity> move = std::make_shared<MovableEntity>(trans, coll);
     std::shared_ptr<Death> death = std::make_shared<Death>();
     std::shared_ptr<RenderableEntity> render = std::make_shared<RenderableEntity>(trans, move);
@@ -348,7 +346,6 @@ TEST(TestComponents, TestSaveLoadPlayerActions) {
 TEST(TestComponents, TestSaveLoadAnimationFile) {
     std::shared_ptr<Transform> trans = std::make_shared<Transform>();
     std::shared_ptr<Collision> coll = std::make_shared<Collision>(trans);
-    coll->setCollideable(std::make_shared<CollideablePlayerHurtbox>(trans));
     std::shared_ptr<MovableEntity> move = std::make_shared<MovableEntity>(trans, coll);
     std::shared_ptr<RenderableEntity> render = std::make_shared<RenderableEntity>(trans, move);
 

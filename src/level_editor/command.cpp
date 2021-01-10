@@ -26,7 +26,7 @@ void Command::update() {
                     if (j.contains("Collision")) {
                         auto coll = j["Collision"];
                         if (editor_env->current_entity->collision_) {
-                            editor_env->current_entity->collision_->setHitbox(
+                            editor_env->current_entity->collision_->getCollideable()->setHitbox(
                                     static_cast<int>(static_cast<float>(coll["width"].get<int>()) + (mouse_world_dist.first * 2.0)),
                                     static_cast<int>(static_cast<float>(coll["height"].get<int>()) + (mouse_world_dist.second * 2.0)));
                         }
@@ -199,9 +199,7 @@ void Command::handleCommand(Commands command) {
                 if (editor_env->current_entity->collision_) {
                     editor_env->current_entity->collision_ = {};
                 } else {
-                    auto collision = std::make_shared<CollideableStatic>(editor_env->current_entity->trans_);
                     editor_env->current_entity->collision_ = std::make_shared<Collision>(editor_env->current_entity->trans_);
-                    editor_env->current_entity->collision_->setCollideable(collision);
                 }
                 World::getInstance<World::IWorldModify>().addEntity(editor_env->current_entity);
                 editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();

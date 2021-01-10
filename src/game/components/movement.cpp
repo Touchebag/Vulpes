@@ -12,12 +12,12 @@ std::pair<double, double> checkMovement(double velX, double velY,
     double x = velX;
     double y = velY;
 
-    auto world_colls = World::getInstance<World::IWorldRead>().getCollisions(type);
+    auto world_colls = World::getInstance<World::IWorldRead>().getCollideables(type);
     for (auto it = world_colls.begin(); it != world_colls.end(); ++it) {
         auto other_coll = (*it).lock();
 
         if (other_coll) {
-            if (auto static_coll = std::dynamic_pointer_cast<const ICollideableMovement>(other_coll->getCollideable())) {
+            if (auto static_coll = std::dynamic_pointer_cast<const ICollideableMovement>(other_coll)) {
                 std::pair<double, double> newMoveValues = static_coll->getMaximumMovement(x, y, this_coll->getCollideable());
                 x = newMoveValues.first;
                 y = newMoveValues.second;

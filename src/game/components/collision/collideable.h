@@ -6,9 +6,7 @@
 #include "components/transform.h"
 #include "components/collision/hitbox.h"
 
-class Collision;
-
-class Collideable : public Component {
+class Collideable {
   public:
     enum class CollisionType {
         STATIC,
@@ -28,16 +26,16 @@ class Collideable : public Component {
     Collideable(std::weak_ptr<Transform> trans);
 
     // Component interface
-    void update() override;
+    virtual void update();
 
-    virtual void reloadFromJson(nlohmann::json j) override;
-    virtual std::optional<nlohmann::json> outputToJson() override;
+    virtual void reloadFromJson(nlohmann::json j);
+    virtual std::optional<nlohmann::json> outputToJson();
 
     // Load derived classes from json
     static std::shared_ptr<Collideable> createFromJson(nlohmann::json j, std::weak_ptr<Transform> trans);
 
     // Collision interface
-    bool collides(std::weak_ptr<const Collision> other_entity);
+    bool collides(std::weak_ptr<const Collideable> other_entity);
 
     // Getters/setters
     void setHitbox(int width, int height);

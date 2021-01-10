@@ -154,7 +154,7 @@ std::optional<nlohmann::json> Collideable::outputToJson() {
     throw std::runtime_error("Collideable: this should not happen");
 }
 
-bool Collideable::collides(std::weak_ptr<const Collision> other_entity) {
+bool Collideable::collides(std::weak_ptr<const Collideable> other_entity) {
     if (auto other_ent = other_entity.lock()) {
         auto this_trans = getTransform().lock();
         auto other_trans = other_ent->getTransform().lock();

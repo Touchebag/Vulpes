@@ -49,7 +49,7 @@ std::optional<nlohmann::json> CollideableInteractable::outputToJson() {
 
 void CollideableInteractable::update() {
     if (World::IWorldRead::hasInteractTriggered()) {
-        for (auto it : World::IWorldRead::getCollisions(Collideable::CollisionType::PLAYER_HURTBOX)) {
+        for (auto it : World::IWorldRead::getCollideables(Collideable::CollisionType::PLAYER_HURTBOX)) {
             if (collides(it)) {
                 if (transition_) {
                     World::IWorldModify::loadRoom(transition_.value().first, transition_.value().second);

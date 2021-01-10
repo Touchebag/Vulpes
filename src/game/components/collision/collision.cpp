@@ -42,14 +42,10 @@ void Collision::update() {
     collideable_->update();
 }
 
-void Collision::setHitbox(int width, int height) {
-    collideable_->setHitbox(width, height);
-}
-
 std::shared_ptr<Collision> Collision::createFromJson(nlohmann::json j, std::weak_ptr<Transform> trans) {
     auto collision = std::make_shared<Collision>(trans);
 
-    collision->collideable_ = Collideable::createFromJson(j, trans);
+    collision->setCollideable(j);
 
     return collision;
 }
@@ -63,15 +59,19 @@ std::optional<nlohmann::json> Collision::outputToJson() {
 }
 
 bool Collision::collides(std::weak_ptr<const Collision> other_entity) {
+    if (auto other_coll = other_entity.lock()) {
+        return collides(other_coll->getCollideable());
+    }
+
+    return false;
+}
+
+bool Collision::collides(std::weak_ptr<const Collideable> other_entity) {
     return collideable_->collides(other_entity);
 }
 
 Collideable::CollisionType Collision::getType() const {
     return collideable_->getType();
-}
-
-const std::shared_ptr<const Hitbox> Collision::getHitbox() const {
-    return collideable_->getHitbox();
 }
 
 std::weak_ptr<const Transform> Collision::getTransform() const {
@@ -82,6 +82,14 @@ std::shared_ptr<Collideable> Collision::getCollideable() const {
     return collideable_;
 }
 
-void Collision::setCollideable(std::shared_ptr<Collideable> coll) {
-    collideable_ = coll;
+void Collision::setCollideable(nlohmann::json j) {
+    auto coll = Collideable::createFromJson(j, trans_);
+
+    if (coll) {
+        collideable_ = Collideable::createFromJson(j, trans_);
+    } else {
+        // This should never happen as createFromJson will throw
+        // Message here for debug reasons
+        LOGE("Collision, failed to create collidable");
+    }
 }

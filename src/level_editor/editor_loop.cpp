@@ -236,8 +236,8 @@ int level_editor_main(sf::RenderWindow& window) {
                 std::static_pointer_cast<RenderableText>(current_entity_hud_text->renderableEntity_)
                     ->setText(std::string("X:") + std::to_string(transform->getX()) +
                               " Y: " + std::to_string(transform->getY()) +
-                              "\nW:" + std::to_string(coll->getHitbox()->width_) +
-                              " H: " + std::to_string(coll->getHitbox()->height_));
+                              "\nW:" + std::to_string(coll->getCollideable()->getHitbox()->width_) +
+                              " H: " + std::to_string(coll->getCollideable()->getHitbox()->height_));
             }
         } else {
             std::static_pointer_cast<RenderableText>(current_entity_hud_text->renderableEntity_)

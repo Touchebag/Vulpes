@@ -223,8 +223,8 @@ void World::addEntity(std::shared_ptr<BaseEntity> entity) {
     world_objects_.push_back(entity);
 
     auto coll = entity->collision_;
-    if (coll) {
-        collisions_[static_cast<int>(coll->getType())].push_back(coll);
+    if (coll && coll->getCollideable()) {
+        collideables_[static_cast<int>(coll->getType())].push_back(coll->getCollideable());
     }
 
     System::getRender()->addEntity(entity->renderableEntity_);
@@ -240,8 +240,8 @@ void World::removeEntity(std::shared_ptr<BaseEntity> entity) {
 void World::addPlayer(std::shared_ptr<Player> player) {
     auto coll = player->collision_;
 
-    if (coll) {
-        collisions_[static_cast<int>(coll->getType())].push_back(coll);
+    if (coll && coll->getCollideable()) {
+        collideables_[static_cast<int>(coll->getType())].push_back(coll->getCollideable());
     }
 
     System::getRender()->addEntity(player_->renderableEntity_);
@@ -254,7 +254,7 @@ void World::loadRoom(std::string room_name, int entrance_id) {
 }
 
 void World::setShiftedPlayerPosition(Collideable::CollisionType ctype) {
-    auto world_colls = World::getInstance<World::IWorldRead>().getCollisions(ctype);
+    auto world_colls = World::getInstance<World::IWorldRead>().getCollideables(ctype);
     auto p_trans = player_->trans_;
 
     for (auto it = world_colls.begin(); it != world_colls.end(); ++it) {
@@ -266,7 +266,7 @@ void World::setShiftedPlayerPosition(Collideable::CollisionType ctype) {
             auto other_trans = other_coll->getTransform().lock();
 
             auto new_y_pos = other_trans->getY() - (other_hbox->height_ / 2) -
-                player_->collision_->getHitbox()->height_ / 2;
+                player_->collision_->getCollideable()->getHitbox()->height_ / 2;
 
             p_trans->setPosition(p_trans->getX(), new_y_pos);
         }
@@ -294,7 +294,7 @@ void World::setEntrance(int entrance_id) {
 std::vector<std::shared_ptr<BaseEntity>>::iterator World::deleteEntity(std::vector<std::shared_ptr<BaseEntity>>::iterator entity_it) {
     auto ret_it = world_objects_.erase(entity_it);
 
-    for (auto& coll_type : collisions_) {
+    for (auto& coll_type : collideables_) {
         for (auto it = coll_type.begin(); it != coll_type.end();) {
             if (it->expired()) {
                 it = coll_type.erase(it);

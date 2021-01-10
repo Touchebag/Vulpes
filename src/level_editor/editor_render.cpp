@@ -22,7 +22,7 @@ const std::array<std::pair<Collideable::CollisionType, sf::Color>, 9> type_color
 }};
 
 void renderHitboxes(sf::RenderWindow& window, Collideable::CollisionType coll_type, sf::Color color) {
-    auto colls = World::IWorldRead::getCollisions(coll_type);
+    auto colls = World::IWorldRead::getCollideables(coll_type);
 
     for (auto it : colls) {
         if (auto ptr = it.lock()) {
