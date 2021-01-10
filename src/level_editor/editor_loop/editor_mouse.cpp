@@ -1,6 +1,6 @@
 #include "editor_mouse.h"
 
-#include "components/collision/movement/collision_static.h"
+#include "components/collision/collideables/movement/collideable_static.h"
 
 void EditorMouse::handleMousePress(std::shared_ptr<EditorEnvironment> editor_env) {
     if (editor_env->event.mouseButton.button == sf::Mouse::Button::Left) {
@@ -14,24 +14,22 @@ void EditorMouse::handleMousePress(std::shared_ptr<EditorEnvironment> editor_env
         std::shared_ptr<Transform> tmp_trans = std::make_shared<Transform>();
         tmp_trans->setPosition(static_cast<int>(mouse_world_pos.first), static_cast<int>(mouse_world_pos.second));
 
-        std::shared_ptr<CollisionStatic> tmp_coll = std::make_shared<CollisionStatic>(tmp_trans);
-        tmp_coll->setHitbox(50, 50);
+        std::shared_ptr<Collision> tmp_coll = std::make_shared<Collision>(tmp_trans);
+        tmp_coll->getCollideable()->setHitbox(50, 50);
 
         auto player = World::getInstance<World::IWorldModify>().getPlayer().lock();
         if (player && player->collision_ && player->collision_->collides(tmp_coll)) {
             editor_env->current_entity = player;
         } else {
             for (auto it : World::getInstance<World::IWorldModify>().getWorldObjects()) {
-                std::shared_ptr<Collision> other_coll;
+                std::shared_ptr<Collision> other_coll = std::make_shared<Collision>(it->trans_);
                 if (it->renderableEntity_ && (it->renderableEntity_->getLayer() == editor_env->current_layer)) {
-                    other_coll = std::make_shared<CollisionStatic>(it->trans_);
                     auto size = it->renderableEntity_->getSize();
-                    other_coll->setHitbox(size.first, size.second);
+                    other_coll->getCollideable()->setHitbox(size.first, size.second);
                 } else if (it->collision_) {
-                    other_coll = std::static_pointer_cast<Collision>(it->collision_);
+                    other_coll = it->collision_;
                 } else if (it->trans_) {
-                    other_coll = std::make_shared<CollisionStatic>(it->trans_);
-                    other_coll->setHitbox(50, 50);
+                    other_coll->getCollideable()->setHitbox(50, 50);
                 }
 
                 if (other_coll && other_coll->collides(tmp_coll)) {
@@ -61,12 +59,13 @@ void EditorMouse::handleMousePress(std::shared_ptr<EditorEnvironment> editor_env
         } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
             auto coll = editor_env->current_entity->collision_;
             if (editor_env->current_entity && coll) {
+                auto collideable = coll->getCollideable();
                 int width = static_cast<int>(
-                        std::round(static_cast<float>(coll->getHitbox()->width_) / 5.0) * 5.0);
+                        std::round(static_cast<float>(collideable->getHitbox()->width_) / 5.0) * 5.0);
                 int height = static_cast<int>(
-                        std::round(static_cast<float>(coll->getHitbox()->height_) / 5.0) * 5.0);
+                        std::round(static_cast<float>(collideable->getHitbox()->height_) / 5.0) * 5.0);
 
-                editor_env->current_entity->collision_->setHitbox(width, height);
+                editor_env->current_entity->collision_->getCollideable()->setHitbox(width, height);
             }
         } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
             if (editor_env->current_entity) {

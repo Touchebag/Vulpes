@@ -1,22 +1,22 @@
-#include "collision_transition.h"
+#include "collideable_transition.h"
 
 #include "system/world.h"
 #include "utils/log.h"
 
-CollisionTransition::CollisionTransition(std::weak_ptr<Transform> trans) :
-    Collision(trans) {
+CollideableTransition::CollideableTransition(std::weak_ptr<Transform> trans) :
+    Collideable(trans) {
 }
 
-void CollisionTransition::update() {
+void CollideableTransition::update() {
     auto player = World::IWorldRead::getPlayer().lock();
 
-    if (collides(player->collision_)) {
+    if (player->collision_ && collides(player->collision_->getCollideable())) {
         World::IWorldModify::loadRoom(room_, entrance_id_);
     }
 }
 
-void CollisionTransition::reloadFromJson(nlohmann::json j) {
-    Collision::reloadFromJson(j);
+void CollideableTransition::reloadFromJson(nlohmann::json j) {
+    Collideable::reloadFromJson(j);
 
     if (!j.contains("destination")) {
         throw std::invalid_argument("Transition: destination not found");
@@ -32,8 +32,8 @@ void CollisionTransition::reloadFromJson(nlohmann::json j) {
     entrance_id_ = dest["entrance_id"].get<int>();
 }
 
-std::optional<nlohmann::json> CollisionTransition::outputToJson() {
-    nlohmann::json base_json = Collision::outputToJson().value();
+std::optional<nlohmann::json> CollideableTransition::outputToJson() {
+    nlohmann::json base_json = Collideable::outputToJson().value();
 
     nlohmann::json j;
     j["room"] = room_;
@@ -43,6 +43,6 @@ std::optional<nlohmann::json> CollisionTransition::outputToJson() {
     return base_json;
 }
 
-Collision::CollisionType CollisionTransition::getType() const {
-    return Collision::CollisionType::TRANSITION;
+Collideable::CollisionType CollideableTransition::getType() const {
+    return Collideable::CollisionType::TRANSITION;
 }

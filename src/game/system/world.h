@@ -16,10 +16,9 @@ class World {
  * TODO Figure out if this is a good idea
  */
   public:
-
     class IWorldRead {
       public:
-        static const std::vector<std::weak_ptr<const Collision>>& getCollisions(Collision::CollisionType coll_type);
+        static const std::vector<std::weak_ptr<const Collideable>>& getCollideables(Collideable::CollisionType coll_type);
 
         static util::Point getPlayerPosition();
 
@@ -89,7 +88,7 @@ class World {
     void loadRoom(std::string room_name, int entrance_id);
 
     void setEntrance(int entrance_id);
-    void setShiftedPlayerPosition(Collision::CollisionType c_type);
+    void setShiftedPlayerPosition(Collideable::CollisionType c_type);
 
     std::vector<std::shared_ptr<BaseEntity>>::iterator deleteEntity(std::vector<std::shared_ptr<BaseEntity>>::iterator it);
 
@@ -108,7 +107,7 @@ class World {
 
     std::vector<std::shared_ptr<BaseEntity>> world_objects_;
 
-    std::array<std::vector<std::weak_ptr<const Collision>>, static_cast<int>(Collision::CollisionType::MAX_NUM)> collisions_;
+    std::array<std::vector<std::weak_ptr<const Collideable>>, static_cast<int>(Collideable::CollisionType::MAX_NUM)> collideables_;
 
     std::vector<util::Point> entrances_;
 

@@ -6,8 +6,8 @@
 #include "system/world.h"
 #include "utils/log.h"
 
-#include "components/collision/collision_collectible.h"
-#include "components/collision/collision_interactable.h"
+#include "components/collision/collideables/collideable_collectible.h"
+#include "components/collision/collideables/collideable_interactable.h"
 
 namespace {
 
@@ -27,10 +27,10 @@ ActionsPlayer::ActionsPlayer(std::weak_ptr<Death> death, std::weak_ptr<Collision
 
 void ActionsPlayer::update() {
     if (auto coll = coll_.lock()) {
-        for (auto& it : World::IWorldRead::getCollisions(Collision::CollisionType::COLLECTIBLE)) {
+        for (auto& it : World::IWorldRead::getCollideables(Collideable::CollisionType::COLLECTIBLE)) {
             if (auto other_coll = it.lock()) {
                 if (coll->collides(other_coll)) {
-                    if (auto collectible = std::dynamic_pointer_cast<const CollisionCollectible>(other_coll)) {
+                    if (auto collectible = std::dynamic_pointer_cast<const CollideableCollectible>(other_coll)) {
                         try {
                             enableAction(id_actions_map.at(collectible->getId()));
                         } catch (std::out_of_range& e) {

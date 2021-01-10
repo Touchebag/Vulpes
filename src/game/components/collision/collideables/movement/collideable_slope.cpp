@@ -1,13 +1,13 @@
-#include "collision_slope.h"
+#include "collideable_slope.h"
 
 #include "components/collision/collision_utils.h"
 #include "utils/log.h"
 
-CollisionSlope::CollisionSlope(std::weak_ptr<Transform> trans) :
-    ICollisionMovement(trans) {
+CollideableSlope::CollideableSlope(std::weak_ptr<Transform> trans) :
+    ICollideableMovement(trans) {
 }
 
-void CollisionSlope::recalculateConstants() {
+void CollideableSlope::recalculateConstants() {
     if (auto this_trans = trans_.lock()) {
         auto top = getAbsTop(this_trans, hbox_);
         auto bot = getAbsBottom(this_trans, hbox_);
@@ -25,8 +25,8 @@ void CollisionSlope::recalculateConstants() {
     }
 }
 
-void CollisionSlope::reloadFromJson(nlohmann::json j) {
-    Collision::reloadFromJson(j);
+void CollideableSlope::reloadFromJson(nlohmann::json j) {
+    Collideable::reloadFromJson(j);
 
     if (j.contains("direction")) {
         auto str = j["direction"].get<std::string>();
@@ -45,33 +45,33 @@ void CollisionSlope::reloadFromJson(nlohmann::json j) {
     recalculateConstants();
 }
 
-std::optional<nlohmann::json> CollisionSlope::outputToJson() {
-    nlohmann::json j = Collision::outputToJson().value();
+std::optional<nlohmann::json> CollideableSlope::outputToJson() {
+    nlohmann::json j = Collideable::outputToJson().value();
 
     j["direction"] = direction_right_ ? "right" : "left";
 
     return j;
 }
 
-Collision::CollisionType CollisionSlope::getType() const {
-    return Collision::CollisionType::SLOPE;
+Collideable::CollisionType CollideableSlope::getType() const {
+    return Collideable::CollisionType::SLOPE;
 }
 
-int CollisionSlope::getCurrentHeight(int x) const {
+int CollideableSlope::getCurrentHeight(int x) const {
     auto ret_x = static_cast<int>(x * slope_coeff_) + slope_const_;
 
     return ret_x;
 }
 
-// TODO Some duplicated code with CollisionStatic
+// TODO Some duplicated code with CollideableStatic
 // See if can be broken out
-std::pair<double, double> CollisionSlope::getMaximumMovement(double stepX, double stepY,
-        std::shared_ptr<const Collision> other_coll) const {
+std::pair<double, double> CollideableSlope::getMaximumMovement(double stepX, double stepY,
+        std::shared_ptr<const Collideable> other_coll) const {
     auto other_trans = other_coll->getTransform().lock();
     auto other_hbox = other_coll->getHitbox();
 
     if (!other_trans) {
-        LOGW("CollisionSlope: unable to lock other");
+        LOGW("CollideableSlope: unable to lock other");
         return {stepX, stepY};
     }
 
@@ -118,7 +118,7 @@ std::pair<double, double> CollisionSlope::getMaximumMovement(double stepX, doubl
             return {retX, retY};
         }
     } else {
-        LOGW("CollisionSlope: Missing transform");
+        LOGW("CollideableSlope: Missing transform");
     }
 
     return {retX, retY};

@@ -4,7 +4,7 @@
 #include "level_editor/history.h"
 #include "mocks/mock_mouse.h"
 
-#include "components/collision/movement/collision_static.h"
+#include "components/collision/collideables/movement/collideable_static.h"
 
 class HistoryTestFixture : public ::testing::Test {
   public:
@@ -211,7 +211,7 @@ TEST_F(HistoryTestFixture, ToggleRenderable) {
 
 TEST_F(HistoryTestFixture, ToggleCollision) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    entity->collision_ = std::make_shared<CollisionStatic>(entity->trans_);
+    entity->collision_ = std::make_shared<Collision>(entity->trans_);
     editor_env->command->add(entity);
 
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();

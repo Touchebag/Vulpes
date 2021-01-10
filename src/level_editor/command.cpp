@@ -4,7 +4,7 @@
 
 #include "operation.h"
 #include "editor_loop/editor_environment.h"
-#include "components/collision/movement/collision_static.h"
+#include "components/collision/collideables/movement/collideable_static.h"
 #include "utils/log.h"
 
 Command::Command(std::weak_ptr<EditorEnvironment> editor_env) :
@@ -26,7 +26,7 @@ void Command::update() {
                     if (j.contains("Collision")) {
                         auto coll = j["Collision"];
                         if (editor_env->current_entity->collision_) {
-                            editor_env->current_entity->collision_->setHitbox(
+                            editor_env->current_entity->collision_->getCollideable()->setHitbox(
                                     static_cast<int>(static_cast<float>(coll["width"].get<int>()) + (mouse_world_dist.first * 2.0)),
                                     static_cast<int>(static_cast<float>(coll["height"].get<int>()) + (mouse_world_dist.second * 2.0)));
                         }
@@ -79,7 +79,7 @@ void Command::add(std::shared_ptr<BaseEntity> entity) {
     auto editor_env = editor_env_.lock();
 
     std::shared_ptr<Transform> trans = std::make_shared<Transform>();
-    std::shared_ptr<CollisionStatic> coll = std::make_shared<CollisionStatic>(trans);
+    std::shared_ptr<CollideableStatic> coll = std::make_shared<CollideableStatic>(trans);
     std::shared_ptr<RenderableEntity> render = std::make_shared<RenderableEntity>(trans, std::weak_ptr<MovableEntity>());
 
     coll->setHitbox(50, 50);
@@ -199,8 +199,7 @@ void Command::handleCommand(Commands command) {
                 if (editor_env->current_entity->collision_) {
                     editor_env->current_entity->collision_ = {};
                 } else {
-                    auto collision = std::make_shared<CollisionStatic>(editor_env->current_entity->trans_);
-                    editor_env->current_entity->collision_ = collision;
+                    editor_env->current_entity->collision_ = std::make_shared<Collision>(editor_env->current_entity->trans_);
                 }
                 World::getInstance<World::IWorldModify>().addEntity(editor_env->current_entity);
                 editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();

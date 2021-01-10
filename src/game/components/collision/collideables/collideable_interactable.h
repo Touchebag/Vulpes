@@ -1,17 +1,17 @@
 #pragma once
 
-#include "collision.h"
+#include "components/collision/collision.h"
 
-class CollisionInteractable : public Collision {
+class CollideableInteractable : public Collideable {
   public:
-    CollisionInteractable(std::weak_ptr<Transform> trans);
+    CollideableInteractable(std::weak_ptr<Transform> trans);
 
     void reloadFromJson(nlohmann::json j) override;
     std::optional<nlohmann::json> outputToJson() override;
 
     void update() override;
 
-    Collision::CollisionType getType() const override;
+    Collideable::CollisionType getType() const override;
 
   private:
     std::optional<std::pair<std::string, int>> transition_;

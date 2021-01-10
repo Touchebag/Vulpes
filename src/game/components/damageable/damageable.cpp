@@ -3,18 +3,18 @@
 #include "utils/log.h"
 #include "system/world.h"
 #include "damageable_player.h"
-#include "components/collision/damage/collision_damage.h"
+#include "components/collision/collideables/damage/collideable_damage.h"
 
 namespace {
 
-typedef Collision::CollisionType Ctype;
+typedef Collideable::CollisionType Ctype;
 
 std::map<Ctype, Ctype> type_mapping = {
     {Ctype::PLAYER_HURTBOX, Ctype::ENEMY_HITBOX},
     {Ctype::ENEMY_HITBOX, Ctype::PLAYER_HITBOX}
 };
 
-bool knockbackRight(std::shared_ptr<Collision> this_coll, std::shared_ptr<const Collision> other_coll) {
+bool knockbackRight(std::shared_ptr<Collideable> this_coll, std::shared_ptr<const Collideable> other_coll) {
     if (auto this_trans = this_coll->getTransform().lock()) {
         if (auto other_trans = other_coll->getTransform().lock()) {
             // If this is left of hitbox, move left
@@ -85,16 +85,16 @@ void Damageable::update() {
         return;
     }
 
-    if (auto coll = hurtbox_.lock()) {
+    if (auto coll = hurtbox_.lock()->getCollideable()) {
         auto hurting_type = type_mapping.at(coll->getType());
 
-        for (auto& it : World::IWorldRead::getCollisions(hurting_type)) {
+        for (auto& it : World::IWorldRead::getCollideables(hurting_type)) {
             if (auto other_coll = it.lock()) {
 
                 if (coll->collides(other_coll)) {
 
                     collision::AttackAttributes attributes;
-                    if (auto other_coll_damage = std::dynamic_pointer_cast<const CollisionDamage>(other_coll)) {
+                    if (auto other_coll_damage = std::dynamic_pointer_cast<const CollideableDamage>(other_coll)) {
                         attributes = other_coll_damage->getAttributes();
                     } else {
                         LOGW("Could not cast collision type to get attributes");

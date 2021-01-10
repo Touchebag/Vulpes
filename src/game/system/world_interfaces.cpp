@@ -4,8 +4,8 @@
 
 /*--- Read ---*/
 
-const std::vector<std::weak_ptr<const Collision>>& World::IWorldRead::getCollisions(Collision::CollisionType coll_type) {
-    return World::getWorldInstance().collisions_[static_cast<int>(coll_type)];
+const std::vector<std::weak_ptr<const Collideable>>& World::IWorldRead::getCollideables(Collideable::CollisionType coll_type) {
+    return World::getWorldInstance().collideables_[static_cast<int>(coll_type)];
 }
 
 util::Point World::IWorldRead::getPlayerPosition() {

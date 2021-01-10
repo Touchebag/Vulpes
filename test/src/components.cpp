@@ -4,18 +4,18 @@
 
 #include "components/actions/actions_player.h"
 
-#include "components/collision/collision_player_hurtbox.h"
-#include "components/collision/collision_transition.h"
-#include "components/collision/collision_health.h"
-#include "components/collision/collision_collectible.h"
-#include "components/collision/collision_interactable.h"
+#include "components/collision/collideables/collideable_player_hurtbox.h"
+#include "components/collision/collideables/collideable_transition.h"
+#include "components/collision/collideables/collideable_health.h"
+#include "components/collision/collideables/collideable_collectible.h"
+#include "components/collision/collideables/collideable_interactable.h"
 
-#include "components/collision/movement/collision_static.h"
-#include "components/collision/movement/collision_semisolid.h"
-#include "components/collision/movement/collision_slope.h"
+#include "components/collision/collideables/movement/collideable_static.h"
+#include "components/collision/collideables/movement/collideable_semisolid.h"
+#include "components/collision/collideables/movement/collideable_slope.h"
 
-#include "components/collision/damage/collision_player_hitbox.h"
-#include "components/collision/damage/collision_enemy_hitbox.h"
+#include "components/collision/collideables/damage/collideable_player_hitbox.h"
+#include "components/collision/collideables/damage/collideable_enemy_hitbox.h"
 
 #include "components/damageable/damageable_player.h"
 
@@ -112,8 +112,8 @@ TEST(TestComponents, TestSaveLoadStatic) {
     nlohmann::json attack = nlohmann::json::parse("{ \"damage\": 5, \"knockback_x\": 50, \"knockback_y\": 10 }");
 
     j1["type"] = "static";
-    std::shared_ptr<CollisionStatic> coll =
-        std::dynamic_pointer_cast<CollisionStatic>(Collision::createFromJson(j1, trans));
+    std::shared_ptr<CollideableStatic> coll =
+        std::dynamic_pointer_cast<CollideableStatic>(Collideable::createFromJson(j1, trans));
     // Ensure dynamic cast valid
     ASSERT_TRUE(coll);
 
@@ -126,8 +126,8 @@ TEST(TestComponents, TestSaveLoadPlayerHurtbox) {
     nlohmann::json j1 = nlohmann::json::parse("{ \"width\": 46, \"height\": 52 }");
 
     j1["type"] = "player_hurtbox";
-    std::shared_ptr<CollisionPlayerHurtbox> coll =
-        std::dynamic_pointer_cast<CollisionPlayerHurtbox>(Collision::createFromJson(j1, trans));
+    std::shared_ptr<CollideablePlayerHurtbox> coll =
+        std::dynamic_pointer_cast<CollideablePlayerHurtbox>(Collideable::createFromJson(j1, trans));
     // Ensure dynamic cast valid
     ASSERT_TRUE(coll);
 
@@ -141,8 +141,8 @@ TEST(TestComponents, TestSaveLoadPlayerHitbox) {
     j1["attack"] = nlohmann::json::parse("{ \"damage\": 5, \"knockback_x\": 50, \"knockback_y\": 10 }");
 
     j1["type"] = "player_hitbox";
-    std::shared_ptr<CollisionPlayerHitbox> coll =
-        std::dynamic_pointer_cast<CollisionPlayerHitbox>(Collision::createFromJson(j1, trans));
+    std::shared_ptr<CollideablePlayerHitbox> coll =
+        std::dynamic_pointer_cast<CollideablePlayerHitbox>(Collideable::createFromJson(j1, trans));
     // Ensure dynamic cast valid
     ASSERT_TRUE(coll);
 
@@ -160,8 +160,8 @@ TEST(TestComponents, TestSaveLoadEnemyHitbox) {
     j1["attack"] = nlohmann::json::parse("{ \"damage\": 5, \"knockback_x\": 50, \"knockback_y\": 10 }");
 
     j1["type"] = "enemy_hitbox";
-    std::shared_ptr<CollisionEnemyHitbox> coll =
-        std::dynamic_pointer_cast<CollisionEnemyHitbox>(Collision::createFromJson(j1, trans));
+    std::shared_ptr<CollideableEnemyHitbox> coll =
+        std::dynamic_pointer_cast<CollideableEnemyHitbox>(Collideable::createFromJson(j1, trans));
     // Ensure dynamic cast valid
     ASSERT_TRUE(coll);
 
@@ -179,8 +179,8 @@ TEST(TestComponents, TestSaveLoadTransition) {
     j1["destination"] = nlohmann::json::parse("{ \"room\": \"world.json\", \"entrance_id\": 1 }");
 
     j1["type"] = "transition";
-    std::shared_ptr<CollisionTransition> coll =
-        std::dynamic_pointer_cast<CollisionTransition>(Collision::createFromJson(j1, trans));
+    std::shared_ptr<CollideableTransition> coll =
+        std::dynamic_pointer_cast<CollideableTransition>(Collideable::createFromJson(j1, trans));
     // Ensure dynamic cast valid
     ASSERT_TRUE(coll);
 
@@ -194,8 +194,8 @@ TEST(TestComponents, TestSaveLoadHealthCollectible) {
     j1["health"] = 10;
 
     j1["type"] = "health";
-    std::shared_ptr<CollisionHealth> coll =
-        std::dynamic_pointer_cast<CollisionHealth>(Collision::createFromJson(j1, trans));
+    std::shared_ptr<CollideableHealth> coll =
+        std::dynamic_pointer_cast<CollideableHealth>(Collideable::createFromJson(j1, trans));
     // Ensure dynamic cast valid
     ASSERT_TRUE(coll);
 
@@ -205,7 +205,7 @@ TEST(TestComponents, TestSaveLoadHealthCollectible) {
 
 TEST(TestComponents, TestSaveLoadPlayerDamageable) {
     std::shared_ptr<Transform> trans = std::make_shared<Transform>();
-    std::shared_ptr<Collision> coll = std::make_shared<CollisionPlayerHurtbox>(trans);
+    std::shared_ptr<Collision> coll = std::make_shared<Collision>(trans);
     std::shared_ptr<MovableEntity> move = std::make_shared<MovableEntity>(trans, coll);
     std::shared_ptr<Death> death = std::make_shared<Death>();
     std::shared_ptr<Subentity> subent = std::make_shared<Subentity>(trans, move);
@@ -235,8 +235,8 @@ TEST(TestComponents, TestSaveLoadCollisionCollectible) {
     j1["id"] = 2;
     j1["type"] = "collectible";
 
-    std::shared_ptr<CollisionCollectible> coll =
-        std::dynamic_pointer_cast<CollisionCollectible>(Collision::createFromJson(j1, trans));
+    std::shared_ptr<CollideableCollectible> coll =
+        std::dynamic_pointer_cast<CollideableCollectible>(Collideable::createFromJson(j1, trans));
     // Ensure dynamic cast valid
     ASSERT_TRUE(coll);
 
@@ -251,8 +251,8 @@ TEST(TestComponents, TestSaveLoadCollisionSemiSolid) {
 
     j1["type"] = "semi_solid";
 
-    std::shared_ptr<CollisionSemiSolid> coll =
-        std::dynamic_pointer_cast<CollisionSemiSolid>(Collision::createFromJson(j1, trans));
+    std::shared_ptr<CollideableSemiSolid> coll =
+        std::dynamic_pointer_cast<CollideableSemiSolid>(Collideable::createFromJson(j1, trans));
     // Ensure dynamic cast valid
     ASSERT_TRUE(coll);
 
@@ -269,8 +269,8 @@ TEST(TestComponents, TestSaveLoadInteractable) {
     j1["transition"]["name"] = "test";
     j1["transition"]["id"] = 6;
 
-    std::shared_ptr<CollisionInteractable> coll =
-        std::dynamic_pointer_cast<CollisionInteractable>(Collision::createFromJson(j1, trans));
+    std::shared_ptr<CollideableInteractable> coll =
+        std::dynamic_pointer_cast<CollideableInteractable>(Collideable::createFromJson(j1, trans));
     // Ensure dynamic cast valid
     ASSERT_TRUE(coll);
 
@@ -280,7 +280,7 @@ TEST(TestComponents, TestSaveLoadInteractable) {
     // Test with cutscene
     j1["cutscene"] = "test_cutscene";
 
-    coll = std::dynamic_pointer_cast<CollisionInteractable>(Collision::createFromJson(j1, trans));
+    coll = std::dynamic_pointer_cast<CollideableInteractable>(Collideable::createFromJson(j1, trans));
     // Ensure dynamic cast valid
     ASSERT_TRUE(coll);
 
@@ -296,8 +296,8 @@ TEST(TestComponents, TestSaveLoadSlope) {
     j1["type"] = "slope";
     j1["direction"] = "left";
 
-    std::shared_ptr<CollisionSlope> coll =
-        std::dynamic_pointer_cast<CollisionSlope>(Collision::createFromJson(j1, trans));
+    std::shared_ptr<CollideableSlope> coll =
+        std::dynamic_pointer_cast<CollideableSlope>(Collideable::createFromJson(j1, trans));
     // Ensure dynamic cast valid
     ASSERT_TRUE(coll);
 
@@ -307,7 +307,7 @@ TEST(TestComponents, TestSaveLoadSlope) {
 
 TEST(TestComponents, TestSaveLoadPlayerActions) {
     std::shared_ptr<Transform> trans = std::make_shared<Transform>();
-    std::shared_ptr<Collision> coll = std::make_shared<CollisionPlayerHurtbox>(trans);
+    std::shared_ptr<Collision> coll = std::make_shared<Collision>(trans);
     std::shared_ptr<MovableEntity> move = std::make_shared<MovableEntity>(trans, coll);
     std::shared_ptr<Death> death = std::make_shared<Death>();
     std::shared_ptr<RenderableEntity> render = std::make_shared<RenderableEntity>(trans, move);
@@ -345,7 +345,7 @@ TEST(TestComponents, TestSaveLoadPlayerActions) {
 
 TEST(TestComponents, TestSaveLoadAnimationFile) {
     std::shared_ptr<Transform> trans = std::make_shared<Transform>();
-    std::shared_ptr<Collision> coll = std::make_shared<CollisionPlayerHurtbox>(trans);
+    std::shared_ptr<Collision> coll = std::make_shared<Collision>(trans);
     std::shared_ptr<MovableEntity> move = std::make_shared<MovableEntity>(trans, coll);
     std::shared_ptr<RenderableEntity> render = std::make_shared<RenderableEntity>(trans, move);
 

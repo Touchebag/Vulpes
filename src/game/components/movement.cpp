@@ -1,6 +1,6 @@
 #include "movement.h"
 
-#include "collision/movement/i_collision_movement.h"
+#include "collision/collideables/movement/i_collideable_movement.h"
 #include "system/world.h"
 #include "utils/log.h"
 
@@ -8,17 +8,17 @@ namespace {
 
 std::pair<double, double> checkMovement(double velX, double velY,
         std::shared_ptr<Collision> this_coll,
-        Collision::CollisionType type) {
+        Collideable::CollisionType type) {
     double x = velX;
     double y = velY;
 
-    auto world_colls = World::getInstance<World::IWorldRead>().getCollisions(type);
+    auto world_colls = World::getInstance<World::IWorldRead>().getCollideables(type);
     for (auto it = world_colls.begin(); it != world_colls.end(); ++it) {
         auto other_coll = (*it).lock();
 
         if (other_coll) {
-            if (auto static_coll = std::dynamic_pointer_cast<const ICollisionMovement>(other_coll)) {
-                std::pair<double, double> newMoveValues = static_coll->getMaximumMovement(x, y, this_coll);
+            if (auto static_coll = std::dynamic_pointer_cast<const ICollideableMovement>(other_coll)) {
+                std::pair<double, double> newMoveValues = static_coll->getMaximumMovement(x, y, this_coll->getCollideable());
                 x = newMoveValues.first;
                 y = newMoveValues.second;
             }
@@ -63,12 +63,12 @@ std::pair<double, double> MovableEntity::getMaximumMovement(double velX, double 
     std::pair<double, double> vel = {velX, velY};
 
     if (auto coll = collision_.lock()) {
-        vel = checkMovement(vel.first, vel.second, coll, Collision::CollisionType::SLOPE);
+        vel = checkMovement(vel.first, vel.second, coll, Collideable::CollisionType::SLOPE);
 
         move_attr_.on_ground = vel.second != velY;
 
-        vel = checkMovement(vel.first, vel.second, coll, Collision::CollisionType::STATIC);
-        vel = checkMovement(vel.first, vel.second, coll, Collision::CollisionType::SEMI_SOLID);
+        vel = checkMovement(vel.first, vel.second, coll, Collideable::CollisionType::STATIC);
+        vel = checkMovement(vel.first, vel.second, coll, Collideable::CollisionType::SEMI_SOLID);
 
         // If already on ground from slope, don't change
         move_attr_.on_ground = move_attr_.on_ground || (vel.second < velY);

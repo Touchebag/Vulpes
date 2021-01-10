@@ -1,10 +1,10 @@
 #pragma once
 
-#include "collision.h"
+#include "components/collision/collision.h"
 
-class CollisionTransition : public Collision {
+class CollideableTransition : public Collideable {
   public:
-    CollisionTransition(std::weak_ptr<Transform> trans);
+    CollideableTransition(std::weak_ptr<Transform> trans);
 
     void update() override;
 
