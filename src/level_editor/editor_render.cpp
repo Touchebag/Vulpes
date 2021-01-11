@@ -71,6 +71,10 @@ void drawLine(float x1, float y1, float x2, float y2, sf::RenderWindow& window) 
 void EditorRender::render(sf::RenderWindow& window) {
     render_.render(window);
 
+    auto viewport = System::getCamera()->getView();
+    sf::View view = {{viewport.x_pos, viewport.y_pos}, {viewport.width, viewport.height}};
+    window.setView(view);
+
     if (auto env = editor_env_.lock()) {
         if (auto ent = env->current_entity) {
             std::pair<float, float> size = ent->renderableEntity_->getScaledSize();
@@ -81,10 +85,6 @@ void EditorRender::render(sf::RenderWindow& window) {
             window.draw(rectangle);
         }
     }
-
-    auto viewport = System::getCamera()->getView();
-    sf::View view = {{viewport.x_pos, viewport.y_pos}, {viewport.width, viewport.height}};
-    window.setView(view);
 
     if (render_hitboxes_) {
         for (auto it : type_color_map) {
