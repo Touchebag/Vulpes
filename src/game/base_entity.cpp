@@ -78,6 +78,14 @@ void BaseEntity::reloadFromJson(nlohmann::json j) {
         collision_.reset();
     }
 
+    death_ = loadComponentFromJson(j, "Death", std::make_shared<Death>());
+
+    if (j.contains("Actions")) {
+        actions_ = Actions::createFromJson(j["Actions"], death_, collision_);
+    } else {
+        actions_.reset();
+    }
+
     movableEntity_ = loadComponentFromJson(j, "Movable", std::make_shared<MovableEntity>(trans_, collision_));
 
     renderableEntity_ = loadComponentFromJson<RenderableEntity>(j, file_instance, "Renderable", std::make_shared<RenderableEntity>(trans_, movableEntity_));
@@ -86,18 +94,10 @@ void BaseEntity::reloadFromJson(nlohmann::json j) {
 
     subentity_ = loadComponentFromJson(j, "Subentity", std::make_shared<Subentity>(trans_, movableEntity_));
 
-    statefulEntity_ = loadComponentFromJson(j, file_instance, "Stateful", std::make_shared<StatefulEntity>(animatedEntity_, subentity_));
+    statefulEntity_ = loadComponentFromJson(j, file_instance, "Stateful", std::make_shared<StatefulEntity>(animatedEntity_, subentity_, actions_));
 
     if (statefulEntity_) {
         statefulEntity_->incomingEvent(state_utils::Event::START);
-    }
-
-    death_ = loadComponentFromJson(j, "Death", std::make_shared<Death>());
-
-    if (j.contains("Actions")) {
-        actions_ = Actions::createFromJson(j["Actions"], death_, collision_, statefulEntity_);
-    } else {
-        actions_.reset();
     }
 
     physics_ = loadComponentFromJson(j, "Physics", std::make_shared<Physics>(statefulEntity_, movableEntity_, animatedEntity_, actions_));

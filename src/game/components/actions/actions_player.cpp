@@ -19,10 +19,9 @@ std::unordered_map<int, Actions::Action> id_actions_map = {
 
 } // namespace
 
-ActionsPlayer::ActionsPlayer(std::weak_ptr<Death> death, std::weak_ptr<Collision> coll, std::weak_ptr<StatefulEntity> state) :
+ActionsPlayer::ActionsPlayer(std::weak_ptr<Death> death, std::weak_ptr<Collision> coll) :
     Actions(death),
-    coll_(coll),
-    state_(state) {
+    coll_(coll) {
 }
 
 void ActionsPlayer::update() {
@@ -51,14 +50,6 @@ void ActionsPlayer::update() {
 }
 
 void ActionsPlayer::addAction(Actions::Action action) {
-    if (action == Action::INTERACT) {
-        if (auto state = state_.lock()) {
-            if (!state->getStateProperties().can_interact) {
-                return;
-            }
-        }
-    }
-
     Actions::addAction(action);
 }
 

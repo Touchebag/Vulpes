@@ -3,7 +3,6 @@
 #include "components/component.h"
 
 #include "components/death.h"
-#include "components/stateful.h"
 #include "utils/bimap.h"
 
 #include <unordered_map>
@@ -60,7 +59,7 @@ class Actions : public Component {
     virtual void reloadFromJson(nlohmann::json j) override;
     virtual std::optional<nlohmann::json> outputToJson() override;
 
-    static std::shared_ptr<Actions> createFromJson(nlohmann::json j, std::weak_ptr<Death> death, std::weak_ptr<Collision> coll, std::weak_ptr<StatefulEntity> state);
+    static std::shared_ptr<Actions> createFromJson(nlohmann::json j, std::weak_ptr<Death> death, std::weak_ptr<Collision> coll);
 
   private:
     std::array<bool, static_cast<int>(Action::NUM_ACTIONS)> enabled_actions_;

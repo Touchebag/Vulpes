@@ -7,9 +7,10 @@
 
 #include "utils/log.h"
 
-StatefulEntity::StatefulEntity(std::weak_ptr<AnimatedEntity> animatedEntity, std::weak_ptr<Subentity> subentity) :
+StatefulEntity::StatefulEntity(std::weak_ptr<AnimatedEntity> animatedEntity, std::weak_ptr<Subentity> subentity, std::weak_ptr<Actions> actions) :
     animatedEntity_(animatedEntity),
-    subentity_(subentity) {
+    subentity_(subentity),
+    actions_(actions) {
 }
 
 void StatefulEntity::update() {
@@ -63,6 +64,10 @@ void StatefulEntity::incomingEvent(state_utils::Event event) {
             if (auto subent = subentity_.lock()) {
                 subent->addEntity(entity);
             }
+        }
+
+        if (auto actions = actions_.lock()) {
+            actions->enableAction(Actions::Action::INTERACT, ns->getData().state_props.can_interact);
         }
     }
 }

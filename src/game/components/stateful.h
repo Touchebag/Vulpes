@@ -3,13 +3,14 @@
 #include <json.hpp>
 
 #include "utils/state.h"
+#include "components/actions/actions.h"
 #include "components/animation.h"
 #include "components/subentity.h"
 #include "utils/state_handler.h"
 
 class StatefulEntity : public ComponentWithFile {
   public:
-    StatefulEntity(std::weak_ptr<AnimatedEntity> animatedEntity, std::weak_ptr<Subentity> subentity);
+    StatefulEntity(std::weak_ptr<AnimatedEntity> animatedEntity, std::weak_ptr<Subentity> subentity, std::weak_ptr<Actions> actions);
 
     void update() override;
 
@@ -32,6 +33,7 @@ class StatefulEntity : public ComponentWithFile {
 
     std::weak_ptr<AnimatedEntity> animatedEntity_;
     std::weak_ptr<Subentity> subentity_;
+    std::weak_ptr<Actions> actions_;
 
     StateHandler<state_utils::EntityContent> state_handler_;
 };

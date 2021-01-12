@@ -208,10 +208,11 @@ TEST(TestComponents, TestSaveLoadPlayerDamageable) {
     std::shared_ptr<Collision> coll = std::make_shared<Collision>(trans);
     std::shared_ptr<MovableEntity> move = std::make_shared<MovableEntity>(trans, coll);
     std::shared_ptr<Death> death = std::make_shared<Death>();
+    std::shared_ptr<Actions> actions = std::make_shared<Actions>(death);
     std::shared_ptr<Subentity> subent = std::make_shared<Subentity>(trans, move);
     std::shared_ptr<RenderableEntity> render = std::make_shared<RenderableEntity>(trans, move);
     std::shared_ptr<AnimatedEntity> anim = std::make_shared<AnimatedEntity>(render);
-    std::shared_ptr<StatefulEntity> state = std::make_shared<StatefulEntity>(anim, subent);
+    std::shared_ptr<StatefulEntity> state = std::make_shared<StatefulEntity>(anim, subent, actions);
 
     nlohmann::json j1;
 
@@ -308,19 +309,14 @@ TEST(TestComponents, TestSaveLoadSlope) {
 TEST(TestComponents, TestSaveLoadPlayerActions) {
     std::shared_ptr<Transform> trans = std::make_shared<Transform>();
     std::shared_ptr<Collision> coll = std::make_shared<Collision>(trans);
-    std::shared_ptr<MovableEntity> move = std::make_shared<MovableEntity>(trans, coll);
     std::shared_ptr<Death> death = std::make_shared<Death>();
-    std::shared_ptr<RenderableEntity> render = std::make_shared<RenderableEntity>(trans, move);
-    std::shared_ptr<AnimatedEntity> animated = std::make_shared<AnimatedEntity>(render);
-    std::shared_ptr<Subentity> sub = std::make_shared<Subentity>(trans, move);
-    std::shared_ptr<StatefulEntity> state = std::make_shared<StatefulEntity>(animated, sub);
 
     nlohmann::json j1;
 
     j1["type"] = "player";
 
     std::shared_ptr<ActionsPlayer> actions =
-        std::dynamic_pointer_cast<ActionsPlayer>(Actions::createFromJson(j1, death, coll, state));
+        std::dynamic_pointer_cast<ActionsPlayer>(Actions::createFromJson(j1, death, coll));
     // Ensure dynamic cast valid
     ASSERT_TRUE(actions);
 
@@ -335,7 +331,7 @@ TEST(TestComponents, TestSaveLoadPlayerActions) {
     j1["enabled_actions"]["attack"] = true;
     j1["enabled_actions"]["interact"] = true;
 
-    actions = std::dynamic_pointer_cast<ActionsPlayer>(Actions::createFromJson(j1, death, coll, state));
+    actions = std::dynamic_pointer_cast<ActionsPlayer>(Actions::createFromJson(j1, death, coll));
     // Ensure dynamic cast valid
     ASSERT_TRUE(actions) << "ActionsPlayer, cast failed" << std::endl;
 
