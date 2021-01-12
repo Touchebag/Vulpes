@@ -55,8 +55,8 @@ TEST_F(HistoryTestFixture, RemoveObject) {
     editor_env->history->redo();
     auto j4 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    ASSERT_TRUE(j1 == j3);
-    ASSERT_TRUE(j2 == j4);
+    ASSERT_TRUE(j1 == j3) << j1.dump() << std::endl << j3.dump() << std::endl;
+    ASSERT_TRUE(j2 == j4) << j2.dump() << std::endl << j4.dump() << std::endl;
 }
 
 TEST_F(HistoryTestFixture, CopyObject) {
@@ -297,8 +297,8 @@ TEST_F(HistoryTestFixture, ToggleActions) {
     editor_env->history->redo();
     auto j4 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
-    ASSERT_TRUE(j1 == j3);
-    ASSERT_TRUE(j2 == j4);
+    ASSERT_TRUE(j1 == j3) << j1.dump() << std::endl << j3.dump() << std::endl;
+    ASSERT_TRUE(j2 == j4) << j2.dump() << std::endl << j4.dump() << std::endl;
 }
 
 TEST_F(HistoryTestFixture, ToggleTiling) {

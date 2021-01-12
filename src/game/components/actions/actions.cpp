@@ -7,6 +7,9 @@
 
 Actions::Actions(std::weak_ptr<Death> death) :
     death_(death) {
+    // Enable everything by default
+    setAllEnabled(true);
+    return;
 }
 
 // TODO Cleanup and reuse internal functions
@@ -43,6 +46,17 @@ void Actions::addAction(Action action) {
         }
     }
 
+    int action_number = static_cast<int>(action);
+    if (action_number < static_cast<int>(Action::NUM_ACTIONS) && !isActionEnabled(action)) {
+        try {
+            LOGD("Action disabled: %s", string_action_map.at(action).c_str());
+        } catch (std::out_of_range& e) {
+            LOGE("Invalid action %i", action_number);
+            throw e;
+        }
+        return;
+    }
+
     auto it = current_actions_.find(action);
 
     // If action is already in map, update to still be active
@@ -77,22 +91,120 @@ Actions::Action Actions::fromString(const std::string& action) {
 }
 
 std::shared_ptr<Actions> Actions::createFromJson(nlohmann::json j, std::weak_ptr<Death> death, std::weak_ptr<Collision> coll, std::weak_ptr<StatefulEntity> state) {
+    std::shared_ptr<Actions> actions;
     if (j.contains("type") && j["type"].get<std::string>() == "player") {
-        std::shared_ptr<ActionsPlayer> actions_player = std::make_shared<ActionsPlayer>(death, coll, state);
-        actions_player->reloadFromJson(j);
-        return actions_player;
+        actions = std::make_shared<ActionsPlayer>(death, coll, state);
     } else {
-        std::shared_ptr<Actions> actions = std::make_shared<Actions>(death);
-        actions->reloadFromJson(j);
-        return actions;
+        actions = std::make_shared<Actions>(death);
     }
+
+    actions->reloadFromJson(j);
+    return actions;
 }
 
-void Actions::reloadFromJson(nlohmann::json /* j */) {
+void Actions::reloadFromJson(nlohmann::json j) {
+    if (!j.contains("enabled_actions")) {
+        // Enabled everything by default
+        setAllEnabled(true);
+        return;
+    }
+
+    // If whitelist then disable everything by default
+    setAllEnabled(false);
+
+    auto j_actions = j["enabled_actions"];
+
+    // TODO See if possible to use string action map for loop
+    if (j_actions.contains("movement_x")) {
+        enableAction(Action::MOVE_RIGHT, true);
+        enableAction(Action::MOVE_LEFT, true);
+    }
+
+    if (j_actions.contains(string_action_map.at(Action::JUMP))) {
+        enableAction(Action::JUMP, true);
+    }
+
+    if (j_actions.contains(string_action_map.at(Action::WALL_JUMP))) {
+        enableAction(Action::WALL_JUMP, true);
+    }
+
+    if (j_actions.contains(string_action_map.at(Action::DOUBLE_JUMP))) {
+        enableAction(Action::DOUBLE_JUMP, true);
+    }
+
+    if (j_actions.contains(string_action_map.at(Action::DASH))) {
+        enableAction(Action::DASH, true);
+    }
+
+    if (j_actions.contains(string_action_map.at(Action::ATTACK))) {
+        enableAction(Action::ATTACK, true);
+    }
+
+    if (j_actions.contains(string_action_map.at(Action::INTERACT))) {
+        enableAction(Action::INTERACT, true);
+    }
+
+    if (j_actions.contains(string_action_map.at(Action::AIR_DIVE))) {
+        enableAction(Action::AIR_DIVE, true);
+    }
 }
 
 std::optional<nlohmann::json> Actions::outputToJson() {
     nlohmann::json j;
 
+    // Everything is enabled by default. If any action is not enabled then we store the whitelist.
+    if (std::any_of(enabled_actions_.begin(), enabled_actions_.end(), [](bool b) { return !b; })) {
+        nlohmann::json j_actions;
+
+        if (isActionEnabled(Action::MOVE_RIGHT) &&
+            isActionEnabled(Action::MOVE_LEFT)) {
+            j_actions["movement_x"] = true;
+        }
+
+        if (isActionEnabled(Action::JUMP)) {
+            j_actions[string_action_map.at(Action::JUMP)] = true;
+        }
+
+        if (isActionEnabled(Action::WALL_JUMP)) {
+            j_actions[string_action_map.at(Action::WALL_JUMP)] = true;
+        }
+
+        if (isActionEnabled(Action::DOUBLE_JUMP)) {
+            j_actions[string_action_map.at(Action::DOUBLE_JUMP)] = true;
+        }
+
+        if (isActionEnabled(Action::DASH)) {
+            j_actions[string_action_map.at(Action::DASH)] = true;
+        }
+
+        if (isActionEnabled(Action::ATTACK)) {
+            j_actions[string_action_map.at(Action::ATTACK)] = true;
+        }
+
+        if (isActionEnabled(Action::INTERACT)) {
+            j_actions[string_action_map.at(Action::INTERACT)] = true;
+        }
+
+        if (isActionEnabled(Action::AIR_DIVE)) {
+            j_actions[string_action_map.at(Action::AIR_DIVE)] = true;
+        }
+
+        j["enabled_actions"] = j_actions;
+    }
+
     return j;
+}
+
+void Actions::enableAction(Action action, bool enable) {
+    enabled_actions_[static_cast<int>(action)] = enable;
+}
+
+bool Actions::isActionEnabled(Action action) {
+    return enabled_actions_[static_cast<int>(action)];
+}
+
+void Actions::setAllEnabled(bool enabled) {
+    for (auto& it : enabled_actions_) {
+        it = enabled;
+    }
 }

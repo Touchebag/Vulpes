@@ -16,12 +16,6 @@ class ActionsPlayer : public Actions {
     void addAction(Action action) override;
 
   private:
-    void enableAction(Action action);
-
-    bool isActionEnabled(Action action);
-
-    bool enabled_actions_[static_cast<int>(Action::NUM_ACTIONS)] = {false};
-
     std::weak_ptr<Collision> coll_;
     std::weak_ptr<StatefulEntity> state_;
 };

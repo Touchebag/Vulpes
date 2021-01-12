@@ -48,6 +48,8 @@ class Actions : public Component {
     virtual void addAction(Action action);
     void removeAction(Action action);
 
+    void enableAction(Action action, bool enable);
+
     static Action fromString(const std::string& action);
 
     // Refreshes all inputs
@@ -55,12 +57,18 @@ class Actions : public Component {
     // They will be removed manually on keyup events
     void updateActions();
 
-    void reloadFromJson(nlohmann::json j) override;
-    std::optional<nlohmann::json> outputToJson() override;
+    virtual void reloadFromJson(nlohmann::json j) override;
+    virtual std::optional<nlohmann::json> outputToJson() override;
 
     static std::shared_ptr<Actions> createFromJson(nlohmann::json j, std::weak_ptr<Death> death, std::weak_ptr<Collision> coll, std::weak_ptr<StatefulEntity> state);
 
   private:
+    std::array<bool, static_cast<int>(Action::NUM_ACTIONS)> enabled_actions_;
+
+    bool isActionEnabled(Action action);
+
+    void setAllEnabled(bool enable);
+
     // ACTIVE = action has been held since at least one frame
     // FIRST_FRAME = action was triggered this frame
     // NOT_ACTIVE = action is stale and will be removed if no ACTIVE input is triggered
