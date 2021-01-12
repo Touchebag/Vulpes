@@ -49,7 +49,7 @@ void Collideable::setHitbox(int width, int height) {
     hbox_ = std::make_shared<Hitbox>(width, height);
 }
 
-std::shared_ptr<Collideable> Collideable::createFromJson(nlohmann::json j, std::weak_ptr<Transform> trans) {
+std::shared_ptr<Collideable> Collideable::createFromJson(nlohmann::json j, std::weak_ptr<Transform> trans, std::weak_ptr<Actions> actions) {
     CollisionType type;
     if (j.contains("type")) {
         auto type_entry = string_type_map.find(j["type"].get<std::string>());
@@ -83,7 +83,7 @@ std::shared_ptr<Collideable> Collideable::createFromJson(nlohmann::json j, std::
             }
         case CollisionType::PLAYER_HURTBOX:
             {
-                auto coll = std::make_shared<CollideablePlayerHurtbox>(trans);
+                auto coll = std::make_shared<CollideablePlayerHurtbox>(trans, actions);
                 coll->reloadFromJson(j);
                 return coll;
             }

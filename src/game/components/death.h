@@ -1,7 +1,6 @@
 #pragma once
 
 #include "component.h"
-#include "subentity.h"
 
 class Death : public Component {
   public:
@@ -19,6 +18,4 @@ class Death : public Component {
     bool is_dead_ = false;
 
     std::optional<nlohmann::json> death_entity_json_ = std::nullopt;
-
-    std::weak_ptr<Subentity> subentity_;
 };

@@ -90,6 +90,8 @@ class World {
     void setEntrance(int entrance_id);
     void setShiftedPlayerPosition(Collideable::CollisionType c_type);
 
+    void clearDeletedEntities();
+
     std::vector<std::shared_ptr<BaseEntity>>::iterator deleteEntity(std::vector<std::shared_ptr<BaseEntity>>::iterator it);
 
     util::Point getPlayerPosition();
@@ -106,6 +108,8 @@ class World {
     std::shared_ptr<Transform> player_health_position_;
 
     std::vector<std::shared_ptr<BaseEntity>> world_objects_;
+    // Temporary storage to delete entities simultaneuosly at frame end
+    std::vector<std::shared_ptr<BaseEntity>> deleted_objects_;
 
     std::array<std::vector<std::weak_ptr<const Collideable>>, static_cast<int>(Collideable::CollisionType::MAX_NUM)> collideables_;
 

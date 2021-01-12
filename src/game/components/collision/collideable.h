@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "components/component.h"
+#include "components/actions/actions.h"
 #include "components/transform.h"
 #include "components/collision/hitbox.h"
 
@@ -32,7 +33,7 @@ class Collideable {
     virtual std::optional<nlohmann::json> outputToJson();
 
     // Load derived classes from json
-    static std::shared_ptr<Collideable> createFromJson(nlohmann::json j, std::weak_ptr<Transform> trans);
+    static std::shared_ptr<Collideable> createFromJson(nlohmann::json j, std::weak_ptr<Transform> trans, std::weak_ptr<Actions> actions);
 
     // Collision interface
     bool collides(std::weak_ptr<const Collideable> other_entity);

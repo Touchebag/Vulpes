@@ -17,3 +17,9 @@ const Bimap<std::string, Actions::Action> string_action_map = {
 
     {"die", Actions::Action::DIE},
 };
+
+const std::unordered_map<int, Actions::Action> id_actions_map = {
+    {0, Actions::Action::JUMP},
+    {1, Actions::Action::DASH},
+    {2, Actions::Action::ATTACK},
+};

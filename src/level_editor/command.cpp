@@ -199,7 +199,7 @@ void Command::handleCommand(Commands command) {
                 if (editor_env->current_entity->collision_) {
                     editor_env->current_entity->collision_ = {};
                 } else {
-                    editor_env->current_entity->collision_ = std::make_shared<Collision>(editor_env->current_entity->trans_);
+                    editor_env->current_entity->collision_ = std::make_shared<Collision>(editor_env->current_entity->trans_, editor_env->current_entity->actions_);
                 }
                 World::getInstance<World::IWorldModify>().addEntity(editor_env->current_entity);
                 editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();

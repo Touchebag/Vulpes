@@ -32,8 +32,9 @@ const std::map<std::string, Collideable::CollisionType> string_type_map {
 
 } // namespace
 
-Collision::Collision(std::weak_ptr<Transform> trans) :
-    trans_(trans) {
+Collision::Collision(std::weak_ptr<Transform> trans, std::weak_ptr<Actions> actions) :
+    trans_(trans),
+    actions_(actions) {
 
     collideable_ = std::make_shared<CollideableStatic>(trans_);
 }
@@ -42,8 +43,8 @@ void Collision::update() {
     collideable_->update();
 }
 
-std::shared_ptr<Collision> Collision::createFromJson(nlohmann::json j, std::weak_ptr<Transform> trans) {
-    auto collision = std::make_shared<Collision>(trans);
+std::shared_ptr<Collision> Collision::createFromJson(nlohmann::json j, std::weak_ptr<Transform> trans, std::weak_ptr<Actions> actions) {
+    auto collision = std::make_shared<Collision>(trans, actions);
 
     collision->setCollideable(j);
 
@@ -83,10 +84,10 @@ std::shared_ptr<Collideable> Collision::getCollideable() const {
 }
 
 void Collision::setCollideable(nlohmann::json j) {
-    auto coll = Collideable::createFromJson(j, trans_);
+    auto coll = Collideable::createFromJson(j, trans_, actions_);
 
     if (coll) {
-        collideable_ = Collideable::createFromJson(j, trans_);
+        collideable_ = coll;
     } else {
         // This should never happen as createFromJson will throw
         // Message here for debug reasons

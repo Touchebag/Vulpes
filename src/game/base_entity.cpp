@@ -72,18 +72,18 @@ void BaseEntity::reloadFromJson(nlohmann::json j) {
 
     trans_ = loadComponentFromJson(j, "Transform", std::make_shared<Transform>());
 
-    if (j.contains("Collision")) {
-        collision_ = Collision::createFromJson(j["Collision"], trans_);
-    } else {
-        collision_.reset();
-    }
-
     death_ = loadComponentFromJson(j, "Death", std::make_shared<Death>());
 
     if (j.contains("Actions")) {
-        actions_ = Actions::createFromJson(j["Actions"], death_, collision_);
+        actions_ = Actions::createFromJson(j["Actions"], death_);
     } else {
         actions_.reset();
+    }
+
+    if (j.contains("Collision")) {
+        collision_ = Collision::createFromJson(j["Collision"], trans_, actions_);
+    } else {
+        collision_.reset();
     }
 
     movableEntity_ = loadComponentFromJson(j, "Movable", std::make_shared<MovableEntity>(trans_, collision_));
@@ -200,16 +200,16 @@ void BaseEntity::update() {
         statefulEntity_->update();
     }
 
-    if (collision_) {
-        collision_->update();
-    }
-
     if (ai_) {
         ai_->update();
     }
 
     if (physics_) {
         physics_->update();
+    }
+
+    if (collision_) {
+        collision_->update();
     }
 
     if (animatedEntity_) {

@@ -90,10 +90,10 @@ Actions::Action Actions::fromString(const std::string& action) {
     }
 }
 
-std::shared_ptr<Actions> Actions::createFromJson(nlohmann::json j, std::weak_ptr<Death> death, std::weak_ptr<Collision> coll) {
+std::shared_ptr<Actions> Actions::createFromJson(nlohmann::json j, std::weak_ptr<Death> death) {
     std::shared_ptr<Actions> actions;
     if (j.contains("type") && j["type"].get<std::string>() == "player") {
-        actions = std::make_shared<ActionsPlayer>(death, coll);
+        actions = std::make_shared<ActionsPlayer>(death);
     } else {
         actions = std::make_shared<Actions>(death);
     }

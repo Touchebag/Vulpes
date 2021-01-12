@@ -4,12 +4,13 @@
 
 #include "components/component.h"
 #include "components/transform.h"
+#include "components/actions/actions.h"
 #include "hitbox.h"
 #include "collideable.h"
 
 class Collision : public Component {
   public:
-    Collision(std::weak_ptr<Transform> trans);
+    Collision(std::weak_ptr<Transform> trans, std::weak_ptr<Actions> actions);
 
     // Component interface
     void update() override;
@@ -18,7 +19,7 @@ class Collision : public Component {
     virtual std::optional<nlohmann::json> outputToJson() override;
 
     // Load derived classes from json
-    static std::shared_ptr<Collision> createFromJson(nlohmann::json j, std::weak_ptr<Transform> trans);
+    static std::shared_ptr<Collision> createFromJson(nlohmann::json j, std::weak_ptr<Transform> trans, std::weak_ptr<Actions> actions);
 
     // Collision interface
     bool collides(std::weak_ptr<const Collision> other_entity);
@@ -37,4 +38,5 @@ class Collision : public Component {
     std::shared_ptr<Collideable> collideable_;
 
     std::weak_ptr<Transform> trans_;
+    std::weak_ptr<Actions> actions_;
 };

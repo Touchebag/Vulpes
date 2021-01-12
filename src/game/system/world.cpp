@@ -65,6 +65,9 @@ void World::update() {
 
     // Reset interaction trigger at end of frame
     interact_triggered_ = false;
+
+    // Delete all expired entities at end of frame
+    clearDeletedEntities();
 }
 
 util::Point World::getPlayerPosition() {
@@ -292,7 +295,13 @@ void World::setEntrance(int entrance_id) {
 }
 
 std::vector<std::shared_ptr<BaseEntity>>::iterator World::deleteEntity(std::vector<std::shared_ptr<BaseEntity>>::iterator entity_it) {
-    auto ret_it = world_objects_.erase(entity_it);
+    deleted_objects_.push_back(*entity_it);
+
+    return world_objects_.erase(entity_it);
+}
+
+void World::clearDeletedEntities() {
+    deleted_objects_.clear();
 
     for (auto& coll_type : collideables_) {
         for (auto it = coll_type.begin(); it != coll_type.end();) {
@@ -303,8 +312,6 @@ std::vector<std::shared_ptr<BaseEntity>>::iterator World::deleteEntity(std::vect
             }
         }
     }
-
-    return ret_it;
 }
 
 std::weak_ptr<Player> World::getPlayer() {
