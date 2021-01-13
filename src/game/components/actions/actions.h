@@ -51,11 +51,6 @@ class Actions : public Component {
 
     static Action fromString(const std::string& action);
 
-    // Refreshes all inputs
-    // This is needed due to the event driven nature of key inputs
-    // They will be removed manually on keyup events
-    void updateActions();
-
     virtual void reloadFromJson(nlohmann::json j) override;
     virtual std::optional<nlohmann::json> outputToJson() override;
 

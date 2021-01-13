@@ -46,6 +46,8 @@ int game_main(sf::RenderWindow& window) {
 
         // If we have rendered more than one physics frame then advance physics
         while (frames.asMilliseconds() >= (MS_PER_FRAME)) {
+            Input::getInstance().update();
+
             sf::Event event;
             while (window.pollEvent(event)) {
                 switch (event.type) {
@@ -59,12 +61,6 @@ int game_main(sf::RenderWindow& window) {
                         if (event.key.code == sf::Keyboard::Key::P) {
                             return 0;
                         }
-                        LOGV("Key pressed %i", event.key.code);
-                        Input::getInstance().keyEvent(event.key.code, true);
-                        break;
-                    case sf::Event::KeyReleased:
-                        LOGV("Key released %i", event.key.code);
-                        Input::getInstance().keyEvent(event.key.code, false);
                         break;
                     default:
                         LOGV("Unknown event %i", event.type);

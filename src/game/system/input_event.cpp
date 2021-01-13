@@ -2,16 +2,12 @@
 
 #include "utils/log.h"
 
-void Input::keyEvent(sf::Keyboard::Key key, bool pressed) {
+void Input::update() {
     if (auto a_inst = actions_instance_.lock()) {
-        auto it = key_map_.find(key);
-
-        if (it != key_map_.end()) {
-            for (auto action : it->second) {
-                if (pressed) {
+        for (auto it : key_map_) {
+            if (sf::Keyboard::isKeyPressed(it.first)) {
+                for (auto action : it.second) {
                     a_inst->addAction(action);
-                } else {
-                    a_inst->removeAction(action);
                 }
             }
         }

@@ -22,9 +22,5 @@ void Player::reloadFromJson(nlohmann::json j) {
 }
 
 void Player::update() {
-    if (actions_) {
-        actions_->updateActions();
-    }
-
     BaseEntity::update();
 }

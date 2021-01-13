@@ -72,15 +72,6 @@ void Actions::removeAction(Action action) {
     current_actions_.erase(action);
 }
 
-void Actions::updateActions() {
-    for (auto it : current_actions_) {
-        // Only refresh non-active actions to avoid messing up first frames
-        if (it.second == ActionState::NOT_ACTIVE) {
-            addAction(it.first);;
-        }
-    }
-}
-
 Actions::Action Actions::fromString(const std::string& action) {
     try {
         return string_action_map.at(action);
