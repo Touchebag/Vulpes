@@ -138,6 +138,10 @@ void Actions::reloadFromJson(nlohmann::json j) {
     if (j_actions.contains(string_action_map.at(Action::AIR_DIVE))) {
         enableAction(Action::AIR_DIVE, true);
     }
+
+    if (j_actions.contains(string_action_map.at(Action::AIR_DIVE_BOUNCE))) {
+        enableAction(Action::AIR_DIVE_BOUNCE, true);
+    }
 }
 
 std::optional<nlohmann::json> Actions::outputToJson() {
@@ -178,6 +182,10 @@ std::optional<nlohmann::json> Actions::outputToJson() {
 
         if (isActionEnabled(Action::AIR_DIVE)) {
             j_actions[string_action_map.at(Action::AIR_DIVE)] = true;
+        }
+
+        if (isActionEnabled(Action::AIR_DIVE_BOUNCE)) {
+            j_actions[string_action_map.at(Action::AIR_DIVE_BOUNCE)] = true;
         }
 
         j["enabled_actions"] = j_actions;

@@ -9,13 +9,14 @@
 
 namespace {
 
-const std::array<std::pair<Collideable::CollisionType, sf::Color>, 9> type_color_map = {{
+const std::array<std::pair<Collideable::CollisionType, sf::Color>, 10> type_color_map = {{
     {Collideable::CollisionType::STATIC, sf::Color(0, 128, 0, 200)},
     {Collideable::CollisionType::SEMI_SOLID, sf::Color(0, 255, 255, 200)},
     {Collideable::CollisionType::SLOPE, sf::Color(0, 0, 128, 200)},
     {Collideable::CollisionType::ENEMY_HITBOX, sf::Color(255, 0, 0, 200)},
     {Collideable::CollisionType::PLAYER_HURTBOX, sf::Color(255, 255, 0, 200)},
     {Collideable::CollisionType::PLAYER_HITBOX, sf::Color(255, 128, 0, 200)},
+    {Collideable::CollisionType::PLAYER_DIVE, sf::Color(200, 128, 0, 200)},
     {Collideable::CollisionType::TRANSITION, sf::Color(128, 128, 128, 200)},
     {Collideable::CollisionType::INTERACTABLE, sf::Color(255, 128, 0, 200)},
     {Collideable::CollisionType::COLLECTIBLE, sf::Color(255, 0, 255, 200)},
@@ -35,7 +36,7 @@ void renderHitboxes(sf::RenderWindow& window, Collideable::CollisionType coll_ty
             }
 
             sf::RectangleShape rectangle(sf::Vector2f(static_cast<float>(hitbox->width_), static_cast<float>(hitbox->height_)));
-            rectangle.setPosition(static_cast<float>(trans->getX() - ((hitbox->width_) / 2.0)), static_cast<float>(trans->getY() - (hitbox->height_) / 2.0));
+            rectangle.setPosition(static_cast<float>(trans->getX() + (hitbox->getLeft())), static_cast<float>(trans->getY() + hitbox->getTop()));
             rectangle.setFillColor(color);
             window.draw(rectangle);
         }

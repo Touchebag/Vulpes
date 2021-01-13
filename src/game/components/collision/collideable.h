@@ -15,6 +15,7 @@ class Collideable {
         SLOPE,
         PLAYER_HURTBOX,
         PLAYER_HITBOX,
+        PLAYER_DIVE,
         ENEMY_HITBOX,
         TRANSITION,
         HEALTH,

@@ -94,7 +94,7 @@ void BaseEntity::reloadFromJson(nlohmann::json j) {
 
     subentity_ = loadComponentFromJson(j, "Subentity", std::make_shared<Subentity>(trans_, movableEntity_));
 
-    statefulEntity_ = loadComponentFromJson(j, file_instance, "Stateful", std::make_shared<StatefulEntity>(animatedEntity_, subentity_, actions_));
+    statefulEntity_ = loadComponentFromJson(j, file_instance, "Stateful", std::make_shared<StatefulEntity>(animatedEntity_, subentity_, actions_, collision_));
 
     if (statefulEntity_) {
         statefulEntity_->incomingEvent(state_utils::Event::START);
@@ -208,16 +208,16 @@ void BaseEntity::update() {
         physics_->update();
     }
 
+    if (actions_) {
+        actions_->update();
+    }
+
     if (collision_) {
         collision_->update();
     }
 
     if (animatedEntity_) {
         animatedEntity_->update();
-    }
-
-    if (actions_) {
-        actions_->update();
     }
 
     if (damageable_) {

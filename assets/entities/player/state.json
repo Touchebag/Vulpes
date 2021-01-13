@@ -181,6 +181,7 @@
     },
     "taking_damage": {
         "properties": {
+            "touching_ground": false,
             "movement_locked_x": true,
             "can_dash": false,
             "can_jump": false
@@ -193,6 +194,7 @@
     },
     "air_dive": {
         "properties": {
+            "touching_ground": false,
             "movement_locked_x": true,
             "can_dash": false,
             "can_jump": false,
@@ -200,8 +202,18 @@
         },
         "next_states": [
             {"event": "touching_floor", "state": "idle"},
+            {"event": "dive_bounce", "state": "falling"},
             {"event": "damaged", "state": "taking_damage"}
         ],
-        "animation": "falling"
+        "animation": "falling",
+        "collideable": {
+            "type": "player_dive",
+            "width": 150,
+            "height": 200,
+            "offset": {
+                "x": 0,
+                "y": 200
+            }
+        }
     }
 }

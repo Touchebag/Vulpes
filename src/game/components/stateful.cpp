@@ -7,10 +7,11 @@
 
 #include "utils/log.h"
 
-StatefulEntity::StatefulEntity(std::weak_ptr<AnimatedEntity> animatedEntity, std::weak_ptr<Subentity> subentity, std::weak_ptr<Actions> actions) :
+StatefulEntity::StatefulEntity(std::weak_ptr<AnimatedEntity> animatedEntity, std::weak_ptr<Subentity> subentity, std::weak_ptr<Actions> actions, std::weak_ptr<Collision> collision) :
     animatedEntity_(animatedEntity),
     subentity_(subentity),
-    actions_(actions) {
+    actions_(actions),
+    collision_(collision) {
 }
 
 void StatefulEntity::update() {
@@ -52,9 +53,11 @@ void StatefulEntity::incomingEvent(state_utils::Event event) {
     auto new_state = state_handler_.incomingEvent(event);
 
     if (auto ns = new_state.lock()) {
-        frame_counter_ = ns->getData().state_props.frame_timer_;
+        auto state_props = ns->getData().state_props;
+
+        frame_counter_ = state_props.frame_timer_;
         if (auto tmp = animatedEntity_.lock()) {
-            tmp->setFrameList(ns->getData().state_props.animation_name);
+            tmp->setFrameList(state_props.animation_name);
         }
 
         if (!getEntity().empty()) {
@@ -67,7 +70,15 @@ void StatefulEntity::incomingEvent(state_utils::Event event) {
         }
 
         if (auto actions = actions_.lock()) {
-            actions->enableAction(Actions::Action::INTERACT, ns->getData().state_props.can_interact);
+            actions->enableAction(Actions::Action::INTERACT, state_props.can_interact);
+        }
+
+        if (auto coll = collision_.lock()) {
+            if (!state_props.collideable.empty()) {
+                coll->addTemporaryCollideable(state_props.collideable);
+            } else {
+                coll->clearTemporaryCollideables();
+            }
         }
     }
 }

@@ -22,6 +22,7 @@ enum class Event {
     FALLING,
     DASHING,
     AIR_DIVING,
+    DIVE_BOUNCE,
 
     // Actions
     ATTACKING,
@@ -50,6 +51,7 @@ const std::map<std::string, Event> string_event_map {
     {"falling", Event::FALLING},
     {"dashing", Event::DASHING},
     {"air_diving", Event::AIR_DIVING},
+    {"dive_bounce", Event::DIVE_BOUNCE},
 
     {"attacking", Event::ATTACKING},
 
@@ -78,6 +80,8 @@ struct StateProperties {
     unsigned int frame_timer_ = UINT_MAX;
     std::unordered_map<state_utils::Event, std::string> next_states_;
     std::string animation_name;
+
+    nlohmann::json collideable;
 
     bool can_interact = false;
 };

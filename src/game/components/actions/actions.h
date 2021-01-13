@@ -22,6 +22,7 @@ class Actions : public Component {
         DASH,
         ATTACK,
         AIR_DIVE,
+        AIR_DIVE_BOUNCE,
 
         INTERACT,
 

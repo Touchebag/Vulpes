@@ -56,6 +56,8 @@ class Physics : public Component {
     std::weak_ptr<AnimatedEntity> animatedEntity_;
     std::weak_ptr<Actions> actions_;
 
+    void resetJumps();
+
     // TODO Store in some separate component
     int jumps_left_ = 0;
 

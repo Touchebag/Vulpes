@@ -61,7 +61,7 @@ void Physics::update() {
         facing_right.lockDirection(physics_props.direction_locked_);
 
         if (physics_props.touching_ground_ || physics_props.touching_wall_) {
-            jumps_left_ = 2;
+            resetJumps();
         }
 
         if (!physics_props.movement_locked_x_) {
@@ -184,6 +184,13 @@ void Physics::update() {
         } else {
             y = std::max(std::min(y, constants_.max_vertical_speed), constants_.min_vertical_speed);
         }
+
+        if (act->getActionState(Actions::Action::AIR_DIVE_BOUNCE, true)) {
+            y = -30;
+            stateEnt->incomingEvent(state_utils::Event::DIVE_BOUNCE);
+            resetJumps();
+        }
+
         auto max_movement = movable->getMaximumMovement(x, y);
 
         auto move_attr = movable->getMovementAttributes();
@@ -307,4 +314,8 @@ std::optional<nlohmann::json> Physics::outputToJson() {
     saveConstantToJson(j, "dash_friction", constants_.dash_friction, default_constants.dash_friction);
     saveConstantToJson(j, "air_dive_impulse", constants_.air_dive_impulse, default_constants.air_dive_impulse);
     return j;
+}
+
+void Physics::resetJumps() {
+    jumps_left_ = 2;
 }

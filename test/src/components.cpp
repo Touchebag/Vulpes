@@ -224,7 +224,7 @@ TEST(TestComponents, TestSaveLoadPlayerDamageable) {
     std::shared_ptr<Subentity> subent = std::make_shared<Subentity>(trans, move);
     std::shared_ptr<RenderableEntity> render = std::make_shared<RenderableEntity>(trans, move);
     std::shared_ptr<AnimatedEntity> anim = std::make_shared<AnimatedEntity>(render);
-    std::shared_ptr<StatefulEntity> state = std::make_shared<StatefulEntity>(anim, subent, actions);
+    std::shared_ptr<StatefulEntity> state = std::make_shared<StatefulEntity>(anim, subent, actions, coll);
 
     nlohmann::json j1;
 

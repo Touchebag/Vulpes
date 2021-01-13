@@ -7,6 +7,7 @@
             "wall_jump": true,
             "double_jump": true,
             "air_dive": true,
+            "air_dive_bounce": true,
             "interact": true
         }
     },

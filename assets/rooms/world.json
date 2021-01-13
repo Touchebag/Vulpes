@@ -1,4 +1,10 @@
 {
+    "camera": {
+        "bottom": 2950.0,
+        "left": -2000.0,
+        "right": 2700.0,
+        "top": -1700.0
+    },
     "entities": [
         {
             "Collision": {
@@ -41,8 +47,8 @@
         {
             "Entity": "enemy",
             "Transform": {
-                "pos_x": 1350,
-                "pos_y": 2781
+                "pos_x": 740,
+                "pos_y": 2832
             }
         },
         {
@@ -361,12 +367,12 @@
         },
         {
             "Collision": {
+                "cutscene": "door_transition",
                 "height": 400,
                 "transition": {
                     "id": 1,
                     "name": "room2"
                 },
-                "cutscene": "door_transition",
                 "type": "interactable",
                 "width": 220
             },
@@ -385,12 +391,6 @@
         },
         {
             "Entity": "collectible",
-            "Collision": {
-                "height": 50,
-                "type": "collectible",
-                "width": 50,
-                "id": 2
-            },
             "Transform": {
                 "pos_x": -1157,
                 "pos_y": -283
@@ -448,6 +448,13 @@
                 "pos_x": -1565,
                 "pos_y": 2545
             }
+        },
+        {
+            "Entity": "flyer",
+            "Transform": {
+                "pos_x": 132,
+                "pos_y": 1759
+            }
         }
     ],
     "entrances": [
@@ -466,11 +473,5 @@
             "pos_x": 2600,
             "pos_y": 2900
         }
-    ],
-    "camera": {
-        "left": -2000,
-        "right": 2700,
-        "top": -1700,
-        "bottom": 2950
-    }
+    ]
 }

@@ -28,14 +28,19 @@ class Collision : public Component {
     // Getters/setters
     std::weak_ptr<const Transform> getTransform() const;
 
-    // Type-specific functions
-    virtual Collideable::CollisionType getType() const;
-
     std::shared_ptr<Collideable> getCollideable() const;
     void setCollideable(nlohmann::json j);
 
+    void addTemporaryCollideable(nlohmann::json temp_coll);
+    void clearTemporaryCollideables();
+
+    // Type-specific functions
+    virtual Collideable::CollisionType getType() const;
+
   protected:
     std::shared_ptr<Collideable> collideable_;
+
+    std::shared_ptr<Collideable> temp_coll_;
 
     std::weak_ptr<Transform> trans_;
     std::weak_ptr<Actions> actions_;

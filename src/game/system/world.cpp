@@ -227,10 +227,14 @@ void World::addEntity(std::shared_ptr<BaseEntity> entity) {
 
     auto coll = entity->collision_;
     if (coll && coll->getCollideable()) {
-        collideables_[static_cast<int>(coll->getType())].push_back(coll->getCollideable());
+        addCollideable(coll->getCollideable());
     }
 
     System::getRender()->addEntity(entity->renderableEntity_);
+}
+
+void World::addCollideable(std::shared_ptr<Collideable> collideable) {
+    collideables_[static_cast<int>(collideable->getType())].push_back(collideable);
 }
 
 void World::removeEntity(std::shared_ptr<BaseEntity> entity) {
@@ -244,7 +248,7 @@ void World::addPlayer(std::shared_ptr<Player> player) {
     auto coll = player->collision_;
 
     if (coll && coll->getCollideable()) {
-        collideables_[static_cast<int>(coll->getType())].push_back(coll->getCollideable());
+        addCollideable(coll->getCollideable());
     }
 
     System::getRender()->addEntity(player_->renderableEntity_);

@@ -1,0 +1,44 @@
+{
+    "Animated": {
+        "frame_list": [
+            "Open",
+            "Open",
+            "Open",
+            "Open",
+            "Open",
+            "Open",
+            "Open",
+            "Open",
+            "Closed",
+            "Closed",
+            "Closed",
+            "Closed",
+            "Closed",
+            "Closed",
+            "Closed",
+            "Closed"
+        ]
+    },
+    "Collision": {
+        "type": "enemy_hitbox",
+        "height": 50,
+        "width": 50,
+        "attack": {
+            "damage": 10,
+            "knockback_x": 100,
+            "knockback_y": -30,
+            "invincibility": 80
+        }
+    },
+    "Renderable": {
+        "height": 90,
+        "texture": "Enemy",
+        "tile_x": true,
+        "tile_y": true,
+        "layer": "main"
+    },
+    "Transform": {
+        "pos_x": 550,
+        "pos_y": 1600
+    }
+}

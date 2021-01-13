@@ -38,6 +38,10 @@ void World::IWorldModify::removeEntity(std::shared_ptr<BaseEntity> entity) {
     World::getWorldInstance().removeEntity(entity);
 }
 
+void World::IWorldModify::addCollideable(std::shared_ptr<Collideable> collideable) {
+    World::getWorldInstance().addCollideable(collideable);
+}
+
 void World::IWorldModify::loadWorldFromJson(nlohmann::json j) {
     World::getWorldInstance().loadWorldFromJson(j);
 }

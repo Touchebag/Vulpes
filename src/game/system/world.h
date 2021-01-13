@@ -36,6 +36,8 @@ class World {
         static void addEntity(std::shared_ptr<BaseEntity> entity);
         static void removeEntity(std::shared_ptr<BaseEntity> entity);
 
+        static void addCollideable(std::shared_ptr<Collideable> collideable);
+
         static void loadWorldFromJson(nlohmann::json j);
         static void loadWorldFromFile(std::string file);
 
@@ -81,6 +83,8 @@ class World {
     void addEntity(std::shared_ptr<BaseEntity> entity);
     void removeEntity(std::shared_ptr<BaseEntity> entity);
     void addPlayer(std::shared_ptr<Player> player);
+
+    void addCollideable(std::shared_ptr<Collideable> collideable);
 
     void loadWorldFromJson(nlohmann::json j);
     void loadWorldFromFile(std::string file);

@@ -13,6 +13,7 @@
 #include "components/collision/collideables/movement/collideable_slope.h"
 
 #include "components/collision/collideables/damage/collideable_player_hitbox.h"
+#include "components/collision/collideables/damage/collideable_player_dive.h"
 #include "components/collision/collideables/damage/collideable_enemy_hitbox.h"
 
 #include "collision_utils.h"
@@ -25,6 +26,7 @@ const std::map<std::string, Collideable::CollisionType> string_type_map {
     {"slope", Collideable::CollisionType::SLOPE},
     {"player_hurtbox", Collideable::CollisionType::PLAYER_HURTBOX},
     {"player_hitbox", Collideable::CollisionType::PLAYER_HITBOX},
+    {"player_dive", Collideable::CollisionType::PLAYER_DIVE},
     {"enemy_hitbox", Collideable::CollisionType::ENEMY_HITBOX},
     {"transition", Collideable::CollisionType::TRANSITION},
     {"health", Collideable::CollisionType::HEALTH},
@@ -93,6 +95,12 @@ std::shared_ptr<Collideable> Collideable::createFromJson(nlohmann::json j, std::
                 coll->reloadFromJson(j);
                 return coll;
             }
+        case CollisionType::PLAYER_DIVE:
+            {
+                auto coll = std::make_shared<CollideablePlayerDive>(trans, actions);
+                coll->reloadFromJson(j);
+                return coll;
+            }
         case CollisionType::ENEMY_HITBOX:
             {
                 auto coll = std::make_shared<CollideableEnemyHitbox>(trans);
@@ -136,6 +144,14 @@ void Collideable::reloadFromJson(nlohmann::json j) {
     int hitbox_height = j["height"];
 
     hbox_ = std::make_shared<Hitbox>(hitbox_width, hitbox_height);
+
+    if (j.contains("offset")) {
+        if (j["offset"].contains("x") && j["offset"].contains("y")) {
+            hbox_->setOffset({j["offset"]["x"].get<int>(), j["offset"]["y"].get<int>()});
+        } else {
+            LOGW("Collideable: offset requires x and y");
+        }
+    }
 }
 
 std::optional<nlohmann::json> Collideable::outputToJson() {
