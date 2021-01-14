@@ -188,7 +188,7 @@
         },
         "frame_timer": 15,
         "next_states": [
-            {"event": "frame_timeout", "state": "idle"}
+            {"event": "frame_timeout", "state": "falling"}
         ],
         "animation": "falling"
     },
