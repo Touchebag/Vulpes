@@ -16,6 +16,17 @@
 #define MAX_WIDTH_ACCELERATION 0.5f
 #define MAX_HEIGHT_ACCELERATION 0.5f
 
+#define SHAKE_CONSTANT_X 20.0f
+#define SHAKE_CONSTANT_Y 100.0f
+
+namespace {
+
+inline float floatRandom() {
+    return static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+}
+
+} // namespace
+
 void Camera::setCameraBox(Camera::CameraBoundingBox camera_box) {
     camera_box_ = camera_box;
 }
@@ -35,14 +46,18 @@ void Camera::setView(CameraView view) {
     view_ = view;
 }
 
-Camera::CameraView Camera::getView() {
+Camera::CameraView Camera::getRawView() {
     return view_;
+}
+
+Camera::CameraView Camera::getView() {
+    return adjusted_camera_view_;
 }
 
 void Camera::setWindowSize(int width, int height) {
     aspect_ratio_ = static_cast<float>(width) / static_cast<float>(height);
 
-    auto view = getView();
+    auto view = getRawView();
     view.width = static_cast<float>(width);
     view.height = static_cast<float>(height);
 
@@ -85,6 +100,14 @@ void Camera::resizeView(float width, float height) {
     view_.height = height;
 }
 
+void Camera::applyCameraShake() {
+    adjusted_camera_view_ = view_;
+    adjusted_camera_view_.x_pos += SHAKE_CONSTANT_X * floatRandom() * trauma_ * trauma_;
+    adjusted_camera_view_.y_pos += SHAKE_CONSTANT_Y * floatRandom() * trauma_ * trauma_;
+
+    addTrauma(-0.01f);
+}
+
 // Calculates the player position as a ratio of the current view
 // This allows for consistent camera movement regardless of the current view/aspect ratio
 std::pair<float, float> Camera::calculatePlayerPositionRatio(int x_pos, int y_pos) {
@@ -103,6 +126,12 @@ std::pair<float, float> Camera::calculatePlayerPositionRatio(int x_pos, int y_po
     return {player_x_ratio - 0.5f, player_y_ratio - 0.5f};
 }
 
+void Camera::addTrauma(float trauma) {
+    trauma_ += trauma;
+
+    trauma_ = std::max(std::min(trauma_, 1.0f), 0.0f);
+}
+
 void Camera::update() {
     updateTargetView();
 
@@ -114,6 +143,8 @@ void Camera::update() {
 
     resizeView(view_.width + movement.width, view_.height + movement.height);
     moveView(view_.x_pos + movement.x_pos, view_.y_pos + movement.y_pos);
+
+    applyCameraShake();
 
     current_speed_ = movement;
 }

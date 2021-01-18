@@ -120,6 +120,15 @@ int level_editor_main(sf::RenderWindow& window) {
                                     editor_env->history->undo();
                                 }
                                 break;
+                            case sf::Keyboard::Key::J:
+                                System::getCamera()->addTrauma(0.2f);
+                                break;
+                            case sf::Keyboard::Key::K:
+                                System::getCamera()->addTrauma(0.5f);
+                                break;
+                            case sf::Keyboard::Key::L:
+                                System::getCamera()->addTrauma(1.0f);
+                                break;
                             case sf::Keyboard::Key::R:
                                 if (editor_env->current_command == Command::Commands::NONE) {
                                     editor_env->history->redo();

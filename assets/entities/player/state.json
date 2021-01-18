@@ -201,7 +201,7 @@
             "air_diving": true
         },
         "next_states": [
-            {"event": "touching_floor", "state": "idle"},
+            {"event": "touching_floor", "state": "hard_landing"},
             {"event": "dive_bounce", "state": "falling"},
             {"event": "damaged", "state": "taking_damage"}
         ],
@@ -215,5 +215,19 @@
                 "y": 200
             }
         }
+    },
+    "hard_landing": {
+        "properties": {
+            "movement_locked_x": true,
+            "movement_locked_y": true,
+            "can_dash": false
+        },
+        "frame_timer": 20,
+        "next_states": [
+            {"event": "jumping", "state": "jumping"},
+            {"event": "frame_timeout", "state": "idle"},
+            {"event": "damaged", "state": "taking_damage"}
+        ],
+        "animation": "idle"
     }
 }

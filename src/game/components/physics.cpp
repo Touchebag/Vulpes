@@ -1,5 +1,7 @@
 #include "physics.h"
 
+#include "system/system.h"
+
 #include "utils/log.h"
 
 namespace {
@@ -196,6 +198,10 @@ void Physics::update() {
         auto move_attr = movable->getMovementAttributes();
 
         if (move_attr.on_ground) {
+            if (physics_props.air_diving_) {
+                // If we touch ground while diving we landed this frame
+                System::getCamera()->addTrauma(0.4f);
+            }
             stateEnt->incomingEvent(state_utils::Event::TOUCHING_FLOOR);
         } else if (move_attr.touching_wall) {
             stateEnt->incomingEvent(state_utils::Event::TOUCHING_WALL);

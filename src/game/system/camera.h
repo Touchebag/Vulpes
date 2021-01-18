@@ -25,10 +25,13 @@ class Camera {
     void setView(float x, float y, float width, float height);
     void setView(CameraView view);
     CameraView getView();
+    CameraView getRawView();
 
     void setWindowSize(int width, int height);
 
     void setCameraBox(CameraBoundingBox camera_box);
+
+    void addTrauma(float trauma);
 
     CameraBoundingBox getCameraBox();
 
@@ -42,10 +45,17 @@ class Camera {
 
     float aspect_ratio_ = 1.0f;
 
+    void applyCameraShake();
+
     CameraView calculateMovementToTarget();
 
     CameraView view_;
     CameraBoundingBox camera_box_;
+
+    // This is the final view with applied effects such as shake
+    // Saved as a different variable to allow updating at a different interval
+    // than rendering
+    CameraView adjusted_camera_view_;
 
     CameraView target_view_;
 
@@ -54,4 +64,6 @@ class Camera {
 
     // Used to delay view shrinking when idle
     int idle_frame_counter_ = 0;
+
+    float trauma_ = 0.0f;
 };
