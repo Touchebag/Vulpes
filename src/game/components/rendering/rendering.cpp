@@ -172,9 +172,18 @@ void RenderableEntity::clearColor() {
     sprite_.setColor({255, 255, 255, 255});
 }
 
-void RenderableEntity::render(sf::RenderWindow& window) {
+void RenderableEntity::render(sf::RenderWindow& window, float frame_fraction) {
+    // Used for interpolation between physics frames
+    auto vel_x = 0.0;
+    auto vel_y = 0.0;
+
+    if (auto move = movable_.lock()) {
+        vel_x = move->getVelX() * frame_fraction;
+        vel_y = move->getVelY() * frame_fraction;
+    }
+
     if (auto trans = trans_.lock()) {
-        sprite_.setPosition(static_cast<float>(trans->getX()), static_cast<float>(trans->getY()));
+        sprite_.setPosition(static_cast<float>(trans->getX() + vel_x), static_cast<float>(trans->getY() + vel_y));
         if (shader_) {
             window.draw(sprite_, shader_.get());
         } else {

@@ -69,8 +69,8 @@ void drawLine(float x1, float y1, float x2, float y2, sf::RenderWindow& window) 
 
 } // namespace
 
-void EditorRender::render(sf::RenderWindow& window) {
-    render_.render(window);
+void EditorRender::render(sf::RenderWindow& window, float frame_fraction) {
+    render_.render(window, frame_fraction);
 
     auto viewport = System::getCamera()->getView();
     sf::View view = {{viewport.x_pos, viewport.y_pos}, {viewport.width, viewport.height}};
@@ -131,7 +131,7 @@ void EditorRender::addEntity(std::weak_ptr<RenderableEntity> entity) {
 }
 
 void EditorRender::renderLayer(sf::RenderWindow& window, RenderableEntity::Layer layer) {
-    render_.renderLayer(window, layer);
+    render_.renderLayer(window, 0.0f, layer);
 }
 
 void EditorRender::setParallaxEnabled(bool enable) {

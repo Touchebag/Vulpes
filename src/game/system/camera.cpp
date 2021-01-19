@@ -54,6 +54,10 @@ Camera::CameraView Camera::getView() {
     return adjusted_camera_view_;
 }
 
+Camera::CameraView Camera::getChangeVelocity() {
+    return current_speed_;
+}
+
 void Camera::setWindowSize(int width, int height) {
     aspect_ratio_ = static_cast<float>(width) / static_cast<float>(height);
 

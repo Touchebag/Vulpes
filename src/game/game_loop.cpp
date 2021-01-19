@@ -15,8 +15,10 @@
 int game_main(sf::RenderWindow& window) {
     auto worldInstWrite = World::getInstance<World::IWorldModify>();
 
-    sf::Time frames;
-    sf::Clock frame_time;
+    // Rendering produces time, physics consumes
+    // This stores how much "unconsumed" time is available
+    sf::Time time_rendered;
+    sf::Clock render_clock;
 
     Input::getInstance().setKeyboardMap({
             {sf::Keyboard::Key::Space, {Actions::Action::JUMP,
@@ -30,13 +32,13 @@ int game_main(sf::RenderWindow& window) {
             {sf::Keyboard::Key::Up, {Actions::Action::INTERACT}}
             });
 
-    frame_time.restart();
+    render_clock.restart();
 
     std::shared_ptr<IRender> renderInst = System::getRender();
 
     while (window.isOpen()) {
-        frames += frame_time.getElapsedTime();
-        frame_time.restart();
+        time_rendered += render_clock.getElapsedTime();
+        render_clock.restart();
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
             window.close();
@@ -45,7 +47,7 @@ int game_main(sf::RenderWindow& window) {
         window.clear();
 
         // If we have rendered more than one physics frame then advance physics
-        while (frames.asMilliseconds() >= (MS_PER_FRAME)) {
+        while (time_rendered.asMilliseconds() >= (MS_PER_FRAME)) {
             Input::getInstance().update();
 
             sf::Event event;
@@ -70,12 +72,12 @@ int game_main(sf::RenderWindow& window) {
 
             worldInstWrite.update();
 
-            frames -= sf::milliseconds(MS_PER_FRAME);
+            time_rendered -= sf::milliseconds(MS_PER_FRAME);
 
             System::getCamera()->update();
         }
 
-        renderInst->render(window);
+        renderInst->render(window, static_cast<float>(time_rendered.asMilliseconds()) / static_cast<float>(MS_PER_FRAME));
 
         window.display();
     }

@@ -27,6 +27,8 @@ class Camera {
     CameraView getView();
     CameraView getRawView();
 
+    CameraView getChangeVelocity();
+
     void setWindowSize(int width, int height);
 
     void setCameraBox(CameraBoundingBox camera_box);

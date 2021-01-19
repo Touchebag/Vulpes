@@ -6,7 +6,7 @@
 
 class EditorRender : public IRender {
   public:
-    void render(sf::RenderWindow& window) override;
+    void render(sf::RenderWindow& window, float frame_fraction = 0.0f) override;
 
     void setEditorEnvironment(std::weak_ptr<EditorEnvironment> editor_env);
 

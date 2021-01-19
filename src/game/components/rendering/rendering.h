@@ -52,7 +52,7 @@ class RenderableEntity : ComponentWithFile {
     virtual void setColor(sf::Color color);
     virtual void clearColor();
 
-    virtual void render(sf::RenderWindow& window);
+    virtual void render(sf::RenderWindow& window, float frame_fraction = 0.0f);
 
     virtual void update() override;
 

@@ -3,6 +3,8 @@
 #include "system/system.h"
 #include "system/camera.h"
 
+#include "utils/log.h"
+
 namespace {
 
 std::map<RenderableEntity::Layer, float> parallax_map = {
@@ -18,10 +20,10 @@ std::map<RenderableEntity::Layer, float> parallax_map = {
     {RenderableEntity::Layer::FG_3, 1.15},
 };
 
-void renderAllEntitesInVector(std::vector<std::weak_ptr<RenderableEntity>>& layer, sf::RenderWindow& window) {
+void renderAllEntitesInVector(std::vector<std::weak_ptr<RenderableEntity>>& layer, sf::RenderWindow& window, float frame_fraction = 0.0f) {
     for (auto it = layer.begin(); it != layer.end(); ) {
         if (auto ptr = it->lock()) {
-            ptr->render(window);
+            ptr->render(window, frame_fraction);
             ++it;
         } else {
             it = layer.erase(it);
@@ -31,7 +33,7 @@ void renderAllEntitesInVector(std::vector<std::weak_ptr<RenderableEntity>>& laye
 
 } // namespace
 
-void Render::renderLayer(sf::RenderWindow& window, RenderableEntity::Layer layer) {
+void Render::renderLayer(sf::RenderWindow& window, float frame_fraction, RenderableEntity::Layer layer) {
     float parallax_mulitiplier = 1;
 
     if (parallax_enabled_) {
@@ -39,10 +41,16 @@ void Render::renderLayer(sf::RenderWindow& window, RenderableEntity::Layer layer
     }
 
     auto view = System::getCamera()->getView();
-    sf::View viewport({view.x_pos * parallax_mulitiplier, view.y_pos * parallax_mulitiplier}, {view.width, view.height});
+    auto change_speed = System::getCamera()->getChangeVelocity();
+
+    sf::View viewport(
+            {(view.x_pos + (change_speed.x_pos * frame_fraction)) * parallax_mulitiplier,
+             (view.y_pos + (change_speed.y_pos * frame_fraction)) * parallax_mulitiplier},
+            {view.width  + (change_speed.width  * frame_fraction),
+             view.height + (change_speed.height * frame_fraction)});
     window.setView(viewport);
 
-    renderAllEntitesInVector(layers_[static_cast<int>(layer)], window);
+    renderAllEntitesInVector(layers_[static_cast<int>(layer)], window, frame_fraction);
 }
 
 void Render::drawHud(sf::RenderWindow& window) {
@@ -55,9 +63,9 @@ void Render::drawHud(sf::RenderWindow& window) {
     window.setView(current_view);
 }
 
-void Render::render(sf::RenderWindow& window) {
+void Render::render(sf::RenderWindow& window, float frame_fraction) {
     for (int i = 0; i < static_cast<int>(RenderableEntity::Layer::MAX_LAYERS); ++i) {
-        renderLayer(window, static_cast<RenderableEntity::Layer>(i));
+        renderLayer(window, frame_fraction, static_cast<RenderableEntity::Layer>(i));
     }
 
     drawHud(window);

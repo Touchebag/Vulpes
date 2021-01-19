@@ -390,6 +390,12 @@
             }
         },
         {
+            "Collision": {
+                "height": 50,
+                "type": "collectible",
+                "width": 50,
+                "id": 2
+            },
             "Entity": "collectible",
             "Transform": {
                 "pos_x": -1157,
