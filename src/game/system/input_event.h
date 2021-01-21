@@ -11,7 +11,7 @@ class Input {
   public:
     static Input& getInstance();
 
-    void update();
+    void update(sf::Window& window);
 
     void setKeyboardMap(std::unordered_map<sf::Keyboard::Key, std::unordered_set<Actions::Action>> key_map);
 

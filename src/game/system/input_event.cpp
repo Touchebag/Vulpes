@@ -2,10 +2,10 @@
 
 #include "utils/log.h"
 
-void Input::update() {
+void Input::update(sf::Window& window) {
     if (auto a_inst = actions_instance_.lock()) {
         for (auto it : key_map_) {
-            if (sf::Keyboard::isKeyPressed(it.first)) {
+            if (window.hasFocus() && sf::Keyboard::isKeyPressed(it.first)) {
                 for (auto action : it.second) {
                     a_inst->addAction(action);
                 }

@@ -48,7 +48,7 @@ int game_main(sf::RenderWindow& window) {
 
         // If we have rendered more than one physics frame then advance physics
         while (time_rendered.asMilliseconds() >= (MS_PER_FRAME)) {
-            Input::getInstance().update();
+            Input::getInstance().update(window);
 
             sf::Event event;
             while (window.pollEvent(event)) {
