@@ -6,6 +6,13 @@
 
 #include <unistd.h>
 
+#define createComponentFromJson(j, component_name, component, ...)\
+    if (j.contains(component_name)) {\
+        component = component->createFromJson(j[component_name], __VA_ARGS__);\
+    } else {\
+        component.reset();\
+    }\
+
 namespace {
 
 template <class T>
@@ -74,17 +81,9 @@ void BaseEntity::reloadFromJson(nlohmann::json j) {
 
     death_ = loadComponentFromJson(j, "Death", std::make_shared<Death>());
 
-    if (j.contains("Actions")) {
-        actions_ = Actions::createFromJson(j["Actions"], death_);
-    } else {
-        actions_.reset();
-    }
+    createComponentFromJson(j, "Actions", actions_, death_);
 
-    if (j.contains("Collision")) {
-        collision_ = Collision::createFromJson(j["Collision"], trans_, actions_);
-    } else {
-        collision_.reset();
-    }
+    createComponentFromJson(j, "Collision", collision_, trans_, actions_);
 
     movableEntity_ = loadComponentFromJson(j, "Movable", std::make_shared<MovableEntity>(trans_, collision_));
 
@@ -104,11 +103,7 @@ void BaseEntity::reloadFromJson(nlohmann::json j) {
 
     ai_ = loadComponentFromJson(j, file_instance, "AI", std::make_shared<AI>(actions_, trans_, collision_, animatedEntity_));
 
-    if (j.contains("Damageable")) {
-        damageable_ = Damageable::createFromJson(j["Damageable"], collision_, death_, statefulEntity_, renderableEntity_, movableEntity_);
-    } else {
-        damageable_.reset();
-    }
+    createComponentFromJson(j, "Damageable", damageable_, collision_, death_, statefulEntity_, renderableEntity_, movableEntity_);
 }
 
 std::optional<nlohmann::json> BaseEntity::outputToJson() {
