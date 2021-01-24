@@ -36,14 +36,21 @@ Camera::CameraBoundingBox Camera::getCameraBox() {
 }
 
 void Camera::setView(float x, float y, float width, float height) {
-    view_.x_pos = x;
-    view_.y_pos = y;
-    view_.width = width;
-    view_.height = height;
+    CameraView view;
+
+    view.x_pos = x;
+    view.y_pos = y;
+    view.width = width;
+    view.height = height;
+
+    setView(view);
 }
 
 void Camera::setView(CameraView view) {
     view_ = view;
+
+    // Reset shaking camera
+    adjusted_camera_view_ = view_;
 }
 
 Camera::CameraView Camera::getRawView() {

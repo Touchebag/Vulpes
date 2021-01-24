@@ -43,11 +43,12 @@ void Render::renderLayer(sf::RenderWindow& window, float frame_fraction, Rendera
     auto view = System::getCamera()->getView();
     auto change_speed = System::getCamera()->getChangeVelocity();
 
+    // Note: interpolating size causes warping/bouncing issues
     sf::View viewport(
             {(view.x_pos + (change_speed.x_pos * frame_fraction)) * parallax_mulitiplier,
              (view.y_pos + (change_speed.y_pos * frame_fraction)) * parallax_mulitiplier},
-            {view.width  + (change_speed.width  * frame_fraction),
-             view.height + (change_speed.height * frame_fraction)});
+            {view.width ,
+             view.height});
     window.setView(viewport);
 
     renderAllEntitesInVector(layers_[static_cast<int>(layer)], window, frame_fraction);

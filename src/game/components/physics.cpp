@@ -177,6 +177,7 @@ void Physics::update() {
 
         if (act->getActionState(Actions::Action::AIR_DIVE, true) && physics_props.can_air_dive_) {
             stateEnt->incomingEvent(state_utils::Event::AIR_DIVING);
+            x = 0.0;
             y = constants_.air_dive_impulse;
         }
 

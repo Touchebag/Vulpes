@@ -72,7 +72,7 @@ void drawLine(float x1, float y1, float x2, float y2, sf::RenderWindow& window) 
 void EditorRender::render(sf::RenderWindow& window, float frame_fraction) {
     render_.render(window, frame_fraction);
 
-    auto viewport = System::getCamera()->getView();
+    auto viewport = System::getCamera()->getRawView();
     sf::View view = {{viewport.x_pos, viewport.y_pos}, {viewport.width, viewport.height}};
     window.setView(view);
 

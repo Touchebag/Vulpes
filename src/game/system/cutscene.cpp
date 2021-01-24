@@ -11,6 +11,11 @@ void Cutscene::addPlayer(std::shared_ptr<Player> player) {
     // TODO Replace with cutscene version
     player->actions_.reset();
 
+    if (player->movableEntity_) {
+        // Reset speed
+        player->movableEntity_->move(0.0, 0.0);
+    }
+
     temp_player.state = player->statefulEntity_;
     player->statefulEntity_.reset();
 
