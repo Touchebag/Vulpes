@@ -2,6 +2,8 @@
 
 #include <json.hpp>
 
+#include <unordered_set>
+
 #include "utils/common.h"
 
 #include "components/transform.h"
@@ -46,4 +48,9 @@ class BaseEntity {
 
   private:
     std::string entity_file_;
+
+    // Stores which components are loaded from entity file
+    // This will allow overloading certain components locally without affecting
+    // the main file
+    std::unordered_set<std::string> file_loaded_components_;
 };

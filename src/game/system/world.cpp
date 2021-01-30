@@ -230,7 +230,9 @@ void World::addEntity(std::shared_ptr<BaseEntity> entity) {
         addCollideable(coll->getCollideable());
     }
 
-    System::getRender()->addEntity(entity->renderableEntity_);
+    if (auto render = entity->renderableEntity_) {
+        System::getRender()->addEntity(render);
+    }
 }
 
 void World::addCollideable(std::shared_ptr<Collideable> collideable) {

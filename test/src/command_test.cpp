@@ -23,7 +23,13 @@ class CommandTestFixture : public ::testing::Test {
     std::shared_ptr<EditorEnvironment> editor_env = EditorEnvironment::create_environment(window_);
 };
 
-void assertCorrectNumberOfEntities(
+void assertCorrectNumberOfEntities(long long unsigned number) {
+    auto world_objects = World::getInstance<World::IWorldModify>().getWorldObjects();
+
+    ASSERT_EQ(world_objects.size(), number);
+}
+
+void assertCorrectNumberOfRenderables(
         long long unsigned background,
         long long unsigned bg3,
         long long unsigned bg2,
@@ -48,39 +54,41 @@ void assertCorrectNumberOfEntities(
     auto world_objects = World::getInstance<World::IWorldModify>().getWorldObjects();
 
     for (auto it : world_objects) {
-        switch (it->renderableEntity_->getLayer()) {
-            case (RenderableEntity::Layer::BACKGROUND):
-                count_background++;
-                break;
-            case (RenderableEntity::Layer::BG_3):
-                count_bg3++;
-                break;
-            case (RenderableEntity::Layer::BG_2):
-                count_bg2++;
-                break;
-            case (RenderableEntity::Layer::BG_1):
-                count_bg1++;
-                break;
-            case (RenderableEntity::Layer::MAIN_BG):
-                count_main_bg++;
-                break;
-            case (RenderableEntity::Layer::MAIN):
-                count_main++;
-                break;
-            case (RenderableEntity::Layer::MAIN_FG):
-                count_main_fg++;
-                break;
-            case (RenderableEntity::Layer::FG_1):
-                count_fg1++;
-                break;
-            case (RenderableEntity::Layer::FG_2):
-                count_fg2++;
-                break;
-            case (RenderableEntity::Layer::FG_3):
-                count_fg3++;
-                break;
-            default:
-                break;
+        if (it->renderableEntity_) {
+            switch (it->renderableEntity_->getLayer()) {
+                case (RenderableEntity::Layer::BACKGROUND):
+                    count_background++;
+                    break;
+                case (RenderableEntity::Layer::BG_3):
+                    count_bg3++;
+                    break;
+                case (RenderableEntity::Layer::BG_2):
+                    count_bg2++;
+                    break;
+                case (RenderableEntity::Layer::BG_1):
+                    count_bg1++;
+                    break;
+                case (RenderableEntity::Layer::MAIN_BG):
+                    count_main_bg++;
+                    break;
+                case (RenderableEntity::Layer::MAIN):
+                    count_main++;
+                    break;
+                case (RenderableEntity::Layer::MAIN_FG):
+                    count_main_fg++;
+                    break;
+                case (RenderableEntity::Layer::FG_1):
+                    count_fg1++;
+                    break;
+                case (RenderableEntity::Layer::FG_2):
+                    count_fg2++;
+                    break;
+                case (RenderableEntity::Layer::FG_3):
+                    count_fg3++;
+                    break;
+                default:
+                    break;
+            }
         }
     }
     ASSERT_TRUE(count_background == background);
@@ -96,7 +104,7 @@ void assertCorrectNumberOfEntities(
 }
 
 void assertWorldEmpty() {
-    assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    assertCorrectNumberOfRenderables(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 }
 
 TEST_F(CommandTestFixture, AddObject) {
@@ -109,7 +117,8 @@ TEST_F(CommandTestFixture, AddObject) {
 
     editor_env->command->add();
 
-    assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 2, 0, 1, 0, 0);
+    assertCorrectNumberOfEntities(3);
+    assertCorrectNumberOfRenderables(0, 0, 0, 0, 0, 2, 0, 1, 0, 0);
 }
 
 TEST_F(CommandTestFixture, RemoveObject) {
@@ -125,12 +134,14 @@ TEST_F(CommandTestFixture, RemoveObject) {
 
     editor_env->command->add();
 
-    assertCorrectNumberOfEntities(0, 1, 0, 0, 0, 3, 0, 0, 0, 0);
+    assertCorrectNumberOfEntities(4);
+    assertCorrectNumberOfRenderables(0, 1, 0, 0, 0, 3, 0, 0, 0, 0);
 
     editor_env->command->current_layer_ = RenderableEntity::Layer::MAIN;
     editor_env->command->remove(entity);
 
-    assertCorrectNumberOfEntities(0, 1, 0, 0, 0, 2, 0, 0, 0, 0);
+    assertCorrectNumberOfEntities(3);
+    assertCorrectNumberOfRenderables(0, 1, 0, 0, 0, 2, 0, 0, 0, 0);
 }
 
 TEST_F(CommandTestFixture, CopyObjectRemoveOriginal) {
@@ -140,15 +151,15 @@ TEST_F(CommandTestFixture, CopyObjectRemoveOriginal) {
 
     editor_env->command->add(entity);
 
-    assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
+    assertCorrectNumberOfEntities(1);
 
     editor_env->command->copy(entity);
 
-    assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 2, 0, 0, 0, 0);
+    assertCorrectNumberOfEntities(2);
 
     editor_env->command->remove(entity);
 
-    assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
+    assertCorrectNumberOfEntities(1);
 }
 
 TEST_F(CommandTestFixture, CopyObjectCheckEqual) {
@@ -158,11 +169,11 @@ TEST_F(CommandTestFixture, CopyObjectCheckEqual) {
 
     editor_env->command->add(entity);
 
-    assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
+    assertCorrectNumberOfEntities(1);
 
     editor_env->command->copy(entity);
 
-    assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 2, 0, 0, 0, 0);
+    assertCorrectNumberOfEntities(2);
 
     nlohmann::json j = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
@@ -171,7 +182,7 @@ TEST_F(CommandTestFixture, CopyObjectCheckEqual) {
     EXPECT_TRUE(j["entities"][0] == j["entities"][1]);
 }
 
-TEST_F(CommandTestFixture, ResizeObjectl) {
+TEST_F(CommandTestFixture, ResizeObject) {
     assertWorldEmpty();
 
     MockMouse::setMouseWorldPosition({0, 0});
@@ -183,7 +194,7 @@ TEST_F(CommandTestFixture, ResizeObjectl) {
 
     editor_env->mouse->saveMousePosition();
 
-    assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
+    assertCorrectNumberOfEntities(1);
 
     editor_env->current_entity = entity;
     editor_env->command->handleCommand(Command::Commands::RESIZE);
@@ -198,7 +209,7 @@ TEST_F(CommandTestFixture, ResizeObjectl) {
     ASSERT_EQ(entity->collision_->getCollideable()->getHitbox()->height_, 68);
 }
 
-TEST_F(CommandTestFixture, MoveObjectl) {
+TEST_F(CommandTestFixture, MoveObject) {
     assertWorldEmpty();
 
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
@@ -208,7 +219,7 @@ TEST_F(CommandTestFixture, MoveObjectl) {
 
     editor_env->mouse->saveMousePosition();
 
-    assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
+    assertCorrectNumberOfEntities(1);
 
     editor_env->current_entity = entity;
     editor_env->command->handleCommand(Command::Commands::MOVE);
@@ -229,7 +240,8 @@ TEST_F(CommandTestFixture, ToggleRenderable) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
     editor_env->command->add(entity);
 
-    assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
+    assertCorrectNumberOfEntities(1);
+    assertCorrectNumberOfRenderables(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
 
     editor_env->current_entity = entity;
     editor_env->command->handleCommand(Command::Commands::TOGGLE_RENDERABLE);
@@ -247,7 +259,7 @@ TEST_F(CommandTestFixture, ToggleCollision) {
     entity->collision_ = std::make_shared<Collision>(entity->trans_, entity->actions_);
     editor_env->command->add(entity);
 
-    assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
+    assertCorrectNumberOfEntities(1);
 
     editor_env->current_entity = entity;
     editor_env->command->handleCommand(Command::Commands::TOGGLE_COLLISION);
@@ -265,7 +277,7 @@ TEST_F(CommandTestFixture, ToggleMovable) {
     entity->movableEntity_ = std::make_shared<MovableEntity>(entity->trans_, entity->collision_);
     editor_env->command->add(entity);
 
-    assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
+    assertCorrectNumberOfEntities(1);
 
     editor_env->current_entity = entity;
     editor_env->command->handleCommand(Command::Commands::TOGGLE_MOVABLE);
@@ -287,7 +299,7 @@ TEST_F(CommandTestFixture, TogglePhysics) {
                            entity->actions_);
     editor_env->command->add(entity);
 
-    assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
+    assertCorrectNumberOfEntities(1);
 
     editor_env->current_entity = entity;
     editor_env->command->handleCommand(Command::Commands::TOGGLE_PHYSICS);
@@ -305,7 +317,7 @@ TEST_F(CommandTestFixture, ToggleActions) {
     entity->actions_ = std::make_shared<Actions>(entity->death_);
     editor_env->command->add(entity);
 
-    assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
+    assertCorrectNumberOfEntities(1);
 
     editor_env->current_entity = entity;
     editor_env->command->handleCommand(Command::Commands::TOGGLE_ACTIONS);
@@ -322,7 +334,8 @@ TEST_F(CommandTestFixture, ToggleTiling) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
     editor_env->command->add(entity);
 
-    assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
+    assertCorrectNumberOfEntities(1);
+    assertCorrectNumberOfRenderables(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
 
     entity->renderableEntity_ = std::make_shared<RenderableEntity>(entity->trans_, entity->movableEntity_);
 
@@ -357,7 +370,8 @@ TEST_F(CommandTestFixture, ChangeTexture) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
     editor_env->command->add(entity);
 
-    assertCorrectNumberOfEntities(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
+    assertCorrectNumberOfEntities(1);
+    assertCorrectNumberOfRenderables(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
 
     editor_env->current_entity = entity;
 
