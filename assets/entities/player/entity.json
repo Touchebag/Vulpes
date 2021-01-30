@@ -36,7 +36,7 @@
         "max_air_dive_speed": 80.0,
         "jump_impulse": -30.0,
         "wall_slide_friction": 0.85,
-        "wall_jump_horizontal_impulse": 30.0,
+        "wall_jump_horizontal_impulse": 10.0,
         "wall_jump_vertical_impulse": -25.0,
         "dash_speed": 100.0,
         "dash_friction": 0.8,

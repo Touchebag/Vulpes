@@ -62,8 +62,9 @@ void Physics::update() {
 
         facing_right.lockDirection(physics_props.direction_locked_);
 
-        if (physics_props.touching_ground_ || physics_props.touching_wall_) {
-            resetJumps();
+        if (physics_props.touching_ground_) {
+            variables_.resetJumps();
+            variables_.resetDashes();
         }
 
         if (!physics_props.movement_locked_x_) {
@@ -124,7 +125,7 @@ void Physics::update() {
         }
 
         if (act->getActionState(Actions::Action::DASH, true)) {
-            if (physics_props.can_dash_) {
+            if (physics_props.can_dash_ && variables_.popDashes()) {
                 // If holding a direction dash in that direction
                 // else dash forward
                 if (act->getActionState(Actions::Action::MOVE_RIGHT)) {
@@ -149,10 +150,12 @@ void Physics::update() {
         }
 
         if (act->getActionState(Actions::Action::DOUBLE_JUMP, true)) {
-            if (physics_props.can_jump_ && jumps_left_ > 0 && !physics_props.touching_wall_) {
-                y = constants_.jump_impulse;
-                jumps_left_--;
-                stateEnt->incomingEvent(state_utils::Event::JUMPING);
+            if (physics_props.can_jump_ &&
+                !physics_props.touching_ground_ &&
+                !physics_props.touching_wall_ &&
+                variables_.popJumps()) {
+                    y = constants_.jump_impulse;
+                    stateEnt->incomingEvent(state_utils::Event::JUMPING);
             }
         }
 
@@ -165,7 +168,10 @@ void Physics::update() {
                 int dir = facing_right ? -1.0 : 1.0;
                 x = constants_.wall_jump_horizontal_impulse * dir;
                 y = constants_.wall_jump_vertical_impulse;
-                jumps_left_--;
+
+                // Return aerial jumps on wall jump
+                variables_.resetJumps();
+                variables_.resetDashes();
             }
         }
 
@@ -191,7 +197,8 @@ void Physics::update() {
         if (act->getActionState(Actions::Action::AIR_DIVE_BOUNCE, true)) {
             y = -30;
             stateEnt->incomingEvent(state_utils::Event::DIVE_BOUNCE);
-            resetJumps();
+            variables_.resetJumps();
+            variables_.resetDashes();
         }
 
         auto max_movement = movable->getMaximumMovement(x, y);
@@ -230,12 +237,17 @@ void Physics::update() {
     }
 }
 
-void Physics::setPhysicsConstants(Constants constants) {
+void Physics::setPhysicsConstants(PhysicsConstants constants) {
     constants_ = constants;
 }
 
+void Physics::setPhysicsVariables() {
+    variables_.setMaxJumps(1);
+    variables_.setMaxDashes(1);
+}
+
 void Physics::reloadFromJson(nlohmann::json j) {
-    Constants constants;
+    PhysicsConstants constants;
 
     if (j.contains("ground_acceleration")) {
         constants.ground_acceleration = j["ground_acceleration"].get<double>();
@@ -293,11 +305,13 @@ void Physics::reloadFromJson(nlohmann::json j) {
     }
 
     setPhysicsConstants(constants);
+    // TODO Read from json
+    setPhysicsVariables();
 }
 
 std::optional<nlohmann::json> Physics::outputToJson() {
     nlohmann::json j;
-    const Constants default_constants;
+    const PhysicsConstants default_constants;
 
     // Only save changed constants
     saveConstantToJson(j, "ground_acceleration", constants_.ground_acceleration, default_constants.ground_acceleration);
@@ -321,8 +335,4 @@ std::optional<nlohmann::json> Physics::outputToJson() {
     saveConstantToJson(j, "dash_friction", constants_.dash_friction, default_constants.dash_friction);
     saveConstantToJson(j, "air_dive_impulse", constants_.air_dive_impulse, default_constants.air_dive_impulse);
     return j;
-}
-
-void Physics::resetJumps() {
-    jumps_left_ = 2;
 }
