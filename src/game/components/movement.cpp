@@ -39,9 +39,11 @@ void MovableEntity::update() {
 }
 
 void MovableEntity::move(double velX, double velY) {
+    auto max_move = getMaximumMovement(velX, velY);
+
     if (auto trans = trans_.lock()) {
-        vely_ = velY;
-        velx_ = velX;
+        velx_ = max_move.first;
+        vely_ = max_move.second;
 
         int x = trans->getX();
         int y = trans->getY();

@@ -35,9 +35,7 @@ class DynamicCollisionTestFixture : public ::testing::Test {
 TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionNoCollision) {
     World::getInstance<World::IWorldModify>().addEntity(entity_);
 
-    auto max_mvmnt = entity_->movableEntity_->getMaximumMovement(10, 0);
-
-    entity_->movableEntity_->move(max_mvmnt.first, max_mvmnt.second);
+    entity_->movableEntity_->move(10, 0);
     auto pos_x = entity_->trans_->getX();
     auto pos_y = entity_->trans_->getY();
 
@@ -48,8 +46,7 @@ TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionNoCollision) {
 TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionCollision) {
     World::getInstance<World::IWorldModify>().addEntity(entity_);
 
-    auto max_mvmnt = entity_->movableEntity_->getMaximumMovement(60, 0);
-    entity_->movableEntity_->move(max_mvmnt.first, max_mvmnt.second);
+    entity_->movableEntity_->move(60, 0);
     auto pos_x = entity_->trans_->getX();
     auto pos_y = entity_->trans_->getY();
 
@@ -60,8 +57,7 @@ TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionCollision) {
 TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionNegativeCollision) {
     World::getInstance<World::IWorldModify>().addEntity(entity_);
 
-    auto max_mvmnt = entity_->movableEntity_->getMaximumMovement(0, -70);
-    entity_->movableEntity_->move(max_mvmnt.first, max_mvmnt.second);
+    entity_->movableEntity_->move(0, -70);
     auto pos_x = entity_->trans_->getX();
     auto pos_y = entity_->trans_->getY();
 
@@ -72,8 +68,7 @@ TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionNegativeCollision) {
 TEST_F(DynamicCollisionTestFixture, MoveMultipleDirectionCollisionInOne) {
     World::getInstance<World::IWorldModify>().addEntity(entity_);
 
-    auto max_mvmnt = entity_->movableEntity_->getMaximumMovement(80, 20);
-    entity_->movableEntity_->move(max_mvmnt.first, max_mvmnt.second);
+    entity_->movableEntity_->move(80, 20);
     auto pos_x = entity_->trans_->getX();
     auto pos_y = entity_->trans_->getY();
 
@@ -87,8 +82,7 @@ TEST_F(DynamicCollisionTestFixture, CollisionSemiSolidAllDirections) {
     // From below, should not be stopped
     entity_->trans_->setPosition(500, 200);
 
-    auto max_mvmnt = entity_->movableEntity_->getMaximumMovement(0, -100);
-    entity_->movableEntity_->move(max_mvmnt.first, max_mvmnt.second);
+    entity_->movableEntity_->move(0, -100);
     auto pos_x = entity_->trans_->getX();
     auto pos_y = entity_->trans_->getY();
 
@@ -98,8 +92,7 @@ TEST_F(DynamicCollisionTestFixture, CollisionSemiSolidAllDirections) {
     // From above, should be stopped
     entity_->trans_->setPosition(500, 0);
 
-    max_mvmnt = entity_->movableEntity_->getMaximumMovement(0, 100);
-    entity_->movableEntity_->move(max_mvmnt.first, max_mvmnt.second);
+    entity_->movableEntity_->move(0, 100);
     pos_x = entity_->trans_->getX();
     pos_y = entity_->trans_->getY();
 
@@ -109,16 +102,14 @@ TEST_F(DynamicCollisionTestFixture, CollisionSemiSolidAllDirections) {
     // Left/right, should not be stopped
     entity_->trans_->setPosition(400, 100);
 
-    max_mvmnt = entity_->movableEntity_->getMaximumMovement(200, 0);
-    entity_->movableEntity_->move(max_mvmnt.first, max_mvmnt.second);
+    entity_->movableEntity_->move(200, 0);
     pos_x = entity_->trans_->getX();
     pos_y = entity_->trans_->getY();
 
     EXPECT_EQ(600, pos_x);
     EXPECT_EQ(100, pos_y);
 
-    max_mvmnt = entity_->movableEntity_->getMaximumMovement(-200, 0);
-    entity_->movableEntity_->move(max_mvmnt.first, max_mvmnt.second);
+    entity_->movableEntity_->move(-200, 0);
     pos_x = entity_->trans_->getX();
     pos_y = entity_->trans_->getY();
 
@@ -164,8 +155,7 @@ TEST_F(DynamicCollisionTestFixture, MoveDiagonalStuckOnCorner) {
     entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
     World::IWorldModify::addEntity(entity);
 
-    auto max_mvmnt = entity->movableEntity_->getMaximumMovement(10, 10);
-    entity->movableEntity_->move(max_mvmnt.first, max_mvmnt.second);
+    entity->movableEntity_->move(10, 10);
     auto pos_x = entity->trans_->getX();
     auto pos_y = entity->trans_->getY();
 

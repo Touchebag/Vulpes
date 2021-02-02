@@ -201,8 +201,7 @@ void Physics::update() {
             variables_.resetDashes();
         }
 
-        auto max_movement = movable->getMaximumMovement(x, y);
-
+        movable->move(x, y);
         auto move_attr = movable->getMovementAttributes();
 
         if (move_attr.on_ground) {
@@ -220,9 +219,6 @@ void Physics::update() {
         if (move_attr.falling) {
             stateEnt->incomingEvent(state_utils::Event::FALLING);
         }
-
-        movable->move(max_movement.first, max_movement.second);
-
         movable->facing_right_ = facing_right;
     } else {
         if (!stateEnt) {

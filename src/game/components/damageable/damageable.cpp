@@ -115,10 +115,8 @@ void Damageable::update() {
 
                         if (auto move = move_.lock()) {
                             bool should_move_right = knockbackRight(coll, other_coll);
-                            auto max_movement = move->getMaximumMovement(
-                                    attributes.knockback_x * (should_move_right ? 1.0 : -1.0),
-                                    attributes.knockback_y);
-                            move->move(max_movement.first, max_movement.second);
+                            move->move(attributes.knockback_x * (should_move_right ? 1.0 : -1.0),
+                                       attributes.knockback_y);
                             // Face toward damage source, away from knockback direction
                             move->facing_right_ = !should_move_right;
                         }
