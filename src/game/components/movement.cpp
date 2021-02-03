@@ -48,6 +48,11 @@ void MovableEntity::move(double velX, double velY) {
         int x = trans->getX();
         int y = trans->getY();
         trans->setPosition(x + static_cast<int>(velx_), y + static_cast<int>(vely_));
+
+        if (getMovementAttributes().on_slope) {
+            // Reset y velocity if adjusted by slope to avoid overshooting next frame
+            vely_ = 0;
+        }
     } else {
         LOGW("Movable: Missing transform");
     }
@@ -67,13 +72,13 @@ std::pair<double, double> MovableEntity::getMaximumMovement(double velX, double 
     if (auto coll = collision_.lock()) {
         vel = checkMovement(vel.first, vel.second, coll, Collideable::CollisionType::SLOPE);
 
-        move_attr_.on_ground = vel.second != velY;
+        move_attr_.on_slope = vel.second != velY;
 
         vel = checkMovement(vel.first, vel.second, coll, Collideable::CollisionType::STATIC);
         vel = checkMovement(vel.first, vel.second, coll, Collideable::CollisionType::SEMI_SOLID);
 
         // If already on ground from slope, don't change
-        move_attr_.on_ground = move_attr_.on_ground || (vel.second < velY);
+        move_attr_.on_ground = move_attr_.on_slope || vel.second < velY;
         move_attr_.touching_wall = vel.first != velX;
 
         move_attr_.falling = vel.second > 0.0;

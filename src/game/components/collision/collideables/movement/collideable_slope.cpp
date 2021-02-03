@@ -112,7 +112,8 @@ std::pair<double, double> CollideableSlope::getMaximumMovement(double stepX, dou
         }
 
         // If new position is just above slope surface, snap downwards
-        if (entity_new_ground_pos + 20 > current_height) {
+        // but only if we are moving down (e.g. not if jumping up slope)
+        if (entity_new_ground_pos + 20 > current_height && stepY >= 0) {
             return {retX, current_height - entity_current_ground_pos};
         } else {
             return {retX, retY};

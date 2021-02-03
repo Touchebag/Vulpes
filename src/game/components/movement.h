@@ -13,6 +13,7 @@ class MovableEntity : public Component {
         bool on_ground = false;
         bool touching_wall = false;
         bool falling = false;
+        bool on_slope = false;
     };
 
     MovableEntity(std::weak_ptr<Transform> trans, std::weak_ptr<Collision> collision);

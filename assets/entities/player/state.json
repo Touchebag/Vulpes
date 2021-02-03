@@ -141,6 +141,7 @@
         },
         "frame_timer": 10,
         "next_states": [
+            {"event": "touching_floor", "state": "idle"},
             {"event": "touching_wall", "state": "wall_slide"},
             {"event": "jumping", "state": "jumping"},
             {"event": "frame_timeout", "state": "falling"},
