@@ -32,6 +32,15 @@ int game_main(sf::RenderWindow& window) {
             {sf::Keyboard::Key::Up, {Actions::Action::INTERACT}}
             });
 
+    Input::getInstance().setButtonMap({
+            {0, {Actions::Action::JUMP,
+                 Actions::Action::WALL_JUMP,
+                 Actions::Action::DOUBLE_JUMP}},
+            {5, {Actions::Action::DASH}},
+            {2, {Actions::Action::ATTACK}},
+            {1, {Actions::Action::INTERACT}}
+            });
+
     render_clock.restart();
 
     std::shared_ptr<IRender> renderInst = System::getRender();
