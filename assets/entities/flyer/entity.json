@@ -35,7 +35,7 @@
         "texture": "Enemy",
         "tile_x": true,
         "tile_y": true,
-        "layer": "main"
+        "layer": 0
     },
     "Transform": {
         "pos_x": 550,

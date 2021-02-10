@@ -75,7 +75,7 @@ nlohmann::json entity_json = nlohmann::json::parse(R"--(
         "texture": "box.png",
         "tile_x": true,
         "tile_y": true,
-        "layer": "main"
+        "layer": 0
     },
     "Stateful": null,
     "Subentity": null,

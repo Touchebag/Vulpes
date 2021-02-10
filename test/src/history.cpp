@@ -160,7 +160,7 @@ TEST_F(HistoryTestFixture, MoveObject) {
 
 TEST_F(HistoryTestFixture, MoveObjectOtherLayer) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    editor_env->command->current_layer_ = RenderableEntity::Layer::BG_1;
+    editor_env->command->current_layer_ = -1;
     editor_env->command->add(entity);
 
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();

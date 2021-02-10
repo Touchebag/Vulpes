@@ -6,22 +6,8 @@
                 "tile_x": true,
                 "tile_y": true,
                 "height": 200,
-                "width": 50,
-                "layer": "background"
-            },
-            "Transform": {
-                "pos_x": 0,
-                "pos_y": 100
-            }
-        },
-        {
-            "Renderable": {
-                "texture": "box.png",
-                "tile_x": true,
-                "tile_y": true,
-                "height": 200,
                 "width": 40,
-                "layer": "bg1"
+                "layer": -1
             },
             "Transform": {
                 "pos_x": 200,
@@ -36,7 +22,7 @@
                 "tile_y": true,
                 "height": 200,
                 "width": 50,
-                "layer": "bg2"
+                "layer": -2
             },
             "Transform": {
                 "pos_x": 200,
@@ -50,7 +36,35 @@
                 "tile_y": true,
                 "height": 250,
                 "width": 50,
-                "layer": "bg3"
+                "layer": -3
+            },
+            "Transform": {
+                "pos_x": 200,
+                "pos_y": 100
+            }
+        },
+        {
+            "Renderable": {
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true,
+                "height": 250,
+                "width": 50,
+                "layer": -4
+            },
+            "Transform": {
+                "pos_x": 200,
+                "pos_y": 100
+            }
+        },
+        {
+            "Renderable": {
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true,
+                "height": 250,
+                "width": 50,
+                "layer": -5
             },
             "Transform": {
                 "pos_x": 200,
@@ -64,7 +78,7 @@
                 "tile_y": true,
                 "height": 2000,
                 "width": 50,
-                "layer": "fg1"
+                "layer": 1
             },
             "Transform": {
                 "pos_x": 200,
@@ -78,7 +92,7 @@
                 "tile_y": true,
                 "height": 20,
                 "width": 50,
-                "layer": "fg2"
+                "layer": 2
             },
             "Transform": {
                 "pos_x": 200,
@@ -92,7 +106,7 @@
                 "tile_y": true,
                 "height": 200,
                 "width": 50,
-                "layer": "fg3"
+                "layer": 3
             },
             "Transform": {
                 "pos_x": 100,
@@ -106,7 +120,35 @@
                 "tile_y": true,
                 "height": 200,
                 "width": 50,
-                "layer": "main"
+                "layer": 4
+            },
+            "Transform": {
+                "pos_x": 100,
+                "pos_y": 100
+            }
+        },
+        {
+            "Renderable": {
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true,
+                "height": 200,
+                "width": 50,
+                "layer": 5
+            },
+            "Transform": {
+                "pos_x": 100,
+                "pos_y": 100
+            }
+        },
+        {
+            "Renderable": {
+                "texture": "box.png",
+                "tile_x": true,
+                "tile_y": true,
+                "height": 200,
+                "width": 50,
+                "layer": 0
             },
             "Transform": {
                 "pos_x": 200,
@@ -120,42 +162,14 @@
                 "tile_y": true,
                 "height": 50,
                 "width": 200,
-                "layer": "main"
+                "layer": 0
             },
             "Transform": {
                 "pos_x": 100,
                 "pos_y": 0
             }
         },
-        null,
-        {
-            "Renderable": {
-                "texture": "box.png",
-                "tile_x": true,
-                "tile_y": true,
-                "height": 300,
-                "width": 50,
-                "layer": "main_bg"
-            },
-            "Transform": {
-                "pos_x": 200,
-                "pos_y": 100
-            }
-        },
-        {
-            "Renderable": {
-                "texture": "box.png",
-                "tile_x": true,
-                "tile_y": true,
-                "height": 100,
-                "width": 50,
-                "layer": "main_fg"
-            },
-            "Transform": {
-                "pos_x": 200,
-                "pos_y": 100
-            }
-        }
+        null
     ],
     "entrances": [
         {

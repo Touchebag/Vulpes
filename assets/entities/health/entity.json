@@ -10,7 +10,7 @@
     "Death": null,
     "Renderable": {
         "height": 50,
-        "layer": "main",
+        "layer": 0,
         "texture": "Health",
         "tile_x": false,
         "tile_y": false,

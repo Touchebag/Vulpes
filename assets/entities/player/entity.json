@@ -48,7 +48,7 @@
         "texture": "Player",
         "tile_x": false,
         "tile_y": false,
-        "layer": "main"
+        "layer": 0
     },
     "Stateful": null,
     "Subentity": null,

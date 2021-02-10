@@ -29,82 +29,8 @@ void assertCorrectNumberOfEntities(long long unsigned number) {
     ASSERT_EQ(world_objects.size(), number);
 }
 
-void assertCorrectNumberOfRenderables(
-        long long unsigned background,
-        long long unsigned bg3,
-        long long unsigned bg2,
-        long long unsigned bg1,
-        long long unsigned main_bg,
-        long long unsigned main,
-        long long unsigned main_fg,
-        long long unsigned fg1,
-        long long unsigned fg2,
-        long long unsigned fg3) {
-    long long unsigned count_background = 0;
-    long long unsigned count_bg3 = 0;
-    long long unsigned count_bg2 = 0;
-    long long unsigned count_bg1 = 0;
-    long long unsigned count_main_bg = 0;
-    long long unsigned count_main = 0;
-    long long unsigned count_main_fg = 0;
-    long long unsigned count_fg1 = 0;
-    long long unsigned count_fg2 = 0;
-    long long unsigned count_fg3 = 0;
-
-    auto world_objects = World::getInstance<World::IWorldModify>().getWorldObjects();
-
-    for (auto it : world_objects) {
-        if (it->renderableEntity_) {
-            switch (it->renderableEntity_->getLayer()) {
-                case (RenderableEntity::Layer::BACKGROUND):
-                    count_background++;
-                    break;
-                case (RenderableEntity::Layer::BG_3):
-                    count_bg3++;
-                    break;
-                case (RenderableEntity::Layer::BG_2):
-                    count_bg2++;
-                    break;
-                case (RenderableEntity::Layer::BG_1):
-                    count_bg1++;
-                    break;
-                case (RenderableEntity::Layer::MAIN_BG):
-                    count_main_bg++;
-                    break;
-                case (RenderableEntity::Layer::MAIN):
-                    count_main++;
-                    break;
-                case (RenderableEntity::Layer::MAIN_FG):
-                    count_main_fg++;
-                    break;
-                case (RenderableEntity::Layer::FG_1):
-                    count_fg1++;
-                    break;
-                case (RenderableEntity::Layer::FG_2):
-                    count_fg2++;
-                    break;
-                case (RenderableEntity::Layer::FG_3):
-                    count_fg3++;
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-    ASSERT_TRUE(count_background == background);
-    ASSERT_TRUE(count_bg3 == bg3);
-    ASSERT_TRUE(count_bg2 == bg2);
-    ASSERT_TRUE(count_bg1 == bg1);
-    ASSERT_TRUE(count_main_bg == main_bg);
-    ASSERT_TRUE(count_main == main);
-    ASSERT_TRUE(count_main_fg == main_fg);
-    ASSERT_TRUE(count_fg1 == fg1);
-    ASSERT_TRUE(count_fg2 == fg2);
-    ASSERT_TRUE(count_fg3 == fg3);
-}
-
 void assertWorldEmpty() {
-    assertCorrectNumberOfRenderables(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    assertCorrectNumberOfEntities(0);
 }
 
 TEST_F(CommandTestFixture, AddObject) {
@@ -113,12 +39,11 @@ TEST_F(CommandTestFixture, AddObject) {
     editor_env->command->add();
     editor_env->command->add();
 
-    editor_env->command->current_layer_ = RenderableEntity::Layer::FG_1;
+    editor_env->command->current_layer_ = 1;
 
     editor_env->command->add();
 
     assertCorrectNumberOfEntities(3);
-    assertCorrectNumberOfRenderables(0, 0, 0, 0, 0, 2, 0, 1, 0, 0);
 }
 
 TEST_F(CommandTestFixture, RemoveObject) {
@@ -130,18 +55,16 @@ TEST_F(CommandTestFixture, RemoveObject) {
     editor_env->command->add();
     editor_env->command->add(entity);
 
-    editor_env->command->current_layer_ = RenderableEntity::Layer::BG_3;
+    editor_env->command->current_layer_ = -3;
 
     editor_env->command->add();
 
     assertCorrectNumberOfEntities(4);
-    assertCorrectNumberOfRenderables(0, 1, 0, 0, 0, 3, 0, 0, 0, 0);
 
-    editor_env->command->current_layer_ = RenderableEntity::Layer::MAIN;
+    editor_env->command->current_layer_ = 0;
     editor_env->command->remove(entity);
 
     assertCorrectNumberOfEntities(3);
-    assertCorrectNumberOfRenderables(0, 1, 0, 0, 0, 2, 0, 0, 0, 0);
 }
 
 TEST_F(CommandTestFixture, CopyObjectRemoveOriginal) {
@@ -241,7 +164,7 @@ TEST_F(CommandTestFixture, ToggleRenderable) {
     editor_env->command->add(entity);
 
     assertCorrectNumberOfEntities(1);
-    assertCorrectNumberOfRenderables(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
+    ASSERT_TRUE(entity->renderableEntity_);
 
     editor_env->current_entity = entity;
     editor_env->command->handleCommand(Command::Commands::TOGGLE_RENDERABLE);
@@ -335,7 +258,6 @@ TEST_F(CommandTestFixture, ToggleTiling) {
     editor_env->command->add(entity);
 
     assertCorrectNumberOfEntities(1);
-    assertCorrectNumberOfRenderables(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
 
     entity->renderableEntity_ = std::make_shared<RenderableEntity>(entity->trans_, entity->movableEntity_);
 
@@ -371,7 +293,6 @@ TEST_F(CommandTestFixture, ChangeTexture) {
     editor_env->command->add(entity);
 
     assertCorrectNumberOfEntities(1);
-    assertCorrectNumberOfRenderables(0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
 
     editor_env->current_entity = entity;
 

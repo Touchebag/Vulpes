@@ -157,7 +157,7 @@ void World::loadWorldFromJson(nlohmann::json j) {
 
     player_health_ = std::make_shared<RenderableText>(player_health_position_);
     player_health_->setColor(sf::Color::Green);
-    player_health_->setLayer(RenderableEntity::Layer::HUD);
+    player_health_->setLayer(INT_MAX);
 
     System::getRender()->addEntity(player_health_);
 }
@@ -182,7 +182,7 @@ nlohmann::json World::saveWorldToJson() {
     for (auto it : world_objects_) {
         if (auto object = it->outputToJson()) {
             // Do not store if HUD object
-            if (!(it->renderableEntity_) || (it->renderableEntity_->getLayer() != RenderableEntity::Layer::HUD)) {
+            if (!(it->renderableEntity_) || (it->renderableEntity_->getLayer() != INT_MAX)) {
                 json_object_list.push_back(*object);
             }
         }
@@ -253,7 +253,7 @@ void World::addPlayer(std::shared_ptr<Player> player) {
         addCollideable(coll->getCollideable());
     }
 
-    System::getRender()->addEntity(player_->renderableEntity_);
+    System::getRender()->setPlayer(player_->renderableEntity_);
 }
 
 void World::loadRoom(std::string room_name, int entrance_id) {

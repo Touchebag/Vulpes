@@ -1,5 +1,7 @@
 #include "editor_environment.h"
 
+#include "utils/log.h"
+
 std::shared_ptr<EditorEnvironment> EditorEnvironment::create_environment(sf::RenderWindow& window) {
     auto env = std::shared_ptr<EditorEnvironment>(new EditorEnvironment(window));
     env->command = std::make_shared<Command>(env);
@@ -19,12 +21,11 @@ EditorEnvironment::EditorEnvironment(sf::RenderWindow& window) :
     mouse(std::make_shared<Mouse>(window)) {
 }
 
-RenderableEntity::Layer EditorEnvironment::change_layer(bool towards_screen) {
-    int layer_int = static_cast<int>(current_layer);
-    if (towards_screen && layer_int > 0) {
-        return static_cast<RenderableEntity::Layer>(layer_int - 1);
-    } else if (!towards_screen && layer_int < static_cast<int>(RenderableEntity::Layer::MAX_LAYERS) - 1) {
-        return static_cast<RenderableEntity::Layer>(layer_int + 1);
+int EditorEnvironment::change_layer(bool towards_screen) {
+    if (towards_screen && current_layer > -5) {
+        return --current_layer;
+    } else if (!towards_screen && current_layer < 5) {
+        return ++current_layer;
     }
 
     return current_layer;

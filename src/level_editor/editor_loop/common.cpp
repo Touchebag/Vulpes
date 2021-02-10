@@ -8,7 +8,7 @@ std::shared_ptr<BaseEntity> makeHudText(std::pair<int, int> position = {0, 0}) {
     std::shared_ptr<Transform> trans = std::make_shared<Transform>();
     std::shared_ptr<RenderableText> text = std::make_shared<RenderableText>(trans);
     text->setColor(sf::Color::Green);
-    text->setLayer(RenderableEntity::Layer::HUD);
+    text->setLayer(INT_MAX);
 
     trans->setPosition(position.first, position.second);
 

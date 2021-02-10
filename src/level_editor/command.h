@@ -34,8 +34,6 @@ class Command {
 
     Command(std::weak_ptr<EditorEnvironment> editor_env);
 
-    void setLayer(RenderableEntity::Layer layer);
-
     void update();
 
     void add();
@@ -48,7 +46,7 @@ class Command {
 
     void closeTextInput();
 
-    RenderableEntity::Layer current_layer_ = RenderableEntity::Layer::MAIN;
+    int current_layer_ = 0;
 
     std::shared_ptr<TextInput> text_input_;
 

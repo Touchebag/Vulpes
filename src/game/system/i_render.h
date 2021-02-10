@@ -9,4 +9,5 @@ class IRender {
     virtual void render(sf::RenderWindow& window, float frame_fraction) = 0;
 
     virtual void addEntity(std::weak_ptr<RenderableEntity> entity) = 0;
+    virtual void setPlayer(std::weak_ptr<RenderableEntity> entity) = 0;
 };

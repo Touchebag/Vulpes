@@ -14,7 +14,7 @@
             },
             "Renderable": {
                 "height": 4719,
-                "layer": "main",
+                "layer": 0,
                 "texture": "Forest/Tree",
                 "tile_x": true,
                 "tile_y": true,
@@ -33,7 +33,7 @@
             },
             "Renderable": {
                 "height": 4787,
-                "layer": "main",
+                "layer": 0,
                 "texture": "Forest/Tree",
                 "tile_x": true,
                 "tile_y": true,
@@ -59,7 +59,7 @@
             },
             "Renderable": {
                 "height": 57,
-                "layer": "main",
+                "layer": 0,
                 "texture": "Forest/Grass",
                 "tile_x": true,
                 "tile_y": true,
@@ -78,7 +78,7 @@
             },
             "Renderable": {
                 "height": 705,
-                "layer": "main",
+                "layer": 0,
                 "texture": "Forest/Tree",
                 "tile_x": true,
                 "tile_y": true,
@@ -97,7 +97,7 @@
             },
             "Renderable": {
                 "height": 2749,
-                "layer": "main",
+                "layer": 0,
                 "texture": "Forest/Dirt",
                 "tile_x": true,
                 "tile_y": true,
@@ -116,7 +116,7 @@
             },
             "Renderable": {
                 "height": 65,
-                "layer": "main",
+                "layer": 0,
                 "texture": "Forest/Dirt",
                 "tile_x": true,
                 "tile_y": true,
@@ -135,7 +135,7 @@
             },
             "Renderable": {
                 "height": 71,
-                "layer": "main",
+                "layer": 0,
                 "texture": "Forest/Dirt",
                 "tile_x": true,
                 "tile_y": true,
@@ -154,7 +154,7 @@
             },
             "Renderable": {
                 "height": 1394,
-                "layer": "main",
+                "layer": 0,
                 "texture": "Forest/Dirt",
                 "tile_x": true,
                 "tile_y": true,
@@ -173,7 +173,7 @@
             },
             "Renderable": {
                 "height": 75,
-                "layer": "main",
+                "layer": 0,
                 "texture": "Forest/Dirt",
                 "tile_x": true,
                 "tile_y": true,
@@ -192,7 +192,7 @@
             },
             "Renderable": {
                 "height": 75,
-                "layer": "main",
+                "layer": 0,
                 "texture": "Forest/Dirt",
                 "tile_x": true,
                 "tile_y": true,
@@ -211,7 +211,7 @@
             },
             "Renderable": {
                 "height": 1394,
-                "layer": "main",
+                "layer": 0,
                 "texture": "Forest/Dirt",
                 "tile_x": true,
                 "tile_y": true,
@@ -230,7 +230,7 @@
             },
             "Renderable": {
                 "height": 2365,
-                "layer": "main",
+                "layer": 0,
                 "texture": "Forest/Tree",
                 "tile_x": true,
                 "tile_y": true,
@@ -249,7 +249,7 @@
             },
             "Renderable": {
                 "height": 161,
-                "layer": "main",
+                "layer": 0,
                 "texture": "Forest/Canopy",
                 "tile_x": true,
                 "tile_y": true,
@@ -268,7 +268,7 @@
             },
             "Renderable": {
                 "height": 156,
-                "layer": "main",
+                "layer": 0,
                 "texture": "Forest/Grass",
                 "tile_x": true,
                 "tile_y": true,
@@ -287,7 +287,7 @@
             },
             "Renderable": {
                 "height": 367,
-                "layer": "main",
+                "layer": 0,
                 "texture": "Forest/Dirt",
                 "tile_x": true,
                 "tile_y": true,
@@ -301,7 +301,7 @@
         {
             "Renderable": {
                 "height": 235,
-                "layer": "main_fg",
+                "layer": 1,
                 "texture": "Forest/Bush",
                 "tile_x": false,
                 "tile_y": false
@@ -314,7 +314,7 @@
         {
             "Renderable": {
                 "height": 235,
-                "layer": "main_fg",
+                "layer": 1,
                 "texture": "Forest/Bush",
                 "tile_x": false,
                 "tile_y": false
@@ -327,7 +327,7 @@
         {
             "Renderable": {
                 "height": 235,
-                "layer": "main_fg",
+                "layer": 1,
                 "texture": "Forest/Bush",
                 "tile_x": false,
                 "tile_y": false
@@ -340,7 +340,7 @@
         {
             "Renderable": {
                 "height": 235,
-                "layer": "main_fg",
+                "layer": 1,
                 "texture": "Forest/Bush",
                 "tile_x": false,
                 "tile_y": false
@@ -378,7 +378,7 @@
             },
             "Renderable": {
                 "height": 507,
-                "layer": "main",
+                "layer": -1,
                 "texture": "box",
                 "tile_x": false,
                 "tile_y": false,
@@ -405,7 +405,7 @@
         {
             "Renderable": {
                 "height": 2534,
-                "layer": "main_bg",
+                "layer": -2,
                 "texture": "Forest/Tree_bg2.png",
                 "tile_x": false,
                 "tile_y": false,
@@ -425,7 +425,7 @@
             },
             "Renderable": {
                 "height": 393,
-                "layer": "main",
+                "layer": 0,
                 "texture": "slope",
                 "tile_x": false,
                 "tile_y": false,
@@ -444,7 +444,7 @@
             },
             "Renderable": {
                 "height": 137,
-                "layer": "main",
+                "layer": 0,
                 "texture": "Forest/Grass",
                 "tile_x": true,
                 "tile_y": true,

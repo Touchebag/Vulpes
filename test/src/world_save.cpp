@@ -38,7 +38,7 @@ TEST_F(WorldTestFixture, SaveLoadWorldFailure) {
             "Renderable": {
                 "scale": 1.0,
                 "texture": "box.png",
-                "layer": "main"
+                "layer": 0
             },
             "Transform": {
                 "pos_x": 200,
@@ -70,7 +70,7 @@ TEST_F(WorldTestFixture, EnsureHudNotSaved) {
             "Renderable": {
                 "scale": 1.0,
                 "texture": "box.png",
-                "layer": "hud"
+                "layer": 0
             },
             "Transform": {
                 "pos_x": 200,
@@ -79,6 +79,7 @@ TEST_F(WorldTestFixture, EnsureHudNotSaved) {
         })--");
 
     auto hud_object = BaseEntity::createFromJson(j);
+    hud_object->renderableEntity_->setLayer(INT_MAX);
 
     World::getInstance<World::IWorldModify>().addEntity(hud_object);
 

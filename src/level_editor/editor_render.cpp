@@ -130,7 +130,11 @@ void EditorRender::addEntity(std::weak_ptr<RenderableEntity> entity) {
     render_.addEntity(entity);
 }
 
-void EditorRender::renderLayer(sf::RenderWindow& window, RenderableEntity::Layer layer) {
+void EditorRender::setPlayer(std::weak_ptr<RenderableEntity> entity) {
+    render_.setPlayer(entity);
+}
+
+void EditorRender::renderLayer(sf::RenderWindow& window, int layer) {
     render_.renderLayer(window, 0.0f, layer);
 }
 

@@ -12,7 +12,7 @@
                 "tile_y": true,
                 "height": 200,
                 "width": 50,
-                "layer": "main"
+                "layer": 0
             },
             "Transform": {
                 "pos_x": 200,
@@ -31,7 +31,7 @@
                 "tile_y": true,
                 "height": 200,
                 "width": 50,
-                "layer": "main"
+                "layer": 0
             },
             "Transform": {
                 "pos_x": 0,
@@ -50,7 +50,7 @@
                 "tile_y": true,
                 "height": 50,
                 "width": 200,
-                "layer": "main"
+                "layer": 0
             },
             "Transform": {
                 "pos_x": 100,
@@ -69,7 +69,7 @@
                 "tile_y": true,
                 "height": 50,
                 "width": 200,
-                "layer": "main"
+                "layer": 0
             },
             "Transform": {
                 "pos_x": 100,
@@ -88,7 +88,7 @@
                 "tile_y": true,
                 "height": 50,
                 "width": 50,
-                "layer": "main"
+                "layer": 0
             },
             "Transform": {
                 "pos_x": 500,

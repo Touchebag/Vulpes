@@ -5,7 +5,7 @@
 TextInput::TextInput() {
     text_position_->setPosition(50, 300);
     text_renderable_->setColor(sf::Color::Green);
-    text_renderable_->setLayer(RenderableEntity::Layer::HUD);
+    text_renderable_->setLayer(INT_MAX);
     System::getRender()->addEntity(text_renderable_);
 }
 

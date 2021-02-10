@@ -11,8 +11,9 @@ class EditorRender : public IRender {
     void setEditorEnvironment(std::weak_ptr<EditorEnvironment> editor_env);
 
     void addEntity(std::weak_ptr<RenderableEntity> entity) override;
+    void setPlayer(std::weak_ptr<RenderableEntity> entity) override;
 
-    void renderLayer(sf::RenderWindow& window, RenderableEntity::Layer layer);
+    void renderLayer(sf::RenderWindow& window, int layer);
     void setParallaxEnabled(bool enable);
     bool getParallaxEnabled();
 

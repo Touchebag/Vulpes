@@ -71,7 +71,7 @@ std::vector<std::shared_ptr<BaseEntity>> MenuEntry::draw() {
     auto title = createTextEntity(text_, {100, 100}, color_);
 
     menu_text_.push_back(title);
-    title->renderableEntity_->setLayer(RenderableEntity::Layer::HUD);
+    title->renderableEntity_->setLayer(INT_MAX);
     System::getRender()->addEntity(title->renderableEntity_);
 
     int i = 0;
@@ -85,7 +85,7 @@ std::vector<std::shared_ptr<BaseEntity>> MenuEntry::draw() {
             auto text_element = createTextEntity(entry_text, position, it->getColor());
 
             menu_text_.push_back(text_element);
-            text_element->renderableEntity_->setLayer(RenderableEntity::Layer::HUD);
+            text_element->renderableEntity_->setLayer(INT_MAX);
             System::getRender()->addEntity(text_element->renderableEntity_);
             ++i;
         }

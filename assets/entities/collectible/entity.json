@@ -4,7 +4,7 @@
     "Death": null,
     "Renderable": {
         "height": 50,
-        "layer": "main",
+        "layer": 0,
         "texture": "Collectible",
         "tile_x": false,
         "tile_y": false,

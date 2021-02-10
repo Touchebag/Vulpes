@@ -3,24 +3,6 @@
 #include "utils/file.h"
 #include "utils/common.h"
 
-namespace {
-
-std::map<std::string, RenderableEntity::Layer> layerStringMap = {
-    {"background", RenderableEntity::Layer::BACKGROUND},
-    {"bg3", RenderableEntity::Layer::BG_3},
-    {"bg2", RenderableEntity::Layer::BG_2},
-    {"bg1", RenderableEntity::Layer::BG_1},
-    {"main_bg", RenderableEntity::Layer::MAIN_BG},
-    {"main", RenderableEntity::Layer::MAIN},
-    {"main_fg", RenderableEntity::Layer::MAIN_FG},
-    {"fg1", RenderableEntity::Layer::FG_1},
-    {"fg2", RenderableEntity::Layer::FG_2},
-    {"fg3", RenderableEntity::Layer::FG_3},
-    {"hud", RenderableEntity::Layer::HUD},
-};
-
-} // namespace
-
 RenderableEntity::RenderableEntity(std::weak_ptr<Transform> trans, std::weak_ptr<MovableEntity> movable) :
     trans_(trans),
     movable_(movable) {
@@ -66,12 +48,7 @@ void RenderableEntity::reloadFromJson(nlohmann::json j, File file_instance) {
     }
 
     if (j.contains("layer")) {
-        auto layer_string = j["layer"].get<std::string>();
-        try {
-            layer_ = layerStringMap.at(layer_string);
-        } catch (std::out_of_range& e) {
-            throw std::invalid_argument(std::string("Unknown layer: ") + layer_string.c_str());
-        }
+        layer_ = j["layer"].get<int>();
     } else {
         throw std::invalid_argument("Entity missing layer");
     }
@@ -112,10 +89,7 @@ std::optional<nlohmann::json> RenderableEntity::outputToJson() {
     j["tile_x"] = tiling_x_;
     j["tile_y"] = tiling_y_;
 
-    auto layer = getLayerString(layer_);
-    if (layer) {
-        j["layer"] = layer.value();
-    }
+    j["layer"] = layer_;
 
     return {j};
 }
@@ -194,22 +168,12 @@ void RenderableEntity::render(sf::RenderWindow& window, float frame_fraction) {
     }
 }
 
-RenderableEntity::Layer RenderableEntity::getLayer() {
+int RenderableEntity::getLayer() {
     return layer_;
 }
 
-void RenderableEntity::setLayer(Layer layer) {
+void RenderableEntity::setLayer(int layer) {
     layer_ = layer;
-}
-
-std::optional<std::string> RenderableEntity::getLayerString(RenderableEntity::Layer layer) {
-    for (auto it : layerStringMap) {
-        if (it.second == layer) {
-            return {it.first};
-        }
-    }
-
-    return std::nullopt;
 }
 
 void RenderableEntity::loadShader(std::string shader_name) {

@@ -27,7 +27,7 @@ class EditorEnvironment {
 
     static std::shared_ptr<EditorEnvironment> create_environment(sf::RenderWindow& window);
 
-    RenderableEntity::Layer change_layer(bool towards_screen);
+    int change_layer(bool towards_screen);
 
     // Data
     sf::Event event;
@@ -41,7 +41,7 @@ class EditorEnvironment {
     Command::Commands current_command = Command::Commands::NONE;
     std::shared_ptr<Command> command = nullptr;
 
-    RenderableEntity::Layer current_layer = RenderableEntity::Layer::MAIN;
+    int current_layer = 0;
 
     std::shared_ptr<BaseEntity> current_entity;
     std::array<std::shared_ptr<BaseEntity>, EditorEntities::MAX_ENTITIES> editor_entities;

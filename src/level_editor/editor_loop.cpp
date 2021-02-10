@@ -225,9 +225,7 @@ int level_editor_main(sf::RenderWindow& window) {
         window.setView(viewport);
 
         // Print current layer
-        if (auto layer_string = RenderableEntity::getLayerString(editor_env->current_layer)) {
-            std::static_pointer_cast<RenderableText>(editor_env->editor_entities[EditorEnvironment::EditorEntities::LAYER_HUD_TEXT]->renderableEntity_)->setText(layer_string.value());
-        }
+        std::static_pointer_cast<RenderableText>(editor_env->editor_entities[EditorEnvironment::EditorEntities::LAYER_HUD_TEXT]->renderableEntity_)->setText(std::to_string(editor_env->current_layer));
 
         {
             std::static_pointer_cast<RenderableText>(editor_env->editor_entities[EditorEnvironment::EditorEntities::MOUSE_HUD_TEXT]->renderableEntity_)->setText(
