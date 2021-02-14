@@ -5,6 +5,14 @@
 
 #include "utils/log.h"
 
+#define renderToTexture(layer) {\
+    sf::RenderTexture texture;\
+    texture.create(window_size.first, window_size.second);\
+    renderLayer(texture, frame_fraction, layer);\
+    texture.display();\
+    window.draw(sf::Sprite(texture.getTexture()));\
+}
+
 namespace {
 
 std::map<int, float> parallax_map = {
@@ -21,10 +29,10 @@ std::map<int, float> parallax_map = {
     {5, 1.15},
 };
 
-void renderAllEntitesInVector(std::vector<std::weak_ptr<RenderableEntity>>& layer, sf::RenderWindow& window, float frame_fraction = 0.0f) {
+void renderAllEntitesInVector(std::vector<std::weak_ptr<RenderableEntity>>& layer, sf::RenderTarget& target, float frame_fraction = 0.0f) {
     for (auto it = layer.begin(); it != layer.end(); ) {
         if (auto ptr = it->lock()) {
-            ptr->render(window, frame_fraction);
+            ptr->render(target, frame_fraction);
             ++it;
         } else {
             it = layer.erase(it);
@@ -39,7 +47,7 @@ Render::Render() :
     foreground_layers_(5) {
 }
 
-void Render::renderLayer(sf::RenderWindow& window, float frame_fraction, int layer) {
+void Render::renderLayer(sf::RenderTarget& target, float frame_fraction, int layer) {
     float parallax_mulitiplier = 1;
 
     if (parallax_enabled_) {
@@ -55,9 +63,35 @@ void Render::renderLayer(sf::RenderWindow& window, float frame_fraction, int lay
              (view.y_pos + (change_speed.y_pos * frame_fraction)) * parallax_mulitiplier},
             {view.width ,
              view.height});
-    window.setView(viewport);
+    target.setView(viewport);
 
-    renderAllEntitesInVector(getLayer(layer), window, frame_fraction);
+    renderAllEntitesInVector(getLayer(layer), target, frame_fraction);
+}
+
+void Render::drawPlayer(sf::RenderWindow& window, float frame_fraction) {
+    if (auto player = player_.lock()) {
+        auto camera = System::getCamera();
+
+        sf::RenderTexture texture;
+        auto window_size = camera->getWindowSize();
+        texture.create(window_size.first, window_size.second);
+
+        auto view = camera->getView();
+        auto change_speed = System::getCamera()->getChangeVelocity();
+
+        // Note: interpolating size causes warping/bouncing issues
+        sf::View viewport(
+                {(view.x_pos + (change_speed.x_pos * frame_fraction)),
+                 (view.y_pos + (change_speed.y_pos * frame_fraction))},
+                {view.width ,
+                 view.height});
+        texture.setView(viewport);
+
+        player->render(texture, frame_fraction);
+
+        texture.display();
+        window.draw(sf::Sprite(texture.getTexture()));
+    }
 }
 
 void Render::drawHud(sf::RenderWindow& window) {
@@ -71,18 +105,18 @@ void Render::drawHud(sf::RenderWindow& window) {
 }
 
 void Render::render(sf::RenderWindow& window, float frame_fraction) {
+    auto window_size = System::getCamera()->getWindowSize();
+
     for (int i = -static_cast<int>(background_layers_.size()); i <= -1; ++i) {
-        renderLayer(window, frame_fraction, i);
+        renderToTexture(i);
     }
 
-    renderLayer(window, frame_fraction, 0);
+    renderToTexture(0);
 
-    if (auto player = player_.lock()) {
-        player->render(window, frame_fraction);
-    }
+    drawPlayer(window, frame_fraction);
 
     for (int i = 1; i <= static_cast<int>(foreground_layers_.size()); ++i) {
-        renderLayer(window, frame_fraction, i);
+        renderToTexture(i);
     }
 
     drawHud(window);

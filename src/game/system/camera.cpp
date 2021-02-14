@@ -72,7 +72,13 @@ void Camera::setWindowSize(int width, int height) {
     view.width = static_cast<float>(width);
     view.height = static_cast<float>(height);
 
+    window_size_ = {width, height};
+
     setView(view);
+}
+
+std::pair<int, int> Camera::getWindowSize() {
+    return window_size_;
 }
 
 void Camera::moveView(float x, float y) {

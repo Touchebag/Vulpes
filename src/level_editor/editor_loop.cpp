@@ -212,7 +212,14 @@ int level_editor_main(sf::RenderWindow& window) {
         cameraInst->setView(static_cast<float>(editor_env->view_pos_x), static_cast<float>(editor_env->view_pos_y), editor_env->view_size, editor_env->view_size);
 
         if (render_current_layer_only) {
-            renderInst->renderLayer(window, editor_env->current_layer);
+            auto window_size = System::getCamera()->getWindowSize();
+            sf::RenderTexture texture;
+            texture.create(window_size.first, window_size.second);
+
+            renderInst->renderLayer(texture, editor_env->current_layer);
+            texture.display();
+
+            window.draw(sf::Sprite(texture.getTexture()));
         } else {
             renderInst->render(window);
         }
@@ -220,9 +227,12 @@ int level_editor_main(sf::RenderWindow& window) {
         // Get this before changing to HUD view for proper coordinate mapping
         auto mouse_world_pos = editor_env->mouse->getMouseWorldPosition();
 
-        sf::View old_viewport = window.getView();
+        auto window_size = System::getCamera()->getWindowSize();
+        sf::RenderTexture texture;
+        texture.create(window_size.first, window_size.second);
+
         sf::View viewport({editor_env->VIEW_POS_X, editor_env->VIEW_POS_Y}, {editor_env->VIEW_SIZE, editor_env->VIEW_SIZE});
-        window.setView(viewport);
+        texture.setView(viewport);
 
         // Print current layer
         std::static_pointer_cast<RenderableText>(editor_env->editor_entities[EditorEnvironment::EditorEntities::LAYER_HUD_TEXT]->renderableEntity_)->setText(std::to_string(editor_env->current_layer));
@@ -252,7 +262,9 @@ int level_editor_main(sf::RenderWindow& window) {
         }
 
         // Needed for cursor positions to map correctly when zoomed
-        window.setView(old_viewport);
+        texture.display();
+        window.draw(sf::Sprite(texture.getTexture()));
+
         window.display();
     }
 

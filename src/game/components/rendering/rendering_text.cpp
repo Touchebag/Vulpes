@@ -31,9 +31,9 @@ void RenderableText::setText(const std::string& text) {
     text_.setString(text);
 }
 
-void RenderableText::render(sf::RenderWindow& window, float /* frame_fraction */) {
+void RenderableText::render(sf::RenderTarget& target, float /* frame_fraction */) {
     if (auto trans = trans_.lock()) {
         text_.setPosition(static_cast<float>(trans->getX()), static_cast<float>(trans->getY()));
-        window.draw(text_);
+        target.draw(text_);
     }
 }

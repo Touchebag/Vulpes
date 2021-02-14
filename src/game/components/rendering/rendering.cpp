@@ -146,7 +146,7 @@ void RenderableEntity::clearColor() {
     sprite_.setColor({255, 255, 255, 255});
 }
 
-void RenderableEntity::render(sf::RenderWindow& window, float frame_fraction) {
+void RenderableEntity::render(sf::RenderTarget& target, float frame_fraction) {
     // Used for interpolation between physics frames
     auto vel_x = 0.0;
     auto vel_y = 0.0;
@@ -159,9 +159,9 @@ void RenderableEntity::render(sf::RenderWindow& window, float frame_fraction) {
     if (auto trans = trans_.lock()) {
         sprite_.setPosition(static_cast<float>(trans->getX() + vel_x), static_cast<float>(trans->getY() + vel_y));
         if (shader_) {
-            window.draw(sprite_, shader_.get());
+            target.draw(sprite_, shader_.get());
         } else {
-            window.draw(sprite_);
+            target.draw(sprite_);
         }
     } else {
         LOGW("Rendering: Missing transform");

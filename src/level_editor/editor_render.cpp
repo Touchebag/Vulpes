@@ -22,7 +22,7 @@ const std::array<std::pair<Collideable::CollisionType, sf::Color>, 10> type_colo
     {Collideable::CollisionType::COLLECTIBLE, sf::Color(255, 0, 255, 200)},
 }};
 
-void renderHitboxes(sf::RenderWindow& window, Collideable::CollisionType coll_type, sf::Color color) {
+void renderHitboxes(sf::RenderTarget& target, Collideable::CollisionType coll_type, sf::Color color) {
     auto colls = World::IWorldRead::getCollideables(coll_type);
 
     for (auto it : colls) {
@@ -38,23 +38,23 @@ void renderHitboxes(sf::RenderWindow& window, Collideable::CollisionType coll_ty
             sf::RectangleShape rectangle(sf::Vector2f(static_cast<float>(hitbox->width_), static_cast<float>(hitbox->height_)));
             rectangle.setPosition(static_cast<float>(trans->getX() + (hitbox->getLeft())), static_cast<float>(trans->getY() + hitbox->getTop()));
             rectangle.setFillColor(color);
-            window.draw(rectangle);
+            target.draw(rectangle);
         }
     }
 }
 
-void renderEntrances(sf::RenderWindow& window, const std::vector<util::Point>& entrances) {
+void renderEntrances(sf::RenderTarget& target, const std::vector<util::Point>& entrances) {
     constexpr int width = 50.0f;
     constexpr int height = 200.0f;
     for (auto it : entrances) {
         sf::RectangleShape rectangle(sf::Vector2f(width, height));
         rectangle.setPosition(static_cast<float>(it.x - ((width) / 2.0)), static_cast<float>(it.y - (height) / 2.0));
         rectangle.setFillColor(sf::Color(255, 255, 255, 128));
-        window.draw(rectangle);
+        target.draw(rectangle);
     }
 }
 
-void drawLine(float x1, float y1, float x2, float y2, sf::RenderWindow& window) {
+void drawLine(float x1, float y1, float x2, float y2, sf::RenderTarget& target) {
     sf::Vertex lines[] = {
         sf::Vertex(sf::Vector2f(x1, y1)),
         sf::Vertex(sf::Vector2f(x2, y2))
@@ -64,7 +64,7 @@ void drawLine(float x1, float y1, float x2, float y2, sf::RenderWindow& window) 
         it.color = sf::Color::Red;
     }
 
-    window.draw(lines, 2, sf::Lines);
+    target.draw(lines, 2, sf::Lines);
 }
 
 } // namespace
@@ -72,9 +72,15 @@ void drawLine(float x1, float y1, float x2, float y2, sf::RenderWindow& window) 
 void EditorRender::render(sf::RenderWindow& window, float frame_fraction) {
     render_.render(window, frame_fraction);
 
-    auto viewport = System::getCamera()->getRawView();
+    auto camera = System::getCamera();
+
+    auto viewport = camera->getRawView();
     sf::View view = {{viewport.x_pos, viewport.y_pos}, {viewport.width, viewport.height}};
-    window.setView(view);
+
+    auto window_size = camera->getWindowSize();
+    sf::RenderTexture texture;
+    texture.create(window_size.first, window_size.second);
+    texture.setView(view);
 
     if (auto env = editor_env_.lock()) {
         if (auto ent = env->current_entity) {
@@ -83,24 +89,27 @@ void EditorRender::render(sf::RenderWindow& window, float frame_fraction) {
             sf::RectangleShape rectangle(sf::Vector2f(size.first, size.second));
             rectangle.setPosition(static_cast<float>(trans->getX()) - (size.first / 2.0f), static_cast<float>(trans->getY()) - (size.second / 2.0f));
             rectangle.setFillColor(sf::Color(255, 255, 255, 64));
-            window.draw(rectangle);
+            texture.draw(rectangle);
         }
     }
 
     if (render_hitboxes_) {
         for (auto it : type_color_map) {
-            renderHitboxes(window, it.first, it.second);
+            renderHitboxes(texture, it.first, it.second);
         }
     }
 
     if (render_entrances_) {
-        renderEntrances(window, World::IWorldRead::getEntrances());
+        renderEntrances(texture, World::IWorldRead::getEntrances());
     }
 
-    drawCameraBoundaries(window);
+    drawCameraBoundaries(texture);
+
+    texture.display();
+    window.draw(sf::Sprite(texture.getTexture()));
 }
 
-void EditorRender::drawCameraBoundaries(sf::RenderWindow& window) {
+void EditorRender::drawCameraBoundaries(sf::RenderTarget& target) {
     auto viewport = System::getCamera()->getView();
     sf::View view = {{viewport.x_pos, viewport.y_pos}, {viewport.width, viewport.height}};
 
@@ -114,12 +123,12 @@ void EditorRender::drawCameraBoundaries(sf::RenderWindow& window) {
 
     auto camera = System::getCamera()->getCameraBox();
 
-    window.setView(view);
+    target.setView(view);
 
-    drawLine(camera.left_margin, view_top, camera.left_margin, view_bottom, window);
-    drawLine(camera.right_margin, view_top, camera.right_margin, view_bottom, window);
-    drawLine(view_left, camera.top_margin, view_right, camera.top_margin, window);
-    drawLine(view_left, camera.bottom_margin, view_right, camera.bottom_margin, window);
+    drawLine(camera.left_margin, view_top, camera.left_margin, view_bottom, target);
+    drawLine(camera.right_margin, view_top, camera.right_margin, view_bottom, target);
+    drawLine(view_left, camera.top_margin, view_right, camera.top_margin, target);
+    drawLine(view_left, camera.bottom_margin, view_right, camera.bottom_margin, target);
 }
 
 void EditorRender::setEditorEnvironment(std::weak_ptr<EditorEnvironment> editor_env) {
@@ -134,8 +143,8 @@ void EditorRender::setPlayer(std::weak_ptr<RenderableEntity> entity) {
     render_.setPlayer(entity);
 }
 
-void EditorRender::renderLayer(sf::RenderWindow& window, int layer) {
-    render_.renderLayer(window, 0.0f, layer);
+void EditorRender::renderLayer(sf::RenderTarget& target, int layer) {
+    render_.renderLayer(target, 0.0f, layer);
 }
 
 void EditorRender::setParallaxEnabled(bool enable) {

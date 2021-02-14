@@ -12,7 +12,7 @@ class RenderableText : public RenderableEntity{
     void setFont(sf::Font font);
     void setColor(sf::Color color) override;
 
-    void render(sf::RenderWindow& window, float frame_fraction = 0.0f) override;
+    void render(sf::RenderTarget& target, float frame_fraction = 0.0f) override;
 
   private:
     sf::Font font_;

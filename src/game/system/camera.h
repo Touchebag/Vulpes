@@ -30,6 +30,7 @@ class Camera {
     CameraView getChangeVelocity();
 
     void setWindowSize(int width, int height);
+    std::pair<int, int> getWindowSize();
 
     void setCameraBox(CameraBoundingBox camera_box);
 
@@ -48,6 +49,8 @@ class Camera {
     float aspect_ratio_ = 1.0f;
 
     void applyCameraShake();
+
+    std::pair<int, int> window_size_;
 
     CameraView calculateMovementToTarget();
 

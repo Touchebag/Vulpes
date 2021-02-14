@@ -13,7 +13,7 @@ class EditorRender : public IRender {
     void addEntity(std::weak_ptr<RenderableEntity> entity) override;
     void setPlayer(std::weak_ptr<RenderableEntity> entity) override;
 
-    void renderLayer(sf::RenderWindow& window, int layer);
+    void renderLayer(sf::RenderTarget& target, int layer);
     void setParallaxEnabled(bool enable);
     bool getParallaxEnabled();
 
@@ -23,7 +23,7 @@ class EditorRender : public IRender {
     void setCameraBox(Camera::CameraBoundingBox camera_box);
 
   private:
-    void drawCameraBoundaries(sf::RenderWindow& window);
+    void drawCameraBoundaries(sf::RenderTarget& target);
 
     Render render_;
 

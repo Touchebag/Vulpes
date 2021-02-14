@@ -17,6 +17,7 @@ class Render : public IRender {
 
   private:
     void drawHud(sf::RenderWindow& window);
+    void drawPlayer(sf::RenderWindow& window, float frame_fraction);
 
     // Layers
     std::weak_ptr<RenderableEntity> background_;
@@ -31,6 +32,8 @@ class Render : public IRender {
     // Helper functions
 
     std::vector<std::weak_ptr<RenderableEntity>>& getLayer(int layer);
-    void renderLayer(sf::RenderWindow& window, float frame_fraction, int layer);
+    void renderLayer(sf::RenderTarget& target, float frame_fraction, int layer);
+    sf::RenderTexture renderToTexture(std::pair<int, int> size, float frame_fraction, int layer);
+
     bool parallax_enabled_ = true;
 };
