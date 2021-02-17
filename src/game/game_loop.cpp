@@ -53,8 +53,6 @@ int game_main(sf::RenderWindow& window) {
             window.close();
         }
 
-        window.clear();
-
         // If we have rendered more than one physics frame then advance physics
         while (time_rendered.asMilliseconds() >= (MS_PER_FRAME)) {
             Input::getInstance().update(window);
@@ -66,7 +64,7 @@ int game_main(sf::RenderWindow& window) {
                         window.close();
                         break;
                     case sf::Event::Resized:
-                        System::getCamera()->setWindowSize(event.size.width, event.size.height);
+                        System::getRender()->setWindowSize(window, event.size.width, event.size.height);
                         break;
                     case sf::Event::KeyPressed:
                         if (event.key.code == sf::Keyboard::Key::P) {
@@ -85,6 +83,8 @@ int game_main(sf::RenderWindow& window) {
 
             System::getCamera()->update();
         }
+
+        window.clear();
 
         renderInst->render(window, static_cast<float>(time_rendered.asMilliseconds()) / static_cast<float>(MS_PER_FRAME));
 

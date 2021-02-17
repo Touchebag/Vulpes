@@ -80,6 +80,7 @@ void EditorRender::render(sf::RenderWindow& window, float frame_fraction) {
     auto window_size = camera->getWindowSize();
     sf::RenderTexture texture;
     texture.create(window_size.first, window_size.second);
+    texture.clear(sf::Color(0, 0, 0, 0));
     texture.setView(view);
 
     if (auto env = editor_env_.lock()) {
@@ -103,10 +104,18 @@ void EditorRender::render(sf::RenderWindow& window, float frame_fraction) {
         renderEntrances(texture, World::IWorldRead::getEntrances());
     }
 
-    drawCameraBoundaries(texture);
-
     texture.display();
     window.draw(sf::Sprite(texture.getTexture()));
+
+    // TODO Single texture glitches out, why?
+    sf::RenderTexture texture_2;
+    texture_2.create(window_size.first, window_size.second);
+    texture_2.clear(sf::Color(0, 0, 0, 0));
+    texture_2.setView(view);
+    drawCameraBoundaries(texture_2);
+
+    texture_2.display();
+    window.draw(sf::Sprite(texture_2.getTexture()));
 }
 
 void EditorRender::drawCameraBoundaries(sf::RenderTarget& target) {
@@ -161,6 +170,10 @@ void EditorRender::toggleHitboxRendering() {
 
 void EditorRender::toggleEntranceRendering() {
     render_entrances_ = !render_entrances_;
+}
+
+void EditorRender::setWindowSize(sf::RenderWindow& window, int width, int height) {
+    render_.setWindowSize(window, width, height);
 }
 
 void EditorRender::setCameraBox(Camera::CameraBoundingBox camera_box) {

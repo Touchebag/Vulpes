@@ -15,9 +15,13 @@ class Render : public IRender {
     void addEntity(std::weak_ptr<RenderableEntity> entity) override;
     void setPlayer(std::weak_ptr<RenderableEntity> entity) override;
 
+    void setWindowSize(sf::RenderWindow& window, int width, int height) override;
+
   private:
     void drawHud(sf::RenderWindow& window);
     void drawPlayer(sf::RenderWindow& window, float frame_fraction);
+
+    void renderLayerWithPostProcessing(sf::RenderWindow& window, int layer, float frame_fraction);
 
     // Layers
     std::weak_ptr<RenderableEntity> background_;
@@ -36,4 +40,7 @@ class Render : public IRender {
     sf::RenderTexture renderToTexture(std::pair<int, int> size, float frame_fraction, int layer);
 
     bool parallax_enabled_ = true;
+
+    sf::Sprite render_layer_sprite;
+    sf::RenderTexture render_texture_;
 };

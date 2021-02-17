@@ -13,6 +13,8 @@ class EditorRender : public IRender {
     void addEntity(std::weak_ptr<RenderableEntity> entity) override;
     void setPlayer(std::weak_ptr<RenderableEntity> entity) override;
 
+    void setWindowSize(sf::RenderWindow& window, int width, int height) override;
+
     void renderLayer(sf::RenderTarget& target, int layer);
     void setParallaxEnabled(bool enable);
     bool getParallaxEnabled();

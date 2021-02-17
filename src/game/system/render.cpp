@@ -5,14 +5,6 @@
 
 #include "utils/log.h"
 
-#define renderToTexture(layer) {\
-    sf::RenderTexture texture;\
-    texture.create(window_size.first, window_size.second);\
-    renderLayer(texture, frame_fraction, layer);\
-    texture.display();\
-    window.draw(sf::Sprite(texture.getTexture()));\
-}
-
 namespace {
 
 std::map<int, float> parallax_map = {
@@ -43,8 +35,18 @@ void renderAllEntitesInVector(std::vector<std::weak_ptr<RenderableEntity>>& laye
 } // namespace
 
 Render::Render() :
-    background_layers_(5),
-    foreground_layers_(5) {
+        background_layers_(5),
+        foreground_layers_(5) {
+}
+
+void Render::renderLayerWithPostProcessing(sf::RenderWindow& window, int layer, float frame_fraction) {
+    render_texture_.clear(sf::Color(0, 0, 0, 0));
+
+    renderLayer(render_texture_, frame_fraction, layer);
+    render_texture_.display();
+
+    render_layer_sprite.setTexture(render_texture_.getTexture());
+    window.draw(render_layer_sprite);
 }
 
 void Render::renderLayer(sf::RenderTarget& target, float frame_fraction, int layer) {
@@ -72,9 +74,7 @@ void Render::drawPlayer(sf::RenderWindow& window, float frame_fraction) {
     if (auto player = player_.lock()) {
         auto camera = System::getCamera();
 
-        sf::RenderTexture texture;
-        auto window_size = camera->getWindowSize();
-        texture.create(window_size.first, window_size.second);
+        render_texture_.clear(sf::Color(0, 0, 0, 0));
 
         auto view = camera->getView();
         auto change_speed = System::getCamera()->getChangeVelocity();
@@ -85,12 +85,13 @@ void Render::drawPlayer(sf::RenderWindow& window, float frame_fraction) {
                  (view.y_pos + (change_speed.y_pos * frame_fraction))},
                 {view.width ,
                  view.height});
-        texture.setView(viewport);
+        render_texture_.setView(viewport);
 
-        player->render(texture, frame_fraction);
+        player->render(render_texture_, frame_fraction);
 
-        texture.display();
-        window.draw(sf::Sprite(texture.getTexture()));
+        render_texture_.display();
+        render_layer_sprite.setTexture(render_texture_.getTexture());
+        window.draw(render_layer_sprite);
     }
 }
 
@@ -105,18 +106,16 @@ void Render::drawHud(sf::RenderWindow& window) {
 }
 
 void Render::render(sf::RenderWindow& window, float frame_fraction) {
-    auto window_size = System::getCamera()->getWindowSize();
-
     for (int i = -static_cast<int>(background_layers_.size()); i <= -1; ++i) {
-        renderToTexture(i);
+        renderLayerWithPostProcessing(window, i, frame_fraction);
     }
 
-    renderToTexture(0);
+    renderLayerWithPostProcessing(window, 0, frame_fraction);
 
     drawPlayer(window, frame_fraction);
 
     for (int i = 1; i <= static_cast<int>(foreground_layers_.size()); ++i) {
-        renderToTexture(i);
+        renderLayerWithPostProcessing(window, i, frame_fraction);
     }
 
     drawHud(window);
@@ -124,6 +123,18 @@ void Render::render(sf::RenderWindow& window, float frame_fraction) {
 
 void Render::setPlayer(std::weak_ptr<RenderableEntity> entity) {
     player_ = entity;
+}
+
+void Render::setWindowSize(sf::RenderWindow& window, int width, int height) {
+    auto view = window.getView();
+    view.setSize({static_cast<float>(width), static_cast<float>(height)});
+    window.setView(view);
+    System::getCamera()->setWindowSize(width, height);
+
+    render_texture_.create(width, height);
+    render_texture_.clear(sf::Color(0, 0, 0, 0));
+
+    render_layer_sprite = sf::Sprite(render_texture_.getTexture());
 }
 
 std::vector<std::weak_ptr<RenderableEntity>>& Render::getLayer(int layer) {
