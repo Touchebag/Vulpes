@@ -135,6 +135,11 @@ void Render::setWindowSize(sf::RenderWindow& window, int width, int height) {
     render_texture_.clear(sf::Color(0, 0, 0, 0));
 
     render_layer_sprite = sf::Sprite(render_texture_.getTexture());
+
+    // Set sprite origin to center and reposition to stay in center of window
+    auto window_center = window.getView().getCenter();
+    render_layer_sprite.setOrigin(static_cast<float>(width) / 2.0f, static_cast<float>(height) / 2.0f);
+    render_layer_sprite.setPosition(window_center.x, window_center.y);
 }
 
 std::vector<std::weak_ptr<RenderableEntity>>& Render::getLayer(int layer) {

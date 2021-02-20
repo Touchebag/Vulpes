@@ -6,7 +6,9 @@
 
 int main(int argc, char** argv) {
     sf::RenderWindow window(sf::VideoMode(1000,1000), "Level Editor");
-    System::getCamera()->setWindowSize(1000.0, 1000.0);
+
+    System::setRender(std::make_shared<EditorRender>());
+    System::getRender()->setWindowSize(window, 1000, 1000);
 
     window.setKeyRepeatEnabled(false);
 
@@ -16,8 +18,6 @@ int main(int argc, char** argv) {
     } else {
         level_file = "world.json";
     }
-
-    System::setRender(std::make_shared<EditorRender>());
 
     World::IWorldModify::loadWorldFromFile(level_file);
     World::IWorldModify::setEntrance(0);
