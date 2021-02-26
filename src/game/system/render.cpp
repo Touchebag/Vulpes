@@ -40,6 +40,18 @@ Render::Render() :
     for (int i = -5; i <= 5; i++) {
         getLayer(i).parallax_multiplier = parallax_map.at(i);
     }
+
+    getLayer(-5).shader = File().loadShader("color_fade.frag");
+    getLayer(-5).shader->setUniform("target_color", sf::Glsl::Vec3(0.5f, 0.8f, 1.0f));
+    getLayer(-5).shader->setUniform("intensity", 0.3f);
+
+    getLayer(-4).shader = File().loadShader("color_fade.frag");
+    getLayer(-4).shader->setUniform("target_color", sf::Glsl::Vec3(0.5f, 0.8f, 1.0f));
+    getLayer(-4).shader->setUniform("intensity", 0.15f);
+
+    getLayer(-3).shader = File().loadShader("color_fade.frag");
+    getLayer(-3).shader->setUniform("target_color", sf::Glsl::Vec3(0.5f, 0.8f, 1.0f));
+    getLayer(-3).shader->setUniform("intensity", 0.05f);
 }
 
 void Render::renderLayerWithPostProcessing(sf::RenderWindow& window, int layer, float frame_fraction) {
@@ -112,6 +124,9 @@ void Render::drawHud(sf::RenderWindow& window) {
 }
 
 void Render::render(sf::RenderWindow& window, float frame_fraction) {
+    // TODO Use actual background layer
+    window.clear(sf::Color(135, 206, 255));
+
     for (int i = -static_cast<int>(background_layers_.size()); i <= -1; ++i) {
         renderLayerWithPostProcessing(window, i, frame_fraction);
     }
