@@ -24,23 +24,31 @@ class Render : public IRender {
     void renderLayerWithPostProcessing(sf::RenderWindow& window, int layer, float frame_fraction);
 
     // Layers
-    std::weak_ptr<RenderableEntity> background_;
-    std::vector<std::vector<std::weak_ptr<RenderableEntity>>> background_layers_;
+    struct RenderLayer {
+        std::vector<std::weak_ptr<RenderableEntity>> renderables;
+        std::shared_ptr<sf::Shader> shader;
+        float parallax_multiplier;
+    };
 
-    std::vector<std::weak_ptr<RenderableEntity>> main_layer_;
+    std::weak_ptr<RenderableEntity> background_;
+    std::vector<RenderLayer> background_layers_;
+
+    RenderLayer main_layer_;
     std::weak_ptr<RenderableEntity> player_;
 
-    std::vector<std::vector<std::weak_ptr<RenderableEntity>>> foreground_layers_;
-    std::vector<std::weak_ptr<RenderableEntity>> hud_layer_;
+    std::vector<RenderLayer> foreground_layers_;
+    RenderLayer hud_layer_;
 
     // Helper functions
 
-    std::vector<std::weak_ptr<RenderableEntity>>& getLayer(int layer);
+    std::vector<std::weak_ptr<RenderableEntity>>& getLayerRenderables(int layer);
+    RenderLayer& getLayer(int layer);
+
     void renderLayer(sf::RenderTarget& target, float frame_fraction, int layer);
     sf::RenderTexture renderToTexture(std::pair<int, int> size, float frame_fraction, int layer);
 
     bool parallax_enabled_ = true;
 
-    sf::Sprite render_layer_sprite;
+    sf::Sprite render_layer_sprite_;
     sf::RenderTexture render_texture_;
 };

@@ -7,7 +7,7 @@
 
 namespace {
 
-std::map<int, float> parallax_map = {
+const std::map<int, float> parallax_map = {
     {-5, 0.85},
     {-4, 0.9},
     {-3, 0.95},
@@ -37,6 +37,9 @@ void renderAllEntitesInVector(std::vector<std::weak_ptr<RenderableEntity>>& laye
 Render::Render() :
         background_layers_(5),
         foreground_layers_(5) {
+    for (int i = -5; i <= 5; i++) {
+        getLayer(i).parallax_multiplier = parallax_map.at(i);
+    }
 }
 
 void Render::renderLayerWithPostProcessing(sf::RenderWindow& window, int layer, float frame_fraction) {
@@ -45,15 +48,18 @@ void Render::renderLayerWithPostProcessing(sf::RenderWindow& window, int layer, 
     renderLayer(render_texture_, frame_fraction, layer);
     render_texture_.display();
 
-    render_layer_sprite.setTexture(render_texture_.getTexture());
-    window.draw(render_layer_sprite);
+    if (auto shader = getLayer(layer).shader) {
+        window.draw(render_layer_sprite_, shader.get());
+    } else {
+        window.draw(render_layer_sprite_);
+    }
 }
 
 void Render::renderLayer(sf::RenderTarget& target, float frame_fraction, int layer) {
-    float parallax_mulitiplier = 1;
+    float parallax_multiplier = 1;
 
     if (parallax_enabled_) {
-        parallax_mulitiplier = parallax_map[layer];
+        parallax_multiplier = getLayer(layer).parallax_multiplier;
     }
 
     auto view = System::getCamera()->getView();
@@ -61,13 +67,13 @@ void Render::renderLayer(sf::RenderTarget& target, float frame_fraction, int lay
 
     // Note: interpolating size causes warping/bouncing issues
     sf::View viewport(
-            {(view.x_pos + (change_speed.x_pos * frame_fraction)) * parallax_mulitiplier,
-             (view.y_pos + (change_speed.y_pos * frame_fraction)) * parallax_mulitiplier},
+            {(view.x_pos + (change_speed.x_pos * frame_fraction)) * parallax_multiplier,
+             (view.y_pos + (change_speed.y_pos * frame_fraction)) * parallax_multiplier},
             {view.width ,
              view.height});
     target.setView(viewport);
 
-    renderAllEntitesInVector(getLayer(layer), target, frame_fraction);
+    renderAllEntitesInVector(getLayerRenderables(layer), target, frame_fraction);
 }
 
 void Render::drawPlayer(sf::RenderWindow& window, float frame_fraction) {
@@ -90,8 +96,8 @@ void Render::drawPlayer(sf::RenderWindow& window, float frame_fraction) {
         player->render(render_texture_, frame_fraction);
 
         render_texture_.display();
-        render_layer_sprite.setTexture(render_texture_.getTexture());
-        window.draw(render_layer_sprite);
+        render_layer_sprite_.setTexture(render_texture_.getTexture());
+        window.draw(render_layer_sprite_);
     }
 }
 
@@ -100,7 +106,7 @@ void Render::drawHud(sf::RenderWindow& window) {
 
     // Set static view for HUD
     window.setView({{500, 500}, {1000, 1000}});
-    renderAllEntitesInVector(hud_layer_, window);
+    renderAllEntitesInVector(hud_layer_.renderables, window);
 
     window.setView(current_view);
 }
@@ -134,15 +140,15 @@ void Render::setWindowSize(sf::RenderWindow& window, int width, int height) {
     render_texture_.create(width, height);
     render_texture_.clear(sf::Color(0, 0, 0, 0));
 
-    render_layer_sprite = sf::Sprite(render_texture_.getTexture());
+    render_layer_sprite_ = sf::Sprite(render_texture_.getTexture());
 
     // Set sprite origin to center and reposition to stay in center of window
     auto window_center = window.getView().getCenter();
-    render_layer_sprite.setOrigin(static_cast<float>(width) / 2.0f, static_cast<float>(height) / 2.0f);
-    render_layer_sprite.setPosition(window_center.x, window_center.y);
+    render_layer_sprite_.setOrigin(static_cast<float>(width) / 2.0f, static_cast<float>(height) / 2.0f);
+    render_layer_sprite_.setPosition(window_center.x, window_center.y);
 }
 
-std::vector<std::weak_ptr<RenderableEntity>>& Render::getLayer(int layer) {
+Render::RenderLayer& Render::getLayer(int layer) {
     if (layer < 0) {
         try {
             return background_layers_.at(abs(layer) - 1);
@@ -162,15 +168,19 @@ std::vector<std::weak_ptr<RenderableEntity>>& Render::getLayer(int layer) {
     }
 }
 
+std::vector<std::weak_ptr<RenderableEntity>>& Render::getLayerRenderables(int layer) {
+    return getLayer(layer).renderables;
+}
+
 void Render::addEntity(std::weak_ptr<RenderableEntity> entity) {
     if (auto ent = entity.lock()) {
         int layer = ent->getLayer();
 
         if (layer == INT_MAX) {
-            hud_layer_.push_back(entity);
+            hud_layer_.renderables.push_back(entity);
             return;
         }
 
-        getLayer(layer).push_back(entity);
+        getLayerRenderables(layer).push_back(entity);
     }
 }
