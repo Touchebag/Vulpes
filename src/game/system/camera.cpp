@@ -107,9 +107,11 @@ void Camera::resizeView(float width, float height) {
     if (width > camera_box_width) {
         width = camera_box_width;
         height = width / aspect_ratio_;
-    }
-    if (height > camera_box_height) {
+    } else if (height > camera_box_height) {
         height = camera_box_height;
+        width = height * aspect_ratio_;
+    } else {
+        // Ensure aspect ratio is maintained
         width = height * aspect_ratio_;
     }
 
