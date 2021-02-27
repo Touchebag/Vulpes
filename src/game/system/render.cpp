@@ -52,6 +52,15 @@ Render::Render() :
     getLayer(-3).shader = File().loadShader("color_fade.frag");
     getLayer(-3).shader->setUniform("target_color", sf::Glsl::Vec3(0.5f, 0.8f, 1.0f));
     getLayer(-3).shader->setUniform("intensity", 0.05f);
+
+    getLayer(3).shader = File().loadShader("blur.frag");
+    getLayer(3).shader->setUniform("direction", sf::Glsl::Vec2(1.0, 0.0));
+
+    getLayer(4).shader = File().loadShader("blur.frag");
+    getLayer(4).shader->setUniform("direction", sf::Glsl::Vec2(1.0, 0.0));
+
+    getLayer(5).shader = File().loadShader("blur.frag");
+    getLayer(5).shader->setUniform("direction", sf::Glsl::Vec2(1.0, 0.0));
 }
 
 void Render::renderLayerWithPostProcessing(sf::RenderWindow& window, int layer, float frame_fraction) {

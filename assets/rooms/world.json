@@ -503,6 +503,48 @@
                 "pos_x": 753,
                 "pos_y": 394
             }
+        },
+        {
+            "Renderable": {
+                "height": 5358,
+                "layer": 3,
+                "texture": "Forest/Tree.png",
+                "tile_x": false,
+                "tile_y": false,
+                "width": 209
+            },
+            "Transform": {
+                "pos_x": -856,
+                "pos_y": 648
+            }
+        },
+        {
+            "Renderable": {
+                "height": 5050,
+                "layer": 4,
+                "texture": "Forest/Tree.png",
+                "tile_x": false,
+                "tile_y": false,
+                "width": 475
+            },
+            "Transform": {
+                "pos_x": 2096,
+                "pos_y": 756
+            }
+        },
+        {
+            "Renderable": {
+                "height": 1476,
+                "layer": 5,
+                "texture": "Forest/Bush.png",
+                "tile_x": false,
+                "tile_y": false,
+                "width": 1360
+            },
+            "Transform": {
+                "pos_x": -1882,
+                "pos_y": 2907
+            }
         }
     ],
     "entrances": [
