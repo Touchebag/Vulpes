@@ -40,27 +40,49 @@ Render::Render() :
     for (int i = -5; i <= 5; i++) {
         getLayer(i).parallax_multiplier = parallax_map.at(i);
     }
+    std::shared_ptr<sf::Shader> shader;
 
-    getLayer(-5).shader = File().loadShader("color_fade.frag");
-    getLayer(-5).shader->setUniform("target_color", sf::Glsl::Vec3(0.5f, 0.8f, 1.0f));
-    getLayer(-5).shader->setUniform("intensity", 0.3f);
+    getLayer(-5).shaders.clear();
+    shader = File().loadShader("color_fade.frag");
+    shader->setUniform("target_color", sf::Glsl::Vec3(0.5f, 0.8f, 1.0f));
+    shader->setUniform("intensity", 0.3f);
+    getLayer(-5).shaders.push_back(shader);
 
-    getLayer(-4).shader = File().loadShader("color_fade.frag");
-    getLayer(-4).shader->setUniform("target_color", sf::Glsl::Vec3(0.5f, 0.8f, 1.0f));
-    getLayer(-4).shader->setUniform("intensity", 0.15f);
+    getLayer(-4).shaders.clear();
+    shader = File().loadShader("color_fade.frag");
+    shader->setUniform("target_color", sf::Glsl::Vec3(0.5f, 0.8f, 1.0f));
+    shader->setUniform("intensity", 0.15f);
+    getLayer(-4).shaders.push_back(shader);
 
-    getLayer(-3).shader = File().loadShader("color_fade.frag");
-    getLayer(-3).shader->setUniform("target_color", sf::Glsl::Vec3(0.5f, 0.8f, 1.0f));
-    getLayer(-3).shader->setUniform("intensity", 0.05f);
+    getLayer(-3).shaders.clear();
+    shader = File().loadShader("color_fade.frag");
+    shader->setUniform("target_color", sf::Glsl::Vec3(0.5f, 0.8f, 1.0f));
+    shader->setUniform("intensity", 0.05f);
+    getLayer(-3).shaders.push_back(shader);
 
-    getLayer(3).shader = File().loadShader("blur.frag");
-    getLayer(3).shader->setUniform("direction", sf::Glsl::Vec2(1.0, 0.0));
+    getLayer(3).shaders.clear();
+    shader = File().loadShader("blur.frag");
+    shader->setUniform("direction", sf::Glsl::Vec2(1.0, 0.0));
+    getLayer(3).shaders.push_back(shader);
+    shader = File().loadShader("blur.frag");
+    shader->setUniform("direction", sf::Glsl::Vec2(0.0, 1.0));
+    getLayer(3).shaders.push_back(shader);
 
-    getLayer(4).shader = File().loadShader("blur.frag");
-    getLayer(4).shader->setUniform("direction", sf::Glsl::Vec2(1.0, 0.0));
+    getLayer(4).shaders.clear();
+    shader = File().loadShader("blur.frag");
+    shader->setUniform("direction", sf::Glsl::Vec2(1.0, 0.0));
+    getLayer(4).shaders.push_back(shader);
+    shader = File().loadShader("blur.frag");
+    shader->setUniform("direction", sf::Glsl::Vec2(0.0, 1.0));
+    getLayer(4).shaders.push_back(shader);
 
-    getLayer(5).shader = File().loadShader("blur.frag");
-    getLayer(5).shader->setUniform("direction", sf::Glsl::Vec2(1.0, 0.0));
+    getLayer(5).shaders.clear();
+    shader = File().loadShader("blur.frag");
+    shader->setUniform("direction", sf::Glsl::Vec2(1.0, 0.0));
+    getLayer(5).shaders.push_back(shader);
+    shader = File().loadShader("blur.frag");
+    shader->setUniform("direction", sf::Glsl::Vec2(0.0, 1.0));
+    getLayer(5).shaders.push_back(shader);
 }
 
 void Render::renderLayerWithPostProcessing(sf::RenderWindow& window, int layer, float frame_fraction) {
@@ -68,11 +90,30 @@ void Render::renderLayerWithPostProcessing(sf::RenderWindow& window, int layer, 
 
     renderLayer(render_texture_, frame_fraction, layer);
     render_texture_.display();
+    bool render_from_primary = true;
 
-    if (auto shader = getLayer(layer).shader) {
-        window.draw(render_layer_sprite_, shader.get());
-    } else {
+    if (!getLayer(layer).shaders.empty()) {
+        for (auto shader : getLayer(layer).shaders) {
+            if (render_from_primary) {
+                secondary_render_texture_.clear(sf::Color(0, 0, 0, 0));
+                secondary_render_texture_.setView(window.getView());
+                secondary_render_texture_.draw(render_layer_sprite_, shader.get());
+                secondary_render_texture_.display();
+                render_from_primary = false;
+            } else {
+                render_texture_.clear(sf::Color(0, 0, 0, 0));
+                render_texture_.setView(window.getView());
+                render_texture_.draw(secondary_render_layer_sprite_, shader.get());
+                render_texture_.display();
+                render_from_primary = true;
+            }
+        }
+    }
+
+    if (render_from_primary) {
         window.draw(render_layer_sprite_);
+    } else {
+        window.draw(secondary_render_layer_sprite_);
     }
 }
 
@@ -163,13 +204,20 @@ void Render::setWindowSize(sf::RenderWindow& window, int width, int height) {
 
     render_texture_.create(width, height);
     render_texture_.clear(sf::Color(0, 0, 0, 0));
-
     render_layer_sprite_ = sf::Sprite(render_texture_.getTexture());
+
+    secondary_render_texture_.create(width, height);
+    secondary_render_texture_.clear(sf::Color(0, 0, 0, 0));
+    secondary_render_layer_sprite_ = sf::Sprite(secondary_render_texture_.getTexture());
 
     // Set sprite origin to center and reposition to stay in center of window
     auto window_center = window.getView().getCenter();
+
     render_layer_sprite_.setOrigin(static_cast<float>(width) / 2.0f, static_cast<float>(height) / 2.0f);
     render_layer_sprite_.setPosition(window_center.x, window_center.y);
+
+    secondary_render_layer_sprite_.setOrigin(static_cast<float>(width) / 2.0f, static_cast<float>(height) / 2.0f);
+    secondary_render_layer_sprite_.setPosition(window_center.x, window_center.y);
 }
 
 Render::RenderLayer& Render::getLayer(int layer) {
