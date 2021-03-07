@@ -26,17 +26,11 @@ std::shared_ptr<MenuEntry> makeRenderableEntry(std::shared_ptr<BaseEntity> curre
         auto tile_x = current_entity->renderableEntity_->tiling_x_;
         auto tile_y = current_entity->renderableEntity_->tiling_y_;
 
-        auto tiling_color = !tile_x && !tile_y ? sf::Color::Green : sf::Color::Red;
-        tiling_entry->addEntry(makeMenuEntry("No tiling", tiling_color, {Command::Commands::RENDERABLE_TILING_NONE}));
-        tiling_color = tile_x && !tile_y ? sf::Color::Green : sf::Color::Red;
+        auto tiling_color = sf::Color::Green;
         tiling_entry->addEntry(makeMenuEntry("Tile X", tiling_color, {Command::Commands::RENDERABLE_TILING_X}));
-        tiling_color = !tile_x && tile_y ? sf::Color::Green : sf::Color::Red;
         tiling_entry->addEntry(makeMenuEntry("Tile Y", tiling_color, {Command::Commands::RENDERABLE_TILING_Y}));
-        tiling_color = tile_x && tile_y ? sf::Color::Green : sf::Color::Red;
-        tiling_entry->addEntry(makeMenuEntry("Tile X & Y", tiling_color, {Command::Commands::RENDERABLE_TILING_XY}));
 
         entry->addEntry(tiling_entry);
-
     }
 
     return entry;

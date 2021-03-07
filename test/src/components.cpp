@@ -73,8 +73,8 @@ const nlohmann::json entity_json = nlohmann::json::parse(R"--(
         "height": 200,
         "width": 100,
         "texture": "box.png",
-        "tile_x": true,
-        "tile_y": true,
+        "tile_x": 0,
+        "tile_y": 0,
         "layer": 0
     },
     "Stateful": null,

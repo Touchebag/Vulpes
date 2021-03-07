@@ -12,35 +12,39 @@ class RenderableEntity : ComponentWithFile {
     RenderableEntity(std::weak_ptr<Transform> trans, std::weak_ptr<MovableEntity> movable);
     virtual ~RenderableEntity() = default;
 
-    virtual bool loadTexture(std::string file_path, File file_instance);
+    bool loadTexture(std::string file_path, File file_instance);
 
     virtual void reloadFromJson(nlohmann::json j) override ;
     virtual void reloadFromJson(nlohmann::json j, File file_instance) override ;
     virtual std::optional<nlohmann::json> outputToJson() override ;
 
-    virtual void recalculateTextureRect();
-    virtual void setTiling(bool tiling_x, bool tiling_y);
+    void recalculateTextureRect();
 
-    virtual void setTextureCoords(int pos_x, int pos_y, int width, int height);
+    std::pair<int, int> getTiling();
+    void setTiling(int tiling_x, int tiling_y);
 
-    virtual void setSize(int width, int height);
-    virtual std::pair<int, int> getSize();
-    virtual std::pair<float, float> getScaledSize();
+    void setTextureCoords(int pos_x, int pos_y, int width, int height);
+
+    void setSize(int width, int height);
+    std::pair<int, int> getSize();
+    std::pair<float, float> getScaledSize();
 
     virtual void setColor(sf::Color color);
     virtual void clearColor();
 
     virtual void render(sf::RenderTarget& target, float frame_fraction = 0.0f);
 
-    virtual void update() override;
+    void update() override;
 
     int getLayer();
     void setLayer(int layer);
 
     void loadShader(std::string shader_name);
 
-    bool tiling_x_ = true;
-    bool tiling_y_ = true;
+    // Number of repeated sprites
+    // 0 = infinite tiling
+    int tiling_x_ = 0;
+    int tiling_y_ = 0;
 
   protected:
     std::weak_ptr<Transform> trans_;

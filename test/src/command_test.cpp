@@ -262,29 +262,24 @@ TEST_F(CommandTestFixture, ToggleTiling) {
 
     entity->renderableEntity_ = std::make_shared<RenderableEntity>(entity->trans_, entity->movableEntity_);
 
-    ASSERT_TRUE(entity->renderableEntity_->tiling_x_);
-    ASSERT_TRUE(entity->renderableEntity_->tiling_y_);
+    ASSERT_EQ(0, entity->renderableEntity_->tiling_x_);
+    ASSERT_EQ(0, entity->renderableEntity_->tiling_y_);
 
     editor_env->current_entity = entity;
-    editor_env->command->handleCommand(Command::Commands::RENDERABLE_TILING_NONE);
-
-    EXPECT_FALSE(entity->renderableEntity_->tiling_x_);
-    EXPECT_FALSE(entity->renderableEntity_->tiling_y_);
 
     editor_env->command->handleCommand(Command::Commands::RENDERABLE_TILING_X);
+    editor_env->command->text_input_->enterText("1");
+    editor_env->command->stopCommand();
 
-    EXPECT_TRUE(entity->renderableEntity_->tiling_x_);
-    EXPECT_FALSE(entity->renderableEntity_->tiling_y_);
+    ASSERT_EQ(1, entity->renderableEntity_->tiling_x_);
+    ASSERT_EQ(0, entity->renderableEntity_->tiling_y_);
 
     editor_env->command->handleCommand(Command::Commands::RENDERABLE_TILING_Y);
+    editor_env->command->text_input_->enterText("2");
+    editor_env->command->stopCommand();
 
-    EXPECT_FALSE(entity->renderableEntity_->tiling_x_);
-    EXPECT_TRUE(entity->renderableEntity_->tiling_y_);
-
-    editor_env->command->handleCommand(Command::Commands::RENDERABLE_TILING_XY);
-
-    EXPECT_TRUE(entity->renderableEntity_->tiling_x_);
-    EXPECT_TRUE(entity->renderableEntity_->tiling_y_);
+    ASSERT_EQ(1, entity->renderableEntity_->tiling_x_);
+    ASSERT_EQ(2, entity->renderableEntity_->tiling_y_);
 }
 
 TEST_F(CommandTestFixture, ChangeTexture) {

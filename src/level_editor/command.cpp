@@ -279,28 +279,15 @@ void Command::handleCommand(Commands command) {
                 editor_env->current_command = Command::Commands::RENDERABLE_SPRITE_CHANGE;
                 break;
             }
-        case (Commands::RENDERABLE_TILING_NONE):
-            if (editor_env->current_entity->renderableEntity_) {
-                editor_env->current_operation = std::make_shared<Operation>();
-                editor_env->current_operation->entity_ = editor_env->current_entity;
-                editor_env->current_operation->before_ = editor_env->current_entity->outputToJson();
-
-                editor_env->current_entity->renderableEntity_->setTiling(false, false);
-
-                editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();
-                editor_env->history->addOperation(editor_env->current_operation);
-            }
-            break;
         case (Commands::RENDERABLE_TILING_X):
             if (editor_env->current_entity->renderableEntity_) {
                 editor_env->current_operation = std::make_shared<Operation>();
                 editor_env->current_operation->entity_ = editor_env->current_entity;
                 editor_env->current_operation->before_ = editor_env->current_entity->outputToJson();
 
-                editor_env->current_entity->renderableEntity_->setTiling(true, false);
+                text_input_ = std::make_shared<TextInput>();
 
-                editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();
-                editor_env->history->addOperation(editor_env->current_operation);
+                editor_env->current_command = Command::Commands::RENDERABLE_TILING_X;
             }
             break;
         case (Commands::RENDERABLE_TILING_Y):
@@ -309,22 +296,9 @@ void Command::handleCommand(Commands command) {
                 editor_env->current_operation->entity_ = editor_env->current_entity;
                 editor_env->current_operation->before_ = editor_env->current_entity->outputToJson();
 
-                editor_env->current_entity->renderableEntity_->setTiling(false, true);
+                text_input_ = std::make_shared<TextInput>();
 
-                editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();
-                editor_env->history->addOperation(editor_env->current_operation);
-            }
-            break;
-        case (Commands::RENDERABLE_TILING_XY):
-            if (editor_env->current_entity->renderableEntity_) {
-                editor_env->current_operation = std::make_shared<Operation>();
-                editor_env->current_operation->entity_ = editor_env->current_entity;
-                editor_env->current_operation->before_ = editor_env->current_entity->outputToJson();
-
-                editor_env->current_entity->renderableEntity_->setTiling(true, true);
-
-                editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();
-                editor_env->history->addOperation(editor_env->current_operation);
+                editor_env->current_command = Command::Commands::RENDERABLE_TILING_Y;
             }
             break;
 
@@ -357,6 +331,38 @@ void Command::stopCommand() {
                 try {
                     auto texture_name = text_input_->getString();
                     editor_env->current_entity->renderableEntity_->loadTexture(texture_name, File());
+
+                    editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();
+
+                    editor_env->history->addOperation(editor_env->current_operation);
+                } catch (std::invalid_argument& e) {
+                    LOGW("Unable to parse input text");
+                    editor_env->current_operation.reset();
+                }
+            }
+            break;
+        case (Commands::RENDERABLE_TILING_X):
+            if (editor_env->current_entity->renderableEntity_ && text_input_) {
+                try {
+                    auto tiling = stoi(text_input_->getString());
+                    auto current_tiling = editor_env->current_entity->renderableEntity_->getTiling();
+                    editor_env->current_entity->renderableEntity_->setTiling(tiling, current_tiling.second);
+
+                    editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();
+
+                    editor_env->history->addOperation(editor_env->current_operation);
+                } catch (std::invalid_argument& e) {
+                    LOGW("Unable to parse input text");
+                    editor_env->current_operation.reset();
+                }
+            }
+            break;
+        case (Commands::RENDERABLE_TILING_Y):
+            if (editor_env->current_entity->renderableEntity_ && text_input_) {
+                try {
+                    auto tiling = stoi(text_input_->getString());
+                    auto current_tiling = editor_env->current_entity->renderableEntity_->getTiling();
+                    editor_env->current_entity->renderableEntity_->setTiling(current_tiling.first, tiling);
 
                     editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();
 

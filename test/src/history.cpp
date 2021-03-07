@@ -309,7 +309,10 @@ TEST_F(HistoryTestFixture, ToggleTiling) {
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
     editor_env->current_entity = entity;
-    editor_env->command->handleCommand(Command::Commands::RENDERABLE_TILING_NONE);
+
+    editor_env->command->handleCommand(Command::Commands::RENDERABLE_TILING_X);
+    editor_env->command->text_input_->enterText("4");
+    editor_env->command->stopCommand();
 
     auto j2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 

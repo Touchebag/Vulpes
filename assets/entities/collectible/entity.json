@@ -6,8 +6,8 @@
         "height": 50,
         "layer": 0,
         "texture": "Collectible",
-        "tile_x": false,
-        "tile_y": false,
+        "tile_x": 1,
+        "tile_y": 1,
         "width": 50
     }
 }

@@ -51,8 +51,8 @@
     "Renderable": {
         "height": 90,
         "texture": "Enemy",
-        "tile_x": true,
-        "tile_y": true,
+        "tile_x": 0,
+        "tile_y": 0,
         "layer": 0
     },
     "Stateful": null,

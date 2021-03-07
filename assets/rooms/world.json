@@ -16,8 +16,8 @@
                 "height": 4719,
                 "layer": 0,
                 "texture": "Forest/Tree",
-                "tile_x": true,
-                "tile_y": true,
+                "tile_x": 0,
+                "tile_y": 0,
                 "width": 245
             },
             "Transform": {
@@ -35,8 +35,8 @@
                 "height": 4787,
                 "layer": 0,
                 "texture": "Forest/Tree",
-                "tile_x": true,
-                "tile_y": true,
+                "tile_x": 0,
+                "tile_y": 0,
                 "width": 204
             },
             "Transform": {
@@ -61,8 +61,8 @@
                 "height": 57,
                 "layer": 0,
                 "texture": "Forest/Grass",
-                "tile_x": true,
-                "tile_y": true,
+                "tile_x": 0,
+                "tile_y": 0,
                 "width": 867
             },
             "Transform": {
@@ -80,8 +80,8 @@
                 "height": 705,
                 "layer": 0,
                 "texture": "Forest/Tree",
-                "tile_x": true,
-                "tile_y": true,
+                "tile_x": 0,
+                "tile_y": 0,
                 "width": 70
             },
             "Transform": {
@@ -99,8 +99,8 @@
                 "height": 2749,
                 "layer": 0,
                 "texture": "Forest/Dirt",
-                "tile_x": true,
-                "tile_y": true,
+                "tile_x": 0,
+                "tile_y": 0,
                 "width": 89
             },
             "Transform": {
@@ -118,8 +118,8 @@
                 "height": 65,
                 "layer": 0,
                 "texture": "Forest/Dirt",
-                "tile_x": true,
-                "tile_y": true,
+                "tile_x": 0,
+                "tile_y": 0,
                 "width": 1015
             },
             "Transform": {
@@ -137,8 +137,8 @@
                 "height": 71,
                 "layer": 0,
                 "texture": "Forest/Dirt",
-                "tile_x": true,
-                "tile_y": true,
+                "tile_x": 0,
+                "tile_y": 0,
                 "width": 1606
             },
             "Transform": {
@@ -156,8 +156,8 @@
                 "height": 1394,
                 "layer": 0,
                 "texture": "Forest/Dirt",
-                "tile_x": true,
-                "tile_y": true,
+                "tile_x": 0,
+                "tile_y": 0,
                 "width": 101
             },
             "Transform": {
@@ -175,8 +175,8 @@
                 "height": 75,
                 "layer": 0,
                 "texture": "Forest/Dirt",
-                "tile_x": true,
-                "tile_y": true,
+                "tile_x": 0,
+                "tile_y": 0,
                 "width": 996
             },
             "Transform": {
@@ -194,8 +194,8 @@
                 "height": 75,
                 "layer": 0,
                 "texture": "Forest/Dirt",
-                "tile_x": true,
-                "tile_y": true,
+                "tile_x": 0,
+                "tile_y": 0,
                 "width": 996
             },
             "Transform": {
@@ -213,8 +213,8 @@
                 "height": 1394,
                 "layer": 0,
                 "texture": "Forest/Dirt",
-                "tile_x": true,
-                "tile_y": true,
+                "tile_x": 0,
+                "tile_y": 0,
                 "width": 101
             },
             "Transform": {
@@ -232,8 +232,8 @@
                 "height": 2365,
                 "layer": 0,
                 "texture": "Forest/Tree",
-                "tile_x": true,
-                "tile_y": true,
+                "tile_x": 0,
+                "tile_y": 0,
                 "width": 112
             },
             "Transform": {
@@ -251,8 +251,8 @@
                 "height": 161,
                 "layer": 0,
                 "texture": "Forest/Canopy",
-                "tile_x": true,
-                "tile_y": true,
+                "tile_x": 0,
+                "tile_y": 0,
                 "width": 4920
             },
             "Transform": {
@@ -270,8 +270,8 @@
                 "height": 156,
                 "layer": 0,
                 "texture": "Forest/Grass",
-                "tile_x": true,
-                "tile_y": true,
+                "tile_x": 0,
+                "tile_y": 0,
                 "width": 4882
             },
             "Transform": {
@@ -289,8 +289,8 @@
                 "height": 367,
                 "layer": 0,
                 "texture": "Forest/Dirt",
-                "tile_x": true,
-                "tile_y": true,
+                "tile_x": 0,
+                "tile_y": 0,
                 "width": 1076
             },
             "Transform": {
@@ -303,8 +303,8 @@
                 "height": 235,
                 "layer": 1,
                 "texture": "Forest/Bush",
-                "tile_x": false,
-                "tile_y": false
+                "tile_x": 1,
+                "tile_y": 1
             },
             "Transform": {
                 "pos_x": -43,
@@ -316,8 +316,8 @@
                 "height": 235,
                 "layer": 1,
                 "texture": "Forest/Bush",
-                "tile_x": false,
-                "tile_y": false
+                "tile_x": 1,
+                "tile_y": 1
             },
             "Transform": {
                 "pos_x": 945,
@@ -329,8 +329,8 @@
                 "height": 235,
                 "layer": 1,
                 "texture": "Forest/Bush",
-                "tile_x": false,
-                "tile_y": false
+                "tile_x": 1,
+                "tile_y": 1
             },
             "Transform": {
                 "pos_x": 1832,
@@ -342,8 +342,8 @@
                 "height": 235,
                 "layer": 1,
                 "texture": "Forest/Bush",
-                "tile_x": false,
-                "tile_y": false
+                "tile_x": 1,
+                "tile_y": 1
             },
             "Transform": {
                 "pos_x": -19,
@@ -380,8 +380,8 @@
                 "height": 507,
                 "layer": -1,
                 "texture": "box",
-                "tile_x": false,
-                "tile_y": false,
+                "tile_x": 1,
+                "tile_y": 1,
                 "width": 243
             },
             "Transform": {
@@ -392,9 +392,9 @@
         {
             "Collision": {
                 "height": 50,
+                "id": 2,
                 "type": "collectible",
-                "width": 50,
-                "id": 2
+                "width": 50
             },
             "Entity": "collectible",
             "Transform": {
@@ -407,8 +407,8 @@
                 "height": 2534,
                 "layer": -2,
                 "texture": "Forest/Tree_bg2.png",
-                "tile_x": false,
-                "tile_y": false,
+                "tile_x": 1,
+                "tile_y": 1,
                 "width": 1247
             },
             "Transform": {
@@ -427,8 +427,8 @@
                 "height": 393,
                 "layer": 0,
                 "texture": "slope",
-                "tile_x": false,
-                "tile_y": false,
+                "tile_x": 1,
+                "tile_y": 1,
                 "width": 551
             },
             "Transform": {
@@ -446,8 +446,8 @@
                 "height": 137,
                 "layer": 0,
                 "texture": "Forest/Grass",
-                "tile_x": true,
-                "tile_y": true,
+                "tile_x": 0,
+                "tile_y": 0,
                 "width": 1080
             },
             "Transform": {
@@ -467,8 +467,8 @@
                 "height": 5364,
                 "layer": -4,
                 "texture": "Forest/Tree.png",
-                "tile_x": false,
-                "tile_y": true,
+                "tile_x": 1,
+                "tile_y": 0,
                 "width": 349
             },
             "Transform": {
@@ -481,8 +481,8 @@
                 "height": 1302,
                 "layer": -3,
                 "texture": "Forest/Bush.png",
-                "tile_x": false,
-                "tile_y": false,
+                "tile_x": 1,
+                "tile_y": 1,
                 "width": 1314
             },
             "Transform": {
@@ -495,8 +495,8 @@
                 "height": 5293,
                 "layer": -5,
                 "texture": "Forest/Tree.png",
-                "tile_x": false,
-                "tile_y": true,
+                "tile_x": 1,
+                "tile_y": 0,
                 "width": 582
             },
             "Transform": {
@@ -509,8 +509,8 @@
                 "height": 5358,
                 "layer": 3,
                 "texture": "Forest/Tree.png",
-                "tile_x": false,
-                "tile_y": false,
+                "tile_x": 1,
+                "tile_y": 1,
                 "width": 209
             },
             "Transform": {
@@ -523,8 +523,8 @@
                 "height": 5050,
                 "layer": 4,
                 "texture": "Forest/Tree.png",
-                "tile_x": false,
-                "tile_y": false,
+                "tile_x": 1,
+                "tile_y": 1,
                 "width": 475
             },
             "Transform": {
@@ -537,8 +537,8 @@
                 "height": 1476,
                 "layer": 5,
                 "texture": "Forest/Bush.png",
-                "tile_x": false,
-                "tile_y": false,
+                "tile_x": 1,
+                "tile_y": 1,
                 "width": 1360
             },
             "Transform": {

@@ -1,4 +1,10 @@
 {
+    "camera": {
+        "bottom": 1550.0,
+        "left": -310.0,
+        "right": 1140.0,
+        "top": 200.0
+    },
     "entities": [
         {
             "Collision": {
@@ -10,8 +16,8 @@
                 "height": 184,
                 "layer": 0,
                 "texture": "Forest/Grass",
-                "tile_x": true,
-                "tile_y": true,
+                "tile_x": 0,
+                "tile_y": 0,
                 "width": 1470
             },
             "Transform": {
@@ -29,8 +35,8 @@
                 "height": 1119,
                 "layer": 0,
                 "texture": "Forest/Tree",
-                "tile_x": true,
-                "tile_y": true,
+                "tile_x": 0,
+                "tile_y": 0,
                 "width": 210
             },
             "Transform": {
@@ -48,8 +54,8 @@
                 "height": 1088,
                 "layer": 0,
                 "texture": "Forest/Tree",
-                "tile_x": true,
-                "tile_y": true,
+                "tile_x": 0,
+                "tile_y": 0,
                 "width": 204
             },
             "Transform": {
@@ -67,8 +73,8 @@
                 "height": 234,
                 "layer": 0,
                 "texture": "Forest/Canopy",
-                "tile_x": true,
-                "tile_y": true,
+                "tile_x": 0,
+                "tile_y": 0,
                 "width": 1917
             },
             "Transform": {
@@ -107,13 +113,13 @@
             }
         },
         {
-            "Entity": "collectible",
             "Collision": {
                 "height": 50,
+                "id": 1,
                 "type": "collectible",
-                "width": 50,
-                "id": 1
+                "width": 50
             },
+            "Entity": "collectible",
             "Transform": {
                 "pos_x": 400,
                 "pos_y": 1120
@@ -124,8 +130,8 @@
                 "height": 1429,
                 "layer": -1,
                 "texture": "Forest/Tree_bg2",
-                "tile_x": false,
-                "tile_y": false,
+                "tile_x": 1,
+                "tile_y": 1,
                 "width": 2091
             },
             "Transform": {
@@ -145,12 +151,5 @@
             "pos_x": 1050,
             "pos_y": 1400
         }
-    ],
-    "camera": {
-        "left": -310,
-        "right": 1140,
-        "top": 200,
-        "bottom": 1550
-    }
-
+    ]
 }
