@@ -40,9 +40,5 @@
         "texture": "Attack",
         "height": 350,
         "layer": 0
-    },
-    "Transform": {
-        "pos_x": 150,
-        "pos_y": 0
     }
 }

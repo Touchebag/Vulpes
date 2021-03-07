@@ -25,9 +25,9 @@ class BaseEntity {
 
     void setHitbox(int width, int height);
 
-    static std::shared_ptr<BaseEntity> createFromJson(nlohmann::json j);
+    static std::shared_ptr<BaseEntity> createFromJson(const nlohmann::json& j);
 
-    virtual void reloadFromJson(nlohmann::json j);
+    virtual void reloadFromJson(const nlohmann::json& j);
     virtual std::optional<nlohmann::json> outputToJson();
 
     virtual ~BaseEntity() {};
@@ -47,10 +47,8 @@ class BaseEntity {
     std::shared_ptr<Death> death_ = nullptr;
 
   private:
-    std::string entity_file_;
-
-    // Stores which components are loaded from entity file
-    // This will allow overloading certain components locally without affecting
-    // the main file
-    std::unordered_set<std::string> file_loaded_components_;
+    // These are to be able to differentiate between overloaded components
+    // and components loaded via entity file when saving
+    std::string entity_file_name_;
+    nlohmann::json entity_file_exclusives_;
 };

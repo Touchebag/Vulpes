@@ -114,6 +114,7 @@ TEST_F(CommandTestFixture, ResizeObject) {
     editor_env->command->add(entity);
     entity->trans_->setPosition(0, 0);
     entity->collision_ = std::make_shared<Collision>(entity->trans_, entity->actions_);
+    entity->collision_->getCollideable()->setHitbox(50, 50);
 
     editor_env->mouse->saveMousePosition();
 

@@ -5,7 +5,7 @@
 #include <tuple>
 #include <algorithm>
 
-std::shared_ptr<Player> Player::createFromJson(nlohmann::json j) {
+std::shared_ptr<Player> Player::createFromJson(const nlohmann::json& j) {
     auto ret_ptr = std::make_shared<Player>();
 
     ret_ptr->reloadFromJson(j);
@@ -13,7 +13,7 @@ std::shared_ptr<Player> Player::createFromJson(nlohmann::json j) {
     return ret_ptr;
 }
 
-void Player::reloadFromJson(nlohmann::json j) {
+void Player::reloadFromJson(const nlohmann::json& j) {
     BaseEntity::reloadFromJson(j);
 
     if (actions_) {

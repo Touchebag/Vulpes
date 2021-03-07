@@ -6,52 +6,41 @@
 
 #include <unistd.h>
 
-// If the origanl json contains a value it should override what is
+// If the original json contains a value it should override what is
 // loaded from the entity file
 #define createComponentFromJson(component_name, component, ...)\
-    if (j.contains(component_name)) {\
-        component = component->createFromJson(j[component_name], __VA_ARGS__);\
-    } else if (entity_json.contains(component_name)) {\
+    if (entity_json.contains(component_name)) {\
         component = component->createFromJson(entity_json[component_name], __VA_ARGS__);\
-        file_loaded_components_.insert(component_name);\
     } else {\
         component.reset();\
     }
 
 #define loadComponentFromJson(component_name, component, component_ptr)\
-    if (j.contains(component_name) && component_ptr) {\
-        component = component_ptr;\
-        component->reloadFromJson(j[component_name]);\
-    } else if (entity_json.contains(component_name) && component_ptr) {\
+    if (entity_json.contains(component_name) && component_ptr) {\
         component = component_ptr;\
         component->reloadFromJson(entity_json[component_name]);\
-        file_loaded_components_.insert(component_name);\
     } else {\
         component.reset();\
     }
 
 #define loadComponentWithFileFromJson(component_name, file, component, component_ptr)\
-    if (j.contains(component_name) && component_ptr) {\
-        component = component_ptr;\
-        component->reloadFromJson(j[component_name], file);\
-    } else if (entity_json.contains(component_name) && component_ptr) {\
+    if (entity_json.contains(component_name) && component_ptr) {\
         component = component_ptr;\
         component->reloadFromJson(entity_json[component_name], file);\
-        file_loaded_components_.insert(component_name);\
     } else {\
         component.reset();\
     }
 
 // Only explicitly save if not read from entity file
 #define saveComponentToJson(component_name, component)\
-    if (component && (file_loaded_components_.count(component_name) == 0)) {\
+    if (component && (!entity_file_exclusives_.contains(component_name))) {\
         if (auto opt = component->outputToJson()) {\
             j[component_name] = opt.value();\
         }\
     }
 
 
-std::shared_ptr<BaseEntity> BaseEntity::createFromJson(nlohmann::json j) {
+std::shared_ptr<BaseEntity> BaseEntity::createFromJson(const nlohmann::json& j) {
     auto ret_ptr = std::make_shared<BaseEntity>();
 
     ret_ptr->reloadFromJson(j);
@@ -59,28 +48,38 @@ std::shared_ptr<BaseEntity> BaseEntity::createFromJson(nlohmann::json j) {
     return ret_ptr;
 }
 
-void BaseEntity::reloadFromJson(nlohmann::json j) {
-    // TODO Duplicate arguments in orignal json is overwritten by entity load
-    // Should be reversed instead
+void BaseEntity::reloadFromJson(const nlohmann::json& j) {
     File file_instance;
 
     nlohmann::json entity_json;
-    file_loaded_components_.clear();
 
     if (j.contains("Entity")) {
         auto entity_name = j["Entity"].get<std::string>();
         file_instance = File(entity_name);
 
         if (auto j_entity = file_instance.loadEntityFromFile()) {
-            j.insert(j_entity.value().begin(), j_entity.value().end());
             entity_json = j_entity.value();
         } else {
             throw std::invalid_argument("File not found");
         }
 
-        entity_file_ = entity_name;
+        // Store all components from file
+        entity_file_exclusives_ = entity_json;
+        entity_file_name_ = entity_name;
     } else {
-        entity_file_.clear();
+        entity_file_name_.clear();
+    }
+
+    entity_file_exclusives_.clear();
+    entity_file_exclusives_ = entity_json;
+    // Overload entity file components with local components
+    for (auto it = j.begin(); it != j.end(); ++it) {
+        // Remove duplicate entries and only store file exclusive
+        if (entity_file_exclusives_.contains(it.key())) {
+            entity_file_exclusives_.erase(it.key());
+        }
+
+        entity_json[it.key()] = it.value();
     }
 
     loadComponentFromJson("Transform", trans_, std::make_shared<Transform>());
@@ -115,8 +114,8 @@ void BaseEntity::reloadFromJson(nlohmann::json j) {
 std::optional<nlohmann::json> BaseEntity::outputToJson() {
     nlohmann::json j;
 
-    if (!entity_file_.empty()) {
-        j["Entity"] = entity_file_;
+    if (!entity_file_name_.empty()) {
+        j["Entity"] = entity_file_name_;
     }
 
     saveComponentToJson("Transform", trans_);

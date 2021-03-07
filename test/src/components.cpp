@@ -19,7 +19,7 @@
 
 #include "components/damageable/damageable_player.h"
 
-nlohmann::json entity_json = nlohmann::json::parse(R"--(
+const nlohmann::json entity_json = nlohmann::json::parse(R"--(
 {
     "Actions": null,
     "Animated": {
@@ -87,6 +87,34 @@ nlohmann::json entity_json = nlohmann::json::parse(R"--(
 )--");
 
 TEST(TestComponents, TestLoadSaveAllComponents) {
+    nlohmann::json file_entity;
+    file_entity["Entity"] = "enemy";
+
+    // Fill with some arbitrary overrides
+    file_entity["Stateful"] = entity_json["Stateful"];
+    file_entity["Transform"] = entity_json["Transform"];
+    file_entity["Death"] = entity_json["Death"];
+
+    std::shared_ptr<BaseEntity> entity = BaseEntity::createFromJson(file_entity);
+
+    auto e1 = entity->outputToJson();
+    ASSERT_TRUE(e1.has_value());
+
+    nlohmann::json j1 = e1.value();
+
+    EXPECT_TRUE(file_entity == j1) << file_entity.dump() << std::endl << j1.dump() << std::endl;
+
+    entity->reloadFromJson(j1);
+
+    auto e2 = entity->outputToJson();
+    ASSERT_TRUE(e2.has_value());
+
+    nlohmann::json j2 = e2.value();
+
+    EXPECT_TRUE(j1 == j2) << j1.dump() << std::endl << j2.dump() << std::endl;
+}
+
+TEST(TestComponents, TestSaveLoadEntityFile) {
     std::shared_ptr<BaseEntity> entity = BaseEntity::createFromJson(entity_json);
 
     auto e1 = entity->outputToJson();

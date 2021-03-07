@@ -15,9 +15,5 @@
         "tile_x": false,
         "tile_y": false,
         "width": 50
-    },
-    "Transform": {
-        "pos_x": 0,
-        "pos_y": 0
     }
 }

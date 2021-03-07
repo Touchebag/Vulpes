@@ -1,0 +1,78 @@
+{
+    "main": {
+        "next_states": [
+            { "event": "ai_event_1", "state": "move_right_turnaround" },
+            { "event": "ai_event_2", "state": "move_left_turnaround" }
+        ],
+        "actions": [
+            {
+                "condition": "grt (player position x) (this position x)",
+                "action": "ai_event_1"
+            },
+            {
+                "condition": "lss (player position x) (this position x)",
+                "action": "ai_event_2"
+            }
+        ]
+    },
+    "move_right_turnaround": {
+        "next_states": [
+            { "event": "ai_event_1", "state": "move_right" }
+        ],
+        "actions": [
+            {
+                "condition": "true",
+                "action": "move_right"
+            },
+            {
+                "condition": "frame_timer (constant 30)",
+                "action": "ai_event_1"
+            }
+        ]
+    },
+    "move_right": {
+        "next_states": [
+            { "event": "ai_event_1", "state": "move_left_turnaround" }
+        ],
+        "actions": [
+            {
+                "condition": "grt (player position x) (this position x)",
+                "action": "move_right"
+            },
+            {
+                "condition": "lss (player position x) (this position x)",
+                "action": "ai_event_1"
+            }
+        ]
+    },
+    "move_left_turnaround": {
+        "next_states": [
+            { "event": "ai_event_1", "state": "move_left" }
+        ],
+        "actions": [
+            {
+                "condition": "true",
+                "action": "move_left"
+            },
+            {
+                "condition": "frame_timer (constant 30)",
+                "action": "ai_event_1"
+            }
+        ]
+    },
+    "move_left": {
+        "next_states": [
+            { "event": "ai_event_1", "state": "move_right_turnaround" }
+        ],
+        "actions": [
+            {
+                "condition": "grt (player position x) (this position x)",
+                "action": "ai_event_1"
+            },
+            {
+                "condition": "lss (player position x) (this position x)",
+                "action": "move_left"
+            }
+        ]
+    }
+}
