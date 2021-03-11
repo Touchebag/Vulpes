@@ -104,12 +104,13 @@ void Camera::moveView(float x, float y) {
 void Camera::resizeView(float width, float height) {
     auto camera_box_width = camera_box_.right_margin - camera_box_.left_margin;
     auto camera_box_height = camera_box_.bottom_margin - camera_box_.top_margin;
-    if (width > camera_box_width) {
-        width = camera_box_width;
-        height = width / aspect_ratio_;
-    } else if (height > camera_box_height) {
+
+    if (height > camera_box_height) {
         height = camera_box_height;
         width = height * aspect_ratio_;
+    } else if (width > camera_box_width) {
+        width = camera_box_width;
+        height = width / aspect_ratio_;
     } else {
         // Ensure aspect ratio is maintained
         width = height * aspect_ratio_;
