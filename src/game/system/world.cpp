@@ -77,6 +77,10 @@ util::Point World::getPlayerPosition() {
 void World::clearWorld() {
     world_objects_.clear();
 
+    for (auto& it : collideables_) {
+        it.clear();
+    }
+
     entrances_.clear();
 }
 
