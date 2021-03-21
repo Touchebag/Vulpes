@@ -26,55 +26,17 @@ std::pair<double, double> CollideableSemiSolid::getMaximumMovement(double stepX,
     double retX = stepX, retY = stepY;
 
     if (auto this_trans = trans_.lock()) {
-        // Check if collision after move
-        std::shared_ptr<Transform> new_pos = std::make_shared<Transform>();
-        new_pos->setPosition(other_trans->getX() + static_cast<int>(stepX), other_trans->getY() + static_cast<int>(stepY));
+        auto collision_data = calculateSweptCollision(other_coll, {stepX, stepY});
 
-        bool collides_x_new = collidesX(new_pos, other_hbox, this_trans, hbox_);
-        bool collides_y_new = collidesY(new_pos, other_hbox, this_trans, hbox_);
-
-        if (!(collides_x_new && collides_y_new)) {
+        if (collision_data.collision_time < 0.0 || collision_data.collision_time >= 1.0) {
             return {retX, retY};
         }
 
-        auto collides_x_old = collidesX(other_trans, other_hbox, this_trans, hbox_);
         auto collides_y_old = collidesY(other_trans, other_hbox, this_trans, hbox_);
 
-        // If entering from below, return early
-        // Only check for collisions from above
-        if (other_trans->getY() > this_trans->getY()) {
-            return {retX, retY};
-        }
-
-        // If Y direction was already colliding before movement then we are parallel in this direction
-        // I.e. for semisolid we should just return early to allow entering from the side
-        if (!collides_y_old) {
-            if (stepY > 0.0) {
-                retY = std::min(stepY, static_cast<double>(getAbsTop(this_trans, hbox_) - getAbsBottom(other_trans, other_hbox)));
-            } else if (stepY < 0.0) {
-                retY = std::max(stepY, static_cast<double>(getAbsBottom(this_trans, hbox_) - getAbsTop(other_trans, other_hbox)));
-            }
-        } else {
-            return {retX, retY};
-        }
-
-        // Check if still colliding after y velocity change
-        // This will prevent getting stuck at corners if entering diagonally
-        new_pos->setPosition(other_trans->getX() + static_cast<int>(retX), other_trans->getY() + static_cast<int>(retY));
-        collides_y_new = collidesY(new_pos, other_hbox, this_trans, hbox_);
-
-        if (!(collides_x_new && collides_y_new)) {
-            return {retX, retY};
-        }
-
-        // If X direction was already colliding before movement then we are parallel in this direction
-        // I.e. do not change speed
-        if (!collides_x_old) {
-            if (stepX > 0.0) {
-                retX = std::min(stepX, static_cast<double>(getAbsLeft(this_trans, hbox_) - getAbsRight(other_trans, other_hbox)));
-            } else if (stepX < 0.0) {
-                retX = std::max(stepX, static_cast<double>(getAbsRight(this_trans, hbox_) - getAbsLeft(other_trans, other_hbox)));
-            }
+        // Only block if collides from above
+        if (collision_data.normals.second == -1 && !collides_y_old) {
+            retY = stepY * collision_data.collision_time;
         }
     } else {
         LOGW("CollideableStatic: Missing transform");
