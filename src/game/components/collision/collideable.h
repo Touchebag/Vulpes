@@ -37,7 +37,8 @@ class Collideable {
     static std::shared_ptr<Collideable> createFromJson(nlohmann::json j, std::weak_ptr<Transform> trans, std::weak_ptr<Actions> actions);
 
     // Collision interface
-    bool collides(std::weak_ptr<const Collideable> other_entity);
+    bool collides(std::weak_ptr<const Collideable> other_entity) const;
+    bool collides(std::shared_ptr<const Transform> other_trans, std::shared_ptr<const Hitbox> other_hbox) const;
 
     // Getters/setters
     void setHitbox(int width, int height);

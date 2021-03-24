@@ -11,6 +11,7 @@ class DynamicCollisionTestFixture : public ::testing::Test {
     }
 
     void SetUp() override {
+        World::IWorldModify().clearWorld();
         World::getInstance<World::IWorldModify>().loadWorldFromFile("test_world.json");
     }
 
@@ -118,8 +119,6 @@ TEST_F(DynamicCollisionTestFixture, CollisionSemiSolidAllDirections) {
 }
 
 TEST_F(DynamicCollisionTestFixture, MoveDiagonalStuckOnCorner) {
-    World::getInstance<World::IWorldModify>().clearWorld();
-
     std::string entity_json = R"--(
 {
     "Collision": {
@@ -162,4 +161,201 @@ TEST_F(DynamicCollisionTestFixture, MoveDiagonalStuckOnCorner) {
     // Should continue moving on top of object instead of getting stuck in corner
     EXPECT_EQ(10, pos_x);
     EXPECT_EQ(5, pos_y);
+}
+
+TEST_F(DynamicCollisionTestFixture, TunnelingOneDirection) {
+    std::string entity_json = R"--(
+{
+    "Collision": {
+        "type": "static",
+        "height": 20,
+        "width": 10
+    },
+    "Transform": {
+        "pos_x": 15,
+        "pos_y": 5
+    }
+}
+    )--";
+
+    auto entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
+    World::IWorldModify::addEntity(entity);
+
+    entity_json = R"--(
+{
+    "Collision": {
+        "type": "static",
+        "height": 10,
+        "width": 10
+    },
+    "Movable": null,
+    "Transform": {
+        "pos_x": 0,
+        "pos_y": 0
+    }
+}
+    )--";
+
+    entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
+    World::IWorldModify::addEntity(entity);
+
+    entity->movableEntity_->move(30, 0);
+    auto pos_x = entity->trans_->getX();
+    auto pos_y = entity->trans_->getY();
+
+    // Should not tunnel through but get stuck in corner
+    EXPECT_EQ(5, pos_x);
+    EXPECT_EQ(0, pos_y);
+}
+
+TEST_F(DynamicCollisionTestFixture, TunnelingStuckInCorner) {
+    std::string entity_json = R"--(
+{
+    "Collision": {
+        "type": "static",
+        "height": 20,
+        "width": 10
+    },
+    "Transform": {
+        "pos_x": 15,
+        "pos_y": 5
+    }
+}
+    )--";
+
+    auto entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
+    World::IWorldModify::addEntity(entity);
+
+    entity_json = R"--(
+{
+    "Collision": {
+        "type": "static",
+        "height": 10,
+        "width": 20
+    },
+    "Transform": {
+        "pos_x": 0,
+        "pos_y": 20
+    }
+}
+    )--";
+
+    entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
+    World::IWorldModify::addEntity(entity);
+
+    entity_json = R"--(
+{
+    "Collision": {
+        "type": "static",
+        "height": 10,
+        "width": 10
+    },
+    "Movable": null,
+    "Transform": {
+        "pos_x": 0,
+        "pos_y": 0
+    }
+}
+    )--";
+
+    entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
+    World::IWorldModify::addEntity(entity);
+
+    entity->movableEntity_->move(30, 35);
+    auto pos_x = entity->trans_->getX();
+    auto pos_y = entity->trans_->getY();
+
+    // Should not tunnel through but get stuck in corner
+    EXPECT_EQ(5, pos_x);
+    EXPECT_EQ(10, pos_y);
+}
+
+TEST_F(DynamicCollisionTestFixture, TunnelingOnlyXSlideDown) {
+    std::string entity_json = R"--(
+{
+    "Collision": {
+        "type": "static",
+        "height": 20,
+        "width": 10
+    },
+    "Transform": {
+        "pos_x": 15,
+        "pos_y": 5
+    }
+}
+    )--";
+
+    auto entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
+    World::IWorldModify::addEntity(entity);
+
+    entity_json = R"--(
+{
+    "Collision": {
+        "type": "static",
+        "height": 10,
+        "width": 10
+    },
+    "Movable": null,
+    "Transform": {
+        "pos_x": 0,
+        "pos_y": 0
+    }
+}
+    )--";
+
+    entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
+    World::IWorldModify::addEntity(entity);
+
+    entity->movableEntity_->move(30, 35);
+    auto pos_x = entity->trans_->getX();
+    auto pos_y = entity->trans_->getY();
+
+    // Should not tunnel through X but get slide in Y direction
+    EXPECT_EQ(5, pos_x);
+    EXPECT_EQ(35, pos_y);
+}
+
+TEST_F(DynamicCollisionTestFixture, GrazeAgainstCornerButNoCollision) {
+    std::string entity_json = R"--(
+{
+    "Collision": {
+        "type": "static",
+        "height": 10,
+        "width": 10
+    },
+    "Transform": {
+        "pos_x": 31,
+        "pos_y": 9
+    }
+}
+    )--";
+
+    auto entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
+    World::IWorldModify::addEntity(entity);
+
+    entity_json = R"--(
+{
+    "Collision": {
+        "type": "static",
+        "height": 10,
+        "width": 10
+    },
+    "Movable": null,
+    "Transform": {
+        "pos_x": 0,
+        "pos_y": 0
+    }
+}
+    )--";
+
+    entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
+    World::IWorldModify::addEntity(entity);
+
+    entity->movableEntity_->move(40, 40);
+    auto pos_x = entity->trans_->getX();
+    auto pos_y = entity->trans_->getY();
+
+    // Should touch corner of box but not be blocked
+    EXPECT_EQ(40, pos_x);
+    EXPECT_EQ(40, pos_y);
 }

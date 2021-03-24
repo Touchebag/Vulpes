@@ -79,18 +79,15 @@ std::pair<double, double> CollideableSlope::getMaximumMovement(double stepX, dou
 
     if (auto this_trans = trans_.lock()) {
         // Check if collision after move
-        std::shared_ptr<Transform> new_pos = std::make_shared<Transform>();
-        new_pos->setPosition(other_trans->getX() + static_cast<int>(stepX), other_trans->getY() + static_cast<int>(stepY));
+        auto collision_data = calculateSweptCollision(other_coll, {stepX, stepY});
 
-        bool collides_x = collidesX(new_pos, other_hbox, this_trans, hbox_);
-        bool collides_y = collidesY(new_pos, other_hbox, this_trans, hbox_);
-
-        if (!(collides_x && collides_y)) {
+        // Calculate slope even if colliding before
+        if (collision_data.collision_time >= 1.0) {
             return {retX, retY};
         }
 
-        collides_x = collidesX(other_trans, other_hbox, this_trans, hbox_);
-        collides_y = collidesY(other_trans, other_hbox, this_trans, hbox_);
+        std::shared_ptr<Transform> new_pos = std::make_shared<Transform>();
+        new_pos->setPosition(other_trans->getX() + static_cast<int>(stepX), other_trans->getY() + static_cast<int>(stepY));
 
         // Current position needed to calculate relative movement for snapping
         int entity_current_ground_pos = other_trans->getY() + (other_hbox->height_ / 2);
