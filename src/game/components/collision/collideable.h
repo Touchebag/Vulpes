@@ -38,6 +38,7 @@ class Collideable {
 
     // Collision interface
     bool collides(std::weak_ptr<const Collideable> other_entity) const;
+    bool collides(std::shared_ptr<const Transform> other_trans, std::shared_ptr<const Hitbox> other_hbox) const;
 
     // Getters/setters
     void setHitbox(int width, int height);

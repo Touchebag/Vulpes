@@ -6,21 +6,52 @@
 
 namespace {
 
+void recalculateTempCollision(std::shared_ptr<Transform> new_trans,
+                              std::shared_ptr<Hitbox> new_hbox,
+                              std::shared_ptr<const Transform> old_trans,
+                              std::shared_ptr<const Hitbox> old_hbox,
+                              double velX,
+                              double velY) {
+    new_hbox->width_ = old_hbox->width_ + abs(static_cast<int>(lround(velX))),
+    new_hbox->height_ = old_hbox->height_ + abs(static_cast<int>(lround(velY))),
+    new_trans->setPosition(old_trans->getX() + static_cast<int>(lround(velX / 2.0)),
+                           old_trans->getY() + static_cast<int>(lround(velY / 2.0)));
+}
+
 std::pair<double, double> checkMovement(double velX, double velY,
         std::shared_ptr<Collision> this_coll,
         Collideable::CollisionType type) {
     double x = velX;
     double y = velY;
 
+    // For broad sweep
+    auto this_trans = this_coll->getTransform().lock();
+    auto this_hbox = this_coll->getCollideable()->getHitbox();
+
+    if (!(this_trans && this_hbox)) {
+        return {x, y};
+    }
+
+    auto temp_trans = std::make_shared<Transform>();
+    auto temp_hitbox = std::make_shared<Hitbox>(0, 0);
+
+    recalculateTempCollision(temp_trans, temp_hitbox, this_trans, this_hbox, x, y);
+
     auto world_colls = World::getInstance<World::IWorldRead>().getCollideables(type);
     for (auto it = world_colls.begin(); it != world_colls.end(); ++it) {
         auto other_coll = (*it).lock();
 
         if (other_coll) {
-            if (auto static_coll = std::dynamic_pointer_cast<const ICollideableMovement>(other_coll)) {
-                std::pair<double, double> newMoveValues = static_coll->getMaximumMovement(x, y, this_coll->getCollideable());
-                x = newMoveValues.first;
-                y = newMoveValues.second;
+            // Broad sweep
+            if (other_coll->collides(temp_trans, temp_hitbox)) {
+                if (auto movement_coll = std::dynamic_pointer_cast<const ICollideableMovement>(other_coll)) {
+                    std::pair<double, double> newMoveValues = movement_coll->getMaximumMovement(x, y, this_coll->getCollideable());
+                    x = newMoveValues.first;
+                    y = newMoveValues.second;
+
+                    // Recalculate with new movement values
+                    recalculateTempCollision(temp_trans, temp_hitbox, this_trans, this_hbox, x, y);
+                }
             }
         }
     }

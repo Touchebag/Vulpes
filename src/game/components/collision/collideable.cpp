@@ -170,16 +170,23 @@ std::optional<nlohmann::json> Collideable::outputToJson() {
     throw std::runtime_error("Collideable: this should not happen");
 }
 
+bool Collideable::collides(std::shared_ptr<const Transform> other_trans, std::shared_ptr<const Hitbox> other_hbox) const {
+    auto this_trans = getTransform().lock();
+
+    if (this_trans && hbox_ && other_hbox && other_trans) {
+        return collidesX(this_trans, hbox_, other_trans, other_hbox)
+            && collidesY(this_trans, hbox_, other_trans, other_hbox);
+    }
+
+    return false;
+}
+
 bool Collideable::collides(std::weak_ptr<const Collideable> other_entity) const {
     if (auto other_ent = other_entity.lock()) {
-        auto this_trans = getTransform().lock();
         auto other_trans = other_ent->getTransform().lock();
         auto other_hbox = other_ent->getHitbox();
 
-        if (this_trans && hbox_ && other_trans && other_hbox) {
-            return collidesX(this_trans, hbox_, other_trans, other_hbox)
-                && collidesY(this_trans, hbox_, other_trans, other_hbox);
-        }
+        return collides(other_trans, other_hbox);
     }
 
     return false;
