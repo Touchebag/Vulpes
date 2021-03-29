@@ -29,6 +29,8 @@ class RenderableEntity : ComponentWithFile {
     std::pair<int, int> getSize();
     std::pair<float, float> getScaledSize();
 
+    void setScale(float x_scale, float y_scale);
+
     virtual void setColor(sf::Color color);
     virtual void clearColor();
 
@@ -58,6 +60,9 @@ class RenderableEntity : ComponentWithFile {
     int width_ = 0;
 
     int layer_ = 0;
+
+    float x_scale_ = 1.0;
+    float y_scale_ = 1.0;
 
     // Needed for level editor
     std::string texture_name_;

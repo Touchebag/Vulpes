@@ -108,7 +108,47 @@
     {
         "name": "dashing",
         "frame_list": [
+            "Dashing",
+            "Dashing",
+            "Dashing",
+            "Dashing",
+            "Dashing",
+            "Dashing",
+            "Dashing",
+            "Dashing",
+            "Dashing",
+            "Dashing",
             "Dashing"
+        ],
+        "meta_data": [
+            {
+                "frame": 0,
+                "x_scale": 2.0
+            },
+            {
+                "frame": 1,
+                "x_scale": 2.0
+            },
+            {
+                "frame": 2,
+                "x_scale": 2.0
+            },
+            {
+                "frame": 3,
+                "x_scale": 1.5
+            },
+            {
+                "frame": 4,
+                "x_scale": 1.5
+            },
+            {
+                "frame": 8,
+                "x_scale": 0.8
+            },
+            {
+                "frame": 9,
+                "x_scale": 0.8
+            }
         ]
     },
     {

@@ -132,7 +132,8 @@ void RenderableEntity::setTextureCoords(int pos_x, int pos_y, int width, int hei
         x_scale = y_scale;
     }
 
-    sprite_.setScale(static_cast<float>(mirror_scale * x_scale), static_cast<float>(y_scale));
+    sprite_.setScale(static_cast<float>(mirror_scale * x_scale * x_scale_),
+                     static_cast<float>(y_scale * y_scale_));
 }
 
 void RenderableEntity::setSize(int width, int height) {
@@ -193,6 +194,11 @@ void RenderableEntity::loadShader(std::string shader_name) {
     auto shader = File().loadShader(shader_name);
 
     shader_ = shader;
+}
+
+void RenderableEntity::setScale(float x_scale, float y_scale) {
+    x_scale_ = x_scale;
+    y_scale_ = y_scale;
 }
 
 void RenderableEntity::update() {

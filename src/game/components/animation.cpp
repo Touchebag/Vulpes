@@ -38,30 +38,48 @@ std::unordered_map<std::string, util::Rectangle> AnimatedEntity::loadSpriteMap(F
     return sprite_map;
 }
 
-void AnimatedEntity::loadFrameList(
-        File file_instance,
-        const std::unordered_map<std::string, std::vector<std::string>>& list_frame_map) {
-    // Map of frame name to texture coordinates
-    auto sprite_map = loadSpriteMap(file_instance);
+std::shared_ptr<std::vector<AnimatedEntity::AnimationFrameData>> AnimatedEntity::loadAnimationFromJson(
+        const nlohmann::json& j,
+        const std::unordered_map<std::string, util::Rectangle>& sprite_map) {
+    auto frame_data_list = std::make_shared<std::vector<AnimationFrameData>>();
 
-    for (auto it : list_frame_map) {
-        // List of coordinates
-        std::vector<util::Rectangle> coord_list;
+    std::unordered_map<int, AnimationFrameData> meta_data;
 
-        for (auto frame_it : it.second) {
-            // Convert names to coords
-            coord_list.push_back(sprite_map.at(frame_it));
+    if (j.contains("meta_data")) {
+        for (auto it : j["meta_data"]) {
+            AnimationFrameData frame_data;
+
+            if (it.contains("x_scale")) {
+                frame_data.x_scale = it["x_scale"].get<float>();
+            }
+
+            if (it.contains("y_scale")) {
+                frame_data.y_scale = it["y_scale"].get<float>();
+            }
+
+            if (it.contains("frame")) {
+                meta_data.insert({it["frame"].get<int>(), frame_data});
+            } else {
+                LOGW("Animation meta data must contain frame number");
+            }
+        }
+    }
+
+    int i = 0;
+    for (auto it : j["frame_list"]) {
+        AnimationFrameData frame_data;
+
+        if (meta_data.count(i)) {
+            frame_data = meta_data.at(i);
         }
 
-        sprite_sheet_map_.emplace(it.first, std::make_shared<std::vector<util::Rectangle>>(coord_list));
+        frame_data.sprite_rectangle = (sprite_map.at(it.get<std::string>()));
+        frame_data_list->push_back(frame_data);
+
+        i++;
     }
 
-    if (sprite_sheet_map_.size() < 1) {
-        LOGE("No animations loaded");
-        throw std::invalid_argument("");
-    }
-
-    current_frame_list_ = sprite_sheet_map_.begin()->second;
+    return frame_data_list;
 }
 
 void AnimatedEntity::setFrameList(std::string animation_name) {
@@ -75,7 +93,7 @@ void AnimatedEntity::setFrameList(std::string animation_name) {
     }
 }
 
-util::Rectangle AnimatedEntity::getSpriteRect() {
+AnimatedEntity::AnimationFrameData AnimatedEntity::getFrameData() {
     try {
         if (current_frame_list_) {
             return current_frame_list_->at(current_frame_);
@@ -93,38 +111,35 @@ void AnimatedEntity::reloadFromJson(nlohmann::json j) {
 }
 
 void AnimatedEntity::reloadFromJson(nlohmann::json j, File file_instance) {
+    auto sprite_map = loadSpriteMap(file_instance);
+
     // Load the animation names as lists of frame names
     std::unordered_map<std::string, std::vector<std::string>> name_frames_map;
 
     // If there is a frame list directly, do not load from file
     if (j.contains("frame_list")) {
-        nlohmann::json frame_names_array = j["frame_list"];
+        auto frame_data_list = loadAnimationFromJson(j, sprite_map);
+        sprite_sheet_map_.emplace("default", frame_data_list);
 
-        std::vector<std::string> frame_list;
-        for (auto it : frame_names_array) {
-            frame_list.push_back(it.get<std::string>());
-        }
-
-        name_frames_map.emplace("default", frame_list);
-
-        original_frame_list_ = frame_list;
+        original_frame_list_ = j["frame_list"];
     } else {
         // TODO Error handling
         nlohmann::json j_anim_list = file_instance.loadAnimations().value();
 
         for (auto animation : j_anim_list) {
-            std::vector<std::string> frame_list;
-            for (auto it : animation["frame_list"]) {
-                frame_list.push_back(it.get<std::string>());
-            }
-
-            name_frames_map.emplace(animation["name"], frame_list);
+            auto frame_data_list = loadAnimationFromJson(animation, sprite_map);
+            sprite_sheet_map_.emplace(animation["name"], frame_data_list);
         }
 
         original_frame_list_.reset();
     }
 
-    loadFrameList(file_instance, name_frames_map);
+    if (sprite_sheet_map_.size() < 1) {
+        LOGE("No animations loaded");
+        throw std::invalid_argument("");
+    }
+
+    current_frame_list_ = sprite_sheet_map_.begin()->second;
 
     setRenderTexture();
 }
@@ -151,8 +166,12 @@ void AnimatedEntity::update() {
 
 void AnimatedEntity::setRenderTexture() {
     if (auto renderable = renderableEntity_.lock()) {
-        auto sprite_rect = getSpriteRect();
+        auto frame_data = getFrameData();
+
+        auto sprite_rect = frame_data.sprite_rectangle;
         renderable->setTextureCoords(sprite_rect.x, sprite_rect.y, sprite_rect.width, sprite_rect.height);
+
+        renderable->setScale(frame_data.x_scale, frame_data.y_scale);
     } else {
         LOGW("Animated: Missing renderable");
     }

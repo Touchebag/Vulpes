@@ -15,7 +15,6 @@ class AnimatedEntity : public ComponentWithFile {
     void setFrameList(std::string animation_name);
 
     // Returns a pair of the top-left and bottom-right points of current texture
-    util::Rectangle getSpriteRect();
 
     void reloadFromJson(nlohmann::json j) override;
     void reloadFromJson(nlohmann::json j, File file_instance) override;
@@ -27,18 +26,27 @@ class AnimatedEntity : public ComponentWithFile {
     bool hasAnimationLooped();
 
   private:
+    struct AnimationFrameData {
+        util::Rectangle sprite_rectangle;
+        float x_scale = 1.0;
+        float y_scale = 1.0;
+    };
+
+    AnimationFrameData getFrameData();
+
     std::unordered_map<std::string, util::Rectangle> loadSpriteMap(File file_instance);
-    void loadFrameList(File file_instance,
-                       const std::unordered_map<std::string, std::vector<std::string>>& list_frame_map);
+    std::shared_ptr<std::vector<AnimationFrameData>> loadAnimationFromJson(
+            const nlohmann::json& j,
+            const std::unordered_map<std::string, util::Rectangle>& sprite_map);
 
     void setRenderTexture();
 
     std::weak_ptr<RenderableEntity> renderableEntity_;
 
-    std::unordered_map<std::string, std::shared_ptr<std::vector<util::Rectangle>>> sprite_sheet_map_;
+    std::unordered_map<std::string, std::shared_ptr<std::vector<AnimationFrameData>>> sprite_sheet_map_;
 
-    std::optional<std::vector<std::string>> original_frame_list_;
+    std::optional<nlohmann::json> original_frame_list_;
 
-    std::shared_ptr<std::vector<util::Rectangle>> current_frame_list_;
+    std::shared_ptr<std::vector<AnimationFrameData>> current_frame_list_;
     int current_frame_ = 0;
 };
