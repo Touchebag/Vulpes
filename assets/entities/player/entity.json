@@ -8,7 +8,8 @@
             "double_jump": true,
             "air_dive": true,
             "air_dive_bounce": true,
-            "interact": true
+            "interact": true,
+            "dash": true
         }
     },
     "Animated": null,

@@ -94,6 +94,57 @@
         ]
     },
     {
+        "name": "air_diving",
+        "frame_list": [
+            "Falling",
+            "Falling",
+            "Falling",
+            "Falling",
+            "Falling",
+            "Falling",
+            "Falling",
+            "Falling",
+            "Falling",
+            "Falling",
+            "Falling",
+            "Falling",
+            "Falling",
+            "Falling"
+        ],
+        "meta_data": [
+            {
+                "frame": 8,
+                "x_scale": 1.25,
+                "y_scale": 0.8
+            },
+            {
+                "frame": 9,
+                "x_scale": 1.25,
+                "y_scale": 0.8
+            },
+            {
+                "frame": 10,
+                "x_scale": 1.4,
+                "y_scale": 0.7
+            },
+            {
+                "frame": 11,
+                "x_scale": 1.6,
+                "y_scale": 0.6
+            },
+            {
+                "frame": 12,
+                "x_scale": 0.5,
+                "y_scale": 1.8
+            },
+            {
+                "frame": 13,
+                "x_scale": 0.75,
+                "y_scale": 1.5
+            }
+        ]
+    },
+    {
         "name": "wall_slide",
         "frame_list": [
             "Wall_slide"
@@ -123,31 +174,38 @@
         "meta_data": [
             {
                 "frame": 0,
-                "x_scale": 2.0
+                "x_scale": 1.8,
+                "y_scale": 0.5
             },
             {
                 "frame": 1,
-                "x_scale": 2.0
+                "x_scale": 2.0,
+                "y_scale": 0.5
             },
             {
                 "frame": 2,
-                "x_scale": 2.0
+                "x_scale": 1.8,
+                "y_scale": 0.5
             },
             {
                 "frame": 3,
-                "x_scale": 1.5
+                "x_scale": 1.7,
+                "y_scale": 0.6
             },
             {
                 "frame": 4,
-                "x_scale": 1.5
-            },
-            {
-                "frame": 8,
-                "x_scale": 0.8
+                "x_scale": 1.6,
+                "y_scale": 0.7
             },
             {
                 "frame": 9,
-                "x_scale": 0.8
+                "x_scale": 0.8,
+                "y_scale": 1.25
+            },
+            {
+                "frame": 10,
+                "x_scale": 0.8,
+                "y_scale": 1.25
             }
         ]
     },
@@ -186,6 +244,68 @@
             "Door_transition3",
             "Door_transition3",
             "Door_transition3"
+        ]
+    },
+    {
+        "name": "hard_landing",
+        "frame_list": [
+            "Idle0",
+            "Idle0",
+            "Idle0",
+            "Idle1",
+            "Idle1",
+            "Idle1",
+            "Idle2",
+            "Idle2",
+            "Idle2",
+            "Idle3",
+            "Idle3",
+            "Idle3",
+            "Idle4",
+            "Idle4",
+            "Idle4",
+            "Idle5",
+            "Idle5",
+            "Idle5",
+            "Idle6",
+            "Idle6",
+            "Idle6",
+            "Idle7",
+            "Idle7",
+            "Idle7",
+            "Idle8",
+            "Idle8",
+            "Idle8",
+            "Idle9",
+            "Idle9",
+            "Idle9"
+        ],
+        "meta_data": [
+            {
+                "frame": 0,
+                "x_scale": 1.1,
+                "y_scale": 0.9
+            },
+            {
+                "frame": 1,
+                "x_scale": 1.25,
+                "y_scale": 0.8
+            },
+            {
+                "frame": 2,
+                "x_scale": 1.4,
+                "y_scale": 0.7
+            },
+            {
+                "frame": 3,
+                "x_scale": 1.25,
+                "y_scale": 0.8
+            },
+            {
+                "frame": 4,
+                "x_scale": 1.1,
+                "y_scale": 0.9
+            }
         ]
     }
 ]

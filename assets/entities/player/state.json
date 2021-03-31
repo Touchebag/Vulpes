@@ -45,7 +45,7 @@
             {"event": "jumping", "state": "jumping"},
             {"event": "falling", "state": "falling"},
             {"event": "dashing", "state": "dashing"},
-            {"event": "air_diving", "state": "air_dive"},
+            {"event": "air_diving", "state": "air_dive_start"},
             {"event": "damaged", "state": "taking_damage"}
         ],
         "animation": "jumping"
@@ -61,7 +61,7 @@
             {"event": "touching_wall", "state": "wall_slide"},
             {"event": "jumping", "state": "jumping"},
             {"event": "dashing", "state": "dashing"},
-            {"event": "air_diving", "state": "air_dive"},
+            {"event": "air_diving", "state": "air_dive_start"},
             {"event": "damaged", "state": "taking_damage"}
         ],
         "animation": "falling"
@@ -126,7 +126,7 @@
             {"event": "touching_wall", "state": "wall_slide"},
             {"event": "dashing", "state": "dashing"},
             {"event": "frame_timeout", "state": "jumping"},
-            {"event": "air_diving", "state": "air_dive"},
+            {"event": "air_diving", "state": "air_dive_start"},
             {"event": "damaged", "state": "taking_damage"}
         ],
         "animation": "jumping"
@@ -193,6 +193,32 @@
         ],
         "animation": "falling"
     },
+    "air_dive_start": {
+        "properties": {
+            "touching_ground": false,
+            "movement_locked_x": true,
+            "can_dash": false,
+            "can_jump": false,
+            "air_diving": true
+        },
+        "next_states": [
+            {"event": "touching_floor", "state": "hard_landing"},
+            {"event": "frame_timeout", "state": "air_dive"},
+            {"event": "dive_bounce", "state": "falling"},
+            {"event": "damaged", "state": "taking_damage"}
+        ],
+        "animation": "air_diving",
+        "frame_timer": 14,
+        "collideable": {
+            "type": "player_dive",
+            "width": 150,
+            "height": 200,
+            "offset": {
+                "x": 0,
+                "y": 200
+            }
+        }
+    },
     "air_dive": {
         "properties": {
             "touching_ground": false,
@@ -229,6 +255,6 @@
             {"event": "frame_timeout", "state": "idle"},
             {"event": "damaged", "state": "taking_damage"}
         ],
-        "animation": "idle"
+        "animation": "hard_landing"
     }
 }
