@@ -15,17 +15,15 @@
 
 class Physics : public Component {
   public:
-    Physics(std::weak_ptr<StatefulEntity> statefulEntity,
-            std::weak_ptr<MovableEntity> movableEntity,
-            std::weak_ptr<AnimatedEntity> animatedEntity,
-            std::weak_ptr<Actions> actions);
+    Physics(std::weak_ptr<ComponentStore> components);
 
     void update() override;
 
     void setPhysicsConstants(PhysicsConstants constants);
     void setPhysicsVariables();
 
-    void reloadFromJson(nlohmann::json j) override;
+    static std::shared_ptr<Physics> createFromJson(nlohmann::json, std::weak_ptr<ComponentStore>, File file_instance = File());
+    void reloadFromJson(nlohmann::json j, File file = File()) override;
     std::optional<nlohmann::json> outputToJson() override;
 
   private:

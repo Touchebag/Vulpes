@@ -10,7 +10,7 @@ CollideableTransition::CollideableTransition(std::weak_ptr<Transform> trans) :
 void CollideableTransition::update() {
     auto player = World::IWorldRead::getPlayer().lock();
 
-    if (player->collision_ && collides(player->collision_->getCollideable())) {
+    if (player->components_->collision && collides(player->components_->collision->getCollideable())) {
         World::IWorldModify::loadRoom(room_, entrance_id_);
     }
 }

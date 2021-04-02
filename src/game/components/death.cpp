@@ -2,10 +2,22 @@
 
 #include "base_entity.h"
 
+Death::Death(std::weak_ptr<ComponentStore> components) :
+    Component(components) {
+}
+
 void Death::update() {
 }
 
-void Death::reloadFromJson(nlohmann::json j) {
+std::shared_ptr<Death> Death::createFromJson(nlohmann::json j, std::weak_ptr<ComponentStore> components, File file_instance) {
+    auto ret_ptr = std::make_shared<Death>(components);
+
+    ret_ptr->reloadFromJson(j, file_instance);
+
+    return ret_ptr;
+}
+
+void Death::reloadFromJson(nlohmann::json j, File /* file_instance */) {
     if (j.contains("death_entity")) {
         death_entity_json_ = j["death_entity"];
     }

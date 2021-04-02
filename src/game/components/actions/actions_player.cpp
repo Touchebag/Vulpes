@@ -9,8 +9,8 @@
 #include "components/collision/collideables/collideable_collectible.h"
 #include "components/collision/collideables/collideable_interactable.h"
 
-ActionsPlayer::ActionsPlayer(std::weak_ptr<Death> death) :
-    Actions(death) {
+ActionsPlayer::ActionsPlayer(std::weak_ptr<ComponentStore> components) :
+    Actions(components) {
 }
 
 void ActionsPlayer::update() {
@@ -25,8 +25,8 @@ void ActionsPlayer::addAction(Actions::Action action) {
     Actions::addAction(action);
 }
 
-void ActionsPlayer::reloadFromJson(nlohmann::json j) {
-    Actions::reloadFromJson(j);
+void ActionsPlayer::reloadFromJson(nlohmann::json j, File file_instance) {
+    Actions::reloadFromJson(j, file_instance);
 }
 
 std::optional<nlohmann::json> ActionsPlayer::outputToJson() {

@@ -39,7 +39,7 @@ class Actions : public Component {
         DIE,
     };
 
-    Actions(std::weak_ptr<Death> death);
+    Actions(std::weak_ptr<ComponentStore> components);
 
     void update() override;
 
@@ -52,10 +52,9 @@ class Actions : public Component {
 
     static Action fromString(const std::string& action);
 
-    virtual void reloadFromJson(nlohmann::json j) override;
+    static std::shared_ptr<Actions> createFromJson(nlohmann::json, std::weak_ptr<ComponentStore>, File file_instance = File());
+    void reloadFromJson(nlohmann::json j, File file = File()) override;
     virtual std::optional<nlohmann::json> outputToJson() override;
-
-    static std::shared_ptr<Actions> createFromJson(nlohmann::json j, std::weak_ptr<Death> death);
 
   private:
     std::array<bool, static_cast<int>(Action::NUM_ACTIONS)> enabled_actions_;

@@ -12,14 +12,8 @@
 #include "ai/values/player_value.h"
 #include "ai/values/this.h"
 
-AI::AI(std::weak_ptr<Actions> actions,
-       std::weak_ptr<Transform> transform,
-       std::weak_ptr<Collision> collision,
-       std::weak_ptr<AnimatedEntity> animated_entitiy) :
-    actions_(actions),
-    transform_(transform),
-    collision_(collision),
-    animated_entitiy_(animated_entitiy) {
+AI::AI(std::weak_ptr<ComponentStore> components) :
+    Component(components) {
 }
 
 void AI::update() {
@@ -57,8 +51,12 @@ void AI::update() {
     }
 }
 
-void AI::reloadFromJson(nlohmann::json j) {
-    reloadFromJson(j, File());
+std::shared_ptr<AI> AI::createFromJson(nlohmann::json j, std::weak_ptr<ComponentStore> components, File file_instance) {
+    auto ret_ptr = std::make_shared<AI>(components);
+
+    ret_ptr->reloadFromJson(j, file_instance);
+
+    return ret_ptr;
 }
 
 void AI::reloadFromJson(nlohmann::json /* j */, File file) {

@@ -4,9 +4,12 @@
 
 class Death : public Component {
   public:
+    Death(std::weak_ptr<ComponentStore> components);
+
     void update() override;
 
-    void reloadFromJson(nlohmann::json j) override;
+    static std::shared_ptr<Death> createFromJson(nlohmann::json, std::weak_ptr<ComponentStore>, File file_instance = File());
+    void reloadFromJson(nlohmann::json j, File file = File()) override;
     std::optional<nlohmann::json> outputToJson() override;
 
     std::optional<nlohmann::json> getDeathEntityJson();

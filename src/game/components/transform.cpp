@@ -1,5 +1,9 @@
 #include "transform.h"
 
+Transform::Transform(std::weak_ptr<ComponentStore> components) :
+    Component(components) {
+}
+
 void Transform::update() {
 }
 
@@ -17,7 +21,15 @@ util::Point Transform::getPosition() {
     return {getX(), getY()};
 }
 
-void Transform::reloadFromJson(nlohmann::json j) {
+std::shared_ptr<Transform> Transform::createFromJson(nlohmann::json j, std::weak_ptr<ComponentStore> components, File file_instance) {
+    auto ret_ptr = std::make_shared<Transform>(components);
+
+    ret_ptr->reloadFromJson(j, file_instance);
+
+    return ret_ptr;
+}
+
+void Transform::reloadFromJson(nlohmann::json j, File /* file_instance */) {
     pos_x_ = j["pos_x"];
     pos_y_ = j["pos_y"];
 }

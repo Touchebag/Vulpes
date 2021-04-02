@@ -1,0 +1,30 @@
+#pragma once
+
+#include "components/transform.h"
+#include "components/movement.h"
+#include "components/rendering/rendering.h"
+#include "components/animation.h"
+#include "components/stateful.h"
+#include "components/actions/actions.h"
+#include "components/collision/collision.h"
+#include "components/physics/physics.h"
+#include "components/ai.h"
+#include "components/damageable/damageable.h"
+#include "components/subentity.h"
+#include "components/death.h"
+
+struct ComponentStore {
+    // Components
+    std::shared_ptr<Transform> transform = nullptr;
+    std::shared_ptr<Collision> collision = nullptr;
+    std::shared_ptr<MovableEntity> movableEntity = nullptr;
+    std::shared_ptr<RenderableEntity> renderableEntity = nullptr;
+    std::shared_ptr<AnimatedEntity> animatedEntity = nullptr;
+    std::shared_ptr<StatefulEntity> statefulEntity = nullptr;
+    std::shared_ptr<Actions> actions = nullptr;
+    std::shared_ptr<Physics> physics = nullptr;
+    std::shared_ptr<AI> ai = nullptr;
+    std::shared_ptr<Damageable> damageable = nullptr;
+    std::shared_ptr<Subentity> subentity = nullptr;
+    std::shared_ptr<Death> death = nullptr;
+};

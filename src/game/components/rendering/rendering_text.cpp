@@ -3,8 +3,8 @@
 #include "utils/file.h"
 #include "utils/log.h"
 
-RenderableText::RenderableText(std::weak_ptr<Transform> trans) :
-    RenderableEntity(trans, {}) {
+RenderableText::RenderableText(std::weak_ptr<ComponentStore> components) :
+    RenderableEntity(components) {
 
     sf::Font font;
     if (std::optional<sf::Font> tmp_font = File().loadFont("arial.ttf")) {

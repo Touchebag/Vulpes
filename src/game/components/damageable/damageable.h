@@ -11,25 +11,16 @@
 
 class Damageable : public Component {
   public:
-    Damageable(std::weak_ptr<Collision> hurtbox,
-               std::weak_ptr<Death> death,
-               std::weak_ptr<StatefulEntity> state,
-               std::weak_ptr<RenderableEntity> render,
-               std::weak_ptr<MovableEntity> move);
+    Damageable(std::weak_ptr<ComponentStore> components);
 
     // Component interface
-    virtual void reloadFromJson(nlohmann::json j) override;
+    void reloadFromJson(nlohmann::json j, File file_instance = File()) override;
     virtual std::optional<nlohmann::json> outputToJson() override;
 
     void update() override;
 
     // Load derived classes from json
-    static std::shared_ptr<Damageable> createFromJson(nlohmann::json j,
-                                                      std::weak_ptr<Collision> coll,
-                                                      std::weak_ptr<Death> death,
-                                                      std::weak_ptr<StatefulEntity> state,
-                                                      std::weak_ptr<RenderableEntity> render,
-                                                      std::weak_ptr<MovableEntity> move);
+    static std::shared_ptr<Damageable> createFromJson(nlohmann::json, std::weak_ptr<ComponentStore>, File file_instance = File());
 
     int getHealth();
     bool isDead();

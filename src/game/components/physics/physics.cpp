@@ -37,11 +37,8 @@ void saveConstantToJson(nlohmann::json& j, std::string name, double constant, do
 
 } // namespace
 
-Physics::Physics(std::weak_ptr<StatefulEntity> statefulEntity, std::weak_ptr<MovableEntity> movableEntity, std::weak_ptr<AnimatedEntity> animatedEntity, std::weak_ptr<Actions> actions) :
-                 statefulEntity_(statefulEntity),
-                 movableEntity_(movableEntity),
-                 animatedEntity_(animatedEntity),
-                 actions_(actions) {
+Physics::Physics(std::weak_ptr<ComponentStore> components) :
+    Component(components) {
 }
 
 void Physics::update() {
@@ -242,7 +239,15 @@ void Physics::setPhysicsVariables() {
     variables_.setMaxDashes(1);
 }
 
-void Physics::reloadFromJson(nlohmann::json j) {
+std::shared_ptr<Physics> Physics::createFromJson(nlohmann::json j, std::weak_ptr<ComponentStore> components, File file_instance) {
+    auto ret_ptr = std::make_shared<Physics>(components);
+
+    ret_ptr->reloadFromJson(j, file_instance);
+
+    return ret_ptr;
+}
+
+void Physics::reloadFromJson(nlohmann::json j, File /* file_instance */) {
     PhysicsConstants constants;
 
     if (j.contains("ground_acceleration")) {

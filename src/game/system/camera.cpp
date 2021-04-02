@@ -186,8 +186,8 @@ void Camera::updateTargetView() {
     auto player = World::getInstance<World::IWorldRead>().getPlayer().lock();
 
     if (player) {
-        auto p_trans = player->trans_;
-        auto p_move = player->movableEntity_;
+        auto p_trans = player->components_->transform;
+        auto p_move = player->components_->movableEntity;
 
         if (p_trans && p_move) {
             auto ratio = calculatePlayerPositionRatio(p_trans->getX(), p_trans->getY());

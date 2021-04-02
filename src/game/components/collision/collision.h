@@ -10,16 +10,16 @@
 
 class Collision : public Component {
   public:
-    Collision(std::weak_ptr<Transform> trans, std::weak_ptr<Actions> actions);
+    Collision(std::weak_ptr<ComponentStore> components);
 
     // Component interface
     void update() override;
 
-    virtual void reloadFromJson(nlohmann::json j) override;
-    virtual std::optional<nlohmann::json> outputToJson() override;
-
     // Load derived classes from json
-    static std::shared_ptr<Collision> createFromJson(nlohmann::json j, std::weak_ptr<Transform> trans, std::weak_ptr<Actions> actions);
+    static std::shared_ptr<Collision> createFromJson(nlohmann::json, std::weak_ptr<ComponentStore>, File file_instance = File());
+
+    void reloadFromJson(nlohmann::json j, File file = File()) override;
+    virtual std::optional<nlohmann::json> outputToJson() override;
 
     // Collision interface
     bool collides(std::weak_ptr<const Collision> other_entity);

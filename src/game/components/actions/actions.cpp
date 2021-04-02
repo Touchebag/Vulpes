@@ -5,8 +5,8 @@
 #include "common.h"
 #include "utils/log.h"
 
-Actions::Actions(std::weak_ptr<Death> death) :
-    death_(death) {
+Actions::Actions(std::weak_ptr<ComponentStore> components) :
+    Component(components) {
     // Enable everything by default
     setAllEnabled(true);
     return;
@@ -81,19 +81,19 @@ Actions::Action Actions::fromString(const std::string& action) {
     }
 }
 
-std::shared_ptr<Actions> Actions::createFromJson(nlohmann::json j, std::weak_ptr<Death> death) {
+std::shared_ptr<Actions> Actions::createFromJson(nlohmann::json j, std::weak_ptr<ComponentStore> components, File /* file_instance */) {
     std::shared_ptr<Actions> actions;
     if (j.contains("type") && j["type"].get<std::string>() == "player") {
-        actions = std::make_shared<ActionsPlayer>(death);
+        actions = std::make_shared<ActionsPlayer>(components);
     } else {
-        actions = std::make_shared<Actions>(death);
+        actions = std::make_shared<Actions>(components);
     }
 
     actions->reloadFromJson(j);
     return actions;
 }
 
-void Actions::reloadFromJson(nlohmann::json j) {
+void Actions::reloadFromJson(nlohmann::json j, File /* file_instance */) {
     if (!j.contains("enabled_actions")) {
         // Enabled everything by default
         setAllEnabled(true);

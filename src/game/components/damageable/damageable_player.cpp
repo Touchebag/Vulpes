@@ -3,16 +3,8 @@
 #include "system/world.h"
 #include "components/collision/collideables/collideable_health.h"
 
-DamageablePlayer::DamageablePlayer(std::weak_ptr<Collision> hurtbox,
-                                   std::weak_ptr<Death> death,
-                                   std::weak_ptr<StatefulEntity> state,
-                                   std::weak_ptr<RenderableEntity> render,
-                                   std::weak_ptr<MovableEntity> move) :
-    Damageable(hurtbox, death, state, render, move) {
-}
-
-void DamageablePlayer::reloadFromJson(nlohmann::json j) {
-    Damageable::reloadFromJson(j);
+DamageablePlayer::DamageablePlayer(std::weak_ptr<ComponentStore> components) :
+    Damageable(components) {
 }
 
 std::optional<nlohmann::json> DamageablePlayer::outputToJson() {

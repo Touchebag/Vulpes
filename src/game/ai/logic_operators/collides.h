@@ -18,7 +18,7 @@ class Collides : public LogicalOperator {
     bool getValue(aiValues& values) const override {
         if (auto this_coll = values.coll.lock()) {
             if (auto player = World::IWorldRead::getPlayer().lock()) {
-                return this_coll->collides(player->collision_);
+                return this_coll->collides(player->components_->collision);
             }
         }
 

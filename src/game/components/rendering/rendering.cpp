@@ -3,9 +3,8 @@
 #include "utils/file.h"
 #include "utils/common.h"
 
-RenderableEntity::RenderableEntity(std::weak_ptr<Transform> trans, std::weak_ptr<MovableEntity> movable) :
-    trans_(trans),
-    movable_(movable) {
+RenderableEntity::RenderableEntity(std::weak_ptr<ComponentStore> components) :
+    Component(components) {
 }
 
 bool RenderableEntity::loadTexture(std::string file_path, File file_instance) {
@@ -26,8 +25,12 @@ bool RenderableEntity::loadTexture(std::string file_path, File file_instance) {
     return true;
 }
 
-void RenderableEntity::reloadFromJson(nlohmann::json j) {
-    reloadFromJson(j, File());
+std::shared_ptr<RenderableEntity> RenderableEntity::createFromJson(nlohmann::json j, std::weak_ptr<ComponentStore> components, File file_instance) {
+    auto ret_ptr = std::make_shared<RenderableEntity>(components);
+
+    ret_ptr->reloadFromJson(j, file_instance);
+
+    return ret_ptr;
 }
 
 void RenderableEntity::reloadFromJson(nlohmann::json j, File file_instance) {

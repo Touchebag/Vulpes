@@ -7,11 +7,8 @@
 
 #include "utils/log.h"
 
-StatefulEntity::StatefulEntity(std::weak_ptr<AnimatedEntity> animatedEntity, std::weak_ptr<Subentity> subentity, std::weak_ptr<Actions> actions, std::weak_ptr<Collision> collision) :
-    animatedEntity_(animatedEntity),
-    subentity_(subentity),
-    actions_(actions),
-    collision_(collision) {
+StatefulEntity::StatefulEntity(std::weak_ptr<ComponentStore> components) :
+    Component(components) {
 }
 
 void StatefulEntity::update() {
@@ -20,8 +17,12 @@ void StatefulEntity::update() {
     }
 }
 
-void StatefulEntity::reloadFromJson(nlohmann::json j) {
-    reloadFromJson(j, File());
+std::shared_ptr<StatefulEntity> StatefulEntity::createFromJson(nlohmann::json j, std::weak_ptr<ComponentStore> components, File file_instance) {
+    auto ret_ptr = std::make_shared<StatefulEntity>(components);
+
+    ret_ptr->reloadFromJson(j, file_instance);
+
+    return ret_ptr;
 }
 
 void StatefulEntity::reloadFromJson(nlohmann::json /* j */, File file_instance) {

@@ -32,7 +32,7 @@ std::pair<double, double> checkMovement(double velX, double velY,
         return {x, y};
     }
 
-    auto temp_trans = std::make_shared<Transform>();
+    auto temp_trans = std::make_shared<Transform>(std::weak_ptr<ComponentStore>({}));
     auto temp_hitbox = std::make_shared<Hitbox>(0, 0);
 
     recalculateTempCollision(temp_trans, temp_hitbox, this_trans, this_hbox, x, y);
@@ -61,9 +61,8 @@ std::pair<double, double> checkMovement(double velX, double velY,
 
 } // namespace
 
-MovableEntity::MovableEntity(std::weak_ptr<Transform> trans, std::weak_ptr<Collision> collision) :
-    trans_(trans),
-    collision_(collision) {
+MovableEntity::MovableEntity(std::weak_ptr<ComponentStore> components) :
+    Component(components) {
 }
 
 void MovableEntity::update() {
@@ -89,7 +88,15 @@ void MovableEntity::move(double velX, double velY) {
     }
 }
 
-void MovableEntity::reloadFromJson(nlohmann::json /* j */) {
+std::shared_ptr<MovableEntity> MovableEntity::createFromJson(nlohmann::json j, std::weak_ptr<ComponentStore> components, File file_instance) {
+    auto ret_ptr = std::make_shared<MovableEntity>(components);
+
+    ret_ptr->reloadFromJson(j, file_instance);
+
+    return ret_ptr;
+}
+
+void MovableEntity::reloadFromJson(nlohmann::json /* j */, File /* file_instance */) {
 }
 
 std::optional<nlohmann::json> MovableEntity::outputToJson() {

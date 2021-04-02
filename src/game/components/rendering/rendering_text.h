@@ -6,7 +6,7 @@
 
 class RenderableText : public RenderableEntity{
   public:
-    RenderableText(std::weak_ptr<Transform> trans);
+    RenderableText(std::weak_ptr<ComponentStore> components);
 
     void setText(const std::string& text);
     void setFont(sf::Font font);

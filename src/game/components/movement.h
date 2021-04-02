@@ -16,13 +16,14 @@ class MovableEntity : public Component {
         bool on_slope = false;
     };
 
-    MovableEntity(std::weak_ptr<Transform> trans, std::weak_ptr<Collision> collision);
+    MovableEntity(std::weak_ptr<ComponentStore> components);
 
     void move(double velX, double velY);
 
     void update() override;
 
-    void reloadFromJson(nlohmann::json j) override;
+    static std::shared_ptr<MovableEntity> createFromJson(nlohmann::json, std::weak_ptr<ComponentStore>, File file_instance = File());
+    void reloadFromJson(nlohmann::json j, File file = File()) override;
     std::optional<nlohmann::json> outputToJson() override;
 
     double getVelX();

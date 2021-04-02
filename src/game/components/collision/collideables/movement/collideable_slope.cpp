@@ -86,7 +86,7 @@ std::pair<double, double> CollideableSlope::getMaximumMovement(double stepX, dou
             return {retX, retY};
         }
 
-        std::shared_ptr<Transform> new_pos = std::make_shared<Transform>();
+        std::shared_ptr<Transform> new_pos = std::make_shared<Transform>(std::weak_ptr<ComponentStore>({}));
         new_pos->setPosition(other_trans->getX() + static_cast<int>(stepX), other_trans->getY() + static_cast<int>(stepY));
 
         // Current position needed to calculate relative movement for snapping

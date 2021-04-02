@@ -4,9 +4,8 @@
 
 #include "utils/log.h"
 
-Subentity::Subentity(std::weak_ptr<Transform> trans, std::weak_ptr<MovableEntity> movable) :
-    trans_(trans),
-    movable_(movable) {
+Subentity::Subentity(std::weak_ptr<ComponentStore> components) :
+    Component(components) {
 }
 
 void Subentity::addEntity(std::shared_ptr<BaseEntity> entity) {
@@ -24,8 +23,8 @@ void Subentity::update() {
 
 void Subentity::set_position() {
     if (auto entity = entity_.lock()) {
-        auto ent_trans = entity->trans_;
-        auto ent_move = entity->movableEntity_;
+        auto ent_trans = entity->components_->transform;
+        auto ent_move = entity->components_->movableEntity;
 
         if (ent_trans && ent_move) {
             auto trans = trans_.lock();
@@ -40,7 +39,15 @@ void Subentity::set_position() {
     }
 }
 
-void Subentity::reloadFromJson(nlohmann::json) {
+std::shared_ptr<Subentity> Subentity::createFromJson(nlohmann::json j, std::weak_ptr<ComponentStore> components, File file_instance) {
+    auto ret_ptr = std::make_shared<Subentity>(components);
+
+    ret_ptr->reloadFromJson(j, file_instance);
+
+    return ret_ptr;
+}
+
+void Subentity::reloadFromJson(nlohmann::json /* j */, File /* file_instance */) {
 }
 
 std::optional<nlohmann::json> Subentity::outputToJson() {

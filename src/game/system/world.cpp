@@ -37,12 +37,12 @@ void World::update() {
               ) {
         (*it)->update();
 
-        if ((*it)->death_ && (*it)->death_->isDead()) {
-            if (auto death_entity_json = (*it)->death_->getDeathEntityJson()) {
+        if ((*it)->components_->death && (*it)->components_->death->isDead()) {
+            if (auto death_entity_json = (*it)->components_->death->getDeathEntityJson()) {
                 auto death_entity = BaseEntity::createFromJson(death_entity_json.value());
 
-                if ((*it)->trans_ && death_entity->trans_) {
-                    death_entity->trans_->setPosition((*it)->trans_->getPosition());
+                if ((*it)->components_->transform && death_entity->components_->transform) {
+                    death_entity->components_->transform->setPosition((*it)->components_->transform->getPosition());
                 }
 
                 addEntity(death_entity);
@@ -53,8 +53,8 @@ void World::update() {
         }
     }
 
-    if (player_->damageable_) {
-        player_health_->setText(std::to_string(player_->damageable_->getHealth()));
+    if (player_->components_->damageable) {
+        player_health_->setText(std::to_string(player_->components_->damageable->getHealth()));
     }
 
     // Do not load a new room if cutscene is playing
@@ -71,7 +71,7 @@ void World::update() {
 }
 
 util::Point World::getPlayerPosition() {
-    return player_->trans_->getPosition();
+    return player_->components_->transform->getPosition();
 }
 
 void World::clearWorld() {
@@ -156,10 +156,10 @@ void World::loadWorldFromJson(nlohmann::json j) {
     }
 
     // Health HUD
-    player_health_position_ = std::make_shared<Transform>();
+    player_health_position_ = std::make_shared<Transform>(std::weak_ptr<ComponentStore>());
     player_health_position_->setPosition(50, 50);
 
-    player_health_ = std::make_shared<RenderableText>(player_health_position_);
+    player_health_ = std::make_shared<RenderableText>(std::weak_ptr<ComponentStore>());
     player_health_->setColor(sf::Color::Green);
     player_health_->setLayer(INT_MAX);
 
@@ -186,7 +186,7 @@ nlohmann::json World::saveWorldToJson() {
     for (auto it : world_objects_) {
         if (auto object = it->outputToJson()) {
             // Do not store if HUD object
-            if (!(it->renderableEntity_) || (it->renderableEntity_->getLayer() != INT_MAX)) {
+            if (!(it->components_->renderableEntity) || (it->components_->renderableEntity->getLayer() != INT_MAX)) {
                 json_object_list.push_back(*object);
             }
         }
@@ -229,12 +229,12 @@ nlohmann::json World::saveWorldToJson() {
 void World::addEntity(std::shared_ptr<BaseEntity> entity) {
     world_objects_.push_back(entity);
 
-    auto coll = entity->collision_;
+    auto coll = entity->components_->collision;
     if (coll && coll->getCollideable()) {
         addCollideable(coll->getCollideable());
     }
 
-    if (auto render = entity->renderableEntity_) {
+    if (auto render = entity->components_->renderableEntity) {
         System::getRender()->addEntity(render);
     }
 }
@@ -251,13 +251,13 @@ void World::removeEntity(std::shared_ptr<BaseEntity> entity) {
 }
 
 void World::addPlayer(std::shared_ptr<Player> player) {
-    auto coll = player->collision_;
+    auto coll = player->components_->collision;
 
     if (coll && coll->getCollideable()) {
         addCollideable(coll->getCollideable());
     }
 
-    System::getRender()->setPlayer(player_->renderableEntity_);
+    System::getRender()->setPlayer(player_->components_->renderableEntity);
 }
 
 void World::loadRoom(std::string room_name, int entrance_id) {
@@ -268,10 +268,10 @@ void World::loadRoom(std::string room_name, int entrance_id) {
 
 void World::setShiftedPlayerPosition(Collideable::CollisionType ctype) {
     auto world_colls = World::getInstance<World::IWorldRead>().getCollideables(ctype);
-    auto p_trans = player_->trans_;
+    auto p_trans = player_->components_->transform;
 
     for (auto it = world_colls.begin(); it != world_colls.end(); ++it) {
-        if (player_->collision_->collides(*it)) {
+        if (player_->components_->collision->collides(*it)) {
             // If this entrance would put the player inside an object
             // move player to spawn on top of object
             auto other_coll = it->lock();
@@ -279,7 +279,7 @@ void World::setShiftedPlayerPosition(Collideable::CollisionType ctype) {
             auto other_trans = other_coll->getTransform().lock();
 
             auto new_y_pos = other_trans->getY() - (other_hbox->height_ / 2) -
-                player_->collision_->getCollideable()->getHitbox()->height_ / 2;
+                player_->components_->collision->getCollideable()->getHitbox()->height_ / 2;
 
             p_trans->setPosition(p_trans->getX(), new_y_pos);
         }
@@ -288,7 +288,7 @@ void World::setShiftedPlayerPosition(Collideable::CollisionType ctype) {
 
 void World::setEntrance(int entrance_id) {
     if (entrance_id < static_cast<int>(entrances_.size())) {
-        auto p_trans = player_->trans_;
+        auto p_trans = player_->components_->transform;
         p_trans->setPosition(entrances_.at(entrance_id));
 
         // This is to avoid spawning inside objects

@@ -35,9 +35,8 @@ const std::map<std::string, Collideable::CollisionType> string_type_map {
 
 } // namespace
 
-Collision::Collision(std::weak_ptr<Transform> trans, std::weak_ptr<Actions> actions) :
-    trans_(trans),
-    actions_(actions) {
+Collision::Collision(std::weak_ptr<ComponentStore> components) :
+    Component(components) {
 
     collideable_ = std::make_shared<CollideableStatic>(trans_);
 }
@@ -50,15 +49,15 @@ void Collision::update() {
     collideable_->update();
 }
 
-std::shared_ptr<Collision> Collision::createFromJson(nlohmann::json j, std::weak_ptr<Transform> trans, std::weak_ptr<Actions> actions) {
-    auto collision = std::make_shared<Collision>(trans, actions);
+std::shared_ptr<Collision> Collision::createFromJson(nlohmann::json j, std::weak_ptr<ComponentStore> components, File /* file_instance */) {
+    auto collision = std::make_shared<Collision>(components);
 
     collision->setCollideable(j);
 
     return collision;
 }
 
-void Collision::reloadFromJson(nlohmann::json j) {
+void Collision::reloadFromJson(nlohmann::json j, File /* file_instance */) {
     collideable_->reloadFromJson(j);
 }
 

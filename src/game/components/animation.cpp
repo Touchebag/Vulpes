@@ -5,8 +5,16 @@
 #include "utils/file.h"
 #include "utils/common.h"
 
-AnimatedEntity::AnimatedEntity(std::weak_ptr<RenderableEntity> renderableEntity) :
-    renderableEntity_(renderableEntity) {
+AnimatedEntity::AnimatedEntity(std::weak_ptr<ComponentStore> components) :
+    Component(components) {
+}
+
+std::shared_ptr<AnimatedEntity> AnimatedEntity::createFromJson(nlohmann::json j, std::weak_ptr<ComponentStore> components, File file_instance) {
+    auto ret_ptr = std::make_shared<AnimatedEntity>(components);
+
+    ret_ptr->reloadFromJson(j, file_instance);
+
+    return ret_ptr;
 }
 
 std::unordered_map<std::string, util::Rectangle> AnimatedEntity::loadSpriteMap(File file_instance) {
@@ -105,10 +113,6 @@ AnimatedEntity::AnimationFrameData AnimatedEntity::getFrameData() {
         LOGE("Could not find sprite map entry");
         throw e;
     }
-}
-
-void AnimatedEntity::reloadFromJson(nlohmann::json j) {
-    reloadFromJson(j, File());
 }
 
 void AnimatedEntity::reloadFromJson(nlohmann::json j, File file_instance) {
