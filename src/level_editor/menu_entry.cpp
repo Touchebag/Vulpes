@@ -9,15 +9,15 @@ namespace {
 std::shared_ptr<BaseEntity> createTextEntity (std::string text_string, util::Point pos, sf::Color color) {
     std::shared_ptr<BaseEntity> text_entity = std::make_shared<BaseEntity>();
 
-    std::shared_ptr<Transform> trans = std::make_shared<Transform>();
+    std::shared_ptr<Transform> trans = std::make_shared<Transform>(text_entity->components_);
     trans->setPosition(pos.x, pos.y);
 
-    std::shared_ptr<RenderableText> text = std::make_shared<RenderableText>(trans);
+    std::shared_ptr<RenderableText> text = std::make_shared<RenderableText>(text_entity->components_);
     text->setColor(color);
     text->setText(text_string);
 
-    text_entity->trans_ = trans;
-    text_entity->renderableEntity_ = text;
+    text_entity->setComponent<Transform>(trans);
+    text_entity->setComponent<RenderableEntity>(text);
 
     return text_entity;
 }
@@ -71,8 +71,8 @@ std::vector<std::shared_ptr<BaseEntity>> MenuEntry::draw() {
     auto title = createTextEntity(text_, {100, 100}, color_);
 
     menu_text_.push_back(title);
-    title->renderableEntity_->setLayer(INT_MAX);
-    System::getRender()->addEntity(title->renderableEntity_);
+    title->getComponent<RenderableEntity>()->setLayer(INT_MAX);
+    System::getRender()->addEntity(title->getComponent<RenderableEntity>());
 
     int i = 0;
     for (auto& it : entries_) {
@@ -85,8 +85,8 @@ std::vector<std::shared_ptr<BaseEntity>> MenuEntry::draw() {
             auto text_element = createTextEntity(entry_text, position, it->getColor());
 
             menu_text_.push_back(text_element);
-            text_element->renderableEntity_->setLayer(INT_MAX);
-            System::getRender()->addEntity(text_element->renderableEntity_);
+            text_element->getComponent<RenderableEntity>()->setLayer(INT_MAX);
+            System::getRender()->addEntity(text_element->getComponent<RenderableEntity>());
             ++i;
         }
     }

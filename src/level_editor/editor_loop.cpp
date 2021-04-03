@@ -25,8 +25,8 @@ int level_editor_main(sf::RenderWindow& window) {
     }
 
     if (auto player = World::IWorldRead::getPlayer().lock()) {
-        editor_env->view_pos_x = static_cast<float>(player->trans_->getX());
-        editor_env->view_pos_y = static_cast<float>(player->trans_->getY());
+        editor_env->view_pos_x = static_cast<float>(player->getComponent<Transform>()->getX());
+        editor_env->view_pos_y = static_cast<float>(player->getComponent<Transform>()->getY());
     }
 
     while (window.isOpen()) {
@@ -235,10 +235,10 @@ int level_editor_main(sf::RenderWindow& window) {
         texture.setView(viewport);
 
         // Print current layer
-        std::static_pointer_cast<RenderableText>(editor_env->editor_entities[EditorEnvironment::EditorEntities::LAYER_HUD_TEXT]->renderableEntity_)->setText(std::to_string(editor_env->current_layer));
+        std::static_pointer_cast<RenderableText>(editor_env->editor_entities[EditorEnvironment::EditorEntities::LAYER_HUD_TEXT]->getComponent<RenderableEntity>())->setText(std::to_string(editor_env->current_layer));
 
         {
-            std::static_pointer_cast<RenderableText>(editor_env->editor_entities[EditorEnvironment::EditorEntities::MOUSE_HUD_TEXT]->renderableEntity_)->setText(
+            std::static_pointer_cast<RenderableText>(editor_env->editor_entities[EditorEnvironment::EditorEntities::MOUSE_HUD_TEXT]->getComponent<RenderableEntity>())->setText(
                     std::string("Mouse X: ") + std::to_string(static_cast<int>(mouse_world_pos.first)) +
                     "\nMouse Y: " + std::to_string(static_cast<int>(mouse_world_pos.second)));
         }
@@ -246,18 +246,18 @@ int level_editor_main(sf::RenderWindow& window) {
         auto current_entity_hud_text = editor_env->editor_entities[EditorEnvironment::EditorEntities::CURRENT_ENTITY_HUD_TEXT];
 
         if (editor_env->current_entity) {
-            auto transform = editor_env->current_entity->trans_;
-            auto coll = editor_env->current_entity->collision_;
+            auto transform = editor_env->current_entity->getComponent<Transform>();
+            auto coll = editor_env->current_entity->getComponent<Collision>();
 
             if (transform && coll) {
-                std::static_pointer_cast<RenderableText>(current_entity_hud_text->renderableEntity_)
+                std::static_pointer_cast<RenderableText>(current_entity_hud_text->getComponent<RenderableEntity>())
                     ->setText(std::string("X:") + std::to_string(transform->getX()) +
                               " Y: " + std::to_string(transform->getY()) +
                               "\nW:" + std::to_string(coll->getCollideable()->getHitbox()->width_) +
                               " H: " + std::to_string(coll->getCollideable()->getHitbox()->height_));
             }
         } else {
-            std::static_pointer_cast<RenderableText>(current_entity_hud_text->renderableEntity_)
+            std::static_pointer_cast<RenderableText>(current_entity_hud_text->getComponent<RenderableEntity>())
                 ->setText("");
         }
 

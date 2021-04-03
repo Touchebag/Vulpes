@@ -62,13 +62,13 @@ TEST_F(DeathTestFixture, TestHealthDeath) {
     entity_->update();
 
     // Entity should not be dead
-    EXPECT_FALSE(entity_->death_->isDead());
+    EXPECT_FALSE(entity_->getComponent<Death>()->isDead());
 
-    attack_->trans_->setPosition(100, 100);
+    attack_->getComponent<Transform>()->setPosition(100, 100);
 
     entity_->update();
     entity_->update();
 
     // Now overlapping, should take 2 damage
-    EXPECT_TRUE(entity_->death_->isDead());
+    EXPECT_TRUE(entity_->getComponent<Death>()->isDead());
 }

@@ -3,10 +3,17 @@
 #include "system/system.h"
 
 TextInput::TextInput() {
-    text_position_->setPosition(50, 300);
-    text_renderable_->setColor(sf::Color::Green);
-    text_renderable_->setLayer(INT_MAX);
-    System::getRender()->addEntity(text_renderable_);
+    std::shared_ptr<Transform> text_position = std::make_shared<Transform>(components_);
+    std::shared_ptr<RenderableText> text_renderable = std::make_shared<RenderableText>(components_);
+
+    text_position->setPosition(50, 300);
+    text_renderable->setColor(sf::Color::Green);
+    text_renderable->setLayer(INT_MAX);
+
+    components_->setComponent<Transform>(text_position);
+    components_->setComponent<RenderableEntity>(text_renderable);
+
+    System::getRender()->addEntity(text_renderable);
 }
 
 void TextInput::enterText(const std::string& text) {
@@ -16,7 +23,9 @@ void TextInput::enterText(const std::string& text) {
         text_ += text;
     }
 
-    text_renderable_->setText(text_);
+    if (auto renderable_text = std::dynamic_pointer_cast<RenderableText>(components_->getComponent<RenderableEntity>())) {
+        renderable_text->setText(text_);
+    }
 }
 
 std::string TextInput::getString() {

@@ -112,9 +112,9 @@ TEST_F(CommandTestFixture, ResizeObject) {
 
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
     editor_env->command->add(entity);
-    entity->trans_->setPosition(0, 0);
-    entity->collision_ = std::make_shared<Collision>(entity->trans_, entity->actions_);
-    entity->collision_->getCollideable()->setHitbox(50, 50);
+    entity->getComponent<Transform>()->setPosition(0, 0);
+    entity->setComponent<Collision>(std::make_shared<Collision>(entity->components_));
+    entity->getComponent<Collision>()->getCollideable()->setHitbox(50, 50);
 
     editor_env->mouse->saveMousePosition();
 
@@ -129,8 +129,8 @@ TEST_F(CommandTestFixture, ResizeObject) {
 
     window_.close();
 
-    ASSERT_EQ(entity->collision_->getCollideable()->getHitbox()->width_, 70);
-    ASSERT_EQ(entity->collision_->getCollideable()->getHitbox()->height_, 68);
+    ASSERT_EQ(entity->getComponent<Collision>()->getCollideable()->getHitbox()->width_, 70);
+    ASSERT_EQ(entity->getComponent<Collision>()->getCollideable()->getHitbox()->height_, 68);
 }
 
 TEST_F(CommandTestFixture, MoveObject) {
@@ -154,8 +154,8 @@ TEST_F(CommandTestFixture, MoveObject) {
 
     window_.close();
 
-    ASSERT_EQ(entity->trans_->getX(), 5);
-    ASSERT_EQ(entity->trans_->getY(), 17);
+    ASSERT_EQ(entity->getComponent<Transform>()->getX(), 5);
+    ASSERT_EQ(entity->getComponent<Transform>()->getY(), 17);
 }
 
 TEST_F(CommandTestFixture, ToggleRenderable) {
@@ -165,22 +165,22 @@ TEST_F(CommandTestFixture, ToggleRenderable) {
     editor_env->command->add(entity);
 
     assertCorrectNumberOfEntities(1);
-    ASSERT_TRUE(entity->renderableEntity_);
+    ASSERT_TRUE(entity->getComponent<RenderableEntity>());
 
     editor_env->current_entity = entity;
     editor_env->command->handleCommand(Command::Commands::TOGGLE_RENDERABLE);
 
-    ASSERT_FALSE(entity->renderableEntity_);
+    ASSERT_FALSE(entity->getComponent<RenderableEntity>());
 
     editor_env->command->handleCommand(Command::Commands::TOGGLE_RENDERABLE);
-    ASSERT_TRUE(entity->renderableEntity_);
+    ASSERT_TRUE(entity->getComponent<RenderableEntity>());
 }
 
 TEST_F(CommandTestFixture, ToggleCollision) {
     assertWorldEmpty();
 
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    entity->collision_ = std::make_shared<Collision>(entity->trans_, entity->actions_);
+    entity->setComponent<Collision>(std::make_shared<Collision>(entity->components_));
     editor_env->command->add(entity);
 
     assertCorrectNumberOfEntities(1);
@@ -188,17 +188,17 @@ TEST_F(CommandTestFixture, ToggleCollision) {
     editor_env->current_entity = entity;
     editor_env->command->handleCommand(Command::Commands::TOGGLE_COLLISION);
 
-    ASSERT_FALSE(entity->collision_);
+    ASSERT_FALSE(entity->getComponent<Collision>());
 
     editor_env->command->handleCommand(Command::Commands::TOGGLE_COLLISION);
-    ASSERT_TRUE(entity->collision_);
+    ASSERT_TRUE(entity->getComponent<Collision>());
 }
 
 TEST_F(CommandTestFixture, ToggleMovable) {
     assertWorldEmpty();
 
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    entity->movableEntity_ = std::make_shared<MovableEntity>(entity->trans_, entity->collision_);
+    entity->setComponent<MovableEntity>(std::make_shared<MovableEntity>(entity->components_));
     editor_env->command->add(entity);
 
     assertCorrectNumberOfEntities(1);
@@ -206,21 +206,17 @@ TEST_F(CommandTestFixture, ToggleMovable) {
     editor_env->current_entity = entity;
     editor_env->command->handleCommand(Command::Commands::TOGGLE_MOVABLE);
 
-    ASSERT_FALSE(entity->movableEntity_);
+    ASSERT_FALSE(entity->getComponent<MovableEntity>());
 
     editor_env->command->handleCommand(Command::Commands::TOGGLE_MOVABLE);
-    ASSERT_TRUE(entity->movableEntity_);
+    ASSERT_TRUE(entity->getComponent<MovableEntity>());
 }
 
 TEST_F(CommandTestFixture, TogglePhysics) {
     assertWorldEmpty();
 
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    entity->physics_ = std::make_shared<Physics>(
-                           entity->statefulEntity_,
-                           entity->movableEntity_,
-                           entity->animatedEntity_,
-                           entity->actions_);
+    entity->setComponent<Physics>(std::make_shared<Physics>(entity->components_));
     editor_env->command->add(entity);
 
     assertCorrectNumberOfEntities(1);
@@ -228,17 +224,17 @@ TEST_F(CommandTestFixture, TogglePhysics) {
     editor_env->current_entity = entity;
     editor_env->command->handleCommand(Command::Commands::TOGGLE_PHYSICS);
 
-    ASSERT_FALSE(entity->physics_);
+    ASSERT_FALSE(entity->getComponent<Physics>());
 
     editor_env->command->handleCommand(Command::Commands::TOGGLE_PHYSICS);
-    ASSERT_TRUE(entity->physics_);
+    ASSERT_TRUE(entity->getComponent<Physics>());
 }
 
 TEST_F(CommandTestFixture, ToggleActions) {
     assertWorldEmpty();
 
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    entity->actions_ = std::make_shared<Actions>(entity->death_);
+    entity->setComponent<Actions>(std::make_shared<Actions>(entity->components_));
     editor_env->command->add(entity);
 
     assertCorrectNumberOfEntities(1);
@@ -246,10 +242,10 @@ TEST_F(CommandTestFixture, ToggleActions) {
     editor_env->current_entity = entity;
     editor_env->command->handleCommand(Command::Commands::TOGGLE_ACTIONS);
 
-    ASSERT_FALSE(entity->actions_);
+    ASSERT_FALSE(entity->getComponent<Actions>());
 
     editor_env->command->handleCommand(Command::Commands::TOGGLE_ACTIONS);
-    ASSERT_TRUE(entity->actions_);
+    ASSERT_TRUE(entity->getComponent<Actions>());
 }
 
 TEST_F(CommandTestFixture, ToggleTiling) {
@@ -260,10 +256,10 @@ TEST_F(CommandTestFixture, ToggleTiling) {
 
     assertCorrectNumberOfEntities(1);
 
-    entity->renderableEntity_ = std::make_shared<RenderableEntity>(entity->trans_, entity->movableEntity_);
+    entity->setComponent<RenderableEntity>(std::make_shared<RenderableEntity>(entity->components_));
 
-    ASSERT_EQ(0, entity->renderableEntity_->tiling_x_);
-    ASSERT_EQ(0, entity->renderableEntity_->tiling_y_);
+    ASSERT_EQ(0, entity->getComponent<RenderableEntity>()->tiling_x_);
+    ASSERT_EQ(0, entity->getComponent<RenderableEntity>()->tiling_y_);
 
     editor_env->current_entity = entity;
 
@@ -271,15 +267,15 @@ TEST_F(CommandTestFixture, ToggleTiling) {
     editor_env->command->text_input_->enterText("1");
     editor_env->command->stopCommand();
 
-    ASSERT_EQ(1, entity->renderableEntity_->tiling_x_);
-    ASSERT_EQ(0, entity->renderableEntity_->tiling_y_);
+    ASSERT_EQ(1, entity->getComponent<RenderableEntity>()->tiling_x_);
+    ASSERT_EQ(0, entity->getComponent<RenderableEntity>()->tiling_y_);
 
     editor_env->command->handleCommand(Command::Commands::RENDERABLE_TILING_Y);
     editor_env->command->text_input_->enterText("2");
     editor_env->command->stopCommand();
 
-    ASSERT_EQ(1, entity->renderableEntity_->tiling_x_);
-    ASSERT_EQ(2, entity->renderableEntity_->tiling_y_);
+    ASSERT_EQ(1, entity->getComponent<RenderableEntity>()->tiling_x_);
+    ASSERT_EQ(2, entity->getComponent<RenderableEntity>()->tiling_y_);
 }
 
 TEST_F(CommandTestFixture, ChangeTexture) {

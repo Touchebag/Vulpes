@@ -6,7 +6,7 @@ void Operation::undo() {
     if (entity_) {
         if (!before_) {
             // If entity did not exist before, delete it
-            entity_->renderableEntity_.reset();
+            entity_->setComponent<RenderableEntity>({});
             World::getInstance<World::IWorldModify>().removeEntity(entity_);
         } else if (!after_) {
             // If entity does not exist after, add it
@@ -14,7 +14,7 @@ void Operation::undo() {
             World::getInstance<World::IWorldModify>().addEntity(entity_);
         } else {
             entity_->reloadFromJson(before_.value());
-            System::getRender()->addEntity(entity_->renderableEntity_);
+            System::getRender()->addEntity(entity_->getComponent<RenderableEntity>());
         }
     }
 }
@@ -23,7 +23,7 @@ void Operation::redo() {
     if (entity_) {
         if (!after_) {
             // If entity does not exist after it was removed
-            entity_->renderableEntity_.reset();
+            entity_->setComponent<RenderableEntity>({});
             World::getInstance<World::IWorldModify>().removeEntity(entity_);
         } else if (!before_) {
             // If entity did not exist before it was added
@@ -31,7 +31,7 @@ void Operation::redo() {
             World::getInstance<World::IWorldModify>().addEntity(entity_);
         } else {
             entity_->reloadFromJson(after_.value());
-            System::getRender()->addEntity(entity_->renderableEntity_);
+            System::getRender()->addEntity(entity_->getComponent<RenderableEntity>());
         }
     }
 }

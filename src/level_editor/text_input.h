@@ -15,6 +15,5 @@ class TextInput {
   private:
     std::string text_;
 
-    std::shared_ptr<Transform> text_position_ = std::make_shared<Transform>();
-    std::shared_ptr<RenderableText> text_renderable_ = std::make_shared<RenderableText>(text_position_);
+    std::shared_ptr<ComponentStore> components_ = std::make_shared<ComponentStore>();
 };

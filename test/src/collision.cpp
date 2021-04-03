@@ -36,9 +36,9 @@ class DynamicCollisionTestFixture : public ::testing::Test {
 TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionNoCollision) {
     World::getInstance<World::IWorldModify>().addEntity(entity_);
 
-    entity_->movableEntity_->move(10, 0);
-    auto pos_x = entity_->trans_->getX();
-    auto pos_y = entity_->trans_->getY();
+    entity_->getComponent<MovableEntity>()->move(10, 0);
+    auto pos_x = entity_->getComponent<Transform>()->getX();
+    auto pos_y = entity_->getComponent<Transform>()->getY();
 
     EXPECT_EQ(110, pos_x);
     EXPECT_EQ(100, pos_y);
@@ -47,9 +47,9 @@ TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionNoCollision) {
 TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionCollision) {
     World::getInstance<World::IWorldModify>().addEntity(entity_);
 
-    entity_->movableEntity_->move(60, 0);
-    auto pos_x = entity_->trans_->getX();
-    auto pos_y = entity_->trans_->getY();
+    entity_->getComponent<MovableEntity>()->move(60, 0);
+    auto pos_x = entity_->getComponent<Transform>()->getX();
+    auto pos_y = entity_->getComponent<Transform>()->getY();
 
     EXPECT_EQ(150, pos_x);
     EXPECT_EQ(100, pos_y);
@@ -58,9 +58,9 @@ TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionCollision) {
 TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionNegativeCollision) {
     World::getInstance<World::IWorldModify>().addEntity(entity_);
 
-    entity_->movableEntity_->move(0, -70);
-    auto pos_x = entity_->trans_->getX();
-    auto pos_y = entity_->trans_->getY();
+    entity_->getComponent<MovableEntity>()->move(0, -70);
+    auto pos_x = entity_->getComponent<Transform>()->getX();
+    auto pos_y = entity_->getComponent<Transform>()->getY();
 
     EXPECT_EQ(100, pos_x);
     EXPECT_EQ(50, pos_y);
@@ -69,9 +69,9 @@ TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionNegativeCollision) {
 TEST_F(DynamicCollisionTestFixture, MoveMultipleDirectionCollisionInOne) {
     World::getInstance<World::IWorldModify>().addEntity(entity_);
 
-    entity_->movableEntity_->move(80, 20);
-    auto pos_x = entity_->trans_->getX();
-    auto pos_y = entity_->trans_->getY();
+    entity_->getComponent<MovableEntity>()->move(80, 20);
+    auto pos_x = entity_->getComponent<Transform>()->getX();
+    auto pos_y = entity_->getComponent<Transform>()->getY();
 
     EXPECT_EQ(150, pos_x);
     EXPECT_EQ(120, pos_y);
@@ -81,38 +81,38 @@ TEST_F(DynamicCollisionTestFixture, CollisionSemiSolidAllDirections) {
     World::getInstance<World::IWorldModify>().addEntity(entity_);
 
     // From below, should not be stopped
-    entity_->trans_->setPosition(500, 200);
+    entity_->getComponent<Transform>()->setPosition(500, 200);
 
-    entity_->movableEntity_->move(0, -100);
-    auto pos_x = entity_->trans_->getX();
-    auto pos_y = entity_->trans_->getY();
+    entity_->getComponent<MovableEntity>()->move(0, -100);
+    auto pos_x = entity_->getComponent<Transform>()->getX();
+    auto pos_y = entity_->getComponent<Transform>()->getY();
 
     EXPECT_EQ(500, pos_x);
     EXPECT_EQ(100, pos_y);
 
     // From above, should be stopped
-    entity_->trans_->setPosition(500, 0);
+    entity_->getComponent<Transform>()->setPosition(500, 0);
 
-    entity_->movableEntity_->move(0, 100);
-    pos_x = entity_->trans_->getX();
-    pos_y = entity_->trans_->getY();
+    entity_->getComponent<MovableEntity>()->move(0, 100);
+    pos_x = entity_->getComponent<Transform>()->getX();
+    pos_y = entity_->getComponent<Transform>()->getY();
 
     EXPECT_EQ(500, pos_x);
     EXPECT_EQ(50, pos_y);
 
     // Left/right, should not be stopped
-    entity_->trans_->setPosition(400, 100);
+    entity_->getComponent<Transform>()->setPosition(400, 100);
 
-    entity_->movableEntity_->move(200, 0);
-    pos_x = entity_->trans_->getX();
-    pos_y = entity_->trans_->getY();
+    entity_->getComponent<MovableEntity>()->move(200, 0);
+    pos_x = entity_->getComponent<Transform>()->getX();
+    pos_y = entity_->getComponent<Transform>()->getY();
 
     EXPECT_EQ(600, pos_x);
     EXPECT_EQ(100, pos_y);
 
-    entity_->movableEntity_->move(-200, 0);
-    pos_x = entity_->trans_->getX();
-    pos_y = entity_->trans_->getY();
+    entity_->getComponent<MovableEntity>()->move(-200, 0);
+    pos_x = entity_->getComponent<Transform>()->getX();
+    pos_y = entity_->getComponent<Transform>()->getY();
 
     EXPECT_EQ(400, pos_x);
     EXPECT_EQ(100, pos_y);
@@ -154,9 +154,9 @@ TEST_F(DynamicCollisionTestFixture, MoveDiagonalStuckOnCorner) {
     entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
     World::IWorldModify::addEntity(entity);
 
-    entity->movableEntity_->move(10, 10);
-    auto pos_x = entity->trans_->getX();
-    auto pos_y = entity->trans_->getY();
+    entity->getComponent<MovableEntity>()->move(10, 10);
+    auto pos_x = entity->getComponent<Transform>()->getX();
+    auto pos_y = entity->getComponent<Transform>()->getY();
 
     // Should continue moving on top of object instead of getting stuck in corner
     EXPECT_EQ(10, pos_x);
@@ -199,9 +199,9 @@ TEST_F(DynamicCollisionTestFixture, TunnelingOneDirection) {
     entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
     World::IWorldModify::addEntity(entity);
 
-    entity->movableEntity_->move(30, 0);
-    auto pos_x = entity->trans_->getX();
-    auto pos_y = entity->trans_->getY();
+    entity->getComponent<MovableEntity>()->move(30, 0);
+    auto pos_x = entity->getComponent<Transform>()->getX();
+    auto pos_y = entity->getComponent<Transform>()->getY();
 
     // Should not tunnel through but get stuck in corner
     EXPECT_EQ(5, pos_x);
@@ -261,9 +261,9 @@ TEST_F(DynamicCollisionTestFixture, TunnelingStuckInCorner) {
     entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
     World::IWorldModify::addEntity(entity);
 
-    entity->movableEntity_->move(30, 35);
-    auto pos_x = entity->trans_->getX();
-    auto pos_y = entity->trans_->getY();
+    entity->getComponent<MovableEntity>()->move(30, 35);
+    auto pos_x = entity->getComponent<Transform>()->getX();
+    auto pos_y = entity->getComponent<Transform>()->getY();
 
     // Should not tunnel through but get stuck in corner
     EXPECT_EQ(5, pos_x);
@@ -306,9 +306,9 @@ TEST_F(DynamicCollisionTestFixture, TunnelingOnlyXSlideDown) {
     entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
     World::IWorldModify::addEntity(entity);
 
-    entity->movableEntity_->move(30, 35);
-    auto pos_x = entity->trans_->getX();
-    auto pos_y = entity->trans_->getY();
+    entity->getComponent<MovableEntity>()->move(30, 35);
+    auto pos_x = entity->getComponent<Transform>()->getX();
+    auto pos_y = entity->getComponent<Transform>()->getY();
 
     // Should not tunnel through X but get slide in Y direction
     EXPECT_EQ(5, pos_x);
@@ -351,9 +351,9 @@ TEST_F(DynamicCollisionTestFixture, GrazeAgainstCornerButNoCollision) {
     entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
     World::IWorldModify::addEntity(entity);
 
-    entity->movableEntity_->move(40, 40);
-    auto pos_x = entity->trans_->getX();
-    auto pos_y = entity->trans_->getY();
+    entity->getComponent<MovableEntity>()->move(40, 40);
+    auto pos_x = entity->getComponent<Transform>()->getX();
+    auto pos_y = entity->getComponent<Transform>()->getY();
 
     // Should touch corner of box but not be blocked
     EXPECT_EQ(40, pos_x);

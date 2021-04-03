@@ -107,7 +107,7 @@ TEST_F(HistoryTestFixture, ResizeObject) {
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
     MockMouse::setMouseWorldPosition({0, 0});
-    entity->trans_->setPosition(0, 0);
+    entity->getComponent<Transform>()->setPosition(0, 0);
     editor_env->mouse->saveMousePosition();
 
     editor_env->current_entity = entity;
@@ -136,7 +136,7 @@ TEST_F(HistoryTestFixture, MoveObject) {
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
     MockMouse::setMouseWorldPosition({0, 0});
-    entity->trans_->setPosition(0, 0);
+    entity->getComponent<Transform>()->setPosition(0, 0);
     editor_env->mouse->saveMousePosition();
 
     editor_env->current_entity = entity;
@@ -166,7 +166,7 @@ TEST_F(HistoryTestFixture, MoveObjectOtherLayer) {
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
 
     MockMouse::setMouseWorldPosition({0, 0});
-    entity->trans_->setPosition(0, 0);
+    entity->getComponent<Transform>()->setPosition(0, 0);
     editor_env->mouse->saveMousePosition();
 
     editor_env->current_entity = entity;
@@ -211,7 +211,7 @@ TEST_F(HistoryTestFixture, ToggleRenderable) {
 
 TEST_F(HistoryTestFixture, ToggleCollision) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    entity->collision_ = std::make_shared<Collision>(entity->trans_, entity->actions_);
+    entity->setComponent<Collision>(std::make_shared<Collision>(entity->components_));
     editor_env->command->add(entity);
 
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
@@ -233,7 +233,7 @@ TEST_F(HistoryTestFixture, ToggleCollision) {
 
 TEST_F(HistoryTestFixture, ToggleMovable) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    entity->movableEntity_ = std::make_shared<MovableEntity>(entity->trans_, entity->collision_);
+    entity->setComponent<MovableEntity>(std::make_shared<MovableEntity>(entity->components_));
     editor_env->command->add(entity);
 
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
@@ -255,11 +255,7 @@ TEST_F(HistoryTestFixture, ToggleMovable) {
 
 TEST_F(HistoryTestFixture, TogglePhysics) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    entity->physics_ = std::make_shared<Physics>(
-                           entity->statefulEntity_,
-                           entity->movableEntity_,
-                           entity->animatedEntity_,
-                           entity->actions_);
+    entity->setComponent<Physics>(std::make_shared<Physics>(entity->components_));
     editor_env->command->add(entity);
 
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
@@ -281,7 +277,7 @@ TEST_F(HistoryTestFixture, TogglePhysics) {
 
 TEST_F(HistoryTestFixture, ToggleActions) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    entity->actions_ = std::make_shared<Actions>(entity->death_);
+    entity->setComponent<Actions>(std::make_shared<Actions>(entity->components_));
     editor_env->command->add(entity);
 
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
@@ -303,7 +299,7 @@ TEST_F(HistoryTestFixture, ToggleActions) {
 
 TEST_F(HistoryTestFixture, ToggleTiling) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    entity->renderableEntity_ = std::make_shared<RenderableEntity>(entity->trans_, entity->movableEntity_);
+    entity->setComponent<RenderableEntity>(std::make_shared<RenderableEntity>(entity->components_));
     editor_env->command->add(entity);
 
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
@@ -328,7 +324,7 @@ TEST_F(HistoryTestFixture, ToggleTiling) {
 
 TEST_F(HistoryTestFixture, ChangeSprite) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    entity->renderableEntity_ = std::make_shared<RenderableEntity>(entity->trans_, entity->movableEntity_);
+    entity->setComponent<RenderableEntity>(std::make_shared<RenderableEntity>(entity->components_));
     editor_env->command->add(entity);
 
     auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
