@@ -13,6 +13,9 @@ class Component {
     virtual void reloadFromJson(nlohmann::json, File file_instance = File()) = 0;
     virtual std::optional<nlohmann::json> outputToJson() = 0;
 
+    template <typename T>
+    std::shared_ptr<T> getComponent() const;
+
   protected:
     Component(std::weak_ptr<ComponentStore>);
 

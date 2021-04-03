@@ -20,7 +20,7 @@ std::optional<nlohmann::json> DamageablePlayer::outputToJson() {
 void DamageablePlayer::update() {
     Damageable::update();
 
-    if (auto coll = component_store_.lock()->collision) {
+    if (auto coll = getComponent<Collision>()) {
         for (auto& it : World::IWorldRead::getCollideables(Collideable::CollisionType::HEALTH)) {
             if (auto other_coll = it.lock()) {
                 if (coll->collides(other_coll)) {

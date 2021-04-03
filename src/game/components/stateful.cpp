@@ -57,7 +57,7 @@ void StatefulEntity::incomingEvent(state_utils::Event event) {
         auto state_props = ns->getData().state_props;
 
         frame_counter_ = state_props.frame_timer_;
-        if (auto tmp = component_store_.lock()->animatedEntity) {
+        if (auto tmp = getComponent<AnimatedEntity>()) {
             tmp->setFrameList(state_props.animation_name);
         }
 
@@ -65,16 +65,16 @@ void StatefulEntity::incomingEvent(state_utils::Event event) {
             auto entity = std::make_shared<BaseEntity>();
             entity->reloadFromJson(getEntity());
 
-            if (auto subent = component_store_.lock()->subentity) {
+            if (auto subent = getComponent<Subentity>()) {
                 subent->addEntity(entity);
             }
         }
 
-        if (auto actions = component_store_.lock()->actions) {
+        if (auto actions = getComponent<Actions>()) {
             actions->enableAction(Actions::Action::INTERACT, state_props.can_interact);
         }
 
-        if (auto coll = component_store_.lock()->collision) {
+        if (auto coll = getComponent<Collision>()) {
             if (!state_props.collideable.empty()) {
                 coll->addTemporaryCollideable(state_props.collideable);
             } else {

@@ -13,7 +13,14 @@
 #include "components/subentity.h"
 #include "components/death.h"
 
-struct ComponentStore {
+class ComponentStore {
+  public:
+    template <typename T>
+    std::shared_ptr<T> getComponent() const;
+    template <typename T>
+    void setComponent(std::shared_ptr<T> component);
+
+  private:
     // Components
     std::shared_ptr<Transform> transform = nullptr;
     std::shared_ptr<Collision> collision = nullptr;

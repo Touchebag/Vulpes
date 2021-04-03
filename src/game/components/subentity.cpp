@@ -23,12 +23,12 @@ void Subentity::update() {
 
 void Subentity::set_position() {
     if (auto entity = entity_.lock()) {
-        auto ent_trans = entity->components_->transform;
-        auto ent_move = entity->components_->movableEntity;
+        auto ent_trans = entity->getComponent<Transform>();
+        auto ent_move = entity->getComponent<MovableEntity>();
 
         if (ent_trans && ent_move) {
-            auto trans = component_store_.lock()->transform;
-            auto movable = component_store_.lock()->movableEntity;
+            auto trans = getComponent<Transform>();
+            auto movable = getComponent<MovableEntity>();
 
             if (trans && movable) {
                 ent_trans->setPosition(trans->getX() + (ent_trans->getX() * (movable->facing_right_ ? 1 : -1)) ,

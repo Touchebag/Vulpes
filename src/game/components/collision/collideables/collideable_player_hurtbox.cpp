@@ -16,7 +16,7 @@ void CollideablePlayerHurtbox::update() {
             if (collides(other_coll)) {
                 if (auto collectible = std::dynamic_pointer_cast<const CollideableCollectible>(other_coll)) {
                     try {
-                        if (auto actions = components_.lock()->actions) {
+                        if (auto actions = components_.lock()->getComponent<Actions>()) {
                             actions->enableAction(id_actions_map.at(collectible->getId()), true);
                         }
                     } catch (std::out_of_range& e) {

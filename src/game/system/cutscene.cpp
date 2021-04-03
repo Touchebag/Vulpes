@@ -7,20 +7,20 @@ void Cutscene::addPlayer(std::shared_ptr<Player> player) {
 
     temp_player.entity = player;
 
-    temp_player.actions = player->components_->actions;
+    temp_player.actions = player->getComponent<Actions>();
     // TODO Replace with cutscene version
-    player->components_->actions.reset();
+    player->setComponent<Actions>({});
 
-    if (player->components_->movableEntity) {
+    if (player->getComponent<MovableEntity>()) {
         // Reset speed
-        player->components_->movableEntity->move(0.0, 0.0);
+        player->getComponent<MovableEntity>()->move(0.0, 0.0);
     }
 
-    temp_player.state = player->components_->statefulEntity;
-    player->components_->statefulEntity.reset();
+    temp_player.state = player->getComponent<StatefulEntity>();
+    player->setComponent<StatefulEntity>({});
 
-    temp_player.physics = player->components_->physics;
-    player->components_->physics.reset();
+    temp_player.physics = player->getComponent<Physics>();
+    player->setComponent<Physics>({});
 
     player_ = std::make_shared<EntityInformation>(temp_player);
 }

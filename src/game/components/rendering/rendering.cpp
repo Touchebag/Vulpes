@@ -118,7 +118,7 @@ void RenderableEntity::setTextureCoords(int pos_x, int pos_y, int width, int hei
 
     // Mirror sprites facing left
     auto mirror_scale = 1.0;
-    if (auto move = component_store_.lock()->movableEntity) {
+    if (auto move = getComponent<MovableEntity>()) {
         mirror_scale = move->facing_right_ ? 1.0 : -1.0;
     }
 
@@ -170,12 +170,12 @@ void RenderableEntity::render(sf::RenderTarget& target, float frame_fraction) {
     auto vel_x = 0.0;
     auto vel_y = 0.0;
 
-    if (auto move = component_store_.lock()->movableEntity) {
+    if (auto move = getComponent<MovableEntity>()) {
         vel_x = move->getVelX() * frame_fraction;
         vel_y = move->getVelY() * frame_fraction;
     }
 
-    if (auto trans = component_store_.lock()->transform) {
+    if (auto trans = getComponent<Transform>()) {
         sprite_.setPosition(static_cast<float>(trans->getX() + vel_x), static_cast<float>(trans->getY() + vel_y));
         if (shader_) {
             target.draw(sprite_, shader_.get());

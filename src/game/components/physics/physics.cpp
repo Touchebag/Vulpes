@@ -45,9 +45,9 @@ Physics::Physics(std::weak_ptr<ComponentStore> components) :
 
 void Physics::update() {
     // TODO Move somwhere more logical (transform?)
-    auto stateEnt = component_store_.lock()->statefulEntity;
-    auto movable = component_store_.lock()->movableEntity;
-    auto act = component_store_.lock()->actions;
+    auto stateEnt = getComponent<StatefulEntity>();
+    auto movable = getComponent<MovableEntity>();
+    auto act = getComponent<Actions>();
 
     if (stateEnt && movable && act) {
         double x = movable->getVelX();

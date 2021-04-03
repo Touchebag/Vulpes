@@ -18,6 +18,11 @@ class BaseEntity {
     virtual void reloadFromJson(const nlohmann::json& j);
     virtual std::optional<nlohmann::json> outputToJson();
 
+    template <typename T>
+    std::shared_ptr<T> getComponent() const;
+    template <typename T>
+    void setComponent(std::shared_ptr<T> component);
+
     virtual ~BaseEntity() {};
 
     std::shared_ptr<ComponentStore> components_ = std::make_shared<ComponentStore>();

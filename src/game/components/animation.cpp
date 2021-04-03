@@ -171,7 +171,7 @@ void AnimatedEntity::update() {
 }
 
 void AnimatedEntity::setRenderTexture() {
-    if (auto renderable = component_store_.lock()->renderableEntity) {
+    if (auto renderable = getComponent<RenderableEntity>()) {
         auto frame_data = getFrameData();
 
         auto sprite_rect = frame_data.sprite_rectangle;

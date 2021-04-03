@@ -40,7 +40,7 @@ bool Actions::getActionState(Action action, bool first_frame) {
 
 void Actions::addAction(Action action) {
     if (action == Action::DIE) {
-        if (auto death = component_store_.lock()->death) {
+        if (auto death = getComponent<Death>()) {
             death->setDead();
             return;
         } else {

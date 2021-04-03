@@ -199,5 +199,5 @@ const std::shared_ptr<const Hitbox> Collideable::getHitbox() const {
 }
 
 std::weak_ptr<const Transform> Collideable::getTransform() const {
-    return components_.lock()->transform;
+    return components_.lock()->getComponent<Transform>();
 }

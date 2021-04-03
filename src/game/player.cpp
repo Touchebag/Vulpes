@@ -16,8 +16,8 @@ std::shared_ptr<Player> Player::createFromJson(const nlohmann::json& j) {
 void Player::reloadFromJson(const nlohmann::json& j) {
     BaseEntity::reloadFromJson(j);
 
-    if (components_->actions) {
-        Input::getInstance().setActionsInstance(components_->actions);
+    if (getComponent<Actions>()) {
+        Input::getInstance().setActionsInstance(getComponent<Actions>());
     }
 }
 

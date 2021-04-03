@@ -14,7 +14,7 @@ CollideablePlayerDive::CollideablePlayerDive(std::weak_ptr<ComponentStore> compo
 void CollideablePlayerDive::update() {
     for (auto it : World::IWorldRead::getCollideables(Collideable::CollisionType::ENEMY_HITBOX)) {
         if (collides(it)) {
-            if (auto actions = components_.lock()->actions) {
+            if (auto actions = components_.lock()->getComponent<Actions>()) {
                 actions->addAction(Actions::Action::AIR_DIVE_BOUNCE);
             }
         }
