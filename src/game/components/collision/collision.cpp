@@ -38,7 +38,7 @@ const std::map<std::string, Collideable::CollisionType> string_type_map {
 Collision::Collision(std::weak_ptr<ComponentStore> components) :
     Component(components) {
 
-    collideable_ = std::make_shared<CollideableStatic>(trans_);
+    collideable_ = std::make_shared<CollideableStatic>(component_store_);
 }
 
 void Collision::update() {
@@ -90,7 +90,7 @@ std::shared_ptr<Collideable> Collision::getCollideable() const {
 }
 
 void Collision::addTemporaryCollideable(nlohmann::json j) {
-    temp_coll_ = Collideable::createFromJson(j, trans_, actions_);
+    temp_coll_ = Collideable::createFromJson(j, component_store_);
 
     World::IWorldModify::addCollideable(temp_coll_);
 }
@@ -100,7 +100,7 @@ void Collision::clearTemporaryCollideables() {
 }
 
 void Collision::setCollideable(nlohmann::json j) {
-    auto coll = Collideable::createFromJson(j, trans_, actions_);
+    auto coll = Collideable::createFromJson(j, component_store_);
 
     if (coll) {
         collideable_ = coll;

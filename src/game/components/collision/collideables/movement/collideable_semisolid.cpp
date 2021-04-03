@@ -3,8 +3,8 @@
 #include "components/collision/collision_utils.h"
 #include "utils/log.h"
 
-CollideableSemiSolid::CollideableSemiSolid(std::weak_ptr<Transform> trans) :
-    ICollideableMovement(trans) {
+CollideableSemiSolid::CollideableSemiSolid(std::weak_ptr<ComponentStore> components) :
+    ICollideableMovement(components) {
 }
 
 Collideable::CollisionType CollideableSemiSolid::getType() const {
@@ -25,7 +25,7 @@ std::pair<double, double> CollideableSemiSolid::getMaximumMovement(double stepX,
 
     double retX = stepX, retY = stepY;
 
-    if (auto this_trans = trans_.lock()) {
+    if (auto this_trans = getTransform().lock()) {
         auto collision_data = calculateSweptCollision(other_coll, {stepX, stepY});
 
         if (collision_data.collision_time < 0.0 || collision_data.collision_time >= 1.0) {

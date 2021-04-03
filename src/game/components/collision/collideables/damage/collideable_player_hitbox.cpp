@@ -2,8 +2,8 @@
 
 #include "components/collision/attack_attributes.h"
 
-CollideablePlayerHitbox::CollideablePlayerHitbox(std::weak_ptr<Transform> trans) :
-    CollideableDamage(trans) {
+CollideablePlayerHitbox::CollideablePlayerHitbox(std::weak_ptr<ComponentStore> components) :
+    CollideableDamage(components) {
 }
 
 void CollideablePlayerHitbox::reloadFromJson(nlohmann::json j) {

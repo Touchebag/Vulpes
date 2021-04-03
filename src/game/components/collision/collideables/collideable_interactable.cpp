@@ -5,8 +5,8 @@
 
 #include "utils/log.h"
 
-CollideableInteractable::CollideableInteractable(std::weak_ptr<Transform> trans) :
-    Collideable(trans) {
+CollideableInteractable::CollideableInteractable(std::weak_ptr<ComponentStore> components) :
+    Collideable(components) {
 }
 
 void CollideableInteractable::reloadFromJson(nlohmann::json j) {

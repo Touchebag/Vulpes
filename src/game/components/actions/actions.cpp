@@ -5,6 +5,8 @@
 #include "common.h"
 #include "utils/log.h"
 
+#include "components/component_store.h"
+
 Actions::Actions(std::weak_ptr<ComponentStore> components) :
     Component(components) {
     // Enable everything by default
@@ -38,7 +40,7 @@ bool Actions::getActionState(Action action, bool first_frame) {
 
 void Actions::addAction(Action action) {
     if (action == Action::DIE) {
-        if (auto death = death_.lock()) {
+        if (auto death = component_store_.lock()->death) {
             death->setDead();
             return;
         } else {

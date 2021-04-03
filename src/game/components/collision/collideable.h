@@ -25,7 +25,7 @@ class Collideable {
         MAX_NUM
     };
 
-    Collideable(std::weak_ptr<Transform> trans);
+    Collideable(std::weak_ptr<ComponentStore> components);
 
     // Component interface
     virtual void update();
@@ -34,7 +34,7 @@ class Collideable {
     virtual std::optional<nlohmann::json> outputToJson();
 
     // Load derived classes from json
-    static std::shared_ptr<Collideable> createFromJson(nlohmann::json j, std::weak_ptr<Transform> trans, std::weak_ptr<Actions> actions);
+    static std::shared_ptr<Collideable> createFromJson(nlohmann::json j, std::weak_ptr<ComponentStore> components);
 
     // Collision interface
     bool collides(std::weak_ptr<const Collideable> other_entity) const;
@@ -50,7 +50,7 @@ class Collideable {
     virtual CollisionType getType() const = 0;
 
   protected:
-    std::weak_ptr<Transform> trans_;
+    std::weak_ptr<ComponentStore> components_;
 
     std::shared_ptr<Hitbox> hbox_;
 };

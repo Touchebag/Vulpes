@@ -6,9 +6,8 @@
 
 #include "utils/log.h"
 
-CollideablePlayerHurtbox::CollideablePlayerHurtbox(std::weak_ptr<Transform> trans, std::weak_ptr<Actions> actions) :
-    Collideable(trans),
-    actions_(actions) {
+CollideablePlayerHurtbox::CollideablePlayerHurtbox(std::weak_ptr<ComponentStore> components) :
+    Collideable(components) {
 }
 
 void CollideablePlayerHurtbox::update() {
@@ -17,7 +16,7 @@ void CollideablePlayerHurtbox::update() {
             if (collides(other_coll)) {
                 if (auto collectible = std::dynamic_pointer_cast<const CollideableCollectible>(other_coll)) {
                     try {
-                        if (auto actions = actions_.lock()) {
+                        if (auto actions = components_.lock()->actions) {
                             actions->enableAction(id_actions_map.at(collectible->getId()), true);
                         }
                     } catch (std::out_of_range& e) {

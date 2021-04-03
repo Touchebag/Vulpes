@@ -41,7 +41,4 @@ class Collision : public Component {
     std::shared_ptr<Collideable> collideable_;
 
     std::shared_ptr<Collideable> temp_coll_;
-
-    std::weak_ptr<Transform> trans_;
-    std::weak_ptr<Actions> actions_;
 };

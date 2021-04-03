@@ -7,15 +7,14 @@
 
 bool already_added = false;
 
-CollideablePlayerDive::CollideablePlayerDive(std::weak_ptr<Transform> trans, std::weak_ptr<Actions> actions) :
-    CollideableDamage(trans),
-    actions_(actions) {
+CollideablePlayerDive::CollideablePlayerDive(std::weak_ptr<ComponentStore> components) :
+    CollideableDamage(components) {
 }
 
 void CollideablePlayerDive::update() {
     for (auto it : World::IWorldRead::getCollideables(Collideable::CollisionType::ENEMY_HITBOX)) {
         if (collides(it)) {
-            if (auto actions = actions_.lock()) {
+            if (auto actions = components_.lock()->actions) {
                 actions->addAction(Actions::Action::AIR_DIVE_BOUNCE);
             }
         }

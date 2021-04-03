@@ -17,15 +17,15 @@ AI::AI(std::weak_ptr<ComponentStore> components) :
 }
 
 void AI::update() {
-    auto act = actions_.lock();
+    auto act = component_store_.lock()->actions;
 
     frame_timer_++;
 
     if (act) {
         ai::condition::LogicalOperator::aiValues values {
-            transform_,
-            collision_,
-            animated_entitiy_,
+            component_store_.lock()->transform,
+            component_store_.lock()->collision,
+            component_store_.lock()->animatedEntity,
             frame_timer_
         };
 

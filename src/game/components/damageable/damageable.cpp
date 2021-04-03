@@ -5,6 +5,8 @@
 #include "damageable_player.h"
 #include "components/collision/collideables/damage/collideable_damage.h"
 
+#include "components/component_store.h"
+
 namespace {
 
 typedef Collideable::CollisionType Ctype;
@@ -65,13 +67,13 @@ void Damageable::update() {
     if (invincibility_frame_counter_ > 0) {
         // If this is the last frame remove overlay
         if (--invincibility_frame_counter_ == 0) {
-            if (auto render = render_.lock()) {
+            if (auto render = component_store_.lock()->renderableEntity) {
                 render->clearColor();
             }
         }
         return;
     }
-    if (auto collision = hurtbox_.lock()) {
+    if (auto collision = component_store_.lock()->collision) {
         if (auto coll = collision->getCollideable()) {
             auto hurting_type = type_mapping.at(coll->getType());
 
@@ -91,16 +93,16 @@ void Damageable::update() {
                         health_ -= attributes.damage;
                         invincibility_frame_counter_ = attributes.invincibility_frames;
 
-                        if (auto state = state_.lock()) {
+                        if (auto state = component_store_.lock()->statefulEntity) {
                             state->incomingEvent(state_utils::Event::DAMAGED);
 
                             if (invincibility_frame_counter_ > 0) {
-                                if (auto render = render_.lock()) {
+                                if (auto render = component_store_.lock()->renderableEntity) {
                                     render->setColor({255, 255, 255, 128});
                                 }
                             }
 
-                            if (auto move = move_.lock()) {
+                            if (auto move = component_store_.lock()->movableEntity) {
                                 bool should_move_right = knockbackRight(coll, other_coll);
                                 move->move(attributes.knockback_x * (should_move_right ? 1.0 : -1.0),
                                            attributes.knockback_y);
@@ -115,7 +117,7 @@ void Damageable::update() {
     }
 
     if (isDead()) {
-        if (auto death = death_.lock()) {
+        if (auto death = component_store_.lock()->death) {
             death->setDead();
         }
     }

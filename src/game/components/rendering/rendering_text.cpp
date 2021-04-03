@@ -2,6 +2,7 @@
 
 #include "utils/file.h"
 #include "utils/log.h"
+#include "components/component_store.h"
 
 RenderableText::RenderableText(std::weak_ptr<ComponentStore> components) :
     RenderableEntity(components) {
@@ -32,7 +33,7 @@ void RenderableText::setText(const std::string& text) {
 }
 
 void RenderableText::render(sf::RenderTarget& target, float /* frame_fraction */) {
-    if (auto trans = trans_.lock()) {
+    if (auto trans = component_store_.lock()->transform) {
         text_.setPosition(static_cast<float>(trans->getX()), static_cast<float>(trans->getY()));
         target.draw(text_);
     }

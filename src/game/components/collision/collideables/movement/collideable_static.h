@@ -4,7 +4,7 @@
 
 class CollideableStatic : public ICollideableMovement {
   public:
-    CollideableStatic(std::weak_ptr<Transform> trans);
+    CollideableStatic(std::weak_ptr<ComponentStore> components);
 
     CollisionType getType() const override;
 

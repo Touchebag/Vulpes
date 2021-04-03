@@ -74,6 +74,4 @@ class Actions : public Component {
 
     // Buttons currently pressed will be stored in this
     std::unordered_map<Actions::Action, ActionState> current_actions_;
-
-    std::weak_ptr<Death> death_;
 };

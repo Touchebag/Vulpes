@@ -21,8 +21,5 @@ class Subentity : public Component {
   private:
     void set_position();
 
-    std::weak_ptr<Transform> trans_;
-    std::weak_ptr<MovableEntity> movable_;
-
     std::weak_ptr<BaseEntity> entity_;
 };

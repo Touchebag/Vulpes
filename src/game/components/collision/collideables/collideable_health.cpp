@@ -1,7 +1,7 @@
 #include "collideable_health.h"
 
-CollideableHealth::CollideableHealth(std::weak_ptr<Transform> trans) :
-    Collideable(trans) {
+CollideableHealth::CollideableHealth(std::weak_ptr<ComponentStore> components) :
+    Collideable(components) {
 }
 
 void CollideableHealth::reloadFromJson(nlohmann::json j) {

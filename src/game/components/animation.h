@@ -41,8 +41,6 @@ class AnimatedEntity : public Component {
 
     void setRenderTexture();
 
-    std::weak_ptr<RenderableEntity> renderableEntity_;
-
     std::unordered_map<std::string, std::shared_ptr<std::vector<AnimationFrameData>>> sprite_sheet_map_;
 
     std::optional<nlohmann::json> original_frame_list_;

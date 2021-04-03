@@ -108,8 +108,7 @@ class World {
     // Data
     std::shared_ptr<Player> player_;
 
-    std::shared_ptr<RenderableText> player_health_;
-    std::shared_ptr<Transform> player_health_position_;
+    std::shared_ptr<ComponentStore> player_health_ = std::make_shared<ComponentStore>();
 
     std::vector<std::shared_ptr<BaseEntity>> world_objects_;
     // Temporary storage to delete entities simultaneuosly at frame end

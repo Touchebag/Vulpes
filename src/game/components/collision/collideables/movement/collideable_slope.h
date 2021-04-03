@@ -4,7 +4,7 @@
 
 class CollideableSlope : public ICollideableMovement {
   public:
-    CollideableSlope(std::weak_ptr<Transform> trans);
+    CollideableSlope(std::weak_ptr<ComponentStore> components);
 
     CollisionType getType() const override;
 

@@ -3,8 +3,8 @@
 #include "system/world.h"
 #include "utils/log.h"
 
-CollideableTransition::CollideableTransition(std::weak_ptr<Transform> trans) :
-    Collideable(trans) {
+CollideableTransition::CollideableTransition(std::weak_ptr<ComponentStore> components) :
+    Collideable(components) {
 }
 
 void CollideableTransition::update() {

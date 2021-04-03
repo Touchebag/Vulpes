@@ -3,8 +3,8 @@
 #include "components/collision/collision_utils.h"
 #include "utils/log.h"
 
-CollideableStatic::CollideableStatic(std::weak_ptr<Transform> trans) :
-    ICollideableMovement(trans) {
+CollideableStatic::CollideableStatic(std::weak_ptr<ComponentStore> components) :
+    ICollideableMovement(components) {
 }
 
 Collideable::CollisionType CollideableStatic::getType() const {
@@ -25,7 +25,7 @@ std::pair<double, double> CollideableStatic::getMaximumMovement(double stepX, do
 
     double retX = stepX, retY = stepY;
 
-    if (auto this_trans = trans_.lock()) {
+    if (auto this_trans = getTransform().lock()) {
         auto collision_data = calculateSweptCollision(other_coll, {stepX, stepY});
 
         if (collision_data.collision_time < 0.0 || collision_data.collision_time >= 1.0) {

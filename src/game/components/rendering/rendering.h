@@ -7,7 +7,7 @@
 #include "components/transform.h"
 #include "components/movement.h"
 
-class RenderableEntity : Component {
+class RenderableEntity : public Component {
   public:
     RenderableEntity(std::weak_ptr<ComponentStore> components);
     virtual ~RenderableEntity() = default;
@@ -47,10 +47,6 @@ class RenderableEntity : Component {
     // 0 = infinite tiling
     int tiling_x_ = 0;
     int tiling_y_ = 0;
-
-  protected:
-    std::weak_ptr<Transform> trans_;
-    std::weak_ptr<MovableEntity> movable_;
 
   private:
     sf::Texture texture_;

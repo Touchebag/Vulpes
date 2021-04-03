@@ -4,7 +4,7 @@
 
 #include "SFML/Graphics.hpp"
 
-class RenderableText : public RenderableEntity{
+class RenderableText : public RenderableEntity {
   public:
     RenderableText(std::weak_ptr<ComponentStore> components);
 

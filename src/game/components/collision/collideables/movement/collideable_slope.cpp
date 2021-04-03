@@ -3,12 +3,12 @@
 #include "components/collision/collision_utils.h"
 #include "utils/log.h"
 
-CollideableSlope::CollideableSlope(std::weak_ptr<Transform> trans) :
-    ICollideableMovement(trans) {
+CollideableSlope::CollideableSlope(std::weak_ptr<ComponentStore> components) :
+    ICollideableMovement(components) {
 }
 
 void CollideableSlope::recalculateConstants() {
-    if (auto this_trans = trans_.lock()) {
+    if (auto this_trans = getTransform().lock()) {
         auto top = getAbsTop(this_trans, hbox_);
         auto bot = getAbsBottom(this_trans, hbox_);
         auto left = getAbsLeft(this_trans, hbox_);
@@ -77,7 +77,7 @@ std::pair<double, double> CollideableSlope::getMaximumMovement(double stepX, dou
 
     double retX = stepX, retY = stepY;
 
-    if (auto this_trans = trans_.lock()) {
+    if (auto this_trans = getTransform().lock()) {
         // Check if collision after move
         auto collision_data = calculateSweptCollision(other_coll, {stepX, stepY});
 

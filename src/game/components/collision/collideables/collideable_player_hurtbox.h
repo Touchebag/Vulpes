@@ -4,13 +4,10 @@
 
 class CollideablePlayerHurtbox : public Collideable {
   public:
-    CollideablePlayerHurtbox(std::weak_ptr<Transform> trans, std::weak_ptr<Actions> actions);
+    CollideablePlayerHurtbox(std::weak_ptr<ComponentStore> components);
 
     void update() override;
 
     CollisionType getType() const override;
-
-  private:
-    std::weak_ptr<Actions> actions_;
 };
 

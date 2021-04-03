@@ -6,7 +6,7 @@
 
 class CollideablePlayerDive : public CollideableDamage {
   public:
-    CollideablePlayerDive(std::weak_ptr<Transform> trans, std::weak_ptr<Actions> actions);
+    CollideablePlayerDive(std::weak_ptr<ComponentStore> components);
 
     void update() override;
 
@@ -14,8 +14,5 @@ class CollideablePlayerDive : public CollideableDamage {
     std::optional<nlohmann::json> outputToJson() override;
 
     CollisionType getType() const override;
-
-  private:
-    std::weak_ptr<Actions> actions_;
 };
 

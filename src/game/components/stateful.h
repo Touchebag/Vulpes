@@ -32,10 +32,5 @@ class StatefulEntity : public Component {
 
     unsigned int frame_counter_;
 
-    std::weak_ptr<AnimatedEntity> animatedEntity_;
-    std::weak_ptr<Subentity> subentity_;
-    std::weak_ptr<Actions> actions_;
-    std::weak_ptr<Collision> collision_;
-
     StateHandler<state_utils::EntityContent> state_handler_;
 };

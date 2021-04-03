@@ -28,12 +28,6 @@ class Damageable : public Component {
   protected:
     int health_ = 0;
 
-    std::weak_ptr<Collision> hurtbox_;
-    std::weak_ptr<Death> death_;
-    std::weak_ptr<StatefulEntity> state_;
-    std::weak_ptr<RenderableEntity> render_;
-    std::weak_ptr<MovableEntity> move_;
-
   private:
     int invincibility_frame_counter_ = 0;
 

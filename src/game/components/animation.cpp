@@ -4,6 +4,7 @@
 #include "utils/log.h"
 #include "utils/file.h"
 #include "utils/common.h"
+#include "components/component_store.h"
 
 AnimatedEntity::AnimatedEntity(std::weak_ptr<ComponentStore> components) :
     Component(components) {
@@ -170,7 +171,7 @@ void AnimatedEntity::update() {
 }
 
 void AnimatedEntity::setRenderTexture() {
-    if (auto renderable = renderableEntity_.lock()) {
+    if (auto renderable = component_store_.lock()->renderableEntity) {
         auto frame_data = getFrameData();
 
         auto sprite_rect = frame_data.sprite_rectangle;

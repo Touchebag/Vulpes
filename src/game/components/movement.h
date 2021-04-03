@@ -39,9 +39,5 @@ class MovableEntity : public Component {
     double velx_ = 0.0;
     double vely_ = 0.0;
 
-    std::weak_ptr<Transform> trans_;
-    std::weak_ptr<Hitbox> hbox_;
-    std::weak_ptr<Collision> collision_;
-
     MovementAttributes move_attr_;
 };

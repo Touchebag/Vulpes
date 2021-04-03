@@ -27,11 +27,6 @@ class Physics : public Component {
     std::optional<nlohmann::json> outputToJson() override;
 
   private:
-    std::weak_ptr<StatefulEntity> statefulEntity_;
-    std::weak_ptr<MovableEntity> movableEntity_;
-    std::weak_ptr<AnimatedEntity> animatedEntity_;
-    std::weak_ptr<Actions> actions_;
-
     PhysicsConstants constants_;
     PhysicsVariables variables_;
 };

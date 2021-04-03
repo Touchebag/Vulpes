@@ -4,7 +4,7 @@
 
 class CollideableTransition : public Collideable {
   public:
-    CollideableTransition(std::weak_ptr<Transform> trans);
+    CollideableTransition(std::weak_ptr<ComponentStore> components);
 
     void update() override;
 

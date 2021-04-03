@@ -18,6 +18,8 @@
 
 #include "collision_utils.h"
 
+#include "components/component_store.h"
+
 namespace {
 
 const std::map<std::string, Collideable::CollisionType> string_type_map {
@@ -36,8 +38,8 @@ const std::map<std::string, Collideable::CollisionType> string_type_map {
 
 } // namespace
 
-Collideable::Collideable(std::weak_ptr<Transform> trans) :
-    trans_(trans) {
+Collideable::Collideable(std::weak_ptr<ComponentStore> components) :
+    components_(components) {
 
     // TODO Should be 0?
     // Need to fix default collision not being clickable in editor
@@ -51,7 +53,7 @@ void Collideable::setHitbox(int width, int height) {
     hbox_ = std::make_shared<Hitbox>(width, height);
 }
 
-std::shared_ptr<Collideable> Collideable::createFromJson(nlohmann::json j, std::weak_ptr<Transform> trans, std::weak_ptr<Actions> actions) {
+std::shared_ptr<Collideable> Collideable::createFromJson(nlohmann::json j, std::weak_ptr<ComponentStore> components) {
     CollisionType type;
     if (j.contains("type")) {
         auto type_entry = string_type_map.find(j["type"].get<std::string>());
@@ -67,67 +69,67 @@ std::shared_ptr<Collideable> Collideable::createFromJson(nlohmann::json j, std::
     switch (type) {
         case CollisionType::STATIC:
             {
-                auto coll = std::make_shared<CollideableStatic>(trans);
+                auto coll = std::make_shared<CollideableStatic>(components);
                 coll->reloadFromJson(j);
                 return coll;
             }
         case CollisionType::SEMI_SOLID:
             {
-                auto coll = std::make_shared<CollideableSemiSolid>(trans);
+                auto coll = std::make_shared<CollideableSemiSolid>(components);
                 coll->reloadFromJson(j);
                 return coll;
             }
         case CollisionType::SLOPE:
             {
-                auto coll = std::make_shared<CollideableSlope>(trans);
+                auto coll = std::make_shared<CollideableSlope>(components);
                 coll->reloadFromJson(j);
                 return coll;
             }
         case CollisionType::PLAYER_HURTBOX:
             {
-                auto coll = std::make_shared<CollideablePlayerHurtbox>(trans, actions);
+                auto coll = std::make_shared<CollideablePlayerHurtbox>(components);
                 coll->reloadFromJson(j);
                 return coll;
             }
         case CollisionType::PLAYER_HITBOX:
             {
-                auto coll = std::make_shared<CollideablePlayerHitbox>(trans);
+                auto coll = std::make_shared<CollideablePlayerHitbox>(components);
                 coll->reloadFromJson(j);
                 return coll;
             }
         case CollisionType::PLAYER_DIVE:
             {
-                auto coll = std::make_shared<CollideablePlayerDive>(trans, actions);
+                auto coll = std::make_shared<CollideablePlayerDive>(components);
                 coll->reloadFromJson(j);
                 return coll;
             }
         case CollisionType::ENEMY_HITBOX:
             {
-                auto coll = std::make_shared<CollideableEnemyHitbox>(trans);
+                auto coll = std::make_shared<CollideableEnemyHitbox>(components);
                 coll->reloadFromJson(j);
                 return coll;
             }
         case CollisionType::TRANSITION:
             {
-                auto coll = std::make_shared<CollideableTransition>(trans);
+                auto coll = std::make_shared<CollideableTransition>(components);
                 coll->reloadFromJson(j);
                 return coll;
             }
         case CollisionType::HEALTH:
             {
-                auto coll = std::make_shared<CollideableHealth>(trans);
+                auto coll = std::make_shared<CollideableHealth>(components);
                 coll->reloadFromJson(j);
                 return coll;
             }
         case CollisionType::COLLECTIBLE:
             {
-                auto coll = std::make_shared<CollideableCollectible>(trans);
+                auto coll = std::make_shared<CollideableCollectible>(components);
                 coll->reloadFromJson(j);
                 return coll;
             }
         case CollisionType::INTERACTABLE:
             {
-                auto coll = std::make_shared<CollideableInteractable>(trans);
+                auto coll = std::make_shared<CollideableInteractable>(components);
                 coll->reloadFromJson(j);
                 return coll;
             }
@@ -197,5 +199,5 @@ const std::shared_ptr<const Hitbox> Collideable::getHitbox() const {
 }
 
 std::weak_ptr<const Transform> Collideable::getTransform() const {
-    return trans_;
+    return components_.lock()->transform;
 }

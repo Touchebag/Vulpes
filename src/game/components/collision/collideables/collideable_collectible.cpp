@@ -1,7 +1,7 @@
 #include "collideable_collectible.h"
 
-CollideableCollectible::CollideableCollectible(std::weak_ptr<Transform> trans) :
-    Collideable(trans) {
+CollideableCollectible::CollideableCollectible(std::weak_ptr<ComponentStore> components) :
+    Collideable(components) {
 }
 
 void CollideableCollectible::reloadFromJson(nlohmann::json j) {

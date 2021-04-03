@@ -27,8 +27,8 @@ void Subentity::set_position() {
         auto ent_move = entity->components_->movableEntity;
 
         if (ent_trans && ent_move) {
-            auto trans = trans_.lock();
-            auto movable = movable_.lock();
+            auto trans = component_store_.lock()->transform;
+            auto movable = component_store_.lock()->movableEntity;
 
             if (trans && movable) {
                 ent_trans->setPosition(trans->getX() + (ent_trans->getX() * (movable->facing_right_ ? 1 : -1)) ,

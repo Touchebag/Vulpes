@@ -54,7 +54,11 @@ void World::update() {
     }
 
     if (player_->components_->damageable) {
-        player_health_->setText(std::to_string(player_->components_->damageable->getHealth()));
+        if (auto health_text = std::dynamic_pointer_cast<RenderableText>(player_health_->renderableEntity)) {
+            health_text->setText(std::to_string(player_->components_->damageable->getHealth()));
+        } else {
+            LOGW("Unable to cast health text HUD");
+        }
     }
 
     // Do not load a new room if cutscene is playing
@@ -156,14 +160,14 @@ void World::loadWorldFromJson(nlohmann::json j) {
     }
 
     // Health HUD
-    player_health_position_ = std::make_shared<Transform>(std::weak_ptr<ComponentStore>());
-    player_health_position_->setPosition(50, 50);
+    player_health_->transform = std::make_shared<Transform>(player_health_);
+    player_health_->transform->setPosition(50, 50);
 
-    player_health_ = std::make_shared<RenderableText>(std::weak_ptr<ComponentStore>());
-    player_health_->setColor(sf::Color::Green);
-    player_health_->setLayer(INT_MAX);
+    player_health_->renderableEntity = std::make_shared<RenderableText>(player_health_);
+    player_health_->renderableEntity->setColor(sf::Color::Green);
+    player_health_->renderableEntity->setLayer(INT_MAX);
 
-    System::getRender()->addEntity(player_health_);
+    System::getRender()->addEntity(player_health_->renderableEntity);
 }
 
 void World::saveWorldToFile(std::string file) {

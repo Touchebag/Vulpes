@@ -71,7 +71,7 @@ void MovableEntity::update() {
 void MovableEntity::move(double velX, double velY) {
     auto max_move = getMaximumMovement(velX, velY);
 
-    if (auto trans = trans_.lock()) {
+    if (auto trans = component_store_.lock()->transform) {
         velx_ = max_move.first;
         vely_ = max_move.second;
 
@@ -107,7 +107,7 @@ std::optional<nlohmann::json> MovableEntity::outputToJson() {
 std::pair<double, double> MovableEntity::getMaximumMovement(double velX, double velY) {
     std::pair<double, double> vel = {velX, velY};
 
-    if (auto coll = collision_.lock()) {
+    if (auto coll = component_store_.lock()->collision) {
         vel = checkMovement(vel.first, vel.second, coll, Collideable::CollisionType::SLOPE);
 
         move_attr_.on_slope = vel.second != velY;

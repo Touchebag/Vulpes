@@ -4,6 +4,8 @@
 
 #include "utils/log.h"
 
+#include "components/component_store.h"
+
 namespace {
 
 class FacingDirection {
@@ -43,9 +45,9 @@ Physics::Physics(std::weak_ptr<ComponentStore> components) :
 
 void Physics::update() {
     // TODO Move somwhere more logical (transform?)
-    auto stateEnt = statefulEntity_.lock();
-    auto movable = movableEntity_.lock();
-    auto act = actions_.lock();
+    auto stateEnt = component_store_.lock()->statefulEntity;
+    auto movable = component_store_.lock()->movableEntity;
+    auto act = component_store_.lock()->actions;
 
     if (stateEnt && movable && act) {
         double x = movable->getVelX();

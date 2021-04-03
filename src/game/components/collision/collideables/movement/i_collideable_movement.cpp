@@ -3,8 +3,8 @@
 #include "components/collision/collision_utils.h"
 #include "utils/log.h"
 
-ICollideableMovement::ICollideableMovement(std::weak_ptr<Transform> trans) :
-    Collideable(trans) {
+ICollideableMovement::ICollideableMovement(std::weak_ptr<ComponentStore> components) :
+    Collideable(components) {
 }
 
 ICollideableMovement::CollisionData ICollideableMovement::calculateSweptCollision(std::weak_ptr<const Collideable> other_entity, const std::pair<double, double> velocity) const {
