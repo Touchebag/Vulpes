@@ -46,8 +46,3 @@ void Input::setKeyboardMap(std::unordered_map<sf::Keyboard::Key, std::unordered_
 void Input::setButtonMap(std::unordered_map<int, std::unordered_set<Actions::Action>> button_map) {
     button_map_ = button_map;
 }
-
-Input& Input::getInstance() {
-    static Input instance;
-    return instance;
-}

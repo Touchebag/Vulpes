@@ -6,7 +6,6 @@
 #include "system/system.h"
 #include "utils/common.h"
 #include "utils/log.h"
-#include "system/input_event.h"
 
 #define PHYSICS_FRAME_RATE 60
 #define MS_PER_FRAME 1000 / PHYSICS_FRAME_RATE
@@ -19,7 +18,7 @@ int game_main(sf::RenderWindow& window) {
     sf::Time time_rendered;
     sf::Clock render_clock;
 
-    Input::getInstance().setKeyboardMap({
+    System::getInput()->setKeyboardMap({
             {sf::Keyboard::Key::Space, {Actions::Action::JUMP,
                                         Actions::Action::WALL_JUMP,
                                         Actions::Action::DOUBLE_JUMP}},
@@ -31,7 +30,7 @@ int game_main(sf::RenderWindow& window) {
             {sf::Keyboard::Key::Up, {Actions::Action::INTERACT}}
             });
 
-    Input::getInstance().setButtonMap({
+    System::getInput()->setButtonMap({
             {0, {Actions::Action::JUMP,
                  Actions::Action::WALL_JUMP,
                  Actions::Action::DOUBLE_JUMP}},
@@ -54,7 +53,7 @@ int game_main(sf::RenderWindow& window) {
 
         // If we have rendered more than one physics frame then advance physics
         while (time_rendered.asMilliseconds() >= (MS_PER_FRAME)) {
-            Input::getInstance().update(window);
+            System::getInput()->update(window);
 
             sf::Event event;
             while (window.pollEvent(event)) {

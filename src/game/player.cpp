@@ -1,5 +1,5 @@
 #include "player.h"
-#include "system/input_event.h"
+#include "system/system.h"
 #include "utils/log.h"
 
 #include <tuple>
@@ -17,7 +17,7 @@ void Player::reloadFromJson(const nlohmann::json& j) {
     BaseEntity::reloadFromJson(j);
 
     if (getComponent<Actions>()) {
-        Input::getInstance().setActionsInstance(getComponent<Actions>());
+        System::getInput()->setActionsInstance(getComponent<Actions>());
     }
 }
 

@@ -13,6 +13,10 @@ std::shared_ptr<IRender> System::getRender() {
     return render;
 }
 
+std::shared_ptr<Input> System::getInput() {
+    return System::getInstance().input_;
+}
+
 std::shared_ptr<Camera> System::getCamera() {
     return System::getInstance().camera_instance_;
 }

@@ -9,8 +9,6 @@
 
 class Input {
   public:
-    static Input& getInstance();
-
     void update(sf::Window& window);
 
     void setKeyboardMap(std::unordered_map<sf::Keyboard::Key, std::unordered_set<Actions::Action>> key_map);
@@ -25,6 +23,4 @@ class Input {
     // Input mappings from physical keys to logical buttons
     std::unordered_map<sf::Keyboard::Key, std::unordered_set<Actions::Action>> key_map_;
     std::unordered_map<int, std::unordered_set<Actions::Action>> button_map_;
-
-    Input() = default;
 };
