@@ -3,7 +3,7 @@
 #include <unordered_map>
 
 #include "common.h"
-#include "system/world.h"
+#include "system/system.h"
 #include "utils/log.h"
 
 #include "components/collision/collideables/collideable_collectible.h"
@@ -15,7 +15,7 @@ ActionsPlayer::ActionsPlayer(std::weak_ptr<ComponentStore> components) :
 
 void ActionsPlayer::update() {
     if (getActionState(Action::INTERACT, true)) {
-        World::IWorldModify::triggerInterract();
+        System::IWorldModify::triggerInterract();
     }
 
     Actions::update();

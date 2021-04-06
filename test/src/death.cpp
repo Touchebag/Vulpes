@@ -2,7 +2,7 @@
 
 #include "components/death.h"
 #include "base_entity.h"
-#include "system/world.h"
+#include "system/system.h"
 
 class DeathTestFixture : public ::testing::Test {
   public:
@@ -10,8 +10,8 @@ class DeathTestFixture : public ::testing::Test {
         entity_ = BaseEntity::createFromJson(nlohmann::json::parse(entity_json_));
         attack_ = BaseEntity::createFromJson(nlohmann::json::parse(attack_json_));
 
-        World::getInstance<World::IWorldModify>().addEntity(entity_);
-        World::getInstance<World::IWorldModify>().addEntity(attack_);
+        System::IWorldModify::addEntity(entity_);
+        System::IWorldModify::addEntity(attack_);
     }
 
     void SetUp() override {

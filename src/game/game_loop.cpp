@@ -3,17 +3,16 @@
 #include <json.hpp>
 
 #include "base_entity.h"
-#include "system/world.h"
+#include "system/system.h"
 #include "utils/common.h"
 #include "utils/log.h"
 #include "system/input_event.h"
-#include "system/system.h"
 
 #define PHYSICS_FRAME_RATE 60
 #define MS_PER_FRAME 1000 / PHYSICS_FRAME_RATE
 
 int game_main(sf::RenderWindow& window) {
-    auto worldInstWrite = World::getInstance<World::IWorldModify>();
+    auto worldInstWrite = System::IWorldModify();
 
     // Rendering produces time, physics consumes
     // This stores how much "unconsumed" time is available

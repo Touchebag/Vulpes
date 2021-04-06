@@ -1,6 +1,6 @@
 #include "cutscene_handler.h"
 
-#include "system/world.h"
+#include "system/system.h"
 
 #include "utils/log.h"
 
@@ -27,7 +27,7 @@ void CutsceneHandler::startCutscene(std::string cutscene_file) {
 
     std::shared_ptr<Cutscene> cutscene = std::make_shared<Cutscene>();
 
-    cutscene->addPlayer(World::IWorldModify::getPlayer().lock());
+    cutscene->addPlayer(System::IWorldModify::getPlayer().lock());
 
     Cutscene::CutsceneEvent event;
 

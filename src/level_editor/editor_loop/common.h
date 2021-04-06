@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "base_entity.h"
-#include "system/world.h"
+#include "system/system.h"
 
 namespace editor_common {
 

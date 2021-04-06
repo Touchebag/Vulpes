@@ -1,6 +1,6 @@
 #include "collideable_interactable.h"
 
-#include "system/world.h"
+#include "system/system.h"
 #include "system/system.h"
 
 #include "utils/log.h"
@@ -48,11 +48,11 @@ std::optional<nlohmann::json> CollideableInteractable::outputToJson() {
 }
 
 void CollideableInteractable::update() {
-    if (World::IWorldRead::hasInteractTriggered()) {
-        for (auto it : World::IWorldRead::getCollideables(Collideable::CollisionType::PLAYER_HURTBOX)) {
+    if (System::IWorldRead::hasInteractTriggered()) {
+        for (auto it : System::IWorldRead::getCollideables(Collideable::CollisionType::PLAYER_HURTBOX)) {
             if (collides(it)) {
                 if (transition_) {
-                    World::IWorldModify::loadRoom(transition_.value().first, transition_.value().second);
+                    System::IWorldModify::loadRoom(transition_.value().first, transition_.value().second);
                 }
                 if (cutscene_) {
                     System::getCutscene()->startCutscene(cutscene_.value());

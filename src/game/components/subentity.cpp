@@ -1,6 +1,6 @@
 #include "subentity.h"
 
-#include "system/world.h"
+#include "system/system.h"
 
 #include "utils/log.h"
 
@@ -10,7 +10,7 @@ Subentity::Subentity(std::weak_ptr<ComponentStore> components) :
 
 void Subentity::addEntity(std::shared_ptr<BaseEntity> entity) {
     // Add to world
-    World::IWorldModify::addEntity(entity);
+    System::IWorldModify::addEntity(entity);
 
     // Store handle locally
     entity_ = entity;

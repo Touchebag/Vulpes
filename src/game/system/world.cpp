@@ -4,22 +4,6 @@
 #include "utils/file.h"
 #include "system/system.h"
 
-template <>
-World::IWorldRead World::getInstance<World::IWorldRead>() {
-    return World::IWorldRead();
-}
-
-template <>
-World::IWorldModify World::getInstance<World::IWorldModify>() {
-    return World::IWorldModify();
-}
-
-World& World::getWorldInstance() {
-    static World world;
-
-    return world;
-}
-
 std::vector<std::shared_ptr<BaseEntity>>& World::getWorldObjects() {
     return world_objects_;
 }
@@ -271,7 +255,7 @@ void World::loadRoom(std::string room_name, int entrance_id) {
 }
 
 void World::setShiftedPlayerPosition(Collideable::CollisionType ctype) {
-    auto world_colls = World::getInstance<World::IWorldRead>().getCollideables(ctype);
+    auto world_colls = System::IWorldRead::getCollideables(ctype);
     auto p_trans = player_->getComponent<Transform>();
 
     for (auto it = world_colls.begin(); it != world_colls.end(); ++it) {

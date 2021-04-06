@@ -4,7 +4,7 @@
 #include "utils/file.h"
 #include "utils/common.h"
 
-#include "system/world.h"
+#include "system/system.h"
 
 #include "ai/logic_operators/greater.h"
 #include "ai/logic_operators/less.h"

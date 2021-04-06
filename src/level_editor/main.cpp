@@ -19,8 +19,8 @@ int main(int argc, char** argv) {
         level_file = "world.json";
     }
 
-    World::IWorldModify::loadWorldFromFile(level_file);
-    World::IWorldModify::setEntrance(0);
+    System::IWorldModify::loadWorldFromFile(level_file);
+    System::IWorldModify::setEntrance(0);
 
     while (window.isOpen()) {
         game_main(window);

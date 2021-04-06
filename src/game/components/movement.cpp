@@ -1,7 +1,7 @@
 #include "movement.h"
 
 #include "collision/collideables/movement/i_collideable_movement.h"
-#include "system/world.h"
+#include "system/system.h"
 #include "utils/log.h"
 
 namespace {
@@ -37,7 +37,7 @@ std::pair<double, double> checkMovement(double velX, double velY,
 
     recalculateTempCollision(temp_trans, temp_hitbox, this_trans, this_hbox, x, y);
 
-    auto world_colls = World::getInstance<World::IWorldRead>().getCollideables(type);
+    auto world_colls = System::IWorldRead::getCollideables(type);
     for (auto it = world_colls.begin(); it != world_colls.end(); ++it) {
         auto other_coll = (*it).lock();
 

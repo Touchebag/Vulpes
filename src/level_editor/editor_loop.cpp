@@ -24,7 +24,7 @@ int level_editor_main(sf::RenderWindow& window) {
         throw std::runtime_error("Could not cast render instance");
     }
 
-    if (auto player = World::IWorldRead::getPlayer().lock()) {
+    if (auto player = System::IWorldRead::getPlayer().lock()) {
         editor_env->view_pos_x = static_cast<float>(player->getComponent<Transform>()->getX());
         editor_env->view_pos_y = static_cast<float>(player->getComponent<Transform>()->getY());
     }
@@ -95,12 +95,12 @@ int level_editor_main(sf::RenderWindow& window) {
                             case sf::Keyboard::Key::P:
                                 // Remove editor hud when switching back
                                 for (auto it : editor_env->editor_entities) {
-                                    World::IWorldModify::removeEntity(it);
+                                    System::IWorldModify::removeEntity(it);
                                 }
                                 return 0;
                                 break;
                             case sf::Keyboard::Key::S:
-                                World::getInstance<World::IWorldModify>().saveWorldToFile(World::IWorldRead::getCurrentRoomName());
+                                System::IWorldModify::saveWorldToFile(System::IWorldRead::getCurrentRoomName());
                                 break;
                             case sf::Keyboard::Key::A:
                                 editor_env->command->add();

@@ -14,7 +14,7 @@ class HistoryTestFixture : public ::testing::Test {
     void SetUp() override {
         std::shared_ptr<Operation> operation = std::make_shared<Operation>();
 
-        World::getInstance<World::IWorldModify>().loadWorldFromJson(nlohmann::json::parse("{\"entities\": null}"));
+        System::IWorldModify::loadWorldFromJson(nlohmann::json::parse("{\"entities\": null}"));
 
         MockMouse::setMouseWorldPosition({0, 0});
     }
@@ -25,16 +25,16 @@ class HistoryTestFixture : public ::testing::Test {
 };
 
 TEST_F(HistoryTestFixture, AddObject) {
-    auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j1 = System::IWorldModify::saveWorldToJson();
 
     editor_env->command->add();
-    auto j2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j2 = System::IWorldModify::saveWorldToJson();
 
     editor_env->history->undo();
-    auto j3 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j3 = System::IWorldModify::saveWorldToJson();
 
     editor_env->history->redo();
-    auto j4 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j4 = System::IWorldModify::saveWorldToJson();
 
     ASSERT_TRUE(j1 == j3);
     ASSERT_TRUE(j2 == j4);
@@ -44,16 +44,16 @@ TEST_F(HistoryTestFixture, RemoveObject) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
     editor_env->command->add(entity);
 
-    auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j1 = System::IWorldModify::saveWorldToJson();
 
     editor_env->command->remove(entity);
-    auto j2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j2 = System::IWorldModify::saveWorldToJson();
 
     editor_env->history->undo();
-    auto j3 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j3 = System::IWorldModify::saveWorldToJson();
 
     editor_env->history->redo();
-    auto j4 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j4 = System::IWorldModify::saveWorldToJson();
 
     ASSERT_TRUE(j1 == j3) << j1.dump() << std::endl << j3.dump() << std::endl;
     ASSERT_TRUE(j2 == j4) << j2.dump() << std::endl << j4.dump() << std::endl;
@@ -63,16 +63,16 @@ TEST_F(HistoryTestFixture, CopyObject) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
     editor_env->command->add(entity);
 
-    auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j1 = System::IWorldModify::saveWorldToJson();
 
     editor_env->command->copy(entity);
-    auto j2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j2 = System::IWorldModify::saveWorldToJson();
 
     editor_env->history->undo();
-    auto j3 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j3 = System::IWorldModify::saveWorldToJson();
 
     editor_env->history->redo();
-    auto j4 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j4 = System::IWorldModify::saveWorldToJson();
 
     ASSERT_TRUE(j1 == j3);
     ASSERT_TRUE(j2 == j4);
@@ -82,19 +82,19 @@ TEST_F(HistoryTestFixture, CopyObjectRemoveOriginal) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
     editor_env->command->add(entity);
 
-    auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j1 = System::IWorldModify::saveWorldToJson();
 
     editor_env->command->copy(entity);
     editor_env->command->remove(entity);
-    auto j2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j2 = System::IWorldModify::saveWorldToJson();
 
     editor_env->history->undo();
     editor_env->history->undo();
-    auto j3 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j3 = System::IWorldModify::saveWorldToJson();
 
     editor_env->history->redo();
     editor_env->history->redo();
-    auto j4 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j4 = System::IWorldModify::saveWorldToJson();
 
     ASSERT_TRUE(j1 == j3);
     ASSERT_TRUE(j2 == j4);
@@ -104,7 +104,7 @@ TEST_F(HistoryTestFixture, ResizeObject) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
     editor_env->command->add(entity);
 
-    auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j1 = System::IWorldModify::saveWorldToJson();
 
     MockMouse::setMouseWorldPosition({0, 0});
     entity->getComponent<Transform>()->setPosition(0, 0);
@@ -117,13 +117,13 @@ TEST_F(HistoryTestFixture, ResizeObject) {
     editor_env->command->update();
     editor_env->command->stopCommand();
 
-    auto j2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j2 = System::IWorldModify::saveWorldToJson();
 
     editor_env->history->undo();
-    auto j3 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j3 = System::IWorldModify::saveWorldToJson();
 
     editor_env->history->redo();
-    auto j4 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j4 = System::IWorldModify::saveWorldToJson();
 
     ASSERT_TRUE(j1 == j3);
     ASSERT_TRUE(j2 == j4);
@@ -133,7 +133,7 @@ TEST_F(HistoryTestFixture, MoveObject) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
     editor_env->command->add(entity);
 
-    auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j1 = System::IWorldModify::saveWorldToJson();
 
     MockMouse::setMouseWorldPosition({0, 0});
     entity->getComponent<Transform>()->setPosition(0, 0);
@@ -146,13 +146,13 @@ TEST_F(HistoryTestFixture, MoveObject) {
     editor_env->command->update();
     editor_env->command->stopCommand();
 
-    auto j2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j2 = System::IWorldModify::saveWorldToJson();
 
     editor_env->history->undo();
-    auto j3 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j3 = System::IWorldModify::saveWorldToJson();
 
     editor_env->history->redo();
-    auto j4 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j4 = System::IWorldModify::saveWorldToJson();
 
     ASSERT_TRUE(j1 == j3);
     ASSERT_TRUE(j2 == j4);
@@ -163,7 +163,7 @@ TEST_F(HistoryTestFixture, MoveObjectOtherLayer) {
     editor_env->command->current_layer_ = -1;
     editor_env->command->add(entity);
 
-    auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j1 = System::IWorldModify::saveWorldToJson();
 
     MockMouse::setMouseWorldPosition({0, 0});
     entity->getComponent<Transform>()->setPosition(0, 0);
@@ -176,13 +176,13 @@ TEST_F(HistoryTestFixture, MoveObjectOtherLayer) {
     editor_env->command->update();
     editor_env->command->stopCommand();
 
-    auto j2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j2 = System::IWorldModify::saveWorldToJson();
 
     editor_env->history->undo();
-    auto j3 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j3 = System::IWorldModify::saveWorldToJson();
 
     editor_env->history->redo();
-    auto j4 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j4 = System::IWorldModify::saveWorldToJson();
 
     ASSERT_TRUE(j1 == j3);
     ASSERT_TRUE(j2 == j4);
@@ -192,18 +192,18 @@ TEST_F(HistoryTestFixture, ToggleRenderable) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
     editor_env->command->add(entity);
 
-    auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j1 = System::IWorldModify::saveWorldToJson();
 
     editor_env->current_entity = entity;
     editor_env->command->handleCommand(Command::Commands::TOGGLE_RENDERABLE);
 
-    auto j2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j2 = System::IWorldModify::saveWorldToJson();
 
     editor_env->history->undo();
-    auto j3 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j3 = System::IWorldModify::saveWorldToJson();
 
     editor_env->history->redo();
-    auto j4 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j4 = System::IWorldModify::saveWorldToJson();
 
     ASSERT_TRUE(j1 == j3);
     ASSERT_TRUE(j2 == j4);
@@ -214,18 +214,18 @@ TEST_F(HistoryTestFixture, ToggleCollision) {
     entity->setComponent<Collision>(std::make_shared<Collision>(entity->components_));
     editor_env->command->add(entity);
 
-    auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j1 = System::IWorldModify::saveWorldToJson();
 
     editor_env->current_entity = entity;
     editor_env->command->handleCommand(Command::Commands::TOGGLE_COLLISION);
 
-    auto j2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j2 = System::IWorldModify::saveWorldToJson();
 
     editor_env->history->undo();
-    auto j3 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j3 = System::IWorldModify::saveWorldToJson();
 
     editor_env->history->redo();
-    auto j4 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j4 = System::IWorldModify::saveWorldToJson();
 
     ASSERT_TRUE(j1 == j3);
     ASSERT_TRUE(j2 == j4);
@@ -236,18 +236,18 @@ TEST_F(HistoryTestFixture, ToggleMovable) {
     entity->setComponent<MovableEntity>(std::make_shared<MovableEntity>(entity->components_));
     editor_env->command->add(entity);
 
-    auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j1 = System::IWorldModify::saveWorldToJson();
 
     editor_env->current_entity = entity;
     editor_env->command->handleCommand(Command::Commands::TOGGLE_MOVABLE);
 
-    auto j2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j2 = System::IWorldModify::saveWorldToJson();
 
     editor_env->history->undo();
-    auto j3 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j3 = System::IWorldModify::saveWorldToJson();
 
     editor_env->history->redo();
-    auto j4 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j4 = System::IWorldModify::saveWorldToJson();
 
     ASSERT_TRUE(j1 == j3);
     ASSERT_TRUE(j2 == j4);
@@ -258,18 +258,18 @@ TEST_F(HistoryTestFixture, TogglePhysics) {
     entity->setComponent<Physics>(std::make_shared<Physics>(entity->components_));
     editor_env->command->add(entity);
 
-    auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j1 = System::IWorldModify::saveWorldToJson();
 
     editor_env->current_entity = entity;
     editor_env->command->handleCommand(Command::Commands::TOGGLE_PHYSICS);
 
-    auto j2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j2 = System::IWorldModify::saveWorldToJson();
 
     editor_env->history->undo();
-    auto j3 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j3 = System::IWorldModify::saveWorldToJson();
 
     editor_env->history->redo();
-    auto j4 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j4 = System::IWorldModify::saveWorldToJson();
 
     ASSERT_TRUE(j1 == j3);
     ASSERT_TRUE(j2 == j4);
@@ -280,18 +280,18 @@ TEST_F(HistoryTestFixture, ToggleActions) {
     entity->setComponent<Actions>(std::make_shared<Actions>(entity->components_));
     editor_env->command->add(entity);
 
-    auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j1 = System::IWorldModify::saveWorldToJson();
 
     editor_env->current_entity = entity;
     editor_env->command->handleCommand(Command::Commands::TOGGLE_ACTIONS);
 
-    auto j2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j2 = System::IWorldModify::saveWorldToJson();
 
     editor_env->history->undo();
-    auto j3 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j3 = System::IWorldModify::saveWorldToJson();
 
     editor_env->history->redo();
-    auto j4 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j4 = System::IWorldModify::saveWorldToJson();
 
     ASSERT_TRUE(j1 == j3) << j1.dump() << std::endl << j3.dump() << std::endl;
     ASSERT_TRUE(j2 == j4) << j2.dump() << std::endl << j4.dump() << std::endl;
@@ -302,7 +302,7 @@ TEST_F(HistoryTestFixture, ToggleTiling) {
     entity->setComponent<RenderableEntity>(std::make_shared<RenderableEntity>(entity->components_));
     editor_env->command->add(entity);
 
-    auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j1 = System::IWorldModify::saveWorldToJson();
 
     editor_env->current_entity = entity;
 
@@ -310,13 +310,13 @@ TEST_F(HistoryTestFixture, ToggleTiling) {
     editor_env->command->text_input_->enterText("4");
     editor_env->command->stopCommand();
 
-    auto j2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j2 = System::IWorldModify::saveWorldToJson();
 
     editor_env->history->undo();
-    auto j3 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j3 = System::IWorldModify::saveWorldToJson();
 
     editor_env->history->redo();
-    auto j4 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j4 = System::IWorldModify::saveWorldToJson();
 
     ASSERT_TRUE(j1 == j3);
     ASSERT_TRUE(j2 == j4);
@@ -327,7 +327,7 @@ TEST_F(HistoryTestFixture, ChangeSprite) {
     entity->setComponent<RenderableEntity>(std::make_shared<RenderableEntity>(entity->components_));
     editor_env->command->add(entity);
 
-    auto j1 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j1 = System::IWorldModify::saveWorldToJson();
 
     editor_env->current_entity = entity;
     editor_env->command->handleCommand(Command::Commands::RENDERABLE_SPRITE_CHANGE);
@@ -336,13 +336,13 @@ TEST_F(HistoryTestFixture, ChangeSprite) {
 
     editor_env->command->stopCommand();
 
-    auto j2 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j2 = System::IWorldModify::saveWorldToJson();
 
     editor_env->history->undo();
-    auto j3 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j3 = System::IWorldModify::saveWorldToJson();
 
     editor_env->history->redo();
-    auto j4 = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    auto j4 = System::IWorldModify::saveWorldToJson();
 
     ASSERT_TRUE(j1 == j3);
     ASSERT_TRUE(j2 == j4);

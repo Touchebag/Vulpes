@@ -1,5 +1,4 @@
 #include "game/game_loop.h"
-#include "system/world.h"
 #include "system/system.h"
 
 int main() {
@@ -8,8 +7,8 @@ int main() {
 
     window.setKeyRepeatEnabled(false);
 
-    World::IWorldModify::loadWorldFromFile("world.json");
-    World::IWorldModify::setEntrance(0);
+    System::IWorldModify::loadWorldFromFile("world.json");
+    System::IWorldModify::setEntrance(0);
 
     game_main(window);
 }

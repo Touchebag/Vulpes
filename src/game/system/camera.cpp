@@ -1,6 +1,6 @@
 #include "camera.h"
 
-#include "system/world.h"
+#include "system/system.h"
 
 #include "utils/log.h"
 #include "utils/common.h"
@@ -183,7 +183,7 @@ Camera::CameraView Camera::calculateMovementToTarget() {
 
 void Camera::updateTargetView() {
     // TODO Error handling
-    auto player = World::getInstance<World::IWorldRead>().getPlayer().lock();
+    auto player = System::IWorldRead::getPlayer().lock();
 
     if (player) {
         auto p_trans = player->getComponent<Transform>();

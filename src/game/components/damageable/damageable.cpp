@@ -1,7 +1,7 @@
 #include "damageable.h"
 
 #include "utils/log.h"
-#include "system/world.h"
+#include "system/system.h"
 #include "damageable_player.h"
 #include "components/collision/collideables/damage/collideable_damage.h"
 
@@ -77,7 +77,7 @@ void Damageable::update() {
         if (auto coll = collision->getCollideable()) {
             auto hurting_type = type_mapping.at(coll->getType());
 
-            for (auto& it : World::IWorldRead::getCollideables(hurting_type)) {
+            for (auto& it : System::IWorldRead::getCollideables(hurting_type)) {
                 if (auto other_coll = it.lock()) {
 
                     if (coll->collides(other_coll)) {

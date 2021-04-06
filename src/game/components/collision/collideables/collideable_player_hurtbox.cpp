@@ -2,7 +2,7 @@
 
 #include "components/collision/collideables/collideable_collectible.h"
 #include "components/actions/common.h"
-#include "system/world.h"
+#include "system/system.h"
 
 #include "utils/log.h"
 
@@ -11,7 +11,7 @@ CollideablePlayerHurtbox::CollideablePlayerHurtbox(std::weak_ptr<ComponentStore>
 }
 
 void CollideablePlayerHurtbox::update() {
-    for (auto& it : World::IWorldRead::getCollideables(Collideable::CollisionType::COLLECTIBLE)) {
+    for (auto& it : System::IWorldRead::getCollideables(Collideable::CollisionType::COLLECTIBLE)) {
         if (auto other_coll = it.lock()) {
             if (collides(other_coll)) {
                 if (auto collectible = std::dynamic_pointer_cast<const CollideableCollectible>(other_coll)) {

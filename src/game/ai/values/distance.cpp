@@ -1,6 +1,6 @@
 #include "distance.h"
 
-#include "system/world.h"
+#include "system/system.h"
 
 namespace ai {
 namespace condition {

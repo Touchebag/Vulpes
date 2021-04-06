@@ -1,7 +1,7 @@
 #include "collideable_player_dive.h"
 
 #include "components/collision/attack_attributes.h"
-#include "system/world.h"
+#include "system/system.h"
 
 #include "utils/log.h"
 
@@ -12,7 +12,7 @@ CollideablePlayerDive::CollideablePlayerDive(std::weak_ptr<ComponentStore> compo
 }
 
 void CollideablePlayerDive::update() {
-    for (auto it : World::IWorldRead::getCollideables(Collideable::CollisionType::ENEMY_HITBOX)) {
+    for (auto it : System::IWorldRead::getCollideables(Collideable::CollisionType::ENEMY_HITBOX)) {
         if (collides(it)) {
             if (auto actions = components_.lock()->getComponent<Actions>()) {
                 actions->addAction(Actions::Action::AIR_DIVE_BOUNCE);

@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "system/world.h"
+#include "system/system.h"
 
 #include "components/transform.h"
 
@@ -11,8 +11,8 @@ class DynamicCollisionTestFixture : public ::testing::Test {
     }
 
     void SetUp() override {
-        World::IWorldModify().clearWorld();
-        World::getInstance<World::IWorldModify>().loadWorldFromFile("test_world.json");
+        System::IWorldModify().clearWorld();
+        System::IWorldModify::loadWorldFromFile("test_world.json");
     }
 
     std::string entity_json_ = R"--(
@@ -34,7 +34,7 @@ class DynamicCollisionTestFixture : public ::testing::Test {
 };
 
 TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionNoCollision) {
-    World::getInstance<World::IWorldModify>().addEntity(entity_);
+    System::IWorldModify::addEntity(entity_);
 
     entity_->getComponent<MovableEntity>()->move(10, 0);
     auto pos_x = entity_->getComponent<Transform>()->getX();
@@ -45,7 +45,7 @@ TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionNoCollision) {
 }
 
 TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionCollision) {
-    World::getInstance<World::IWorldModify>().addEntity(entity_);
+    System::IWorldModify::addEntity(entity_);
 
     entity_->getComponent<MovableEntity>()->move(60, 0);
     auto pos_x = entity_->getComponent<Transform>()->getX();
@@ -56,7 +56,7 @@ TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionCollision) {
 }
 
 TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionNegativeCollision) {
-    World::getInstance<World::IWorldModify>().addEntity(entity_);
+    System::IWorldModify::addEntity(entity_);
 
     entity_->getComponent<MovableEntity>()->move(0, -70);
     auto pos_x = entity_->getComponent<Transform>()->getX();
@@ -67,7 +67,7 @@ TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionNegativeCollision) {
 }
 
 TEST_F(DynamicCollisionTestFixture, MoveMultipleDirectionCollisionInOne) {
-    World::getInstance<World::IWorldModify>().addEntity(entity_);
+    System::IWorldModify::addEntity(entity_);
 
     entity_->getComponent<MovableEntity>()->move(80, 20);
     auto pos_x = entity_->getComponent<Transform>()->getX();
@@ -78,7 +78,7 @@ TEST_F(DynamicCollisionTestFixture, MoveMultipleDirectionCollisionInOne) {
 }
 
 TEST_F(DynamicCollisionTestFixture, CollisionSemiSolidAllDirections) {
-    World::getInstance<World::IWorldModify>().addEntity(entity_);
+    System::IWorldModify::addEntity(entity_);
 
     // From below, should not be stopped
     entity_->getComponent<Transform>()->setPosition(500, 200);
@@ -134,7 +134,7 @@ TEST_F(DynamicCollisionTestFixture, MoveDiagonalStuckOnCorner) {
     )--";
 
     auto entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
-    World::IWorldModify::addEntity(entity);
+    System::IWorldModify::addEntity(entity);
 
     entity_json = R"--(
 {
@@ -152,7 +152,7 @@ TEST_F(DynamicCollisionTestFixture, MoveDiagonalStuckOnCorner) {
     )--";
 
     entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
-    World::IWorldModify::addEntity(entity);
+    System::IWorldModify::addEntity(entity);
 
     entity->getComponent<MovableEntity>()->move(10, 10);
     auto pos_x = entity->getComponent<Transform>()->getX();
@@ -179,7 +179,7 @@ TEST_F(DynamicCollisionTestFixture, TunnelingOneDirection) {
     )--";
 
     auto entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
-    World::IWorldModify::addEntity(entity);
+    System::IWorldModify::addEntity(entity);
 
     entity_json = R"--(
 {
@@ -197,7 +197,7 @@ TEST_F(DynamicCollisionTestFixture, TunnelingOneDirection) {
     )--";
 
     entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
-    World::IWorldModify::addEntity(entity);
+    System::IWorldModify::addEntity(entity);
 
     entity->getComponent<MovableEntity>()->move(30, 0);
     auto pos_x = entity->getComponent<Transform>()->getX();
@@ -224,7 +224,7 @@ TEST_F(DynamicCollisionTestFixture, TunnelingStuckInCorner) {
     )--";
 
     auto entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
-    World::IWorldModify::addEntity(entity);
+    System::IWorldModify::addEntity(entity);
 
     entity_json = R"--(
 {
@@ -241,7 +241,7 @@ TEST_F(DynamicCollisionTestFixture, TunnelingStuckInCorner) {
     )--";
 
     entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
-    World::IWorldModify::addEntity(entity);
+    System::IWorldModify::addEntity(entity);
 
     entity_json = R"--(
 {
@@ -259,7 +259,7 @@ TEST_F(DynamicCollisionTestFixture, TunnelingStuckInCorner) {
     )--";
 
     entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
-    World::IWorldModify::addEntity(entity);
+    System::IWorldModify::addEntity(entity);
 
     entity->getComponent<MovableEntity>()->move(30, 35);
     auto pos_x = entity->getComponent<Transform>()->getX();
@@ -286,7 +286,7 @@ TEST_F(DynamicCollisionTestFixture, TunnelingOnlyXSlideDown) {
     )--";
 
     auto entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
-    World::IWorldModify::addEntity(entity);
+    System::IWorldModify::addEntity(entity);
 
     entity_json = R"--(
 {
@@ -304,7 +304,7 @@ TEST_F(DynamicCollisionTestFixture, TunnelingOnlyXSlideDown) {
     )--";
 
     entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
-    World::IWorldModify::addEntity(entity);
+    System::IWorldModify::addEntity(entity);
 
     entity->getComponent<MovableEntity>()->move(30, 35);
     auto pos_x = entity->getComponent<Transform>()->getX();
@@ -331,7 +331,7 @@ TEST_F(DynamicCollisionTestFixture, GrazeAgainstCornerButNoCollision) {
     )--";
 
     auto entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
-    World::IWorldModify::addEntity(entity);
+    System::IWorldModify::addEntity(entity);
 
     entity_json = R"--(
 {
@@ -349,7 +349,7 @@ TEST_F(DynamicCollisionTestFixture, GrazeAgainstCornerButNoCollision) {
     )--";
 
     entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
-    World::IWorldModify::addEntity(entity);
+    System::IWorldModify::addEntity(entity);
 
     entity->getComponent<MovableEntity>()->move(40, 40);
     auto pos_x = entity->getComponent<Transform>()->getX();

@@ -2,7 +2,7 @@
 
 #include "logic_operator.h"
 #include "ai/values/value.h"
-#include "system/world.h"
+#include "system/system.h"
 
 namespace ai {
 namespace condition {
@@ -17,7 +17,7 @@ class Collides : public LogicalOperator {
 
     bool getValue(aiValues& values) const override {
         if (auto this_coll = values.coll.lock()) {
-            if (auto player = World::IWorldRead::getPlayer().lock()) {
+            if (auto player = System::IWorldRead::getPlayer().lock()) {
                 return this_coll->collides(player->getComponent<Collision>());
             }
         }

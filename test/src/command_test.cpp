@@ -13,7 +13,7 @@ class CommandTestFixture : public ::testing::Test {
     void SetUp() override {
         std::shared_ptr<Operation> operation = std::make_shared<Operation>();
 
-        World::getInstance<World::IWorldModify>().loadWorldFromJson(nlohmann::json::parse("{\"entities\": null}"));
+        System::IWorldModify::loadWorldFromJson(nlohmann::json::parse("{\"entities\": null}"));
 
         MockMouse::setMouseWorldPosition({0, 0});
     }
@@ -24,7 +24,7 @@ class CommandTestFixture : public ::testing::Test {
 };
 
 void assertCorrectNumberOfEntities(long long unsigned number) {
-    auto world_objects = World::getInstance<World::IWorldModify>().getWorldObjects();
+    auto world_objects = System::IWorldModify::getWorldObjects();
 
     ASSERT_EQ(world_objects.size(), number);
 }
@@ -98,7 +98,7 @@ TEST_F(CommandTestFixture, CopyObjectCheckEqual) {
 
     assertCorrectNumberOfEntities(2);
 
-    nlohmann::json j = World::getInstance<World::IWorldModify>().saveWorldToJson();
+    nlohmann::json j = System::IWorldModify::saveWorldToJson();
 
     ASSERT_EQ(2, j["entities"].size());
 

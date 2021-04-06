@@ -93,7 +93,7 @@ void Command::add(std::shared_ptr<BaseEntity> entity) {
     render->loadTexture("box.png", File());
     entity->setComponent<RenderableEntity>(render);
 
-    World::getInstance<World::IWorldModify>().addEntity(entity);
+    System::IWorldModify::addEntity(entity);
 
     editor_env->current_operation = std::make_shared<Operation>();
     editor_env->current_operation->entity_ = entity;
@@ -118,7 +118,7 @@ void Command::remove(std::shared_ptr<BaseEntity> entity) {
 
     editor_env->history->addOperation(editor_env->current_operation);
 
-    World::getInstance<World::IWorldModify>().removeEntity(entity);
+    System::IWorldModify::removeEntity(entity);
     editor_env->current_entity = nullptr;
 }
 
@@ -132,7 +132,7 @@ void Command::copy(std::shared_ptr<BaseEntity> entity) {
         if(auto transform = cp_entity->getComponent<Transform>()) {
             transform->setPosition(static_cast<int>(mouse_world_pos.first), static_cast<int>(mouse_world_pos.second));
         }
-        World::getInstance<World::IWorldModify>().addEntity(cp_entity);
+        System::IWorldModify::addEntity(cp_entity);
 
         editor_env->current_operation = std::make_shared<Operation>();
         editor_env->current_operation->entity_ = cp_entity;
@@ -174,7 +174,7 @@ void Command::handleCommand(Commands command) {
                 editor_env->current_operation->entity_ = editor_env->current_entity;
                 editor_env->current_operation->before_ = editor_env->current_entity->outputToJson();
 
-                World::getInstance<World::IWorldModify>().removeEntity(editor_env->current_entity);
+                System::IWorldModify::removeEntity(editor_env->current_entity);
                 if (editor_env->current_entity->getComponent<RenderableEntity>()) {
                     editor_env->current_entity->setComponent<RenderableEntity>({});
                 } else {
@@ -182,7 +182,7 @@ void Command::handleCommand(Commands command) {
                     renderable->loadTexture("box.png", File());
                     editor_env->current_entity->setComponent<RenderableEntity>(renderable);
                 }
-                World::getInstance<World::IWorldModify>().addEntity(editor_env->current_entity);
+                System::IWorldModify::addEntity(editor_env->current_entity);
                 editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();
 
                 editor_env->history->addOperation(editor_env->current_operation);
@@ -194,13 +194,13 @@ void Command::handleCommand(Commands command) {
                 editor_env->current_operation->entity_ = editor_env->current_entity;
                 editor_env->current_operation->before_ = editor_env->current_entity->outputToJson();
 
-                World::getInstance<World::IWorldModify>().removeEntity(editor_env->current_entity);
+                System::IWorldModify::removeEntity(editor_env->current_entity);
                 if (editor_env->current_entity->getComponent<Collision>()) {
                     editor_env->current_entity->setComponent<Collision>({});
                 } else {
                     editor_env->current_entity->setComponent<Collision>(std::make_shared<Collision>(editor_env->current_entity->components_));
                 }
-                World::getInstance<World::IWorldModify>().addEntity(editor_env->current_entity);
+                System::IWorldModify::addEntity(editor_env->current_entity);
                 editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();
 
                 editor_env->history->addOperation(editor_env->current_operation);
@@ -212,14 +212,14 @@ void Command::handleCommand(Commands command) {
                 editor_env->current_operation->entity_ = editor_env->current_entity;
                 editor_env->current_operation->before_ = editor_env->current_entity->outputToJson();
 
-                World::getInstance<World::IWorldModify>().removeEntity(editor_env->current_entity);
+                System::IWorldModify::removeEntity(editor_env->current_entity);
                 if (editor_env->current_entity->getComponent<MovableEntity>()) {
                     editor_env->current_entity->setComponent<MovableEntity>({});
                 } else {
                     auto movable = std::make_shared<MovableEntity>(editor_env->current_entity->components_);
                     editor_env->current_entity->setComponent<MovableEntity>(movable);
                 }
-                World::getInstance<World::IWorldModify>().addEntity(editor_env->current_entity);
+                System::IWorldModify::addEntity(editor_env->current_entity);
                 editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();
 
                 editor_env->history->addOperation(editor_env->current_operation);
@@ -231,14 +231,14 @@ void Command::handleCommand(Commands command) {
                 editor_env->current_operation->entity_ = editor_env->current_entity;
                 editor_env->current_operation->before_ = editor_env->current_entity->outputToJson();
 
-                World::getInstance<World::IWorldModify>().removeEntity(editor_env->current_entity);
+                System::IWorldModify::removeEntity(editor_env->current_entity);
                 if (editor_env->current_entity->getComponent<Physics>()) {
                     editor_env->current_entity->setComponent<Physics>({});
                 } else {
                     auto physics = std::make_shared<Physics>(editor_env->current_entity->components_);
                     editor_env->current_entity->setComponent<Physics>(physics);
                 }
-                World::getInstance<World::IWorldModify>().addEntity(editor_env->current_entity);
+                System::IWorldModify::addEntity(editor_env->current_entity);
                 editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();
 
                 editor_env->history->addOperation(editor_env->current_operation);
@@ -250,14 +250,14 @@ void Command::handleCommand(Commands command) {
                 editor_env->current_operation->entity_ = editor_env->current_entity;
                 editor_env->current_operation->before_ = editor_env->current_entity->outputToJson();
 
-                World::getInstance<World::IWorldModify>().removeEntity(editor_env->current_entity);
+                System::IWorldModify::removeEntity(editor_env->current_entity);
                 if (editor_env->current_entity->getComponent<Actions>()) {
                     editor_env->current_entity->setComponent<Actions>({});
                 } else {
                     auto actions = std::make_shared<Actions>(editor_env->current_entity->components_);
                     editor_env->current_entity->setComponent<Actions>(actions);
                 }
-                World::getInstance<World::IWorldModify>().addEntity(editor_env->current_entity);
+                System::IWorldModify::addEntity(editor_env->current_entity);
                 editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();
 
                 editor_env->history->addOperation(editor_env->current_operation);

@@ -15,7 +15,7 @@
 #include "collideables/damage/collideable_player_hitbox.h"
 #include "collideables/damage/collideable_enemy_hitbox.h"
 
-#include "system/world.h"
+#include "system/system.h"
 
 namespace {
 
@@ -92,7 +92,7 @@ std::shared_ptr<Collideable> Collision::getCollideable() const {
 void Collision::addTemporaryCollideable(nlohmann::json j) {
     temp_coll_ = Collideable::createFromJson(j, component_store_);
 
-    World::IWorldModify::addCollideable(temp_coll_);
+    System::IWorldModify::addCollideable(temp_coll_);
 }
 
 void Collision::clearTemporaryCollideables() {

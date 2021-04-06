@@ -23,7 +23,7 @@ const std::array<std::pair<Collideable::CollisionType, sf::Color>, 10> type_colo
 }};
 
 void renderHitboxes(sf::RenderTarget& target, Collideable::CollisionType coll_type, sf::Color color) {
-    auto colls = World::IWorldRead::getCollideables(coll_type);
+    auto colls = System::IWorldRead::getCollideables(coll_type);
 
     for (auto it : colls) {
         if (auto ptr = it.lock()) {
@@ -101,7 +101,7 @@ void EditorRender::render(sf::RenderWindow& window, float frame_fraction) {
     }
 
     if (render_entrances_) {
-        renderEntrances(texture, World::IWorldRead::getEntrances());
+        renderEntrances(texture, System::IWorldRead::getEntrances());
     }
 
     texture.display();
@@ -183,6 +183,6 @@ void EditorRender::setCameraBox(Camera::CameraBoundingBox camera_box) {
         return;
     }
 
-    World::IWorldModify::loadCameraData(camera_box);
+    System::IWorldModify::loadCameraData(camera_box);
     System::getCamera()->setCameraBox(camera_box);
 }

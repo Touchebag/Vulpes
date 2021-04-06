@@ -14,7 +14,7 @@ std::shared_ptr<BaseEntity> makeHudText(std::pair<int, int> position = {0, 0}) {
 
     text_element->setComponent<Transform>(trans);
     text_element->setComponent<RenderableEntity>(text);
-    World::getInstance<World::IWorldModify>().addEntity(text_element);
+    System::IWorldModify::addEntity(text_element);
 
     return text_element;
 }

@@ -1,6 +1,6 @@
 #include "collideable_transition.h"
 
-#include "system/world.h"
+#include "system/system.h"
 #include "utils/log.h"
 
 CollideableTransition::CollideableTransition(std::weak_ptr<ComponentStore> components) :
@@ -8,10 +8,10 @@ CollideableTransition::CollideableTransition(std::weak_ptr<ComponentStore> compo
 }
 
 void CollideableTransition::update() {
-    auto player = World::IWorldRead::getPlayer().lock();
+    auto player = System::IWorldRead::getPlayer().lock();
 
     if (player->getComponent<Collision>() && collides(player->getComponent<Collision>()->getCollideable())) {
-        World::IWorldModify::loadRoom(room_, entrance_id_);
+        System::IWorldModify::loadRoom(room_, entrance_id_);
     }
 }
 

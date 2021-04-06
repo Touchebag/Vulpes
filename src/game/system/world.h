@@ -9,6 +9,8 @@
 #include "components/rendering/rendering_text.h"
 #include "camera.h"
 
+class System;
+
 class World {
 /* This class is intended to store all world objects like walls.
  * This is to be able to move the collision logic into the player/enemy enities
@@ -16,61 +18,10 @@ class World {
  * TODO Figure out if this is a good idea
  */
   public:
-    class IWorldRead {
-      public:
-        static const std::vector<std::weak_ptr<const Collideable>>& getCollideables(Collideable::CollisionType coll_type);
-
-        static util::Point getPlayerPosition();
-
-        static std::weak_ptr<const Player> getPlayer();
-
-        static bool hasInteractTriggered();
-
-        static std::string getCurrentRoomName();
-
-        static std::vector<util::Point> getEntrances();
-    };
-
-    class IWorldModify {
-      public:
-        static void addEntity(std::shared_ptr<BaseEntity> entity);
-        static void removeEntity(std::shared_ptr<BaseEntity> entity);
-
-        static void addCollideable(std::shared_ptr<Collideable> collideable);
-
-        static void loadWorldFromJson(nlohmann::json j);
-        static void loadWorldFromFile(std::string file);
-
-        static nlohmann::json saveWorldToJson();
-        static void saveWorldToFile(std::string file);
-
-        static void update();
-
-        static void clearWorld();
-
-        static std::vector<std::shared_ptr<BaseEntity>>& getWorldObjects();
-        static std::weak_ptr<Player> getPlayer();
-
-        static void triggerInterract();
-
-        static void loadRoom(std::string room_name, int entrance_id);
-
-        static void setEntrance(int entrance_id);
-
-        static void loadCameraData(Camera::CameraBoundingBox camera_box);
-    };
-
-    template <class T>
-    static T getInstance();
-
-    World(const World&) = delete;
-    World(World&&) = delete;
-    World operator=(const World&) = delete;
-    World operator=(World&&) = delete;
+    friend System;
 
   private:
     // Functions
-    static World& getWorldInstance();
     std::weak_ptr<Player> getPlayer();
 
     nlohmann::json saveWorldToJson();
@@ -102,9 +53,6 @@ class World {
 
     std::vector<std::shared_ptr<BaseEntity>>& getWorldObjects();
 
-    World() = default;
-
-
     // Data
     std::shared_ptr<Player> player_;
 
@@ -129,6 +77,3 @@ class World {
 
     std::optional<Camera::CameraBoundingBox> camera_box_;
 };
-
-template <> World::IWorldRead World::getInstance<World::IWorldRead>();
-template <> World::IWorldModify World::getInstance<World::IWorldModify>();
