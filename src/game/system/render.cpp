@@ -40,49 +40,8 @@ Render::Render() :
     for (int i = -5; i <= 5; i++) {
         getLayer(i).parallax_multiplier = parallax_map.at(i);
     }
-    std::shared_ptr<sf::Shader> shader;
 
-    getLayer(-5).shaders.clear();
-    shader = File().loadShader("color_fade.frag");
-    shader->setUniform("target_color", sf::Glsl::Vec3(0.5f, 0.8f, 1.0f));
-    shader->setUniform("intensity", 0.3f);
-    getLayer(-5).shaders.push_back(shader);
-
-    getLayer(-4).shaders.clear();
-    shader = File().loadShader("color_fade.frag");
-    shader->setUniform("target_color", sf::Glsl::Vec3(0.5f, 0.8f, 1.0f));
-    shader->setUniform("intensity", 0.15f);
-    getLayer(-4).shaders.push_back(shader);
-
-    getLayer(-3).shaders.clear();
-    shader = File().loadShader("color_fade.frag");
-    shader->setUniform("target_color", sf::Glsl::Vec3(0.5f, 0.8f, 1.0f));
-    shader->setUniform("intensity", 0.05f);
-    getLayer(-3).shaders.push_back(shader);
-
-    getLayer(3).shaders.clear();
-    shader = File().loadShader("blur.frag");
-    shader->setUniform("direction", sf::Glsl::Vec2(1.0, 0.0));
-    getLayer(3).shaders.push_back(shader);
-    shader = File().loadShader("blur.frag");
-    shader->setUniform("direction", sf::Glsl::Vec2(0.0, 1.0));
-    getLayer(3).shaders.push_back(shader);
-
-    getLayer(4).shaders.clear();
-    shader = File().loadShader("blur.frag");
-    shader->setUniform("direction", sf::Glsl::Vec2(1.0, 0.0));
-    getLayer(4).shaders.push_back(shader);
-    shader = File().loadShader("blur.frag");
-    shader->setUniform("direction", sf::Glsl::Vec2(0.0, 1.0));
-    getLayer(4).shaders.push_back(shader);
-
-    getLayer(5).shaders.clear();
-    shader = File().loadShader("blur.frag");
-    shader->setUniform("direction", sf::Glsl::Vec2(1.0, 0.0));
-    getLayer(5).shaders.push_back(shader);
-    shader = File().loadShader("blur.frag");
-    shader->setUniform("direction", sf::Glsl::Vec2(0.0, 1.0));
-    getLayer(5).shaders.push_back(shader);
+    loadLayerShaders({});
 }
 
 void Render::renderLayerWithPostProcessing(sf::RenderWindow& window, int layer, float frame_fraction) {
@@ -97,13 +56,13 @@ void Render::renderLayerWithPostProcessing(sf::RenderWindow& window, int layer, 
             if (render_from_primary) {
                 secondary_render_texture_.clear(sf::Color(0, 0, 0, 0));
                 secondary_render_texture_.setView(window.getView());
-                secondary_render_texture_.draw(render_layer_sprite_, shader.get());
+                secondary_render_texture_.draw(render_layer_sprite_, shader.update().get());
                 secondary_render_texture_.display();
                 render_from_primary = false;
             } else {
                 render_texture_.clear(sf::Color(0, 0, 0, 0));
                 render_texture_.setView(window.getView());
-                render_texture_.draw(secondary_render_layer_sprite_, shader.get());
+                render_texture_.draw(secondary_render_layer_sprite_, shader.update().get());
                 render_texture_.display();
                 render_from_primary = true;
             }
@@ -255,4 +214,101 @@ void Render::addEntity(std::weak_ptr<RenderableEntity> entity) {
 
         getLayerRenderables(layer).push_back(entity);
     }
+}
+
+void Render::loadLayerShaders(nlohmann::json j) {
+    j["shader"] = "color_fade.frag";
+    j["uniforms"] = nlohmann::json::parse(R"--(
+    [
+        {
+            "type": "constant_float",
+            "name": "intensity",
+            "value": 0.3
+        },
+        {
+            "type": "constant_vec4",
+            "name": "target_color",
+            "a": 0.5,
+            "b": 0.8,
+            "c": 1.0,
+            "d": 0.0
+        }
+    ]
+    )--");
+    getLayer(-5).shaders.clear();
+    getLayer(-5).shaders.push_back(ShaderHandle::createFromJson(j));
+
+    j["shader"] = "color_fade.frag";
+    j["uniforms"] = nlohmann::json::parse(R"--(
+    [
+        {
+            "type": "constant_float",
+            "name": "intensity",
+            "value": 0.15
+        },
+        {
+            "type": "constant_vec4",
+            "name": "target_color",
+            "a": 0.5,
+            "b": 0.8,
+            "c": 1.0,
+            "d": 0.0
+        }
+    ]
+    )--");
+    getLayer(-4).shaders.clear();
+    getLayer(-4).shaders.push_back(ShaderHandle::createFromJson(j));
+
+    j["shader"] = "color_fade.frag";
+    j["uniforms"] = nlohmann::json::parse(R"--(
+    [
+        {
+            "type": "constant_float",
+            "name": "intensity",
+            "value": 0.05
+        },
+        {
+            "type": "constant_vec4",
+            "name": "target_color",
+            "a": 0.5,
+            "b": 0.8,
+            "c": 1.0,
+            "d": 0.0
+        }
+    ]
+    )--");
+    getLayer(-3).shaders.clear();
+    getLayer(-3).shaders.push_back(ShaderHandle::createFromJson(j));
+
+    // All three foreground layers share shaders for now
+    getLayer(3).shaders.clear();
+    getLayer(4).shaders.clear();
+    getLayer(5).shaders.clear();
+    j["shader"] = "blur.frag";
+    j["uniforms"] = nlohmann::json::parse(R"--(
+    [
+        {
+            "type": "constant_vec2",
+            "name": "direction",
+            "a": 1.0,
+            "b": 0.0
+        }
+    ]
+    )--");
+    getLayer(3).shaders.push_back(ShaderHandle::createFromJson(j));
+    getLayer(4).shaders.push_back(ShaderHandle::createFromJson(j));
+    getLayer(5).shaders.push_back(ShaderHandle::createFromJson(j));
+    j["uniforms"] = nlohmann::json::parse(R"--(
+    [
+        {
+            "type": "constant_vec2",
+            "name": "direction",
+            "a": 0.0,
+            "b": 1.0
+        }
+    ]
+    )--");
+    getLayer(3).shaders.push_back(ShaderHandle::createFromJson(j));
+    getLayer(4).shaders.push_back(ShaderHandle::createFromJson(j));
+    getLayer(5).shaders.push_back(ShaderHandle::createFromJson(j));
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "i_render.h"
+#include "shader_handle.h"
 
 class EditorRender;
 
@@ -18,6 +19,8 @@ class Render : public IRender {
     void setWindowSize(sf::RenderWindow& window, int width, int height) override;
 
   private:
+    void loadLayerShaders(nlohmann::json j);
+
     void drawHud(sf::RenderWindow& window);
     void drawPlayer(sf::RenderWindow& window, float frame_fraction);
 
@@ -26,7 +29,7 @@ class Render : public IRender {
     // Layers
     struct RenderLayer {
         std::vector<std::weak_ptr<RenderableEntity>> renderables;
-        std::vector<std::shared_ptr<sf::Shader>> shaders;
+        std::vector<ShaderHandle> shaders;
         float parallax_multiplier;
     };
 
