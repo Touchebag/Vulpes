@@ -8,7 +8,7 @@ class ConstantFloat : public IShaderUniform {
   public:
     ConstantFloat(std::string uniform_name);
 
-    void apply_uniform(std::shared_ptr<sf::Shader> shader) override;
+    void applyUniform(std::shared_ptr<sf::Shader> shader) override;
 
     static std::shared_ptr<ConstantFloat> createFromJson(nlohmann::json j);
 

@@ -8,7 +8,7 @@ class ConstantVec2 : public IShaderUniform {
   public:
     ConstantVec2(std::string uniform_name);
 
-    void apply_uniform(std::shared_ptr<sf::Shader> shader) override;
+    void applyUniform(std::shared_ptr<sf::Shader> shader) override;
 
     static std::shared_ptr<ConstantVec2> createFromJson(nlohmann::json j);
 

@@ -4,7 +4,7 @@ ConstantFloat::ConstantFloat(std::string uniform_name) :
     IShaderUniform(uniform_name) {
 }
 
-void ConstantFloat::apply_uniform(std::shared_ptr<sf::Shader> shader) {
+void ConstantFloat::applyUniform(std::shared_ptr<sf::Shader> shader) {
     shader->setUniform(uniform_name_, value_);
 }
 

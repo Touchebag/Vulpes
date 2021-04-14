@@ -3,6 +3,7 @@
 #include "uniforms/constant_float.h"
 #include "uniforms/constant_vec2.h"
 #include "uniforms/constant_vec4.h"
+#include "uniforms/window_size.h"
 
 #include "utils/file.h"
 
@@ -31,6 +32,8 @@ ShaderHandle ShaderHandle::createFromJson(nlohmann::json j) {
                 uniform = ConstantVec2::createFromJson(it);
             } else if (type == "constant_vec4") {
                 uniform = ConstantVec4::createFromJson(it);
+            } else if (type == "window_size") {
+                uniform = WindowSize::createFromJson(it);
             } else {
                 LOGW("Shader uniform: unknown type %s", it["type"].get<std::string>().c_str());
                 continue;
@@ -47,7 +50,7 @@ ShaderHandle ShaderHandle::createFromJson(nlohmann::json j) {
 
 ShaderHandle& ShaderHandle::update() {
     for (auto it : uniforms_) {
-        it->apply_uniform(shader_);
+        it->applyUniform(shader_);
     }
 
     return *this;

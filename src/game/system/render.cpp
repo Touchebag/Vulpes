@@ -292,6 +292,10 @@ void Render::loadLayerShaders(nlohmann::json j) {
             "name": "direction",
             "a": 1.0,
             "b": 0.0
+        },
+        {
+            "type": "window_size",
+            "name": "render_size"
         }
     ]
     )--");
@@ -305,6 +309,10 @@ void Render::loadLayerShaders(nlohmann::json j) {
             "name": "direction",
             "a": 0.0,
             "b": 1.0
+        },
+        {
+            "type": "window_size",
+            "name": "render_size"
         }
     ]
     )--");

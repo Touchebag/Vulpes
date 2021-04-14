@@ -4,7 +4,7 @@ ConstantVec2::ConstantVec2(std::string uniform_name) :
     IShaderUniform(uniform_name) {
 }
 
-void ConstantVec2::apply_uniform(std::shared_ptr<sf::Shader> shader) {
+void ConstantVec2::applyUniform(std::shared_ptr<sf::Shader> shader) {
     shader->setUniform(uniform_name_, value_);
 }
 

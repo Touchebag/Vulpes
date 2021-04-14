@@ -10,7 +10,7 @@ class IShaderUniform {
 
     virtual ~IShaderUniform() = default;
 
-    virtual void apply_uniform(std::shared_ptr<sf::Shader> shader) = 0;
+    virtual void applyUniform(std::shared_ptr<sf::Shader> shader) = 0;
 
   protected:
     std::string uniform_name_;
