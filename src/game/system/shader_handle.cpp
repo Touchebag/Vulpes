@@ -4,6 +4,7 @@
 #include "uniforms/constant_vec2.h"
 #include "uniforms/constant_vec4.h"
 #include "uniforms/window_size.h"
+#include "uniforms/relative_timer.h"
 
 #include "utils/file.h"
 
@@ -34,6 +35,8 @@ ShaderHandle ShaderHandle::createFromJson(nlohmann::json j) {
                 uniform = ConstantVec4::createFromJson(it);
             } else if (type == "window_size") {
                 uniform = WindowSize::createFromJson(it);
+            } else if (type == "relative_timer") {
+                uniform = RelativeTimer::createFromJson(it);
             } else {
                 LOGW("Shader uniform: unknown type %s", it["type"].get<std::string>().c_str());
                 continue;
