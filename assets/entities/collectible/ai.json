@@ -1,10 +1,12 @@
 {
-    "main": {
-        "actions": [
-            {
-                "condition": "collides (player)",
-                "action": "die"
-            }
-        ]
+    "states": {
+        "main": {
+            "actions": [
+                {
+                    "condition": "collides (player)",
+                    "action": "die"
+                }
+            ]
+        }
     }
 }

@@ -5,8 +5,6 @@
 #include "json.hpp"
 #include "base_entity.h"
 
-#include "utils/log.h"
-
 StatefulEntity::StatefulEntity(std::weak_ptr<ComponentStore> components) :
     Component(components) {
 }

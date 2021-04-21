@@ -10,29 +10,31 @@ class StateTestFixture : public ::testing::Test {
 
     std::string state_json_ = R"--(
 {
-    "main": {
-        "next_states": [
-            {"event": "start", "state": "main2"},
-            {"event": "touching_floor", "state": "main4"}
-        ],
-        "frame_timer": 1
-    },
-    "main2": {
-        "next_states": [
-            {"event": "touching_floor", "state": "main3"}
-        ],
-        "frame_timer": 2
-    },
-    "main3": {
-        "next_states": [
-            {"event": "touching_wall", "state": "main2"}
-        ],
-        "frame_timer": 3
-    },
-    "main4": {
-        "next_states": [
-        ],
-        "frame_timer": 4
+    "states": {
+        "main": {
+            "next_states": [
+                {"event": "start", "state": "main2"},
+                {"event": "touching_floor", "state": "main4"}
+            ],
+            "frame_timer": 1
+        },
+        "main2": {
+            "next_states": [
+                {"event": "touching_floor", "state": "main3"}
+            ],
+            "frame_timer": 2
+        },
+        "main3": {
+            "next_states": [
+                {"event": "touching_wall", "state": "main2"}
+            ],
+            "frame_timer": 3
+        },
+        "main4": {
+            "next_states": [
+            ],
+            "frame_timer": 4
+        }
     }
 }
         )--";
@@ -90,14 +92,16 @@ TEST_F(StateTestFixture, NoFollowingStates) {
 TEST_F(StateTestFixture, ParseError) {
     std::string state_json_invalid = R"--(
 {
-    "main": {
-        "next_states": [
-            {"event": "invalid_event", "state": "main"}
-        ],
-        "data": 1
+    "states": {
+        "main": {
+            "next_states": [
+                {"event": "invalid_event", "state": "main"}
+            ],
+            "data": 1
+        }
     }
 }
-        )--";
+    )--";
 
     try {
         state_handler_.reloadFromJson(nlohmann::json::parse(state_json_invalid));
@@ -107,4 +111,29 @@ TEST_F(StateTestFixture, ParseError) {
     }
 
     // Let other exceptions propagate and fail test case
+}
+
+TEST_F(StateTestFixture, TemplateLoad) {
+    std::string template_json = R"--(
+{
+    "templates": {
+        "test_templ": {
+            "frame_timer": 5
+        }
+    },
+    "states": {
+        "main": {
+            "template": "test_templ",
+            "next_states": [
+                {"event": "start", "state": "main2"},
+                {"event": "touching_floor", "state": "main4"}
+            ]
+        }
+    }
+}
+    )--";
+
+    state_handler_.reloadFromJson(nlohmann::json::parse(template_json));
+
+    ASSERT_EQ(state_handler_.getStateData().state_props.frame_timer_, 5);
 }

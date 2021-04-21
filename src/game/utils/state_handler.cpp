@@ -3,6 +3,8 @@
 #include "ai/logic_operators/logic_operator.h"
 #include "components/actions/actions.h"
 
+#include "utils/log.h"
+
 template <class T>
 void StateHandler<T>::resetState() {
     // TODO Error handling
@@ -11,10 +13,38 @@ void StateHandler<T>::resetState() {
 
 template <class T>
 void StateHandler<T>::reloadFromJson(const nlohmann::json& j) {
-    for (auto state = j.begin(); state != j.end(); ++state) {
+    state_list_.clear();
+
+    if (!j.contains("states")) {
+        LOGE("Unable to load states");
+        throw std::invalid_argument("Unable to load states");
+    }
+
+    std::unordered_map<std::string, nlohmann::json> template_map;
+
+    if (j.contains("templates")) {
+        for (auto templ = j["templates"].begin(); templ != j["templates"].end(); ++templ) {
+            template_map.insert(std::make_pair(templ.key(), templ.value()));
+        }
+    }
+
+    for (auto state = j["states"].begin(); state != j["states"].end(); ++state) {
+        auto st = state.value();
+
+        if (st.contains("template")) {
+            try {
+                auto temp_state = template_map.at(st["template"].get<std::string>());
+                temp_state.update(st);
+                st = temp_state;
+            } catch (std::out_of_range& e) {
+                LOGE("State template %s not found", st["template"].get<std::string>().c_str());
+                throw e;
+            }
+        }
+
         state_list_.insert(std::make_pair(state.key(),
                     std::make_shared<State<T>>(
-                        State<T>::loadStateFromJson(state.value()))));
+                        State<T>::loadStateFromJson(st))));
     }
 
     resetState();

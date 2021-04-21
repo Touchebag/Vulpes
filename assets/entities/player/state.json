@@ -1,260 +1,265 @@
 {
-    "main": {
-        "next_states": [
-            {"event": "start", "state": "idle"}
-        ],
-        "animation": "idle"
-    },
-    "idle": {
-        "properties": {
-            "can_interact": true
-        },
-        "next_states": [
-            {"event": "moving", "state": "running"},
-            {"event": "jumping", "state": "jumping"},
-            {"event": "airborne", "state": "falling"},
-            {"event": "dashing", "state": "dashing"},
-            {"event": "attacking", "state": "attack"},
-            {"event": "damaged", "state": "taking_damage"}
-        ],
-        "animation": "idle"
-    },
-    "running": {
-        "properties": {
-            "can_interact": true
-        },
-        "next_states": [
-            {"event": "no_movement", "state": "idle"},
-            {"event": "jumping", "state": "jumping"},
-            {"event": "airborne", "state": "falling"},
-            {"event": "dashing", "state": "dashing"},
-            {"event": "attacking", "state": "attack"},
-            {"event": "damaged", "state": "taking_damage"}
-        ],
-        "animation": "running"
-    },
-    "jumping": {
-        "properties": {
-            "touching_ground": false,
-            "can_jump": true,
-            "can_air_dive": true
-        },
-        "next_states": [
-            {"event": "touching_floor", "state": "idle"},
-            {"event": "touching_wall", "state": "wall_slide_rising"},
-            {"event": "jumping", "state": "jumping"},
-            {"event": "falling", "state": "falling"},
-            {"event": "dashing", "state": "dashing"},
-            {"event": "air_diving", "state": "air_dive_start"},
-            {"event": "damaged", "state": "taking_damage"}
-        ],
-        "animation": "jumping"
-    },
-    "falling": {
-        "properties": {
-            "touching_ground": false,
-            "can_jump": true,
-            "can_air_dive": true
-        },
-        "next_states": [
-            {"event": "touching_floor", "state": "idle"},
-            {"event": "touching_wall", "state": "wall_slide"},
-            {"event": "jumping", "state": "jumping"},
-            {"event": "dashing", "state": "dashing"},
-            {"event": "air_diving", "state": "air_dive_start"},
-            {"event": "damaged", "state": "taking_damage"}
-        ],
-        "animation": "falling"
-    },
-    "wall_slide_rising": {
-        "properties": {
-            "touching_ground": false,
-            "touching_wall": true,
-            "direction_locked": true,
-            "can_dash": false
-        },
-        "frame_timer": 10,
-        "next_states": [
-            {"event": "touching_floor", "state": "idle"},
-            {"event": "jumping", "state": "wall_jump"},
-            {"event": "falling", "state": "wall_slide"},
-            {"event": "airborne", "state": "wall_jump_grace_period"},
-            {"event": "damaged", "state": "taking_damage"}
-        ],
-        "animation": "jumping"
-    },
-    "wall_slide": {
-        "properties": {
-            "touching_ground": false,
-            "touching_wall": true,
-            "direction_locked": true,
-            "can_dash": false
-        },
-        "frame_timer": 10,
-        "next_states": [
-            {"event": "touching_floor", "state": "idle"},
-            {"event": "jumping", "state": "wall_jump"},
-            {"event": "airborne", "state": "wall_jump_grace_period"},
-            {"event": "damaged", "state": "taking_damage"}
-        ],
-        "animation": "wall_slide"
-    },
-    "wall_jump_grace_period": {
-        "properties": {
-            "touching_ground": false,
-            "touching_wall": true
-        },
-        "frame_timer": 10,
-        "next_states": [
-            {"event": "touching_floor", "state": "idle"},
-            {"event": "touching_wall", "state": "wall_slide"},
-            {"event": "jumping", "state": "wall_jump"},
-            {"event": "dashing", "state": "dashing"},
-            {"event": "frame_timeout", "state": "falling"},
-            {"event": "damaged", "state": "taking_damage"}
-        ],
-        "animation": "falling"
-    },
-    "wall_jump": {
-        "properties": {
-            "touching_ground": false,
-            "can_jump": false,
-            "can_air_dive": true
-        },
-        "frame_timer": 10,
-        "next_states": [
-            {"event": "touching_wall", "state": "wall_slide"},
-            {"event": "dashing", "state": "dashing"},
-            {"event": "frame_timeout", "state": "jumping"},
-            {"event": "air_diving", "state": "air_dive_start"},
-            {"event": "damaged", "state": "taking_damage"}
-        ],
-        "animation": "jumping"
-    },
-    "dashing": {
-        "properties": {
-            "touching_ground": false,
-            "movement_locked_x": true,
-            "movement_locked_y": true,
-            "dashing": true,
-            "can_dash": false
-        },
-        "frame_timer": 10,
-        "next_states": [
-            {"event": "touching_floor", "state": "idle"},
-            {"event": "touching_wall", "state": "wall_slide"},
-            {"event": "jumping", "state": "jumping"},
-            {"event": "frame_timeout", "state": "falling"},
-            {"event": "damaged", "state": "taking_damage"}
-        ],
-        "animation": "dashing"
-    },
-    "attack": {
-        "properties": {
-            "movement_locked_x": true,
-            "movement_locked_y": true,
-            "can_dash": false
-        },
-        "frame_timer": 0,
-        "spawn_entity": {
-            "Entity": "attack"
-        },
-        "next_states": [
-            {"event": "jumping", "state": "jumping"},
-            {"event": "frame_timeout", "state": "attack_end_lag"},
-            {"event": "damaged", "state": "taking_damage"}
-        ],
-        "animation": "idle"
-    },
-    "attack_end_lag": {
-        "properties": {
-            "movement_locked_x": true,
-            "movement_locked_y": true,
-            "can_dash": false
-        },
-        "frame_timer": 30,
-        "next_states": [
-            {"event": "jumping", "state": "jumping"},
-            {"event": "frame_timeout", "state": "idle"},
-            {"event": "damaged", "state": "taking_damage"}
-        ],
-        "animation": "idle"
-    },
-    "taking_damage": {
-        "properties": {
-            "touching_ground": false,
-            "movement_locked_x": true,
-            "can_dash": false,
-            "can_jump": false
-        },
-        "frame_timer": 15,
-        "next_states": [
-            {"event": "frame_timeout", "state": "falling"}
-        ],
-        "animation": "falling"
-    },
-    "air_dive_start": {
-        "properties": {
-            "touching_ground": false,
-            "movement_locked_x": true,
-            "can_dash": false,
-            "can_jump": false,
-            "air_diving": true
-        },
-        "next_states": [
-            {"event": "touching_floor", "state": "hard_landing"},
-            {"event": "frame_timeout", "state": "air_dive"},
-            {"event": "dive_bounce", "state": "falling"},
-            {"event": "damaged", "state": "taking_damage"}
-        ],
-        "animation": "air_diving",
-        "frame_timer": 14,
-        "collideable": {
-            "type": "player_dive",
-            "width": 150,
-            "height": 200,
-            "offset": {
-                "x": 0,
-                "y": 200
+    "templates": {
+        "grounded": {
+            "properties": {
+                "can_interact": true
             }
         }
     },
-    "air_dive": {
-        "properties": {
-            "touching_ground": false,
-            "movement_locked_x": true,
-            "can_dash": false,
-            "can_jump": false,
-            "air_diving": true
+    "states": {
+        "main": {
+            "next_states": [
+                {"event": "start", "state": "idle"}
+            ],
+            "animation": "idle"
         },
-        "next_states": [
-            {"event": "touching_floor", "state": "hard_landing"},
-            {"event": "dive_bounce", "state": "falling"},
-            {"event": "damaged", "state": "taking_damage"}
-        ],
-        "animation": "falling",
-        "collideable": {
-            "type": "player_dive",
-            "width": 150,
-            "height": 200,
-            "offset": {
-                "x": 0,
-                "y": 200
+        "idle": {
+            "template": "grounded",
+            "next_states": [
+                {"event": "moving", "state": "running"},
+                {"event": "jumping", "state": "jumping"},
+                {"event": "airborne", "state": "falling"},
+                {"event": "dashing", "state": "dashing"},
+                {"event": "attacking", "state": "attack"},
+                {"event": "damaged", "state": "taking_damage"}
+            ],
+            "animation": "idle"
+        },
+        "running": {
+            "template": "grounded",
+            "next_states": [
+                {"event": "no_movement", "state": "idle"},
+                {"event": "jumping", "state": "jumping"},
+                {"event": "airborne", "state": "falling"},
+                {"event": "dashing", "state": "dashing"},
+                {"event": "attacking", "state": "attack"},
+                {"event": "damaged", "state": "taking_damage"}
+            ],
+            "animation": "running"
+        },
+        "jumping": {
+            "properties": {
+                "touching_ground": false,
+                "can_jump": true,
+                "can_air_dive": true
+            },
+            "next_states": [
+                {"event": "touching_floor", "state": "idle"},
+                {"event": "touching_wall", "state": "wall_slide_rising"},
+                {"event": "jumping", "state": "jumping"},
+                {"event": "falling", "state": "falling"},
+                {"event": "dashing", "state": "dashing"},
+                {"event": "air_diving", "state": "air_dive_start"},
+                {"event": "damaged", "state": "taking_damage"}
+            ],
+            "animation": "jumping"
+        },
+        "falling": {
+            "properties": {
+                "touching_ground": false,
+                "can_jump": true,
+                "can_air_dive": true
+            },
+            "next_states": [
+                {"event": "touching_floor", "state": "idle"},
+                {"event": "touching_wall", "state": "wall_slide"},
+                {"event": "jumping", "state": "jumping"},
+                {"event": "dashing", "state": "dashing"},
+                {"event": "air_diving", "state": "air_dive_start"},
+                {"event": "damaged", "state": "taking_damage"}
+            ],
+            "animation": "falling"
+        },
+        "wall_slide_rising": {
+            "properties": {
+                "touching_ground": false,
+                "touching_wall": true,
+                "direction_locked": true,
+                "can_dash": false
+            },
+            "frame_timer": 10,
+            "next_states": [
+                {"event": "touching_floor", "state": "idle"},
+                {"event": "jumping", "state": "wall_jump"},
+                {"event": "falling", "state": "wall_slide"},
+                {"event": "airborne", "state": "wall_jump_grace_period"},
+                {"event": "damaged", "state": "taking_damage"}
+            ],
+            "animation": "jumping"
+        },
+        "wall_slide": {
+            "properties": {
+                "touching_ground": false,
+                "touching_wall": true,
+                "direction_locked": true,
+                "can_dash": false
+            },
+            "frame_timer": 10,
+            "next_states": [
+                {"event": "touching_floor", "state": "idle"},
+                {"event": "jumping", "state": "wall_jump"},
+                {"event": "airborne", "state": "wall_jump_grace_period"},
+                {"event": "damaged", "state": "taking_damage"}
+            ],
+            "animation": "wall_slide"
+        },
+        "wall_jump_grace_period": {
+            "properties": {
+                "touching_ground": false,
+                "touching_wall": true
+            },
+            "frame_timer": 10,
+            "next_states": [
+                {"event": "touching_floor", "state": "idle"},
+                {"event": "touching_wall", "state": "wall_slide"},
+                {"event": "jumping", "state": "wall_jump"},
+                {"event": "dashing", "state": "dashing"},
+                {"event": "frame_timeout", "state": "falling"},
+                {"event": "damaged", "state": "taking_damage"}
+            ],
+            "animation": "falling"
+        },
+        "wall_jump": {
+            "properties": {
+                "touching_ground": false,
+                "can_jump": false,
+                "can_air_dive": true
+            },
+            "frame_timer": 10,
+            "next_states": [
+                {"event": "touching_wall", "state": "wall_slide"},
+                {"event": "dashing", "state": "dashing"},
+                {"event": "frame_timeout", "state": "jumping"},
+                {"event": "air_diving", "state": "air_dive_start"},
+                {"event": "damaged", "state": "taking_damage"}
+            ],
+            "animation": "jumping"
+        },
+        "dashing": {
+            "properties": {
+                "touching_ground": false,
+                "movement_locked_x": true,
+                "movement_locked_y": true,
+                "dashing": true,
+                "can_dash": false
+            },
+            "frame_timer": 10,
+            "next_states": [
+                {"event": "touching_floor", "state": "idle"},
+                {"event": "touching_wall", "state": "wall_slide"},
+                {"event": "jumping", "state": "jumping"},
+                {"event": "frame_timeout", "state": "falling"},
+                {"event": "damaged", "state": "taking_damage"}
+            ],
+            "animation": "dashing"
+        },
+        "attack": {
+            "properties": {
+                "movement_locked_x": true,
+                "movement_locked_y": true,
+                "can_dash": false
+            },
+            "frame_timer": 0,
+            "spawn_entity": {
+                "Entity": "attack"
+            },
+            "next_states": [
+                {"event": "jumping", "state": "jumping"},
+                {"event": "frame_timeout", "state": "attack_end_lag"},
+                {"event": "damaged", "state": "taking_damage"}
+            ],
+            "animation": "idle"
+        },
+        "attack_end_lag": {
+            "properties": {
+                "movement_locked_x": true,
+                "movement_locked_y": true,
+                "can_dash": false
+            },
+            "frame_timer": 30,
+            "next_states": [
+                {"event": "jumping", "state": "jumping"},
+                {"event": "frame_timeout", "state": "idle"},
+                {"event": "damaged", "state": "taking_damage"}
+            ],
+            "animation": "idle"
+        },
+        "taking_damage": {
+            "properties": {
+                "touching_ground": false,
+                "movement_locked_x": true,
+                "can_dash": false,
+                "can_jump": false
+            },
+            "frame_timer": 15,
+            "next_states": [
+                {"event": "frame_timeout", "state": "falling"}
+            ],
+            "animation": "falling"
+        },
+        "air_dive_start": {
+            "properties": {
+                "touching_ground": false,
+                "movement_locked_x": true,
+                "can_dash": false,
+                "can_jump": false,
+                "air_diving": true
+            },
+            "next_states": [
+                {"event": "touching_floor", "state": "hard_landing"},
+                {"event": "frame_timeout", "state": "air_dive"},
+                {"event": "dive_bounce", "state": "falling"},
+                {"event": "damaged", "state": "taking_damage"}
+            ],
+            "animation": "air_diving",
+            "frame_timer": 14,
+            "collideable": {
+                "type": "player_dive",
+                "width": 150,
+                "height": 200,
+                "offset": {
+                    "x": 0,
+                    "y": 200
+                }
             }
-        }
-    },
-    "hard_landing": {
-        "properties": {
-            "movement_locked_x": true,
-            "movement_locked_y": true,
-            "can_dash": false
         },
-        "frame_timer": 20,
-        "next_states": [
-            {"event": "jumping", "state": "jumping"},
-            {"event": "frame_timeout", "state": "idle"},
-            {"event": "damaged", "state": "taking_damage"}
-        ],
-        "animation": "hard_landing"
+        "air_dive": {
+            "properties": {
+                "touching_ground": false,
+                "movement_locked_x": true,
+                "can_dash": false,
+                "can_jump": false,
+                "air_diving": true
+            },
+            "next_states": [
+                {"event": "touching_floor", "state": "hard_landing"},
+                {"event": "dive_bounce", "state": "falling"},
+                {"event": "damaged", "state": "taking_damage"}
+            ],
+            "animation": "falling",
+            "collideable": {
+                "type": "player_dive",
+                "width": 150,
+                "height": 200,
+                "offset": {
+                    "x": 0,
+                    "y": 200
+                }
+            }
+        },
+        "hard_landing": {
+            "properties": {
+                "movement_locked_x": true,
+                "movement_locked_y": true,
+                "can_dash": false
+            },
+            "frame_timer": 20,
+            "next_states": [
+                {"event": "jumping", "state": "jumping"},
+                {"event": "frame_timeout", "state": "idle"},
+                {"event": "damaged", "state": "taking_damage"}
+            ],
+            "animation": "hard_landing"
+        }
     }
 }
