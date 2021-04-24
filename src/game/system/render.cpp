@@ -294,6 +294,16 @@ void Render::loadLayerShaders(nlohmann::json j) {
             "b": 0.0
         },
         {
+            "type": "constant_int",
+            "name": "size",
+            "value": 35
+        },
+        {
+            "type": "constant_float",
+            "name": "sigma",
+            "value": 5.0
+        },
+        {
             "type": "window_size",
             "name": "render_size"
         }
@@ -309,6 +319,16 @@ void Render::loadLayerShaders(nlohmann::json j) {
             "name": "direction",
             "a": 0.0,
             "b": 1.0
+        },
+        {
+            "type": "constant_int",
+            "name": "size",
+            "value": 35
+        },
+        {
+            "type": "constant_float",
+            "name": "sigma",
+            "value": 5.0
         },
         {
             "type": "window_size",

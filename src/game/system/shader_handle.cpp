@@ -1,5 +1,6 @@
 #include "shader_handle.h"
 
+#include "uniforms/constant_int.h"
 #include "uniforms/constant_float.h"
 #include "uniforms/constant_vec2.h"
 #include "uniforms/constant_vec4.h"
@@ -27,7 +28,9 @@ ShaderHandle ShaderHandle::createFromJson(nlohmann::json j) {
             std::shared_ptr<IShaderUniform> uniform;
             std::string type = it["type"].get<std::string>();
 
-            if (type == "constant_float") {
+            if (type == "constant_int") {
+                uniform = ConstantInt::createFromJson(it);
+            } else if (type == "constant_float") {
                 uniform = ConstantFloat::createFromJson(it);
             } else if (type == "constant_vec2") {
                 uniform = ConstantVec2::createFromJson(it);
@@ -44,6 +47,8 @@ ShaderHandle ShaderHandle::createFromJson(nlohmann::json j) {
 
             if (uniform) {
                 handle.uniforms_.push_back(uniform);
+            } else {
+                LOGW("Failed to load shader %s", it["type"].get<std::string>().c_str());
             }
         }
     }
