@@ -28,8 +28,8 @@ void main() {
         int t2 = 2 * i;
 
         // Add weights together
-        float weight1 = pow(e, -(float(t1) * float(t1)) / (2 * sigma * sigma)) / sqrt (PI2 * sigma * sigma);
-        float weight2 = pow(e, -(float(t2) * float(t2)) / (2 * sigma * sigma)) / sqrt (PI2 * sigma * sigma);
+        float weight1 = pow(e, -(float(t1) * float(t1)) / (2.0 * sigma * sigma)) / sqrt (PI2 * sigma * sigma);
+        float weight2 = pow(e, -(float(t2) * float(t2)) / (2.0 * sigma * sigma)) / sqrt (PI2 * sigma * sigma);
         weight = weight1 + weight2;
 
         float offset = weight1 / weight;
