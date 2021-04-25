@@ -21,13 +21,23 @@ void main() {
     float weight = 1.0 / sqrt(PI2 * sigma * sigma);
     blur_color += texture2D(texture, vec2(pixel.x, pixel.y)) * weight;
 
-    // Add pixels symmetrically
+    // Add pixels symmetrically using linear interpolation
     for (int i = 1; i <= size; ++i) {
-        weight = pow(e, -(float(i) * float(i)) / (2 * sigma * sigma)) / sqrt (PI2 * sigma * sigma);
-        blur_color += texture2D(texture, vec2(pixel.x - float(i) * hstep * direction.x,
-                                              pixel.y - float(i) * vstep * direction.y)) * weight;
-        blur_color += texture2D(texture, vec2(pixel.x + float(i) * hstep * direction.x,
-                                              pixel.y + float(i) * vstep * direction.y)) * weight;
+        // Calculate fragment coords
+        int t1 = 2 * i - 1;
+        int t2 = 2 * i;
+
+        // Add weights together
+        float weight1 = pow(e, -(float(t1) * float(t1)) / (2 * sigma * sigma)) / sqrt (PI2 * sigma * sigma);
+        float weight2 = pow(e, -(float(t2) * float(t2)) / (2 * sigma * sigma)) / sqrt (PI2 * sigma * sigma);
+        weight = weight1 + weight2;
+
+        float offset = weight1 / weight;
+
+        blur_color += texture2D(texture, vec2(pixel.x - (float(t1) - offset) * hstep * direction.x,
+                                              pixel.y - (float(t1) - offset) * vstep * direction.y)) * weight;
+        blur_color += texture2D(texture, vec2(pixel.x + (float(t1) + offset) * hstep * direction.x,
+                                              pixel.y + (float(t1) + offset) * vstep * direction.y)) * weight;
     }
 
 	gl_FragColor = blur_color;
