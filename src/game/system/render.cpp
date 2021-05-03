@@ -21,7 +21,9 @@ const std::map<int, float> parallax_map = {
     {5, 1.15},
 };
 
-void renderAllEntitesInVector(std::vector<std::weak_ptr<RenderableEntity>>& layer, sf::RenderTarget& target, float frame_fraction = 0.0f) {
+void renderAllEntitesInVector(std::vector<std::weak_ptr<RenderableEntity>>& layer,
+                              sf::RenderTarget& target,
+                              float frame_fraction = 0.0f) {
     for (auto it = layer.begin(); it != layer.end(); ) {
         if (auto ptr = it->lock()) {
             ptr->render(target, frame_fraction);
@@ -41,39 +43,31 @@ Render::Render() :
         getLayer(i).parallax_multiplier = parallax_map.at(i);
     }
 
+    to_render_texture_ = std::make_shared<sf::RenderTexture>();
+    from_render_texture_ = std::make_shared<sf::RenderTexture>();
+
     loadLayerShaders({});
 }
 
 void Render::renderLayerWithPostProcessing(sf::RenderWindow& window, int layer, float frame_fraction) {
-    render_texture_.clear(sf::Color(0, 0, 0, 0));
-
-    renderLayer(render_texture_, frame_fraction, layer);
-    render_texture_.display();
-    bool render_from_primary = true;
+    // Render layer without shaders
+    to_render_texture_->clear(sf::Color(0, 0, 0, 0));
+    renderLayer(*to_render_texture_, frame_fraction, layer);
+    to_render_texture_->display();
 
     if (!getLayer(layer).shaders.empty()) {
         for (auto shader : getLayer(layer).shaders) {
-            if (render_from_primary) {
-                secondary_render_texture_.clear(sf::Color(0, 0, 0, 0));
-                secondary_render_texture_.setView(window.getView());
-                secondary_render_texture_.draw(render_layer_sprite_, shader.update().get());
-                secondary_render_texture_.display();
-                render_from_primary = false;
-            } else {
-                render_texture_.clear(sf::Color(0, 0, 0, 0));
-                render_texture_.setView(window.getView());
-                render_texture_.draw(secondary_render_layer_sprite_, shader.update().get());
-                render_texture_.display();
-                render_from_primary = true;
-            }
+            // Set previous render texture as base for next render
+            std::swap(to_render_texture_, from_render_texture_);
+
+            to_render_texture_->clear(sf::Color(0, 0, 0, 0));
+            to_render_texture_->setView(window.getView());
+            to_render_texture_->draw(sf::Sprite(from_render_texture_->getTexture()), shader.update().get());
+            to_render_texture_->display();
         }
     }
 
-    if (render_from_primary) {
-        window.draw(render_layer_sprite_);
-    } else {
-        window.draw(secondary_render_layer_sprite_);
-    }
+    window.draw(sf::Sprite(to_render_texture_->getTexture()));
 }
 
 void Render::renderLayer(sf::RenderTarget& target, float frame_fraction, int layer) {
@@ -101,7 +95,7 @@ void Render::drawPlayer(sf::RenderWindow& window, float frame_fraction) {
     if (auto player = player_.lock()) {
         auto camera = System::getCamera();
 
-        render_texture_.clear(sf::Color(0, 0, 0, 0));
+        to_render_texture_->clear(sf::Color(0, 0, 0, 0));
 
         auto view = camera->getView();
         auto change_speed = System::getCamera()->getChangeVelocity();
@@ -112,13 +106,12 @@ void Render::drawPlayer(sf::RenderWindow& window, float frame_fraction) {
                  (view.y_pos + (change_speed.y_pos * frame_fraction))},
                 {view.width ,
                  view.height});
-        render_texture_.setView(viewport);
+        to_render_texture_->setView(viewport);
 
-        player->render(render_texture_, frame_fraction);
+        player->render(*to_render_texture_, frame_fraction);
 
-        render_texture_.display();
-        render_layer_sprite_.setTexture(render_texture_.getTexture());
-        window.draw(render_layer_sprite_);
+        to_render_texture_->display();
+        window.draw(sf::Sprite(to_render_texture_->getTexture()));
     }
 }
 
@@ -161,22 +154,11 @@ void Render::setWindowSize(sf::RenderWindow& window, int width, int height) {
     window.setView(view);
     System::getCamera()->setWindowSize(width, height);
 
-    render_texture_.create(width, height);
-    render_texture_.clear(sf::Color(0, 0, 0, 0));
-    render_layer_sprite_ = sf::Sprite(render_texture_.getTexture());
+    to_render_texture_->create(width, height);
+    to_render_texture_->clear(sf::Color(0, 0, 0, 0));
 
-    secondary_render_texture_.create(width, height);
-    secondary_render_texture_.clear(sf::Color(0, 0, 0, 0));
-    secondary_render_layer_sprite_ = sf::Sprite(secondary_render_texture_.getTexture());
-
-    // Set sprite origin to center and reposition to stay in center of window
-    auto window_center = window.getView().getCenter();
-
-    render_layer_sprite_.setOrigin(static_cast<float>(width) / 2.0f, static_cast<float>(height) / 2.0f);
-    render_layer_sprite_.setPosition(window_center.x, window_center.y);
-
-    secondary_render_layer_sprite_.setOrigin(static_cast<float>(width) / 2.0f, static_cast<float>(height) / 2.0f);
-    secondary_render_layer_sprite_.setPosition(window_center.x, window_center.y);
+    from_render_texture_->create(width, height);
+    from_render_texture_->clear(sf::Color(0, 0, 0, 0));
 }
 
 Render::RenderLayer& Render::getLayer(int layer) {

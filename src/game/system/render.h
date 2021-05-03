@@ -52,9 +52,7 @@ class Render : public IRender {
 
     bool parallax_enabled_ = true;
 
-    sf::Sprite render_layer_sprite_;
-    sf::RenderTexture render_texture_;
-
-    sf::Sprite secondary_render_layer_sprite_;
-    sf::RenderTexture secondary_render_texture_;
+    // Primary/secondary textures
+    std::shared_ptr<sf::RenderTexture> to_render_texture_;
+    std::shared_ptr<sf::RenderTexture> from_render_texture_;
 };
