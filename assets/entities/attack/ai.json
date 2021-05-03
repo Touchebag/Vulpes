@@ -1,10 +1,12 @@
 {
-    "main": {
-        "actions": [
-            {
-                "condition": "animation_loop",
-                "action": "die"
-            }
-        ]
+    "states": {
+        "main": {
+            "actions": [
+                {
+                    "condition": "animation_loop",
+                    "action": "die"
+                }
+            ]
+        }
     }
 }
