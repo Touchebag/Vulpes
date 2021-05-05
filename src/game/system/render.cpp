@@ -262,28 +262,17 @@ void Render::loadLayerShaders(nlohmann::json j) {
     getLayer(-3).shaders.clear();
     getLayer(-3).shaders.push_back(ShaderHandle::createFromJson(j));
 
-    // All three foreground layers share shaders for now
+    // Foreground layers share shaders for now
     getLayer(3).shaders.clear();
     getLayer(4).shaders.clear();
     getLayer(5).shaders.clear();
-    j["shader"] = "blur.frag";
+    j["shader"] = "kawase.frag";
     j["uniforms"] = nlohmann::json::parse(R"--(
     [
         {
-            "type": "constant_vec2",
-            "name": "direction",
-            "a": 1.0,
-            "b": 0.0
-        },
-        {
-            "type": "constant_int",
-            "name": "size",
-            "value": 15
-        },
-        {
             "type": "constant_float",
-            "name": "sigma",
-            "value": 10.0
+            "name": "distance",
+            "value": 0.0
         },
         {
             "type": "window_size",
@@ -297,20 +286,89 @@ void Render::loadLayerShaders(nlohmann::json j) {
     j["uniforms"] = nlohmann::json::parse(R"--(
     [
         {
-            "type": "constant_vec2",
-            "name": "direction",
-            "a": 0.0,
-            "b": 1.0
+            "type": "constant_float",
+            "name": "distance",
+            "value": 1.0
         },
         {
-            "type": "constant_int",
-            "name": "size",
-            "value": 15
-        },
+            "type": "window_size",
+            "name": "render_size"
+        }
+    ]
+    )--");
+    getLayer(3).shaders.push_back(ShaderHandle::createFromJson(j));
+    getLayer(4).shaders.push_back(ShaderHandle::createFromJson(j));
+    getLayer(5).shaders.push_back(ShaderHandle::createFromJson(j));
+    j["uniforms"] = nlohmann::json::parse(R"--(
+    [
         {
             "type": "constant_float",
-            "name": "sigma",
-            "value": 10.0
+            "name": "distance",
+            "value": 2.0
+        },
+        {
+            "type": "window_size",
+            "name": "render_size"
+        }
+    ]
+    )--");
+    getLayer(3).shaders.push_back(ShaderHandle::createFromJson(j));
+    getLayer(4).shaders.push_back(ShaderHandle::createFromJson(j));
+    getLayer(5).shaders.push_back(ShaderHandle::createFromJson(j));
+    j["uniforms"] = nlohmann::json::parse(R"--(
+    [
+        {
+            "type": "constant_float",
+            "name": "distance",
+            "value": 2.0
+        },
+        {
+            "type": "window_size",
+            "name": "render_size"
+        }
+    ]
+    )--");
+    getLayer(3).shaders.push_back(ShaderHandle::createFromJson(j));
+    getLayer(4).shaders.push_back(ShaderHandle::createFromJson(j));
+    getLayer(5).shaders.push_back(ShaderHandle::createFromJson(j));
+    j["uniforms"] = nlohmann::json::parse(R"--(
+    [
+        {
+            "type": "constant_float",
+            "name": "distance",
+            "value": 3.0
+        },
+        {
+            "type": "window_size",
+            "name": "render_size"
+        }
+    ]
+    )--");
+    getLayer(3).shaders.push_back(ShaderHandle::createFromJson(j));
+    getLayer(4).shaders.push_back(ShaderHandle::createFromJson(j));
+    getLayer(5).shaders.push_back(ShaderHandle::createFromJson(j));
+    j["uniforms"] = nlohmann::json::parse(R"--(
+    [
+        {
+            "type": "constant_float",
+            "name": "distance",
+            "value": 4.0
+        },
+        {
+            "type": "window_size",
+            "name": "render_size"
+        }
+    ]
+    )--");
+    getLayer(3).shaders.push_back(ShaderHandle::createFromJson(j));
+    getLayer(4).shaders.push_back(ShaderHandle::createFromJson(j));
+    getLayer(5).shaders.push_back(ShaderHandle::createFromJson(j));
+    j["uniforms"] = nlohmann::json::parse(R"--(
+    [
+        {
+            "type": "constant_float",
+            "name": "distance",
+            "value": 5.0
         },
         {
             "type": "window_size",
