@@ -12,4 +12,5 @@ class IRender {
     virtual void setPlayer(std::weak_ptr<RenderableEntity> entity) = 0;
 
     virtual void setWindowSize(sf::RenderWindow& window, int width, int height) = 0;
+    virtual void loadLayerShaders(nlohmann::json j) = 0;
 };

@@ -135,6 +135,11 @@ void World::loadWorldFromJson(nlohmann::json j) {
         addEntity(ent);
     }
 
+    // Shaders
+    if (j.contains("shaders")) {
+        System::getRender()->loadLayerShaders(j["shaders"]);
+    }
+
     // Don't reload player between rooms
     if (!player_) {
         nlohmann::json player_json;

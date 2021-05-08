@@ -18,9 +18,9 @@ class Render : public IRender {
 
     void setWindowSize(sf::RenderWindow& window, int width, int height) override;
 
-  private:
-    void loadLayerShaders(nlohmann::json j);
+    void loadLayerShaders(nlohmann::json j) override;
 
+  private:
     void drawHud(sf::RenderWindow& window);
     void drawPlayer(sf::RenderWindow& window, float frame_fraction);
 

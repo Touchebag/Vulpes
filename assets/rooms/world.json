@@ -563,5 +563,301 @@
             "pos_x": 2600,
             "pos_y": 2900
         }
+    ],
+    "shaders": [
+        {
+            "layer": 3,
+            "shaders": [
+                {
+                    "shader": "kawase.frag",
+                    "uniforms": [
+                        {
+                            "type": "constant_float",
+                            "name": "distance",
+                            "value": 0.0
+                        },
+                        {
+                            "type": "window_size",
+                            "name": "render_size"
+                        }
+                    ]
+                },
+                {
+                    "shader": "kawase.frag",
+                    "uniforms": [
+                        {
+                            "type": "constant_float",
+                            "name": "distance",
+                            "value": 1.0
+                        },
+                        {
+                            "type": "window_size",
+                            "name": "render_size"
+                        }
+                    ]
+                },
+                {
+                    "shader": "kawase.frag",
+                    "uniforms": [
+                        {
+                            "type": "constant_float",
+                            "name": "distance",
+                            "value": 2.0
+                        },
+                        {
+                            "type": "window_size",
+                            "name": "render_size"
+                        }
+                    ]
+                },
+                {
+                    "shader": "kawase.frag",
+                    "uniforms": [
+                        {
+                            "type": "constant_float",
+                            "name": "distance",
+                            "value": 2.0
+                        },
+                        {
+                            "type": "window_size",
+                            "name": "render_size"
+                        }
+                    ]
+                },
+                {
+                    "shader": "kawase.frag",
+                    "uniforms": [
+                        {
+                            "type": "constant_float",
+                            "name": "distance",
+                            "value": 3.0
+                        },
+                        {
+                            "type": "window_size",
+                            "name": "render_size"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "layer": 4,
+            "shaders": [
+                {
+                    "shader": "kawase.frag",
+                    "uniforms": [
+                        {
+                            "type": "constant_float",
+                            "name": "distance",
+                            "value": 0.0
+                        },
+                        {
+                            "type": "window_size",
+                            "name": "render_size"
+                        }
+                    ]
+                },
+                {
+                    "shader": "kawase.frag",
+                    "uniforms": [
+                        {
+                            "type": "constant_float",
+                            "name": "distance",
+                            "value": 1.0
+                        },
+                        {
+                            "type": "window_size",
+                            "name": "render_size"
+                        }
+                    ]
+                },
+                {
+                    "shader": "kawase.frag",
+                    "uniforms": [
+                        {
+                            "type": "constant_float",
+                            "name": "distance",
+                            "value": 2.0
+                        },
+                        {
+                            "type": "window_size",
+                            "name": "render_size"
+                        }
+                    ]
+                },
+                {
+                    "shader": "kawase.frag",
+                    "uniforms": [
+                        {
+                            "type": "constant_float",
+                            "name": "distance",
+                            "value": 2.0
+                        },
+                        {
+                            "type": "window_size",
+                            "name": "render_size"
+                        }
+                    ]
+                },
+                {
+                    "shader": "kawase.frag",
+                    "uniforms": [
+                        {
+                            "type": "constant_float",
+                            "name": "distance",
+                            "value": 3.0
+                        },
+                        {
+                            "type": "window_size",
+                            "name": "render_size"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "layer": 5,
+            "shaders": [
+                {
+                    "shader": "kawase.frag",
+                    "uniforms": [
+                        {
+                            "type": "constant_float",
+                            "name": "distance",
+                            "value": 0.0
+                        },
+                        {
+                            "type": "window_size",
+                            "name": "render_size"
+                        }
+                    ]
+                },
+                {
+                    "shader": "kawase.frag",
+                    "uniforms": [
+                        {
+                            "type": "constant_float",
+                            "name": "distance",
+                            "value": 1.0
+                        },
+                        {
+                            "type": "window_size",
+                            "name": "render_size"
+                        }
+                    ]
+                },
+                {
+                    "shader": "kawase.frag",
+                    "uniforms": [
+                        {
+                            "type": "constant_float",
+                            "name": "distance",
+                            "value": 2.0
+                        },
+                        {
+                            "type": "window_size",
+                            "name": "render_size"
+                        }
+                    ]
+                },
+                {
+                    "shader": "kawase.frag",
+                    "uniforms": [
+                        {
+                            "type": "constant_float",
+                            "name": "distance",
+                            "value": 2.0
+                        },
+                        {
+                            "type": "window_size",
+                            "name": "render_size"
+                        }
+                    ]
+                },
+                {
+                    "shader": "kawase.frag",
+                    "uniforms": [
+                        {
+                            "type": "constant_float",
+                            "name": "distance",
+                            "value": 3.0
+                        },
+                        {
+                            "type": "window_size",
+                            "name": "render_size"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "layer": -5,
+            "shaders": [
+                {
+                    "shader": "color_fade.frag",
+                    "uniforms": [
+                        {
+                            "type": "constant_float",
+                            "name": "intensity",
+                            "value": 0.3
+                        },
+                        {
+                            "type": "constant_vec4",
+                            "name": "target_color",
+                            "a": 0.5,
+                            "b": 0.8,
+                            "c": 1.0,
+                            "d": 0.0
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "layer": -4,
+            "shaders": [
+                {
+                    "shader": "color_fade.frag",
+                    "uniforms": [
+                        {
+                            "type": "constant_float",
+                            "name": "intensity",
+                            "value": 0.15
+                        },
+                        {
+                            "type": "constant_vec4",
+                            "name": "target_color",
+                            "a": 0.5,
+                            "b": 0.8,
+                            "c": 1.0,
+                            "d": 0.0
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "layer": -3,
+            "shaders": [
+                {
+                    "shader": "color_fade.frag",
+                    "uniforms": [
+                        {
+                            "type": "constant_float",
+                            "name": "intensity",
+                            "value": 0.05
+                        },
+                        {
+                            "type": "constant_vec4",
+                            "name": "target_color",
+                            "a": 0.5,
+                            "b": 0.8,
+                            "c": 1.0,
+                            "d": 0.0
+                        }
+                    ]
+                }
+            ]
+        }
     ]
 }
