@@ -11,7 +11,7 @@ set(EDITOR_TARGET level_editor)
 set(STATE_GRAPH_TARGET state_graph)
 set(TEST_TARGET tests)
 
-set(CC_OPTIONS -std=c++17 -Wall -Wextra -Wpedantic -Wconversion -Wold-style-cast -Wshadow -Werror=suggest-override -DLOG_LEVEL=3)
+set(CC_OPTIONS -std=c++17 -Wall -Wextra -Wpedantic -Wconversion -Wold-style-cast -Wshadow -Werror=non-virtual-dtor -Werror=suggest-override -DLOG_LEVEL=3)
 
 set(ASSETS_DIR assets)
 

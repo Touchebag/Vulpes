@@ -18,6 +18,8 @@ class LogicalOperator {
         unsigned int& frame_timer;
     };
 
+    virtual ~LogicalOperator() = default;
+
     static std::shared_ptr<const LogicalOperator> createFromJson(nlohmann::json j);
 
     virtual bool getValue(aiValues& values) const = 0;

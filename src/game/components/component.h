@@ -8,6 +8,8 @@ class ComponentStore;
 
 class Component {
   public:
+    virtual ~Component() = default;
+
     virtual void update() = 0;
 
     virtual void reloadFromJson(nlohmann::json, File file_instance = File()) = 0;

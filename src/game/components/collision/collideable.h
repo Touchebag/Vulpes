@@ -26,6 +26,7 @@ class Collideable {
     };
 
     Collideable(std::weak_ptr<ComponentStore> components);
+    virtual ~Collideable() = default;
 
     // Component interface
     virtual void update();

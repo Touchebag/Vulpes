@@ -6,6 +6,8 @@
 
 class IRender {
   public:
+    virtual ~IRender() = default;
+
     virtual void render(sf::RenderWindow& window, float frame_fraction) = 0;
 
     virtual void addEntity(std::weak_ptr<RenderableEntity> entity) = 0;
