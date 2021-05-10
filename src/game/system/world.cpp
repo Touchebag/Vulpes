@@ -72,27 +72,7 @@ void World::clearWorld() {
     entrances_.clear();
 }
 
-void World::loadWorldFromFile(std::string path) {
-    std::optional<nlohmann::json> j = File().loadRoom(path);
-
-    if (!j) {
-        LOGE("Unable to load json from file %s", path.c_str());
-        exit(EXIT_FAILURE);
-    }
-
-    current_room_name_ = path;
-
-    loadWorldFromJson(j.value());
-}
-
-void World::loadWorldFromJson(nlohmann::json j) {
-    if (!j.contains("entities")) {
-        LOGE("entities not found, exiting");
-        exit(EXIT_FAILURE);
-    }
-
-    clearWorld();
-
+void World::addEntriesToWorld(nlohmann::json j) {
     if (j.contains("entrances")) {
         entrances_.resize(j["entrances"].size());
         for (auto it : j["entrances"]) {
@@ -139,6 +119,52 @@ void World::loadWorldFromJson(nlohmann::json j) {
     if (j.contains("shaders")) {
         System::getRender()->loadLayerShaders(j["shaders"]);
     }
+}
+
+void World::loadWorldTemplate(std::string file) {
+    auto j_opt = File().loadRoomTemplate(file);
+
+    if (!j_opt) {
+        LOGE("Unable to load template from file");
+        exit(EXIT_FAILURE);
+    }
+
+    auto j = j_opt.value();
+
+    // Recursively load templates
+    if (j.contains("template")) {
+        loadWorldTemplate(j["template"]);
+    }
+
+    addEntriesToWorld(j);
+}
+
+void World::loadWorldFromFile(std::string path) {
+    std::optional<nlohmann::json> j = File().loadRoom(path);
+
+    if (!j) {
+        LOGE("Unable to load json from file %s", path.c_str());
+        exit(EXIT_FAILURE);
+    }
+
+    current_room_name_ = path;
+
+    loadWorldFromJson(j.value());
+}
+
+void World::loadWorldFromJson(nlohmann::json j) {
+    if (!j.contains("entities")) {
+        LOGE("entities not found, exiting");
+        exit(EXIT_FAILURE);
+    }
+
+    clearWorld();
+
+    if (j.contains("template")) {
+        loadWorldTemplate(j["template"]);
+    }
+
+    addEntriesToWorld(j);
 
     // Don't reload player between rooms
     if (!player_) {

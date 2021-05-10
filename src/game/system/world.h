@@ -39,6 +39,9 @@ class World {
 
     void loadWorldFromJson(nlohmann::json j);
     void loadWorldFromFile(std::string file);
+    void loadWorldTemplate(std::string file);
+
+    void addEntriesToWorld(nlohmann::json j);
 
     void loadRoom(std::string room_name, int entrance_id);
 

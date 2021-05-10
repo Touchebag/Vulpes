@@ -4,6 +4,7 @@
 const std::string ASSET_DIR = "assets";
 const std::string ENTITY_DIR = "entities";
 const std::string ROOM_DIR = "rooms";
+const std::string ROOM_TEMPLATE_DIR = "_templates";
 const std::string TEXTURE_DIR = "textures";
 const std::string FONT_DIR = "fonts";
 const std::string SHADER_DIR = "shaders";
@@ -92,6 +93,10 @@ bool File::writeJsonToFile(std::string filepath, nlohmann::json j) {
         LOGE("Unable to save file %s: %s", filepath.c_str(), e.what());
         return false;
     }
+}
+
+std::optional<nlohmann::json> File::loadRoomTemplate(std::string filepath) {
+    return loadRoom(ROOM_TEMPLATE_DIR + "/" + filepath);
 }
 
 std::optional<nlohmann::json> File::loadRoom(std::string filepath) {

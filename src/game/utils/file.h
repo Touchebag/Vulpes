@@ -23,6 +23,7 @@ class File {
     std::optional<sf::Texture> loadTexture(std::string file);
     std::optional<sf::Font> loadFont(std::string filepath);
     std::optional<nlohmann::json> loadRoom(std::string filepath);
+    std::optional<nlohmann::json> loadRoomTemplate(std::string filepath);
 
     std::ifstream openSpriteMapFile();
 
