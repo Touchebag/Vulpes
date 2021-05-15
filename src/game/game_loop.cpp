@@ -26,7 +26,8 @@ int game_main(sf::RenderWindow& window) {
             {sf::Keyboard::Key::Right, {Actions::Action::MOVE_RIGHT}},
             {sf::Keyboard::Key::Down, {Actions::Action::AIR_DIVE}},
             {sf::Keyboard::Key::LShift, {Actions::Action::DASH}},
-            {sf::Keyboard::Key::Z, {Actions::Action::ATTACK}},
+            {sf::Keyboard::Key::Z, {Actions::Action::ATTACK1}},
+            {sf::Keyboard::Key::C, {Actions::Action::ATTACK2}},
             {sf::Keyboard::Key::Up, {Actions::Action::INTERACT}}
             });
 
@@ -35,7 +36,7 @@ int game_main(sf::RenderWindow& window) {
                  Actions::Action::WALL_JUMP,
                  Actions::Action::DOUBLE_JUMP}},
             {5, {Actions::Action::DASH}},
-            {2, {Actions::Action::ATTACK}},
+            {2, {Actions::Action::ATTACK1}},
             {1, {Actions::Action::INTERACT}}
             });
 

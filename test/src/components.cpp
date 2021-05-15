@@ -328,7 +328,8 @@ TEST(TestComponents, TestSaveLoadPlayerActions) {
     j1["enabled_actions"]["jump"] = true;
     j1["enabled_actions"]["wall_jump"] = true;
     j1["enabled_actions"]["double_jump"] = true;
-    j1["enabled_actions"]["attack"] = true;
+    j1["enabled_actions"]["attack1"] = true;
+    j1["enabled_actions"]["attack2"] = true;
     j1["enabled_actions"]["interact"] = true;
 
     actions = std::dynamic_pointer_cast<ActionsPlayer>(Actions::createFromJson(j1, {}));

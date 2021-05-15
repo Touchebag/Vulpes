@@ -9,7 +9,8 @@
             "air_dive": true,
             "air_dive_bounce": true,
             "interact": true,
-            "dash": true
+            "dash": true,
+            "attack2": true
         }
     },
     "Animated": null,

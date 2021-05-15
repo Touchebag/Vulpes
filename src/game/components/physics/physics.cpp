@@ -195,8 +195,11 @@ void Physics::update() {
 
         // No need to check whether we are allowed to attack since there is no special
         // physics handling. All actions are handled by states.
-        if (act->getActionState(Actions::Action::ATTACK)) {
-            stateEnt->incomingEvent(state_utils::Event::ATTACKING);
+        if (act->getActionState(Actions::Action::ATTACK1)) {
+            stateEnt->incomingEvent(state_utils::Event::ATTACKING1);
+        }
+        if (act->getActionState(Actions::Action::ATTACK2)) {
+            stateEnt->incomingEvent(state_utils::Event::ATTACKING2);
         }
 
         if (act->getActionState(Actions::Action::AIR_DIVE, true) && physics_props.can_air_dive_) {

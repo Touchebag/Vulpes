@@ -25,7 +25,8 @@ enum class Event {
     DIVE_BOUNCE,
 
     // Actions
-    ATTACKING,
+    ATTACKING1,
+    ATTACKING2,
 
     // Effects
     DAMAGED,
@@ -53,7 +54,8 @@ const std::map<std::string, Event> string_event_map {
     {"air_diving", Event::AIR_DIVING},
     {"dive_bounce", Event::DIVE_BOUNCE},
 
-    {"attacking", Event::ATTACKING},
+    {"attacking1", Event::ATTACKING1},
+    {"attacking2", Event::ATTACKING2},
 
     {"damaged", Event::DAMAGED},
 

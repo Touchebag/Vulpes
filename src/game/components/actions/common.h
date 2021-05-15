@@ -7,7 +7,8 @@ const Bimap<std::string, Actions::Action> string_action_map = {
     {"wall_jump", Actions::Action::WALL_JUMP},
     {"double_jump", Actions::Action::DOUBLE_JUMP},
     {"dash", Actions::Action::DASH},
-    {"attack", Actions::Action::ATTACK},
+    {"attack1", Actions::Action::ATTACK1},
+    {"attack2", Actions::Action::ATTACK2},
     {"air_dive", Actions::Action::AIR_DIVE},
     {"air_dive_bounce", Actions::Action::AIR_DIVE_BOUNCE},
 
@@ -22,5 +23,5 @@ const Bimap<std::string, Actions::Action> string_action_map = {
 const std::unordered_map<int, Actions::Action> id_actions_map = {
     {0, Actions::Action::JUMP},
     {1, Actions::Action::DASH},
-    {2, Actions::Action::ATTACK},
+    {2, Actions::Action::ATTACK1},
 };

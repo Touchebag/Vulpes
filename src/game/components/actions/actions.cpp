@@ -129,8 +129,12 @@ void Actions::reloadFromJson(nlohmann::json j, File /* file_instance */) {
         enableAction(Action::DASH, true);
     }
 
-    if (j_actions.contains(string_action_map.at(Action::ATTACK))) {
-        enableAction(Action::ATTACK, true);
+    if (j_actions.contains(string_action_map.at(Action::ATTACK1))) {
+        enableAction(Action::ATTACK1, true);
+    }
+
+    if (j_actions.contains(string_action_map.at(Action::ATTACK2))) {
+        enableAction(Action::ATTACK2, true);
     }
 
     if (j_actions.contains(string_action_map.at(Action::INTERACT))) {
@@ -174,8 +178,12 @@ std::optional<nlohmann::json> Actions::outputToJson() {
             j_actions[string_action_map.at(Action::DASH)] = true;
         }
 
-        if (isActionEnabled(Action::ATTACK)) {
-            j_actions[string_action_map.at(Action::ATTACK)] = true;
+        if (isActionEnabled(Action::ATTACK1)) {
+            j_actions[string_action_map.at(Action::ATTACK1)] = true;
+        }
+
+        if (isActionEnabled(Action::ATTACK2)) {
+            j_actions[string_action_map.at(Action::ATTACK2)] = true;
         }
 
         if (isActionEnabled(Action::INTERACT)) {

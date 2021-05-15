@@ -20,7 +20,8 @@
                 {"event": "jumping", "state": "jumping"},
                 {"event": "airborne", "state": "falling"},
                 {"event": "dashing", "state": "dashing"},
-                {"event": "attacking", "state": "attack"},
+                {"event": "attacking1", "state": "attack"},
+                {"event": "attacking2", "state": "shoot"},
                 {"event": "damaged", "state": "taking_damage"}
             ],
             "animation": "idle"
@@ -32,7 +33,8 @@
                 {"event": "jumping", "state": "jumping"},
                 {"event": "airborne", "state": "falling"},
                 {"event": "dashing", "state": "dashing"},
-                {"event": "attacking", "state": "attack"},
+                {"event": "attacking1", "state": "attack"},
+                {"event": "attacking2", "state": "shoot"},
                 {"event": "damaged", "state": "taking_damage"}
             ],
             "animation": "running"
@@ -171,6 +173,40 @@
             "animation": "idle"
         },
         "attack_end_lag": {
+            "properties": {
+                "movement_locked_x": true,
+                "movement_locked_y": true,
+                "can_dash": false
+            },
+            "frame_timer": 30,
+            "next_states": [
+                {"event": "jumping", "state": "jumping"},
+                {"event": "frame_timeout", "state": "idle"},
+                {"event": "damaged", "state": "taking_damage"}
+            ],
+            "animation": "idle"
+        },
+        "shoot": {
+            "properties": {
+                "movement_locked_x": true,
+                "movement_locked_y": true,
+                "can_dash": false
+            },
+            "frame_timer": 0,
+            "spawn_entity": {
+                "Entity": "attack",
+                "Movable": {
+                    "x_speed": 20
+                }
+            },
+            "next_states": [
+                {"event": "jumping", "state": "jumping"},
+                {"event": "frame_timeout", "state": "shoot_end_lag"},
+                {"event": "damaged", "state": "taking_damage"}
+            ],
+            "animation": "idle"
+        },
+        "shoot_end_lag": {
             "properties": {
                 "movement_locked_x": true,
                 "movement_locked_y": true,
