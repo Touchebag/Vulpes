@@ -26,12 +26,14 @@ class MovableEntity : public Component {
     void reloadFromJson(nlohmann::json j, File file = File()) override;
     std::optional<nlohmann::json> outputToJson() override;
 
+    void setVelocity(double x, double y);
     double getVelX();
     double getVelY();
 
     const MovementAttributes& getMovementAttributes();
 
-    bool facing_right_ = true;
+    bool isFacingRight();
+    void setFacingRight(bool facing_right);
 
   private:
     std::pair<double, double> getMaximumMovement(double velX, double velY);
@@ -40,4 +42,6 @@ class MovableEntity : public Component {
     double vely_ = 0.0;
 
     MovementAttributes move_attr_;
+
+    bool facing_right_ = true;
 };

@@ -153,6 +153,8 @@ void BaseEntity::update() {
 
     update_component(Physics);
 
+    update_component(MovableEntity);
+
     update_component(Actions);
 
     update_component(Collision);

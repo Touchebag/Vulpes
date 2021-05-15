@@ -61,7 +61,18 @@ void StatefulEntity::incomingEvent(state_utils::Event event) {
 
         if (!getEntity().empty()) {
             auto entity = std::make_shared<BaseEntity>();
-            entity->reloadFromJson(getEntity());
+            auto ent_json = getEntity();
+            entity->reloadFromJson(ent_json);
+
+            // Inherit parent direction
+            if (auto move = getComponent<MovableEntity>()) {
+                if (auto other_move = entity->getComponent<MovableEntity>()) {
+                    other_move->setFacingRight(move->isFacingRight());
+
+                    // Force reload to set initial direction
+                    other_move->reloadFromJson(ent_json["Movable"]);
+                }
+            }
 
             if (auto subent = getComponent<Subentity>()) {
                 subent->addEntity(entity);

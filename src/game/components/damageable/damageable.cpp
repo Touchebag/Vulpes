@@ -107,7 +107,7 @@ void Damageable::update() {
                                 move->move(attributes.knockback_x * (should_move_right ? 1.0 : -1.0),
                                            attributes.knockback_y);
                                 // Face toward damage source, away from knockback direction
-                                move->facing_right_ = !should_move_right;
+                                move->setFacingRight(!should_move_right);
                             }
                         }
                     }

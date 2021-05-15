@@ -55,9 +55,28 @@ void Physics::update() {
 
         auto physics_props = stateEnt->getPhysicsProperties();
 
+        // Respond to previous frame's movement
+        auto move_attr = movable->getMovementAttributes();
+
+        if (move_attr.on_ground) {
+            if (physics_props.air_diving_) {
+                // If we touch ground while diving we landed this frame
+                System::getCamera()->addTrauma(0.4f);
+            }
+            stateEnt->incomingEvent(state_utils::Event::TOUCHING_FLOOR);
+        } else if (move_attr.touching_wall) {
+            stateEnt->incomingEvent(state_utils::Event::TOUCHING_WALL);
+        } else {
+            stateEnt->incomingEvent(state_utils::Event::AIRBORNE);
+        }
+
+        if (move_attr.falling) {
+            stateEnt->incomingEvent(state_utils::Event::FALLING);
+        }
+
         FacingDirection facing_right;
 
-        facing_right.setDirection(movable->facing_right_);
+        facing_right.setDirection(movable->isFacingRight());
 
         facing_right.lockDirection(physics_props.direction_locked_);
 
@@ -200,25 +219,8 @@ void Physics::update() {
             variables_.resetDashes();
         }
 
-        movable->move(x, y);
-        auto move_attr = movable->getMovementAttributes();
-
-        if (move_attr.on_ground) {
-            if (physics_props.air_diving_) {
-                // If we touch ground while diving we landed this frame
-                System::getCamera()->addTrauma(0.4f);
-            }
-            stateEnt->incomingEvent(state_utils::Event::TOUCHING_FLOOR);
-        } else if (move_attr.touching_wall) {
-            stateEnt->incomingEvent(state_utils::Event::TOUCHING_WALL);
-        } else {
-            stateEnt->incomingEvent(state_utils::Event::AIRBORNE);
-        }
-
-        if (move_attr.falling) {
-            stateEnt->incomingEvent(state_utils::Event::FALLING);
-        }
-        movable->facing_right_ = facing_right;
+        movable->setFacingRight(facing_right);
+        movable->setVelocity(x, y);
     } else {
         if (!stateEnt) {
             LOGW("Physics: Missing state");

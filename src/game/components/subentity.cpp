@@ -31,9 +31,9 @@ void Subentity::set_position() {
             auto movable = getComponent<MovableEntity>();
 
             if (trans && movable) {
-                ent_trans->setPosition(trans->getX() + (ent_trans->getX() * (movable->facing_right_ ? 1 : -1)) ,
+                ent_trans->setPosition(trans->getX() + (ent_trans->getX() * (movable->isFacingRight() ? 1 : -1)) ,
                                        trans->getY() + ent_trans->getY());
-                ent_move->facing_right_ = movable->facing_right_;
+                ent_move->setFacingRight(movable->isFacingRight());
             }
         }
     }

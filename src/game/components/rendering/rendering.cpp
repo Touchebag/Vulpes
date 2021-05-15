@@ -119,7 +119,7 @@ void RenderableEntity::setTextureCoords(int pos_x, int pos_y, int width, int hei
     // Mirror sprites facing left
     auto mirror_scale = 1.0;
     if (auto move = getComponent<MovableEntity>()) {
-        mirror_scale = move->facing_right_ ? 1.0 : -1.0;
+        mirror_scale = move->isFacingRight() ? 1.0 : -1.0;
     }
 
     // Scale

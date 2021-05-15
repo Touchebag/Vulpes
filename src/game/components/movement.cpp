@@ -66,6 +66,7 @@ MovableEntity::MovableEntity(std::weak_ptr<ComponentStore> components) :
 }
 
 void MovableEntity::update() {
+    move(velx_, vely_);
 }
 
 void MovableEntity::move(double velX, double velY) {
@@ -96,11 +97,21 @@ std::shared_ptr<MovableEntity> MovableEntity::createFromJson(nlohmann::json j, s
     return ret_ptr;
 }
 
-void MovableEntity::reloadFromJson(nlohmann::json /* j */, File /* file_instance */) {
+void MovableEntity::reloadFromJson(nlohmann::json j, File /* file_instance */) {
+    if (j.contains("x_speed")) {
+        velx_ = j["x_speed"].get<double>() * (facing_right_ ? 1.0 : -1.0);
+    }
+    if (j.contains("y_speed")) {
+        vely_ = j["y_speed"].get<double>();
+    }
 }
 
 std::optional<nlohmann::json> MovableEntity::outputToJson() {
     nlohmann::json j;
+
+    // Deliberately not outputting initial velocity as that is supposed to
+    // function as an override on specific instances
+
     return j;
 }
 
@@ -125,6 +136,11 @@ std::pair<double, double> MovableEntity::getMaximumMovement(double velX, double 
     return {vel.first, vel.second};
 }
 
+void MovableEntity::setVelocity(double x, double y) {
+    velx_ = x;
+    vely_ = y;
+}
+
 double MovableEntity::getVelX() {
     return velx_;
 }
@@ -135,4 +151,12 @@ double MovableEntity::getVelY() {
 
 const MovableEntity::MovementAttributes& MovableEntity::getMovementAttributes() {
     return move_attr_;
+}
+
+bool MovableEntity::isFacingRight() {
+    return facing_right_;
+}
+
+void MovableEntity::setFacingRight(bool facing_right) {
+    facing_right_ = facing_right;
 }
