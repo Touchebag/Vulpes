@@ -6,9 +6,15 @@ Custom game engine project.
 ### Requirements
 - cmake
 - SFML development libraries
-- gtest
+- Google test (optional)
+- git-lfs (runtime assets) 
 
 All of these (along with general c++ build tools) are available as packages on most Linux distributions. Windows users will have to add them to cmake environment manually (no instructions here currently).
+
+Note: the art assets are stored using git-lfs so you will also have to run
+
+    git lfs install
+    git lfs pull
 
 ### Compiling
 
