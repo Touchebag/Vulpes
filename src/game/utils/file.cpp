@@ -10,7 +10,6 @@ const std::string FONT_DIR = "fonts";
 const std::string SHADER_DIR = "shaders";
 
 const std::string ENTITY_FILE = "entity";
-const std::string SPRITE_MAP_FILE = "sprite_map.txt";
 const std::string AI_FILE = "ai";
 const std::string STATE_FILE = "state";
 const std::string ANIMATIONS_FILE = "animations";
@@ -66,6 +65,10 @@ std::ofstream File::openFileForOutput(std::string filepath) {
     return fs;
 }
 
+std::filesystem::directory_iterator File::getDirContents(std::string path) {
+    return std::filesystem::directory_iterator("./" + ASSET_DIR + "/" + ENTITY_DIR + "/" + current_namespace_ + "/" + path);
+}
+
 std::optional<nlohmann::json> File::loadJson(std::string filepath) {
     filepath = appendSuffix(filepath, ".json");
 
@@ -81,8 +84,8 @@ std::optional<nlohmann::json> File::loadEntityFromFile() {
     return loadJson(ENTITY_DIR + "/" + current_namespace_ + "/" + ENTITY_FILE);
 }
 
-std::ifstream File::openSpriteMapFile() {
-    return openFileForInput(ENTITY_DIR + "/" + current_namespace_ + "/" + SPRITE_MAP_FILE);
+std::ifstream File::openSpriteMapFile(std::string file) {
+    return openFileForInput(ENTITY_DIR + "/" + current_namespace_ + "/" + TEXTURE_DIR + "/" + file + ".txt");
 }
 
 bool File::writeJsonToFile(std::string filepath, nlohmann::json j) {

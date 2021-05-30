@@ -27,6 +27,7 @@ class AnimatedEntity : public Component {
 
   private:
     struct AnimationFrameData {
+        std::string texture;
         util::Rectangle sprite_rectangle;
         float x_scale = 1.0;
         float y_scale = 1.0;
@@ -34,14 +35,18 @@ class AnimatedEntity : public Component {
 
     AnimationFrameData getFrameData();
 
-    std::unordered_map<std::string, util::Rectangle> loadSpriteMap(File file_instance);
+    std::unordered_map<std::string, AnimationFrameData> loadSpriteMap(File file_instance, std::string file);
+    void loadTexture(File file_instance, std::string file);
+
     std::shared_ptr<std::vector<AnimationFrameData>> loadAnimationFromJson(
             const nlohmann::json& j,
-            const std::unordered_map<std::string, util::Rectangle>& sprite_map);
+            const std::unordered_map<std::string, AnimationFrameData>& sprite_map);
 
     void setRenderTexture();
 
+    // Data
     std::unordered_map<std::string, std::shared_ptr<std::vector<AnimationFrameData>>> sprite_sheet_map_;
+    std::unordered_map<std::string, std::shared_ptr<sf::Texture>> textures_;
 
     std::optional<nlohmann::json> original_frame_list_;
 

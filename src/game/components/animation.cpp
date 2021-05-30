@@ -18,38 +18,53 @@ std::shared_ptr<AnimatedEntity> AnimatedEntity::createFromJson(nlohmann::json j,
     return ret_ptr;
 }
 
-std::unordered_map<std::string, util::Rectangle> AnimatedEntity::loadSpriteMap(File file_instance) {
-    auto fs = file_instance.openSpriteMapFile();
-    std::unordered_map<std::string, util::Rectangle> sprite_map;
+std::unordered_map<std::string, AnimatedEntity::AnimationFrameData> AnimatedEntity::loadSpriteMap(File file_instance, std::string file) {
+    auto fs = file_instance.openSpriteMapFile(file);
+    std::unordered_map<std::string, AnimationFrameData> sprite_map;
 
     std::vector<std::string> map_str(std::istream_iterator<std::string>{fs},
                                      std::istream_iterator<std::string>());
 
     for (auto it = map_str.begin(); it != map_str.end(); ++it) {
+        AnimationFrameData frame_data;
+
+        // Texture name should be same as sprite map file
+        frame_data.texture = file;
+
+        util::Rectangle rect;
+
         // File name
         std::string name = *it;
         ++it;
         // Skip equals sign
         ++it;
         // Positions
-        int x_pos = std::stoi(*it);
+        rect.x = std::stoi(*it);
         ++it;
-        int y_pos = std::stoi(*it);
+        rect.y = std::stoi(*it);
         ++it;
         // Size
-        int width = std::stoi(*it);
+        rect.width = std::stoi(*it);
         ++it;
-        int height = std::stoi(*it);
+        rect.height = std::stoi(*it);
 
-        sprite_map.insert({name, {x_pos, y_pos, width, height}});
+        frame_data.sprite_rectangle = rect;
+
+        sprite_map.insert({name, frame_data});
     }
 
     return sprite_map;
 }
 
+void AnimatedEntity::loadTexture(File file_instance, std::string file_path) {
+    if (auto texture = file_instance.loadTexture(file_path)) {
+        textures_.insert({file_path, std::make_shared<sf::Texture>(texture.value())});
+    }
+}
+
 std::shared_ptr<std::vector<AnimatedEntity::AnimationFrameData>> AnimatedEntity::loadAnimationFromJson(
         const nlohmann::json& j,
-        const std::unordered_map<std::string, util::Rectangle>& sprite_map) {
+        const std::unordered_map<std::string, AnimatedEntity::AnimationFrameData>& sprite_map) {
     auto frame_data_list = std::make_shared<std::vector<AnimationFrameData>>();
 
     std::unordered_map<int, AnimationFrameData> meta_data;
@@ -76,13 +91,14 @@ std::shared_ptr<std::vector<AnimatedEntity::AnimationFrameData>> AnimatedEntity:
 
     int i = 0;
     for (auto it : j["frame_list"]) {
-        AnimationFrameData frame_data;
+        AnimationFrameData frame_data = sprite_map.at(it.get<std::string>());
 
         if (meta_data.count(i)) {
-            frame_data = meta_data.at(i);
+            auto frame_md = meta_data.at(i);
+            frame_data.x_scale = frame_md.x_scale;
+            frame_data.y_scale = frame_md.y_scale;
         }
 
-        frame_data.sprite_rectangle = (sprite_map.at(it.get<std::string>()));
         frame_data_list->push_back(frame_data);
 
         i++;
@@ -117,7 +133,24 @@ AnimatedEntity::AnimationFrameData AnimatedEntity::getFrameData() {
 }
 
 void AnimatedEntity::reloadFromJson(nlohmann::json j, File file_instance) {
-    auto sprite_map = loadSpriteMap(file_instance);
+    sprite_sheet_map_.clear();
+    textures_.clear();
+
+    std::unordered_map<std::string, AnimationFrameData> sprite_map;
+    // TODO Move directory name completely into File class
+    for (auto& file : file_instance.getDirContents("textures")) {
+        auto path = file.path();
+        if (path.extension() == ".txt") {
+            for (auto it : loadSpriteMap(file_instance, path.stem().string())) {
+                if (sprite_map.find(it.first) != sprite_map.end()) {
+                    LOGW("Animation: entry \"%s\" already exists, overwriting", it.first.c_str());
+                }
+                sprite_map.insert(it);
+            }
+        } else {
+            loadTexture(file_instance, path.stem().string());
+        }
+    }
 
     // Load the animation names as lists of frame names
     std::unordered_map<std::string, std::vector<std::string>> name_frames_map;
@@ -146,8 +179,6 @@ void AnimatedEntity::reloadFromJson(nlohmann::json j, File file_instance) {
     }
 
     current_frame_list_ = sprite_sheet_map_.begin()->second;
-
-    setRenderTexture();
 }
 
 std::optional<nlohmann::json> AnimatedEntity::outputToJson() {
@@ -173,6 +204,8 @@ void AnimatedEntity::update() {
 void AnimatedEntity::setRenderTexture() {
     if (auto renderable = getComponent<RenderableEntity>()) {
         auto frame_data = getFrameData();
+
+        renderable->setTexture(textures_.at(frame_data.texture));
 
         auto sprite_rect = frame_data.sprite_rectangle;
         renderable->setTextureCoords(sprite_rect.x, sprite_rect.y, sprite_rect.width, sprite_rect.height);

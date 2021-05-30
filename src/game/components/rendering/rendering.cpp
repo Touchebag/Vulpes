@@ -9,21 +9,25 @@ RenderableEntity::RenderableEntity(std::weak_ptr<ComponentStore> components) :
     Component(components) {
 }
 
+void RenderableEntity::setTexture(std::shared_ptr<sf::Texture> texture) {
+    texture_ = texture;
+
+    sprite_.setTexture(*texture_, true);
+    original_texture_rect_ = sprite_.getTextureRect();
+    texture_->setRepeated(true);
+
+    recalculateTextureRect();
+
+}
+
 bool RenderableEntity::loadTexture(std::string file_path, File file_instance) {
     if (std::optional<sf::Texture> texture = file_instance.loadTexture(file_path)) {
-        texture_ = texture.value();
+        setTexture(std::make_shared<sf::Texture>(texture.value()));
+        texture_name_ = file_path;
     } else {
         LOGW("Error loading image %s", file_path.c_str());
         return false;
     }
-
-    sprite_.setTexture(texture_, true);
-    original_texture_rect_ = sprite_.getTextureRect();
-    texture_.setRepeated(true);
-    texture_name_ = file_path;
-
-    recalculateTextureRect();
-
     return true;
 }
 

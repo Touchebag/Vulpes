@@ -2,6 +2,7 @@
 
 #include <optional>
 #include <fstream>
+#include <filesystem>
 #include <SFML/Graphics.hpp>
 
 #include "json.hpp"
@@ -16,6 +17,8 @@ class File {
     File& operator=(const File&) = default;
     File& operator=(File&&) = default;
 
+    std::filesystem::directory_iterator getDirContents(std::string path);
+
     std::optional<nlohmann::json> loadEntityFromFile();
     std::optional<nlohmann::json> loadAiBehavior();
     std::optional<nlohmann::json> loadStates();
@@ -25,7 +28,7 @@ class File {
     std::optional<nlohmann::json> loadRoom(std::string filepath);
     std::optional<nlohmann::json> loadRoomTemplate(std::string filepath);
 
-    std::ifstream openSpriteMapFile();
+    std::ifstream openSpriteMapFile(std::string file);
 
     std::shared_ptr<sf::Shader> loadShader(std::string filepath);
 

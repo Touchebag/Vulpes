@@ -25,7 +25,8 @@ const nlohmann::json entity_json = nlohmann::json::parse(R"--(
     "Animated": {
         "frame_list": [
             "Idle0",
-            "Idle9"
+            "Idle9",
+            "Other"
         ]
     },
     "AI": null,

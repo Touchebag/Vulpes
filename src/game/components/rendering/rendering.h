@@ -18,6 +18,7 @@ class RenderableEntity : public Component {
     void reloadFromJson(nlohmann::json j, File file = File()) override;
     virtual std::optional<nlohmann::json> outputToJson() override ;
 
+    void setTexture(std::shared_ptr<sf::Texture> texture);
     void recalculateTextureRect();
 
     std::pair<int, int> getTiling();
@@ -49,7 +50,7 @@ class RenderableEntity : public Component {
     int tiling_y_ = 0;
 
   private:
-    sf::Texture texture_;
+    std::shared_ptr<sf::Texture> texture_;
     sf::Sprite sprite_;
 
     int height_ = 0;
