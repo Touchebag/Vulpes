@@ -13,6 +13,7 @@ class Death : public Component {
     std::optional<nlohmann::json> outputToJson() override;
 
     std::optional<nlohmann::json> getDeathEntityJson();
+    const std::vector<std::string>& getFlags();
 
     void setDead();
     bool isDead();
@@ -21,4 +22,7 @@ class Death : public Component {
     bool is_dead_ = false;
 
     std::optional<nlohmann::json> death_entity_json_ = std::nullopt;
+
+    // Flags to set on death
+    std::vector<std::string> death_flags_;
 };

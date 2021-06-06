@@ -88,3 +88,55 @@ TEST_F(WorldTestFixture, EnsureHudNotSaved) {
     // _EQ does not work with nlohmann::json
     ASSERT_TRUE(world_json == world_json_2) << world_json.dump() << std::endl << world_json_2.dump() << std::endl;
 }
+
+TEST_F(WorldTestFixture, TestLoadConditionalEntity) {
+    using w_modify = System::IWorldModify;
+
+    w_modify::clearWorld();
+
+    ASSERT_TRUE(w_modify::getWorldObjects().empty);
+
+    nlohmann::json j = nlohmann::json::parse( R"--(
+        {
+            "entities": [
+                {
+                    "condition": "test_conditional_entity_flag"
+                }
+            ]
+        })--");
+
+    // Should not be added since flag is not set
+    w_modify::loadWorldFromJson(j);
+    EXPECT_TRUE(w_modify::getWorldObjects().empty);
+
+    // After setting flag entity should be added
+    System::getEnvironment()->setFlag("test_conditional_entity_flag");
+    w_modify::loadWorldFromJson(j);
+    EXPECT_TRUE(w_modify::getWorldObjects().size() == 1);
+}
+
+TEST_F(WorldTestFixture, TestLoadConditionalEntityNegated) {
+    using w_modify = System::IWorldModify;
+
+    w_modify::clearWorld();
+
+    ASSERT_TRUE(w_modify::getWorldObjects().empty);
+
+    nlohmann::json j = nlohmann::json::parse( R"--(
+        {
+            "entities": [
+                {
+                    "condition": "!test_conditional_entity_flag_negated"
+                }
+            ]
+        })--");
+
+    // Should be added since flag is not set
+    w_modify::loadWorldFromJson(j);
+    EXPECT_TRUE(w_modify::getWorldObjects().size() == 1);
+
+    // After setting flag entity should not be added
+    System::getEnvironment()->setFlag("test_conditional_entity_flag_negated");
+    w_modify::loadWorldFromJson(j);
+    EXPECT_TRUE(w_modify::getWorldObjects().empty);
+}

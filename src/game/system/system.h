@@ -7,6 +7,7 @@
 #include "cutscene_handler.h"
 #include "world.h"
 #include "input_event.h"
+#include "environment.h"
 
 class System {
   public:
@@ -18,6 +19,8 @@ class System {
     static std::shared_ptr<CutsceneHandler> getCutscene();
 
     static std::shared_ptr<Input> getInput();
+
+    static std::shared_ptr<Environment> getEnvironment();
 
     // World Interfaces
     class IWorldRead {
@@ -72,4 +75,5 @@ class System {
     std::shared_ptr<CutsceneHandler> cutscene_handler_ = std::make_shared<CutsceneHandler>();
     std::shared_ptr<World> world_ = std::make_shared<World>();
     std::shared_ptr<Input> input_ = std::make_shared<Input>();
+    std::shared_ptr<Environment> environment_ = std::make_shared<Environment>();
 };

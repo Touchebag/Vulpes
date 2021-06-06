@@ -119,6 +119,12 @@
                 "type": "collectible",
                 "width": 50
             },
+            "condition": "!Collectible.ID.1",
+            "Death": {
+                "flags": [
+                    "Collectible.ID.1"
+                ]
+            },
             "Entity": "collectible",
             "Transform": {
                 "pos_x": 400,

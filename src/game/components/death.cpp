@@ -21,6 +21,13 @@ void Death::reloadFromJson(nlohmann::json j, File /* file_instance */) {
     if (j.contains("death_entity")) {
         death_entity_json_ = j["death_entity"];
     }
+
+    death_flags_.clear();
+    if (j.contains("flags")) {
+        for (auto flag : j["flags"]) {
+            death_flags_.push_back(flag.get<std::string>());
+        }
+    }
 }
 
 std::optional<nlohmann::json> Death::outputToJson() {
@@ -35,6 +42,10 @@ std::optional<nlohmann::json> Death::outputToJson() {
 
 std::optional<nlohmann::json> Death::getDeathEntityJson() {
     return death_entity_json_;
+}
+
+const std::vector<std::string>& Death::getFlags() {
+    return death_flags_;
 }
 
 void Death::setDead() {

@@ -22,6 +22,7 @@ void World::update() {
         (*it)->update();
 
         if ((*it)->getComponent<Death>() && (*it)->getComponent<Death>()->isDead()) {
+            // Spawn any death entities
             if (auto death_entity_json = (*it)->getComponent<Death>()->getDeathEntityJson()) {
                 auto death_entity = BaseEntity::createFromJson(death_entity_json.value());
 
@@ -31,6 +32,13 @@ void World::update() {
 
                 addEntity(death_entity);
             }
+
+            // Set any death flags
+            auto env = System::getEnvironment();
+            for (auto flag : (*it)->getComponent<Death>()->getFlags()) {
+                env->setFlag(flag);
+            }
+
             it = deleteEntity(it);
         } else {
             ++it;
@@ -110,9 +118,30 @@ void World::addEntriesToWorld(nlohmann::json j) {
         System::getCamera()->setCameraBox({0.0f, 0.0f, 0.0f, 0.0f});
     }
 
+    auto env = System::getEnvironment();
+
     for (auto it : j["entities"]) {
-        auto ent = BaseEntity::createFromJson(it);
-        addEntity(ent);
+        bool should_create = true;
+
+        // If condition exists it must be set to add entity
+        if (it.contains("condition")) {
+            auto condition = it["condition"].get<std::string>();
+            bool invert = false;
+
+            // If condition starts with '!', invert the result
+            if (condition.at(0) == '!') {
+                invert = true;
+                condition = condition.erase(0, 1);
+            }
+
+            auto flag = env->getFlag(condition);
+            should_create = invert ? !flag : flag;
+        }
+
+        if (should_create) {
+            auto ent = BaseEntity::createFromJson(it);
+            addEntity(ent);
+        }
     }
 
     // Shaders
