@@ -161,8 +161,10 @@ void World::loadWorldTemplate(std::string file) {
     auto j = j_opt.value();
 
     // Recursively load templates
-    if (j.contains("template")) {
-        loadWorldTemplate(j["template"]);
+    if (j.contains("templates")) {
+        for (auto temp : j["templates"]) {
+            loadWorldTemplate(temp);
+        }
     }
 
     addEntriesToWorld(j);
@@ -188,9 +190,12 @@ void World::loadWorldFromJson(nlohmann::json j) {
     }
 
     clearWorld();
+    System::getRender()->clearLayerShaders();
 
-    if (j.contains("template")) {
-        loadWorldTemplate(j["template"]);
+    if (j.contains("templates")) {
+        for (auto temp : j["templates"]) {
+            loadWorldTemplate(temp);
+        }
     }
 
     addEntriesToWorld(j);

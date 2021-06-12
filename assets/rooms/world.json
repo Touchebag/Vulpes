@@ -570,5 +570,8 @@
             "pos_y": 2900
         }
     ],
-    "template": "shaders.json"
+    "templates": [
+        "shaders/background_fade_day.json",
+        "shaders/foreground_blur.json"
+    ]
 }

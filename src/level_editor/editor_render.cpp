@@ -187,6 +187,10 @@ void EditorRender::setCameraBox(Camera::CameraBoundingBox camera_box) {
     System::getCamera()->setCameraBox(camera_box);
 }
 
+void EditorRender::clearLayerShaders() {
+    render_.clearLayerShaders();
+}
+
 void EditorRender::loadLayerShaders(nlohmann::json j) {
     render_.loadLayerShaders(j);
 }

@@ -15,6 +15,7 @@ class EditorRender : public IRender {
 
     void setWindowSize(sf::RenderWindow& window, int width, int height) override;
 
+    void clearLayerShaders() override;
     void loadLayerShaders(nlohmann::json j) override;
 
     void renderLayer(sf::RenderTarget& target, int layer);

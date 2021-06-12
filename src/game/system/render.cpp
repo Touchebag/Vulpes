@@ -196,16 +196,16 @@ void Render::addEntity(std::weak_ptr<RenderableEntity> entity) {
     }
 }
 
-void Render::loadLayerShaders(nlohmann::json j) {
-    // Clear previous shaders
+void Render::clearLayerShaders() {
     for (auto& layer : background_layers_) {
         layer.shaders.clear();
     }
     for (auto& layer : foreground_layers_) {
         layer.shaders.clear();
     }
+}
 
-    // Load shaders
+void Render::loadLayerShaders(nlohmann::json j) {
     for (auto& it : j) {
         if (!it.contains("layer")) {
             throw std::invalid_argument("Shader missing layer");
