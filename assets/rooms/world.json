@@ -572,6 +572,7 @@
     ],
     "templates": [
         "shaders/background_fade_day.json",
+        "shaders/background_fade_evening.json",
         "shaders/foreground_blur.json"
     ]
 }

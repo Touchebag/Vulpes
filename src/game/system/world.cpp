@@ -126,16 +126,7 @@ void World::addEntriesToWorld(nlohmann::json j) {
         // If condition exists it must be set to add entity
         if (it.contains("condition")) {
             auto condition = it["condition"].get<std::string>();
-            bool invert = false;
-
-            // If condition starts with '!', invert the result
-            if (condition.at(0) == '!') {
-                invert = true;
-                condition = condition.erase(0, 1);
-            }
-
-            auto flag = env->getFlag(condition);
-            should_create = invert ? !flag : flag;
+            should_create = env->getFlag(condition);
         }
 
         if (should_create) {
@@ -159,6 +150,11 @@ void World::loadWorldTemplate(std::string file) {
     }
 
     auto j = j_opt.value();
+
+    // Conditionally load template
+    if (j.contains("condition") && !System::getEnvironment()->getFlag(j["condition"])) {
+        return;
+    }
 
     // Recursively load templates
     if (j.contains("templates")) {
