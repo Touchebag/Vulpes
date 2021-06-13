@@ -8,7 +8,11 @@ Component::Component(std::weak_ptr<ComponentStore> components) :
 
 template <typename T>
 std::shared_ptr<T> Component::getComponent() const {
-    return component_store_.lock()->getComponent<T>();
+    if (auto store = component_store_.lock()) {
+        return store->getComponent<T>();
+    } else {
+        return {};
+    }
 }
 
 template std::shared_ptr<Transform> Component::getComponent() const;

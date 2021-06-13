@@ -353,3 +353,8 @@ TEST(TestComponents, TestSaveLoadAnimationFile) {
     nlohmann::json j2 = components->getComponent<AnimatedEntity>()->outputToJson().value();
     ASSERT_TRUE(j1 == j2) << j1.dump() << std::endl << j2.dump() << std::endl;
 }
+
+TEST(TestComponents, TestCanHandleNullptrComponentStore) {
+    auto component = Death::createFromJson({}, {});
+    ASSERT_EQ(component->getComponent<MovableEntity>(), nullptr);
+}
