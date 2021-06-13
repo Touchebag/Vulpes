@@ -1,4 +1,5 @@
 {
+    "background": "bg_day",
     "condition": "!Collectible.ID.2",
     "shaders": [
         {

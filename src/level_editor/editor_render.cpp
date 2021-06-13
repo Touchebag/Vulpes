@@ -148,6 +148,10 @@ void EditorRender::addEntity(std::weak_ptr<RenderableEntity> entity) {
     render_.addEntity(entity);
 }
 
+void EditorRender::setBackground(std::string background) {
+    render_.setBackground(background);
+}
+
 void EditorRender::setPlayer(std::weak_ptr<RenderableEntity> entity) {
     render_.setPlayer(entity);
 }

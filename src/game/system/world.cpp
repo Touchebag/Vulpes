@@ -156,6 +156,10 @@ void World::loadWorldTemplate(std::string file) {
         return;
     }
 
+    if (j.contains("background")) {
+        System::getRender()->setBackground(j["background"]);
+    }
+
     // Recursively load templates
     if (j.contains("templates")) {
         for (auto temp : j["templates"]) {
@@ -192,6 +196,10 @@ void World::loadWorldFromJson(nlohmann::json j) {
         for (auto temp : j["templates"]) {
             loadWorldTemplate(temp);
         }
+    }
+
+    if (j.contains("background")) {
+        System::getRender()->setBackground(j["background"]);
     }
 
     addEntriesToWorld(j);

@@ -1,4 +1,5 @@
 {
+    "background": "bg_evening",
     "condition": "Collectible.ID.2",
     "shaders": [
         {

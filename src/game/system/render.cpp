@@ -113,6 +113,17 @@ void Render::drawPlayer(sf::RenderWindow& window, float frame_fraction) {
     }
 }
 
+void Render::drawBackground(sf::RenderWindow& window) {
+    auto current_view = window.getView();
+
+    auto size = background_.getSize();
+    // Set static view for background
+    window.setView({{size.x / 2.0f, size.y / 2.0f}, {static_cast<float>(size.x), static_cast<float>(size.y)}});
+    window.draw(sf::Sprite(background_));
+
+    window.setView(current_view);
+}
+
 void Render::drawHud(sf::RenderWindow& window) {
     auto current_view = window.getView();
 
@@ -124,8 +135,9 @@ void Render::drawHud(sf::RenderWindow& window) {
 }
 
 void Render::render(sf::RenderWindow& window, float frame_fraction) {
-    // TODO Use actual background layer
-    window.clear(sf::Color(135, 206, 255));
+    window.clear(sf::Color(0, 0, 0));
+
+    drawBackground(window);
 
     for (int i = -static_cast<int>(background_layers_.size()); i <= -1; ++i) {
         renderLayerWithPostProcessing(window, i, frame_fraction);
@@ -144,6 +156,14 @@ void Render::render(sf::RenderWindow& window, float frame_fraction) {
 
 void Render::setPlayer(std::weak_ptr<RenderableEntity> entity) {
     player_ = entity;
+}
+
+void Render::setBackground(std::string background) {
+    if (auto texture = File().loadTexture(background)) {
+        background_ = texture.value();
+    } else {
+        LOGW("Failed to set background %s", background.c_str());
+    }
 }
 
 void Render::setWindowSize(sf::RenderWindow& window, int width, int height) {
