@@ -7,15 +7,15 @@
 
 class Hitbox {
   public:
-    Hitbox(int width, int height);
+    Hitbox(unsigned int width, unsigned int height);
 
-    void setHitbox(int width, int height);
+    void setHitbox(unsigned int width, unsigned int height);
 
     void setOffset(std::pair<int, int> offset);
     void moveOffset(std::pair<int, int> offset);
 
-    int width_ = 0;
-    int height_ = 0;
+    unsigned int width_ = 0;
+    unsigned int height_ = 0;
 
     int getRight() const;
     int getLeft() const;

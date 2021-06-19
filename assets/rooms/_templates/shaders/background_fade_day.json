@@ -1,5 +1,5 @@
 {
-    "background": "bg_day",
+    "background": "Forest/Background",
     "condition": "!Collectible.ID.2",
     "shaders": [
         {

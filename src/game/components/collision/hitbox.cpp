@@ -1,11 +1,11 @@
 #include "hitbox.h"
 
-Hitbox::Hitbox(int width, int height) :
+Hitbox::Hitbox(unsigned int width, unsigned int height) :
     width_(width),
     height_(height) {
 }
 
-void Hitbox::setHitbox(int width, int height) {
+void Hitbox::setHitbox(unsigned int width, unsigned int height) {
     width_ = width;
     height_ = height;
 }

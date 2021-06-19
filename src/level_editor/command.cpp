@@ -26,9 +26,20 @@ void Command::update() {
                     if (j.contains("Collision")) {
                         auto coll = j["Collision"];
                         if (editor_env->current_entity->getComponent<Collision>()) {
-                            editor_env->current_entity->getComponent<Collision>()->getCollideable()->setHitbox(
-                                    static_cast<int>(static_cast<float>(coll["width"].get<int>()) + (mouse_world_dist.first * 2.0)),
-                                    static_cast<int>(static_cast<float>(coll["height"].get<int>()) + (mouse_world_dist.second * 2.0)));
+                            auto new_width = 0;
+                            auto new_height = 0;
+
+                            // If result would be negative, don't change
+                            if (mouse_world_dist.first > 0
+                               || (abs(mouse_world_dist.first) < coll["width"].get<float>() / 2.0)) {
+                                new_width = static_cast<int>(coll["width"].get<float>() + (mouse_world_dist.first * 2.0));
+                            }
+                            if (mouse_world_dist.second > 0
+                               || (abs(mouse_world_dist.second) < coll["height"].get<float>() / 2.0)) {
+                                new_height = static_cast<int>(coll["height"].get<float>() + (mouse_world_dist.second * 2.0));
+                            }
+
+                            editor_env->current_entity->getComponent<Collision>()->getCollideable()->setHitbox(new_width, new_height);
                         }
                     }
                     if (j.contains("Renderable")) {
