@@ -209,8 +209,10 @@ void World::loadWorldFromJson(nlohmann::json j) {
         nlohmann::json player_json;
         player_json["Entity"] = "player";
         player_ = Player::createFromJson(player_json);
-        addPlayer(player_);
     }
+
+    // Re-add player to ensure collideable are added correctly
+    addPlayer(player_);
 
     // Health HUD
     player_health_->setComponent<Transform>(std::make_shared<Transform>(player_health_));
