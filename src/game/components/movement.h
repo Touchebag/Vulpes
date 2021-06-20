@@ -7,7 +7,7 @@
 #include <utility>
 #include <memory>
 
-class MovableEntity : public Component {
+class Movement : public Component {
   public:
     struct MovementAttributes {
         bool on_ground = false;
@@ -16,13 +16,13 @@ class MovableEntity : public Component {
         bool on_slope = false;
     };
 
-    MovableEntity(std::weak_ptr<ComponentStore> components);
+    Movement(std::weak_ptr<ComponentStore> components);
 
     void move(double velX, double velY);
 
     void update() override;
 
-    static std::shared_ptr<MovableEntity> createFromJson(nlohmann::json, std::weak_ptr<ComponentStore>, File file_instance = File());
+    static std::shared_ptr<Movement> createFromJson(nlohmann::json, std::weak_ptr<ComponentStore>, File file_instance = File());
     void reloadFromJson(nlohmann::json j, File file = File()) override;
     std::optional<nlohmann::json> outputToJson() override;
 

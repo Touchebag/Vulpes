@@ -165,15 +165,15 @@ TEST_F(CommandTestFixture, ToggleRenderable) {
     editor_env->command->add(entity);
 
     assertCorrectNumberOfEntities(1);
-    ASSERT_TRUE(entity->getComponent<RenderableEntity>());
+    ASSERT_TRUE(entity->getComponent<Rendering>());
 
     editor_env->current_entity = entity;
     editor_env->command->handleCommand(Command::Commands::TOGGLE_RENDERABLE);
 
-    ASSERT_FALSE(entity->getComponent<RenderableEntity>());
+    ASSERT_FALSE(entity->getComponent<Rendering>());
 
     editor_env->command->handleCommand(Command::Commands::TOGGLE_RENDERABLE);
-    ASSERT_TRUE(entity->getComponent<RenderableEntity>());
+    ASSERT_TRUE(entity->getComponent<Rendering>());
 }
 
 TEST_F(CommandTestFixture, ToggleCollision) {
@@ -198,7 +198,7 @@ TEST_F(CommandTestFixture, ToggleMovable) {
     assertWorldEmpty();
 
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    entity->setComponent<MovableEntity>(std::make_shared<MovableEntity>(entity->components_));
+    entity->setComponent<Movement>(std::make_shared<Movement>(entity->components_));
     editor_env->command->add(entity);
 
     assertCorrectNumberOfEntities(1);
@@ -206,10 +206,10 @@ TEST_F(CommandTestFixture, ToggleMovable) {
     editor_env->current_entity = entity;
     editor_env->command->handleCommand(Command::Commands::TOGGLE_MOVABLE);
 
-    ASSERT_FALSE(entity->getComponent<MovableEntity>());
+    ASSERT_FALSE(entity->getComponent<Movement>());
 
     editor_env->command->handleCommand(Command::Commands::TOGGLE_MOVABLE);
-    ASSERT_TRUE(entity->getComponent<MovableEntity>());
+    ASSERT_TRUE(entity->getComponent<Movement>());
 }
 
 TEST_F(CommandTestFixture, TogglePhysics) {
@@ -256,10 +256,10 @@ TEST_F(CommandTestFixture, ToggleTiling) {
 
     assertCorrectNumberOfEntities(1);
 
-    entity->setComponent<RenderableEntity>(std::make_shared<RenderableEntity>(entity->components_));
+    entity->setComponent<Rendering>(std::make_shared<Rendering>(entity->components_));
 
-    ASSERT_EQ(0, entity->getComponent<RenderableEntity>()->tiling_x_);
-    ASSERT_EQ(0, entity->getComponent<RenderableEntity>()->tiling_y_);
+    ASSERT_EQ(0, entity->getComponent<Rendering>()->tiling_x_);
+    ASSERT_EQ(0, entity->getComponent<Rendering>()->tiling_y_);
 
     editor_env->current_entity = entity;
 
@@ -267,15 +267,15 @@ TEST_F(CommandTestFixture, ToggleTiling) {
     editor_env->command->text_input_->enterText("1");
     editor_env->command->stopCommand();
 
-    ASSERT_EQ(1, entity->getComponent<RenderableEntity>()->tiling_x_);
-    ASSERT_EQ(0, entity->getComponent<RenderableEntity>()->tiling_y_);
+    ASSERT_EQ(1, entity->getComponent<Rendering>()->tiling_x_);
+    ASSERT_EQ(0, entity->getComponent<Rendering>()->tiling_y_);
 
     editor_env->command->handleCommand(Command::Commands::RENDERABLE_TILING_Y);
     editor_env->command->text_input_->enterText("2");
     editor_env->command->stopCommand();
 
-    ASSERT_EQ(1, entity->getComponent<RenderableEntity>()->tiling_x_);
-    ASSERT_EQ(2, entity->getComponent<RenderableEntity>()->tiling_y_);
+    ASSERT_EQ(1, entity->getComponent<Rendering>()->tiling_x_);
+    ASSERT_EQ(2, entity->getComponent<Rendering>()->tiling_y_);
 }
 
 TEST_F(CommandTestFixture, ChangeTexture) {

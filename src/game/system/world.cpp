@@ -46,7 +46,7 @@ void World::update() {
     }
 
     if (player_->getComponent<Damageable>()) {
-        if (auto health_text = std::dynamic_pointer_cast<RenderableText>(player_health_->getComponent<RenderableEntity>())) {
+        if (auto health_text = std::dynamic_pointer_cast<RenderingText>(player_health_->getComponent<Rendering>())) {
             health_text->setText(std::to_string(player_->getComponent<Damageable>()->getHealth()));
         } else {
             LOGW("Unable to cast health text HUD");
@@ -218,11 +218,11 @@ void World::loadWorldFromJson(nlohmann::json j) {
     player_health_->setComponent<Transform>(std::make_shared<Transform>(player_health_));
     player_health_->getComponent<Transform>()->setPosition(50, 50);
 
-    player_health_->setComponent<RenderableEntity>(std::make_shared<RenderableText>(player_health_));
-    player_health_->getComponent<RenderableEntity>()->setColor(sf::Color::Green);
-    player_health_->getComponent<RenderableEntity>()->setLayer(INT_MAX);
+    player_health_->setComponent<Rendering>(std::make_shared<RenderingText>(player_health_));
+    player_health_->getComponent<Rendering>()->setColor(sf::Color::Green);
+    player_health_->getComponent<Rendering>()->setLayer(INT_MAX);
 
-    System::getRender()->addEntity(player_health_->getComponent<RenderableEntity>());
+    System::getRender()->addEntity(player_health_->getComponent<Rendering>());
 }
 
 void World::saveWorldToFile(std::string file) {
@@ -245,7 +245,7 @@ nlohmann::json World::saveWorldToJson() {
     for (auto it : world_objects_) {
         if (auto object = it->outputToJson()) {
             // Do not store if HUD object
-            if (!(it->getComponent<RenderableEntity>()) || (it->getComponent<RenderableEntity>()->getLayer() != INT_MAX)) {
+            if (!(it->getComponent<Rendering>()) || (it->getComponent<Rendering>()->getLayer() != INT_MAX)) {
                 json_object_list.push_back(*object);
             }
         }
@@ -293,7 +293,7 @@ void World::addEntity(std::shared_ptr<BaseEntity> entity) {
         addCollideable(coll->getCollideable());
     }
 
-    if (auto render = entity->getComponent<RenderableEntity>()) {
+    if (auto render = entity->getComponent<Rendering>()) {
         System::getRender()->addEntity(render);
     }
 }
@@ -316,7 +316,7 @@ void World::addPlayer(std::shared_ptr<Player> player) {
         addCollideable(coll->getCollideable());
     }
 
-    System::getRender()->setPlayer(player_->getComponent<RenderableEntity>());
+    System::getRender()->setPlayer(player_->getComponent<Rendering>());
 }
 
 void World::loadRoom(std::string room_name, int entrance_id) {

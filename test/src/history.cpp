@@ -233,7 +233,7 @@ TEST_F(HistoryTestFixture, ToggleCollision) {
 
 TEST_F(HistoryTestFixture, ToggleMovable) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    entity->setComponent<MovableEntity>(std::make_shared<MovableEntity>(entity->components_));
+    entity->setComponent<Movement>(std::make_shared<Movement>(entity->components_));
     editor_env->command->add(entity);
 
     auto j1 = System::IWorldModify::saveWorldToJson();
@@ -299,7 +299,7 @@ TEST_F(HistoryTestFixture, ToggleActions) {
 
 TEST_F(HistoryTestFixture, ToggleTiling) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    entity->setComponent<RenderableEntity>(std::make_shared<RenderableEntity>(entity->components_));
+    entity->setComponent<Rendering>(std::make_shared<Rendering>(entity->components_));
     editor_env->command->add(entity);
 
     auto j1 = System::IWorldModify::saveWorldToJson();
@@ -324,7 +324,7 @@ TEST_F(HistoryTestFixture, ToggleTiling) {
 
 TEST_F(HistoryTestFixture, ChangeSprite) {
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    entity->setComponent<RenderableEntity>(std::make_shared<RenderableEntity>(entity->components_));
+    entity->setComponent<Rendering>(std::make_shared<Rendering>(entity->components_));
     editor_env->command->add(entity);
 
     auto j1 = System::IWorldModify::saveWorldToJson();

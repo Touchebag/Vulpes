@@ -67,7 +67,7 @@ void Damageable::update() {
     if (invincibility_frame_counter_ > 0) {
         // If this is the last frame remove overlay
         if (--invincibility_frame_counter_ == 0) {
-            if (auto render = getComponent<RenderableEntity>()) {
+            if (auto render = getComponent<Rendering>()) {
                 render->clearColor();
             }
         }
@@ -93,16 +93,16 @@ void Damageable::update() {
                         health_ -= attributes.damage;
                         invincibility_frame_counter_ = attributes.invincibility_frames;
 
-                        if (auto state = getComponent<StatefulEntity>()) {
+                        if (auto state = getComponent<Stateful>()) {
                             state->incomingEvent(state_utils::Event::DAMAGED);
 
                             if (invincibility_frame_counter_ > 0) {
-                                if (auto render = getComponent<RenderableEntity>()) {
+                                if (auto render = getComponent<Rendering>()) {
                                     render->setColor({255, 255, 255, 128});
                                 }
                             }
 
-                            if (auto move = getComponent<MovableEntity>()) {
+                            if (auto move = getComponent<Movement>()) {
                                 bool should_move_right = knockbackRight(coll, other_coll);
                                 move->move(attributes.knockback_x * (should_move_right ? 1.0 : -1.0),
                                            attributes.knockback_y);

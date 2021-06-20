@@ -12,19 +12,19 @@ std::shared_ptr<MenuEntry> makeMenuEntry(
 }
 
 std::shared_ptr<MenuEntry> makeRenderableEntry(std::shared_ptr<BaseEntity> current_entity) {
-    auto color = current_entity->getComponent<RenderableEntity>() ? sf::Color::Green : sf::Color::Red;
+    auto color = current_entity->getComponent<Rendering>() ? sf::Color::Green : sf::Color::Red;
 
     auto entry = makeMenuEntry("Renderable", color, std::nullopt);
 
     entry->addEntry(makeMenuEntry("Enable/Disable", color, {Command::Commands::TOGGLE_RENDERABLE}));
 
-    if (current_entity->getComponent<RenderableEntity>()) {
+    if (current_entity->getComponent<Rendering>()) {
         entry->addEntry(makeMenuEntry("Sprite", color, {Command::Commands::RENDERABLE_SPRITE_CHANGE}));
 
         auto tiling_entry = makeMenuEntry("Tiling", color, std::nullopt);
 
-        auto tile_x = current_entity->getComponent<RenderableEntity>()->tiling_x_;
-        auto tile_y = current_entity->getComponent<RenderableEntity>()->tiling_y_;
+        auto tile_x = current_entity->getComponent<Rendering>()->tiling_x_;
+        auto tile_y = current_entity->getComponent<Rendering>()->tiling_y_;
 
         auto tiling_color = sf::Color::Green;
         tiling_entry->addEntry(makeMenuEntry("Tile X", tiling_color, {Command::Commands::RENDERABLE_TILING_X}));
@@ -46,7 +46,7 @@ std::shared_ptr<MenuEntry> makeCollisionEntry(std::shared_ptr<BaseEntity> curren
 }
 
 std::shared_ptr<MenuEntry> makeMovableEntry(std::shared_ptr<BaseEntity> current_entity) {
-    auto color = current_entity->getComponent<MovableEntity>() ? sf::Color::Green : sf::Color::Red;
+    auto color = current_entity->getComponent<Movement>() ? sf::Color::Green : sf::Color::Red;
     auto entry = makeMenuEntry("Movable", color, std::nullopt);
 
     entry->addEntry(makeMenuEntry("Enable/Disable", color, {Command::Commands::TOGGLE_MOVABLE}));

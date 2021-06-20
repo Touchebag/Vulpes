@@ -25,7 +25,7 @@ void AI::update() {
         ai::condition::LogicalOperator::aiValues values {
             getComponent<Transform>(),
             getComponent<Collision>(),
-            getComponent<AnimatedEntity>(),
+            getComponent<Animation>(),
             frame_timer_
         };
 

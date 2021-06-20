@@ -8,15 +8,15 @@
 #include "components/rendering/rendering.h"
 
 // This class keeps the sprite sheet coordinates of the currently loaded texture
-class AnimatedEntity : public Component {
+class Animation : public Component {
   public:
-    AnimatedEntity(std::weak_ptr<ComponentStore> components);
+    Animation(std::weak_ptr<ComponentStore> components);
 
     void setFrameList(std::string animation_name);
 
     // Returns a pair of the top-left and bottom-right points of current texture
 
-    static std::shared_ptr<AnimatedEntity> createFromJson(nlohmann::json, std::weak_ptr<ComponentStore>, File file_instance = File());
+    static std::shared_ptr<Animation> createFromJson(nlohmann::json, std::weak_ptr<ComponentStore>, File file_instance = File());
     void reloadFromJson(nlohmann::json j, File file = File()) override;
     std::optional<nlohmann::json> outputToJson() override;
 

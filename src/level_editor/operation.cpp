@@ -6,7 +6,7 @@ void Operation::undo() {
     if (entity_) {
         if (!before_) {
             // If entity did not exist before, delete it
-            entity_->setComponent<RenderableEntity>({});
+            entity_->setComponent<Rendering>({});
             System::IWorldModify::removeEntity(entity_);
         } else if (!after_) {
             // If entity does not exist after, add it
@@ -14,7 +14,7 @@ void Operation::undo() {
             System::IWorldModify::addEntity(entity_);
         } else {
             entity_->reloadFromJson(before_.value());
-            System::getRender()->addEntity(entity_->getComponent<RenderableEntity>());
+            System::getRender()->addEntity(entity_->getComponent<Rendering>());
         }
     }
 }
@@ -23,7 +23,7 @@ void Operation::redo() {
     if (entity_) {
         if (!after_) {
             // If entity does not exist after it was removed
-            entity_->setComponent<RenderableEntity>({});
+            entity_->setComponent<Rendering>({});
             System::IWorldModify::removeEntity(entity_);
         } else if (!before_) {
             // If entity did not exist before it was added
@@ -31,7 +31,7 @@ void Operation::redo() {
             System::IWorldModify::addEntity(entity_);
         } else {
             entity_->reloadFromJson(after_.value());
-            System::getRender()->addEntity(entity_->getComponent<RenderableEntity>());
+            System::getRender()->addEntity(entity_->getComponent<Rendering>());
         }
     }
 }

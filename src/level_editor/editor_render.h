@@ -10,9 +10,9 @@ class EditorRender : public IRender {
 
     void setEditorEnvironment(std::weak_ptr<EditorEnvironment> editor_env);
 
-    void addEntity(std::weak_ptr<RenderableEntity> entity) override;
+    void addEntity(std::weak_ptr<Rendering> entity) override;
     void setBackground(std::string background) override;
-    void setPlayer(std::weak_ptr<RenderableEntity> entity) override;
+    void setPlayer(std::weak_ptr<Rendering> entity) override;
 
     void setWindowSize(sf::RenderWindow& window, int width, int height) override;
 

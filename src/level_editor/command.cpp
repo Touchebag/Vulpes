@@ -44,7 +44,7 @@ void Command::update() {
                     }
                     if (j.contains("Renderable")) {
                         auto render = j["Renderable"];
-                        if (editor_env->current_entity->getComponent<RenderableEntity>()) {
+                        if (editor_env->current_entity->getComponent<Rendering>()) {
                             int w = 0;
                             int h = 0;
                             if (render.contains("width")) {
@@ -53,7 +53,7 @@ void Command::update() {
                             if (render.contains("height")) {
                                 h = static_cast<int>(static_cast<float>(render["height"].get<int>()) + (mouse_world_dist.second * 2.0));
                             }
-                            editor_env->current_entity->getComponent<RenderableEntity>()->setSize(w, h);
+                            editor_env->current_entity->getComponent<Rendering>()->setSize(w, h);
                         }
                     }
                 }
@@ -91,7 +91,7 @@ void Command::add(std::shared_ptr<BaseEntity> entity) {
 
     std::shared_ptr<Transform> trans = std::make_shared<Transform>(entity->components_);
     std::shared_ptr<CollideableStatic> coll = std::make_shared<CollideableStatic>(entity->components_);
-    std::shared_ptr<RenderableEntity> render = std::make_shared<RenderableEntity>(entity->components_);
+    std::shared_ptr<Rendering> render = std::make_shared<Rendering>(entity->components_);
 
     coll->setHitbox(50, 50);
     render->setLayer(current_layer_);
@@ -102,7 +102,7 @@ void Command::add(std::shared_ptr<BaseEntity> entity) {
 
     render->setSize(50, 50);
     render->loadTexture("box.png", File());
-    entity->setComponent<RenderableEntity>(render);
+    entity->setComponent<Rendering>(render);
 
     System::IWorldModify::addEntity(entity);
 
@@ -125,7 +125,7 @@ void Command::remove(std::shared_ptr<BaseEntity> entity) {
     editor_env->current_operation->before_ = entity->outputToJson();
 
     // Ensure weak_ptr in render expires
-    entity->getComponent<RenderableEntity>().reset();
+    entity->getComponent<Rendering>().reset();
 
     editor_env->history->addOperation(editor_env->current_operation);
 
@@ -186,12 +186,12 @@ void Command::handleCommand(Commands command) {
                 editor_env->current_operation->before_ = editor_env->current_entity->outputToJson();
 
                 System::IWorldModify::removeEntity(editor_env->current_entity);
-                if (editor_env->current_entity->getComponent<RenderableEntity>()) {
-                    editor_env->current_entity->setComponent<RenderableEntity>({});
+                if (editor_env->current_entity->getComponent<Rendering>()) {
+                    editor_env->current_entity->setComponent<Rendering>({});
                 } else {
-                    auto renderable = std::make_shared<RenderableEntity>(editor_env->current_entity->components_);
+                    auto renderable = std::make_shared<Rendering>(editor_env->current_entity->components_);
                     renderable->loadTexture("box.png", File());
-                    editor_env->current_entity->setComponent<RenderableEntity>(renderable);
+                    editor_env->current_entity->setComponent<Rendering>(renderable);
                 }
                 System::IWorldModify::addEntity(editor_env->current_entity);
                 editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();
@@ -224,11 +224,11 @@ void Command::handleCommand(Commands command) {
                 editor_env->current_operation->before_ = editor_env->current_entity->outputToJson();
 
                 System::IWorldModify::removeEntity(editor_env->current_entity);
-                if (editor_env->current_entity->getComponent<MovableEntity>()) {
-                    editor_env->current_entity->setComponent<MovableEntity>({});
+                if (editor_env->current_entity->getComponent<Movement>()) {
+                    editor_env->current_entity->setComponent<Movement>({});
                 } else {
-                    auto movable = std::make_shared<MovableEntity>(editor_env->current_entity->components_);
-                    editor_env->current_entity->setComponent<MovableEntity>(movable);
+                    auto movable = std::make_shared<Movement>(editor_env->current_entity->components_);
+                    editor_env->current_entity->setComponent<Movement>(movable);
                 }
                 System::IWorldModify::addEntity(editor_env->current_entity);
                 editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();
@@ -286,7 +286,7 @@ void Command::handleCommand(Commands command) {
                 break;
             }
         case (Commands::RENDERABLE_TILING_X):
-            if (editor_env->current_entity->getComponent<RenderableEntity>()) {
+            if (editor_env->current_entity->getComponent<Rendering>()) {
                 editor_env->current_operation = std::make_shared<Operation>();
                 editor_env->current_operation->entity_ = editor_env->current_entity;
                 editor_env->current_operation->before_ = editor_env->current_entity->outputToJson();
@@ -297,7 +297,7 @@ void Command::handleCommand(Commands command) {
             }
             break;
         case (Commands::RENDERABLE_TILING_Y):
-            if (editor_env->current_entity->getComponent<RenderableEntity>()) {
+            if (editor_env->current_entity->getComponent<Rendering>()) {
                 editor_env->current_operation = std::make_shared<Operation>();
                 editor_env->current_operation->entity_ = editor_env->current_entity;
                 editor_env->current_operation->before_ = editor_env->current_entity->outputToJson();
@@ -333,10 +333,10 @@ void Command::stopCommand() {
                 break;
             }
         case (Commands::RENDERABLE_SPRITE_CHANGE):
-            if (editor_env->current_entity->getComponent<RenderableEntity>() && text_input_) {
+            if (editor_env->current_entity->getComponent<Rendering>() && text_input_) {
                 try {
                     auto texture_name = text_input_->getString();
-                    editor_env->current_entity->getComponent<RenderableEntity>()->loadTexture(texture_name, File());
+                    editor_env->current_entity->getComponent<Rendering>()->loadTexture(texture_name, File());
 
                     editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();
 
@@ -348,11 +348,11 @@ void Command::stopCommand() {
             }
             break;
         case (Commands::RENDERABLE_TILING_X):
-            if (editor_env->current_entity->getComponent<RenderableEntity>() && text_input_) {
+            if (editor_env->current_entity->getComponent<Rendering>() && text_input_) {
                 try {
                     auto tiling = stoi(text_input_->getString());
-                    auto current_tiling = editor_env->current_entity->getComponent<RenderableEntity>()->getTiling();
-                    editor_env->current_entity->getComponent<RenderableEntity>()->setTiling(tiling, current_tiling.second);
+                    auto current_tiling = editor_env->current_entity->getComponent<Rendering>()->getTiling();
+                    editor_env->current_entity->getComponent<Rendering>()->setTiling(tiling, current_tiling.second);
 
                     editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();
 
@@ -364,11 +364,11 @@ void Command::stopCommand() {
             }
             break;
         case (Commands::RENDERABLE_TILING_Y):
-            if (editor_env->current_entity->getComponent<RenderableEntity>() && text_input_) {
+            if (editor_env->current_entity->getComponent<Rendering>() && text_input_) {
                 try {
                     auto tiling = stoi(text_input_->getString());
-                    auto current_tiling = editor_env->current_entity->getComponent<RenderableEntity>()->getTiling();
-                    editor_env->current_entity->getComponent<RenderableEntity>()->setTiling(current_tiling.first, tiling);
+                    auto current_tiling = editor_env->current_entity->getComponent<Rendering>()->getTiling();
+                    editor_env->current_entity->getComponent<Rendering>()->setTiling(current_tiling.first, tiling);
 
                     editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();
 

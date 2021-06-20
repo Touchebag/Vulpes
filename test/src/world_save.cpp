@@ -79,7 +79,7 @@ TEST_F(WorldTestFixture, EnsureHudNotSaved) {
         })--");
 
     auto hud_object = BaseEntity::createFromJson(j);
-    hud_object->getComponent<RenderableEntity>()->setLayer(INT_MAX);
+    hud_object->getComponent<Rendering>()->setLayer(INT_MAX);
 
     System::IWorldModify::addEntity(hud_object);
 

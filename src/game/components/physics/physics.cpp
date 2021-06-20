@@ -45,38 +45,38 @@ Physics::Physics(std::weak_ptr<ComponentStore> components) :
 
 void Physics::update() {
     // TODO Move somwhere more logical (transform?)
-    auto stateEnt = getComponent<StatefulEntity>();
-    auto movable = getComponent<MovableEntity>();
+    auto state = getComponent<Stateful>();
+    auto move = getComponent<Movement>();
     auto act = getComponent<Actions>();
 
-    if (stateEnt && movable && act) {
-        double x = movable->getVelX();
-        double y = movable->getVelY();
+    if (state && move && act) {
+        double x = move->getVelX();
+        double y = move->getVelY();
 
-        auto physics_props = stateEnt->getPhysicsProperties();
+        auto physics_props = state->getPhysicsProperties();
 
         // Respond to previous frame's movement
-        auto move_attr = movable->getMovementAttributes();
+        auto move_attr = move->getMovementAttributes();
 
         if (move_attr.on_ground) {
             if (physics_props.air_diving_) {
                 // If we touch ground while diving we landed this frame
                 System::getCamera()->addTrauma(0.4f);
             }
-            stateEnt->incomingEvent(state_utils::Event::TOUCHING_FLOOR);
+            state->incomingEvent(state_utils::Event::TOUCHING_FLOOR);
         } else if (move_attr.touching_wall) {
-            stateEnt->incomingEvent(state_utils::Event::TOUCHING_WALL);
+            state->incomingEvent(state_utils::Event::TOUCHING_WALL);
         } else {
-            stateEnt->incomingEvent(state_utils::Event::AIRBORNE);
+            state->incomingEvent(state_utils::Event::AIRBORNE);
         }
 
         if (move_attr.falling) {
-            stateEnt->incomingEvent(state_utils::Event::FALLING);
+            state->incomingEvent(state_utils::Event::FALLING);
         }
 
         FacingDirection facing_right;
 
-        facing_right.setDirection(movable->isFacingRight());
+        facing_right.setDirection(move->isFacingRight());
 
         facing_right.lockDirection(physics_props.direction_locked_);
 
@@ -92,7 +92,7 @@ void Physics::update() {
                 } else {
                     x -= constants_.air_acceleration;
                 }
-                stateEnt->incomingEvent(state_utils::Event::MOVING);
+                state->incomingEvent(state_utils::Event::MOVING);
 
                 // When moving left facing_right should be false even when speed is zero
                 facing_right.setDirection(x > 0.0);
@@ -102,12 +102,12 @@ void Physics::update() {
                 } else {
                     x += constants_.air_acceleration;
                 }
-                stateEnt->incomingEvent(state_utils::Event::MOVING);
+                state->incomingEvent(state_utils::Event::MOVING);
 
                 // When moving right facing_right should be true even when speed is zero
                 facing_right.setDirection(x >= 0.0);
             } else {
-                stateEnt->incomingEvent(state_utils::Event::NO_MOVEMENT);
+                state->incomingEvent(state_utils::Event::NO_MOVEMENT);
             }
         }
 
@@ -156,14 +156,14 @@ void Physics::update() {
                     x = constants_.dash_speed * (facing_right ? 1.0 : -1.0);
                 }
                 y = 0.0;
-                stateEnt->incomingEvent(state_utils::Event::DASHING);
+                state->incomingEvent(state_utils::Event::DASHING);
             }
         }
 
         if (act->getActionState(Actions::Action::JUMP, true)) {
             if (physics_props.can_jump_ && physics_props.touching_ground_ && !physics_props.touching_wall_) {
                 y = constants_.jump_impulse;
-                stateEnt->incomingEvent(state_utils::Event::JUMPING);
+                state->incomingEvent(state_utils::Event::JUMPING);
             }
         }
 
@@ -173,13 +173,13 @@ void Physics::update() {
                 !physics_props.touching_wall_ &&
                 variables_.popJumps()) {
                     y = constants_.jump_impulse;
-                    stateEnt->incomingEvent(state_utils::Event::JUMPING);
+                    state->incomingEvent(state_utils::Event::JUMPING);
             }
         }
 
         if (act->getActionState(Actions::Action::WALL_JUMP, true)) {
             if (physics_props.touching_wall_) {
-                stateEnt->incomingEvent(state_utils::Event::JUMPING);
+                state->incomingEvent(state_utils::Event::JUMPING);
                 facing_right.lockDirection(physics_props.direction_locked_);
 
                 facing_right.setDirection(!facing_right);
@@ -196,14 +196,14 @@ void Physics::update() {
         // No need to check whether we are allowed to attack since there is no special
         // physics handling. All actions are handled by states.
         if (act->getActionState(Actions::Action::ATTACK1)) {
-            stateEnt->incomingEvent(state_utils::Event::ATTACKING1);
+            state->incomingEvent(state_utils::Event::ATTACKING1);
         }
         if (act->getActionState(Actions::Action::ATTACK2)) {
-            stateEnt->incomingEvent(state_utils::Event::ATTACKING2);
+            state->incomingEvent(state_utils::Event::ATTACKING2);
         }
 
         if (act->getActionState(Actions::Action::AIR_DIVE, true) && physics_props.can_air_dive_) {
-            stateEnt->incomingEvent(state_utils::Event::AIR_DIVING);
+            state->incomingEvent(state_utils::Event::AIR_DIVING);
             x = 0.0;
             y = constants_.air_dive_impulse;
         }
@@ -217,18 +217,18 @@ void Physics::update() {
 
         if (act->getActionState(Actions::Action::AIR_DIVE_BOUNCE, true)) {
             y = -30;
-            stateEnt->incomingEvent(state_utils::Event::DIVE_BOUNCE);
+            state->incomingEvent(state_utils::Event::DIVE_BOUNCE);
             variables_.resetJumps();
             variables_.resetDashes();
         }
 
-        movable->setFacingRight(facing_right);
-        movable->setVelocity(x, y);
+        move->setFacingRight(facing_right);
+        move->setVelocity(x, y);
     } else {
-        if (!stateEnt) {
+        if (!state) {
             LOGW("Physics: Missing state");
         }
-        if (!movable) {
+        if (!move) {
             LOGW("Physics: Missing movable");
         }
         if (!act) {

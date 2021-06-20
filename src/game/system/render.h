@@ -13,8 +13,8 @@ class Render : public IRender {
 
     void render(sf::RenderWindow& window, float frame_fraction) override;
 
-    void addEntity(std::weak_ptr<RenderableEntity> entity) override;
-    void setPlayer(std::weak_ptr<RenderableEntity> entity) override;
+    void addEntity(std::weak_ptr<Rendering> entity) override;
+    void setPlayer(std::weak_ptr<Rendering> entity) override;
     void setBackground(std::string background) override;
 
     void setWindowSize(sf::RenderWindow& window, int width, int height) override;
@@ -31,7 +31,7 @@ class Render : public IRender {
 
     // Layers
     struct RenderLayer {
-        std::vector<std::weak_ptr<RenderableEntity>> renderables;
+        std::vector<std::weak_ptr<Rendering>> renderables;
         std::vector<ShaderHandle> shaders;
         float parallax_multiplier;
     };
@@ -40,14 +40,14 @@ class Render : public IRender {
     std::vector<RenderLayer> background_layers_;
 
     RenderLayer main_layer_;
-    std::weak_ptr<RenderableEntity> player_;
+    std::weak_ptr<Rendering> player_;
 
     std::vector<RenderLayer> foreground_layers_;
     RenderLayer hud_layer_;
 
     // Helper functions
 
-    std::vector<std::weak_ptr<RenderableEntity>>& getLayerRenderables(int layer);
+    std::vector<std::weak_ptr<Rendering>>& getLayerRenderables(int layer);
     RenderLayer& getLayer(int layer);
 
     void renderLayer(sf::RenderTarget& target, float frame_fraction, int layer);

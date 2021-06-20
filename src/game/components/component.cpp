@@ -17,10 +17,10 @@ std::shared_ptr<T> Component::getComponent() const {
 
 template std::shared_ptr<Transform> Component::getComponent() const;
 template std::shared_ptr<Collision> Component::getComponent() const;
-template std::shared_ptr<MovableEntity> Component::getComponent() const;
-template std::shared_ptr<RenderableEntity> Component::getComponent() const;
-template std::shared_ptr<AnimatedEntity> Component::getComponent() const;
-template std::shared_ptr<StatefulEntity> Component::getComponent() const;
+template std::shared_ptr<Movement> Component::getComponent() const;
+template std::shared_ptr<Rendering> Component::getComponent() const;
+template std::shared_ptr<Animation> Component::getComponent() const;
+template std::shared_ptr<Stateful> Component::getComponent() const;
 template std::shared_ptr<Actions> Component::getComponent() const;
 template std::shared_ptr<Physics> Component::getComponent() const;
 template std::shared_ptr<AI> Component::getComponent() const;

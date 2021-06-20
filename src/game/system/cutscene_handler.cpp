@@ -10,11 +10,11 @@ void resetEntity(std::shared_ptr<Cutscene::EntityInformation> entity_info) {
     auto entity = entity_info->entity;
 
     entity->setComponent<Actions>(entity_info->actions);
-    entity->setComponent<StatefulEntity>(entity_info->state);
+    entity->setComponent<Stateful>(entity_info->state);
     entity->setComponent<Physics>(entity_info->physics);
 
-    if (entity->getComponent<StatefulEntity>()) {
-        entity->getComponent<StatefulEntity>()->resetState();
+    if (entity->getComponent<Stateful>()) {
+        entity->getComponent<Stateful>()->resetState();
     }
 }
 
@@ -70,7 +70,7 @@ void CutsceneHandler::execute_event(const Cutscene::CutsceneEvent& event) {
             {
                 auto entity_info = current_cutscene_->getEntity(event.entity_id);
 
-                entity_info->entity->getComponent<AnimatedEntity>()->setFrameList("door_transition");
+                entity_info->entity->getComponent<Animation>()->setFrameList("door_transition");
                 break;
             }
         case Cutscene::CutsceneEventType::END_CUTSCENE:

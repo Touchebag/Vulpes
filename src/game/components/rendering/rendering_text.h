@@ -4,9 +4,9 @@
 
 #include "SFML/Graphics.hpp"
 
-class RenderableText : public RenderableEntity {
+class RenderingText : public Rendering {
   public:
-    RenderableText(std::weak_ptr<ComponentStore> components);
+    RenderingText(std::weak_ptr<ComponentStore> components);
 
     void setText(const std::string& text);
     void setFont(sf::Font font);

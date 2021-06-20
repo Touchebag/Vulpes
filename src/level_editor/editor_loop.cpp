@@ -235,10 +235,10 @@ int level_editor_main(sf::RenderWindow& window) {
         texture.setView(viewport);
 
         // Print current layer
-        std::static_pointer_cast<RenderableText>(editor_env->editor_entities[EditorEnvironment::EditorEntities::LAYER_HUD_TEXT]->getComponent<RenderableEntity>())->setText(std::to_string(editor_env->current_layer));
+        std::static_pointer_cast<RenderingText>(editor_env->editor_entities[EditorEnvironment::EditorEntities::LAYER_HUD_TEXT]->getComponent<Rendering>())->setText(std::to_string(editor_env->current_layer));
 
         {
-            std::static_pointer_cast<RenderableText>(editor_env->editor_entities[EditorEnvironment::EditorEntities::MOUSE_HUD_TEXT]->getComponent<RenderableEntity>())->setText(
+            std::static_pointer_cast<RenderingText>(editor_env->editor_entities[EditorEnvironment::EditorEntities::MOUSE_HUD_TEXT]->getComponent<Rendering>())->setText(
                     std::string("Mouse X: ") + std::to_string(static_cast<int>(mouse_world_pos.first)) +
                     "\nMouse Y: " + std::to_string(static_cast<int>(mouse_world_pos.second)));
         }
@@ -250,14 +250,14 @@ int level_editor_main(sf::RenderWindow& window) {
             auto coll = editor_env->current_entity->getComponent<Collision>();
 
             if (transform && coll) {
-                std::static_pointer_cast<RenderableText>(current_entity_hud_text->getComponent<RenderableEntity>())
+                std::static_pointer_cast<RenderingText>(current_entity_hud_text->getComponent<Rendering>())
                     ->setText(std::string("X:") + std::to_string(transform->getX()) +
                               " Y: " + std::to_string(transform->getY()) +
                               "\nW:" + std::to_string(coll->getCollideable()->getHitbox()->width_) +
                               " H: " + std::to_string(coll->getCollideable()->getHitbox()->height_));
             }
         } else {
-            std::static_pointer_cast<RenderableText>(current_entity_hud_text->getComponent<RenderableEntity>())
+            std::static_pointer_cast<RenderingText>(current_entity_hud_text->getComponent<Rendering>())
                 ->setText("");
         }
 

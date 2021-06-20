@@ -7,14 +7,14 @@
 #include "components/transform.h"
 #include "components/movement.h"
 
-class RenderableEntity : public Component {
+class Rendering : public Component {
   public:
-    RenderableEntity(std::weak_ptr<ComponentStore> components);
-    virtual ~RenderableEntity() = default;
+    Rendering(std::weak_ptr<ComponentStore> components);
+    virtual ~Rendering() = default;
 
     bool loadTexture(std::string file_path, File file_instance);
 
-    static std::shared_ptr<RenderableEntity> createFromJson(nlohmann::json, std::weak_ptr<ComponentStore>, File file_instance = File());
+    static std::shared_ptr<Rendering> createFromJson(nlohmann::json, std::weak_ptr<ComponentStore>, File file_instance = File());
     void reloadFromJson(nlohmann::json j, File file = File()) override;
     virtual std::optional<nlohmann::json> outputToJson() override ;
 

@@ -13,7 +13,7 @@ class LogicalOperator {
     struct aiValues {
         std::weak_ptr<Transform> trans = {};
         std::weak_ptr<Collision> coll = {};
-        std::weak_ptr<AnimatedEntity> anim = {};
+        std::weak_ptr<Animation> anim = {};
 
         unsigned int& frame_timer;
     };

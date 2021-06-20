@@ -9,13 +9,13 @@
 #include "components/collision/collision.h"
 #include "utils/state_handler.h"
 
-class StatefulEntity : public Component {
+class Stateful : public Component {
   public:
-    StatefulEntity(std::weak_ptr<ComponentStore> components);
+    Stateful(std::weak_ptr<ComponentStore> components);
 
     void update() override;
 
-    static std::shared_ptr<StatefulEntity> createFromJson(nlohmann::json, std::weak_ptr<ComponentStore>, File file_instance = File());
+    static std::shared_ptr<Stateful> createFromJson(nlohmann::json, std::weak_ptr<ComponentStore>, File file_instance = File());
     void reloadFromJson(nlohmann::json j, File file = File()) override;
     std::optional<nlohmann::json> outputToJson() override;
 

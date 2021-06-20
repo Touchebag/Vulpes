@@ -61,15 +61,15 @@ std::pair<double, double> checkMovement(double velX, double velY,
 
 } // namespace
 
-MovableEntity::MovableEntity(std::weak_ptr<ComponentStore> components) :
+Movement::Movement(std::weak_ptr<ComponentStore> components) :
     Component(components) {
 }
 
-void MovableEntity::update() {
+void Movement::update() {
     move(velx_, vely_);
 }
 
-void MovableEntity::move(double velX, double velY) {
+void Movement::move(double velX, double velY) {
     auto max_move = getMaximumMovement(velX, velY);
 
     if (auto trans = getComponent<Transform>()) {
@@ -89,15 +89,15 @@ void MovableEntity::move(double velX, double velY) {
     }
 }
 
-std::shared_ptr<MovableEntity> MovableEntity::createFromJson(nlohmann::json j, std::weak_ptr<ComponentStore> components, File file_instance) {
-    auto ret_ptr = std::make_shared<MovableEntity>(components);
+std::shared_ptr<Movement> Movement::createFromJson(nlohmann::json j, std::weak_ptr<ComponentStore> components, File file_instance) {
+    auto ret_ptr = std::make_shared<Movement>(components);
 
     ret_ptr->reloadFromJson(j, file_instance);
 
     return ret_ptr;
 }
 
-void MovableEntity::reloadFromJson(nlohmann::json j, File /* file_instance */) {
+void Movement::reloadFromJson(nlohmann::json j, File /* file_instance */) {
     if (j.contains("x_speed")) {
         velx_ = j["x_speed"].get<double>() * (facing_right_ ? 1.0 : -1.0);
     }
@@ -106,7 +106,7 @@ void MovableEntity::reloadFromJson(nlohmann::json j, File /* file_instance */) {
     }
 }
 
-std::optional<nlohmann::json> MovableEntity::outputToJson() {
+std::optional<nlohmann::json> Movement::outputToJson() {
     nlohmann::json j;
 
     // Deliberately not outputting initial velocity as that is supposed to
@@ -115,7 +115,7 @@ std::optional<nlohmann::json> MovableEntity::outputToJson() {
     return j;
 }
 
-std::pair<double, double> MovableEntity::getMaximumMovement(double velX, double velY) {
+std::pair<double, double> Movement::getMaximumMovement(double velX, double velY) {
     std::pair<double, double> vel = {velX, velY};
 
     if (auto coll = getComponent<Collision>()) {
@@ -136,27 +136,27 @@ std::pair<double, double> MovableEntity::getMaximumMovement(double velX, double 
     return {vel.first, vel.second};
 }
 
-void MovableEntity::setVelocity(double x, double y) {
+void Movement::setVelocity(double x, double y) {
     velx_ = x;
     vely_ = y;
 }
 
-double MovableEntity::getVelX() {
+double Movement::getVelX() {
     return velx_;
 }
 
-double MovableEntity::getVelY() {
+double Movement::getVelY() {
     return vely_;
 }
 
-const MovableEntity::MovementAttributes& MovableEntity::getMovementAttributes() {
+const Movement::MovementAttributes& Movement::getMovementAttributes() {
     return move_attr_;
 }
 
-bool MovableEntity::isFacingRight() {
+bool Movement::isFacingRight() {
     return facing_right_;
 }
 
-void MovableEntity::setFacingRight(bool facing_right) {
+void Movement::setFacingRight(bool facing_right) {
     facing_right_ = facing_right;
 }

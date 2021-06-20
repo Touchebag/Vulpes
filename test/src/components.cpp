@@ -346,15 +346,15 @@ TEST(TestComponents, TestSaveLoadAnimationFile) {
     nlohmann::json j1;
 
     std::shared_ptr<ComponentStore> components = std::make_shared<ComponentStore>();
-    components->setComponent<RenderableEntity>(std::make_shared<RenderableEntity>(components));
+    components->setComponent<Rendering>(std::make_shared<Rendering>(components));
 
-    components->setComponent<AnimatedEntity>(AnimatedEntity::createFromJson(j1, components));
+    components->setComponent<Animation>(Animation::createFromJson(j1, components));
 
-    nlohmann::json j2 = components->getComponent<AnimatedEntity>()->outputToJson().value();
+    nlohmann::json j2 = components->getComponent<Animation>()->outputToJson().value();
     ASSERT_TRUE(j1 == j2) << j1.dump() << std::endl << j2.dump() << std::endl;
 }
 
 TEST(TestComponents, TestCanHandleNullptrComponentStore) {
     auto component = Death::createFromJson({}, {});
-    ASSERT_EQ(component->getComponent<MovableEntity>(), nullptr);
+    ASSERT_EQ(component->getComponent<Movement>(), nullptr);
 }

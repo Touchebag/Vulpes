@@ -4,8 +4,8 @@
 #include "utils/log.h"
 #include "components/component_store.h"
 
-RenderableText::RenderableText(std::weak_ptr<ComponentStore> components) :
-    RenderableEntity(components) {
+RenderingText::RenderingText(std::weak_ptr<ComponentStore> components) :
+    Rendering(components) {
 
     sf::Font font;
     if (std::optional<sf::Font> tmp_font = File().loadFont("arial.ttf")) {
@@ -19,20 +19,20 @@ RenderableText::RenderableText(std::weak_ptr<ComponentStore> components) :
     setText("");
 }
 
-void RenderableText::setFont(sf::Font font) {
+void RenderingText::setFont(sf::Font font) {
     font_ = font;
     text_.setFont(font_);
 }
 
-void RenderableText::setColor(sf::Color color) {
+void RenderingText::setColor(sf::Color color) {
     text_.setFillColor(color);
 }
 
-void RenderableText::setText(const std::string& text) {
+void RenderingText::setText(const std::string& text) {
     text_.setString(text);
 }
 
-void RenderableText::render(sf::RenderTarget& target, float /* frame_fraction */) {
+void RenderingText::render(sf::RenderTarget& target, float /* frame_fraction */) {
     if (auto trans = getComponent<Transform>()) {
         text_.setPosition(static_cast<float>(trans->getX()), static_cast<float>(trans->getY()));
         target.draw(text_);

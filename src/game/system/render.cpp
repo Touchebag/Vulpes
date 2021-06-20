@@ -21,7 +21,7 @@ const std::map<int, float> parallax_map = {
     {5, 1.15},
 };
 
-void renderAllEntitesInVector(std::vector<std::weak_ptr<RenderableEntity>>& layer,
+void renderAllEntitesInVector(std::vector<std::weak_ptr<Rendering>>& layer,
                               sf::RenderTarget& target,
                               float frame_fraction = 0.0f) {
     for (auto it = layer.begin(); it != layer.end(); ) {
@@ -118,7 +118,8 @@ void Render::drawBackground(sf::RenderWindow& window) {
 
     auto size = background_.getSize();
     // Set static view for background
-    window.setView({{size.x / 2.0f, size.y / 2.0f}, {static_cast<float>(size.x), static_cast<float>(size.y)}});
+    window.setView({{static_cast<float>(size.x) / 2.0f, static_cast<float>(size.y) / 2.0f},
+                    {static_cast<float>(size.x), static_cast<float>(size.y)}});
     window.draw(sf::Sprite(background_));
 
     window.setView(current_view);
@@ -154,7 +155,7 @@ void Render::render(sf::RenderWindow& window, float frame_fraction) {
     drawHud(window);
 }
 
-void Render::setPlayer(std::weak_ptr<RenderableEntity> entity) {
+void Render::setPlayer(std::weak_ptr<Rendering> entity) {
     player_ = entity;
 }
 
@@ -199,11 +200,11 @@ Render::RenderLayer& Render::getLayer(int layer) {
     }
 }
 
-std::vector<std::weak_ptr<RenderableEntity>>& Render::getLayerRenderables(int layer) {
+std::vector<std::weak_ptr<Rendering>>& Render::getLayerRenderables(int layer) {
     return getLayer(layer).renderables;
 }
 
-void Render::addEntity(std::weak_ptr<RenderableEntity> entity) {
+void Render::addEntity(std::weak_ptr<Rendering> entity) {
     if (auto ent = entity.lock()) {
         int layer = ent->getLayer();
 

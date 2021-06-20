@@ -36,7 +36,7 @@ class DynamicCollisionTestFixture : public ::testing::Test {
 TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionNoCollision) {
     System::IWorldModify::addEntity(entity_);
 
-    entity_->getComponent<MovableEntity>()->move(10, 0);
+    entity_->getComponent<Movement>()->move(10, 0);
     auto pos_x = entity_->getComponent<Transform>()->getX();
     auto pos_y = entity_->getComponent<Transform>()->getY();
 
@@ -47,7 +47,7 @@ TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionNoCollision) {
 TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionCollision) {
     System::IWorldModify::addEntity(entity_);
 
-    entity_->getComponent<MovableEntity>()->move(60, 0);
+    entity_->getComponent<Movement>()->move(60, 0);
     auto pos_x = entity_->getComponent<Transform>()->getX();
     auto pos_y = entity_->getComponent<Transform>()->getY();
 
@@ -58,7 +58,7 @@ TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionCollision) {
 TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionNegativeCollision) {
     System::IWorldModify::addEntity(entity_);
 
-    entity_->getComponent<MovableEntity>()->move(0, -70);
+    entity_->getComponent<Movement>()->move(0, -70);
     auto pos_x = entity_->getComponent<Transform>()->getX();
     auto pos_y = entity_->getComponent<Transform>()->getY();
 
@@ -69,7 +69,7 @@ TEST_F(DynamicCollisionTestFixture, MoveSingleDirectionNegativeCollision) {
 TEST_F(DynamicCollisionTestFixture, MoveMultipleDirectionCollisionInOne) {
     System::IWorldModify::addEntity(entity_);
 
-    entity_->getComponent<MovableEntity>()->move(80, 20);
+    entity_->getComponent<Movement>()->move(80, 20);
     auto pos_x = entity_->getComponent<Transform>()->getX();
     auto pos_y = entity_->getComponent<Transform>()->getY();
 
@@ -83,7 +83,7 @@ TEST_F(DynamicCollisionTestFixture, CollisionSemiSolidAllDirections) {
     // From below, should not be stopped
     entity_->getComponent<Transform>()->setPosition(500, 200);
 
-    entity_->getComponent<MovableEntity>()->move(0, -100);
+    entity_->getComponent<Movement>()->move(0, -100);
     auto pos_x = entity_->getComponent<Transform>()->getX();
     auto pos_y = entity_->getComponent<Transform>()->getY();
 
@@ -93,7 +93,7 @@ TEST_F(DynamicCollisionTestFixture, CollisionSemiSolidAllDirections) {
     // From above, should be stopped
     entity_->getComponent<Transform>()->setPosition(500, 0);
 
-    entity_->getComponent<MovableEntity>()->move(0, 100);
+    entity_->getComponent<Movement>()->move(0, 100);
     pos_x = entity_->getComponent<Transform>()->getX();
     pos_y = entity_->getComponent<Transform>()->getY();
 
@@ -103,14 +103,14 @@ TEST_F(DynamicCollisionTestFixture, CollisionSemiSolidAllDirections) {
     // Left/right, should not be stopped
     entity_->getComponent<Transform>()->setPosition(400, 100);
 
-    entity_->getComponent<MovableEntity>()->move(200, 0);
+    entity_->getComponent<Movement>()->move(200, 0);
     pos_x = entity_->getComponent<Transform>()->getX();
     pos_y = entity_->getComponent<Transform>()->getY();
 
     EXPECT_EQ(600, pos_x);
     EXPECT_EQ(100, pos_y);
 
-    entity_->getComponent<MovableEntity>()->move(-200, 0);
+    entity_->getComponent<Movement>()->move(-200, 0);
     pos_x = entity_->getComponent<Transform>()->getX();
     pos_y = entity_->getComponent<Transform>()->getY();
 
@@ -154,7 +154,7 @@ TEST_F(DynamicCollisionTestFixture, MoveDiagonalStuckOnCorner) {
     entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
     System::IWorldModify::addEntity(entity);
 
-    entity->getComponent<MovableEntity>()->move(10, 10);
+    entity->getComponent<Movement>()->move(10, 10);
     auto pos_x = entity->getComponent<Transform>()->getX();
     auto pos_y = entity->getComponent<Transform>()->getY();
 
@@ -199,7 +199,7 @@ TEST_F(DynamicCollisionTestFixture, TunnelingOneDirection) {
     entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
     System::IWorldModify::addEntity(entity);
 
-    entity->getComponent<MovableEntity>()->move(30, 0);
+    entity->getComponent<Movement>()->move(30, 0);
     auto pos_x = entity->getComponent<Transform>()->getX();
     auto pos_y = entity->getComponent<Transform>()->getY();
 
@@ -261,7 +261,7 @@ TEST_F(DynamicCollisionTestFixture, TunnelingStuckInCorner) {
     entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
     System::IWorldModify::addEntity(entity);
 
-    entity->getComponent<MovableEntity>()->move(30, 35);
+    entity->getComponent<Movement>()->move(30, 35);
     auto pos_x = entity->getComponent<Transform>()->getX();
     auto pos_y = entity->getComponent<Transform>()->getY();
 
@@ -306,7 +306,7 @@ TEST_F(DynamicCollisionTestFixture, TunnelingOnlyXSlideDown) {
     entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
     System::IWorldModify::addEntity(entity);
 
-    entity->getComponent<MovableEntity>()->move(30, 35);
+    entity->getComponent<Movement>()->move(30, 35);
     auto pos_x = entity->getComponent<Transform>()->getX();
     auto pos_y = entity->getComponent<Transform>()->getY();
 
@@ -351,7 +351,7 @@ TEST_F(DynamicCollisionTestFixture, GrazeAgainstCornerButNoCollision) {
     entity = BaseEntity::createFromJson(nlohmann::json::parse(entity_json));
     System::IWorldModify::addEntity(entity);
 
-    entity->getComponent<MovableEntity>()->move(40, 40);
+    entity->getComponent<Movement>()->move(40, 40);
     auto pos_x = entity->getComponent<Transform>()->getX();
     auto pos_y = entity->getComponent<Transform>()->getY();
 

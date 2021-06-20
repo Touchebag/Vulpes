@@ -24,8 +24,8 @@ void EditorMouse::handleMousePress(std::shared_ptr<EditorEnvironment> editor_env
         } else {
             for (auto it : System::IWorldModify::getWorldObjects()) {
                 std::shared_ptr<Collision> other_coll = std::make_shared<Collision>(it->components_);
-                if (it->getComponent<RenderableEntity>() && (it->getComponent<RenderableEntity>()->getLayer() == editor_env->current_layer)) {
-                    auto size = it->getComponent<RenderableEntity>()->getSize();
+                if (it->getComponent<Rendering>() && (it->getComponent<Rendering>()->getLayer() == editor_env->current_layer)) {
+                    auto size = it->getComponent<Rendering>()->getSize();
                     other_coll->getCollideable()->setHitbox(size.first, size.second);
                 } else if (it->getComponent<Collision>()) {
                     other_coll = it->getComponent<Collision>();

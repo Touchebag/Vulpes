@@ -6,19 +6,19 @@
 #include "utils/common.h"
 #include "components/component_store.h"
 
-AnimatedEntity::AnimatedEntity(std::weak_ptr<ComponentStore> components) :
+Animation::Animation(std::weak_ptr<ComponentStore> components) :
     Component(components) {
 }
 
-std::shared_ptr<AnimatedEntity> AnimatedEntity::createFromJson(nlohmann::json j, std::weak_ptr<ComponentStore> components, File file_instance) {
-    auto ret_ptr = std::make_shared<AnimatedEntity>(components);
+std::shared_ptr<Animation> Animation::createFromJson(nlohmann::json j, std::weak_ptr<ComponentStore> components, File file_instance) {
+    auto ret_ptr = std::make_shared<Animation>(components);
 
     ret_ptr->reloadFromJson(j, file_instance);
 
     return ret_ptr;
 }
 
-std::unordered_map<std::string, AnimatedEntity::AnimationFrameData> AnimatedEntity::loadSpriteMap(File file_instance, std::string file) {
+std::unordered_map<std::string, Animation::AnimationFrameData> Animation::loadSpriteMap(File file_instance, std::string file) {
     auto fs = file_instance.openSpriteMapFile(file);
     std::unordered_map<std::string, AnimationFrameData> sprite_map;
 
@@ -56,15 +56,15 @@ std::unordered_map<std::string, AnimatedEntity::AnimationFrameData> AnimatedEnti
     return sprite_map;
 }
 
-void AnimatedEntity::loadTexture(File file_instance, std::string file_path) {
+void Animation::loadTexture(File file_instance, std::string file_path) {
     if (auto texture = file_instance.loadTexture(file_path)) {
         textures_.insert({file_path, std::make_shared<sf::Texture>(texture.value())});
     }
 }
 
-std::shared_ptr<std::vector<AnimatedEntity::AnimationFrameData>> AnimatedEntity::loadAnimationFromJson(
+std::shared_ptr<std::vector<Animation::AnimationFrameData>> Animation::loadAnimationFromJson(
         const nlohmann::json& j,
-        const std::unordered_map<std::string, AnimatedEntity::AnimationFrameData>& sprite_map) {
+        const std::unordered_map<std::string, Animation::AnimationFrameData>& sprite_map) {
     auto frame_data_list = std::make_shared<std::vector<AnimationFrameData>>();
 
     std::unordered_map<int, AnimationFrameData> meta_data;
@@ -107,7 +107,7 @@ std::shared_ptr<std::vector<AnimatedEntity::AnimationFrameData>> AnimatedEntity:
     return frame_data_list;
 }
 
-void AnimatedEntity::setFrameList(std::string animation_name) {
+void Animation::setFrameList(std::string animation_name) {
     try {
         if (animation_name.empty()) {
             return;
@@ -119,7 +119,7 @@ void AnimatedEntity::setFrameList(std::string animation_name) {
     }
 }
 
-AnimatedEntity::AnimationFrameData AnimatedEntity::getFrameData() {
+Animation::AnimationFrameData Animation::getFrameData() {
     try {
         if (current_frame_list_) {
             return current_frame_list_->at(current_frame_);
@@ -132,7 +132,7 @@ AnimatedEntity::AnimationFrameData AnimatedEntity::getFrameData() {
     }
 }
 
-void AnimatedEntity::reloadFromJson(nlohmann::json j, File file_instance) {
+void Animation::reloadFromJson(nlohmann::json j, File file_instance) {
     sprite_sheet_map_.clear();
     textures_.clear();
 
@@ -181,7 +181,7 @@ void AnimatedEntity::reloadFromJson(nlohmann::json j, File file_instance) {
     current_frame_list_ = sprite_sheet_map_.begin()->second;
 }
 
-std::optional<nlohmann::json> AnimatedEntity::outputToJson() {
+std::optional<nlohmann::json> Animation::outputToJson() {
     nlohmann::json j;
 
     if (original_frame_list_) {
@@ -191,7 +191,7 @@ std::optional<nlohmann::json> AnimatedEntity::outputToJson() {
     return j;
 }
 
-void AnimatedEntity::update() {
+void Animation::update() {
     if (current_frame_list_) {
         if (++current_frame_ >= static_cast<int>(current_frame_list_->size())) {
             current_frame_ = 0;
@@ -201,8 +201,8 @@ void AnimatedEntity::update() {
     setRenderTexture();
 }
 
-void AnimatedEntity::setRenderTexture() {
-    if (auto renderable = getComponent<RenderableEntity>()) {
+void Animation::setRenderTexture() {
+    if (auto renderable = getComponent<Rendering>()) {
         auto frame_data = getFrameData();
 
         renderable->setTexture(textures_.at(frame_data.texture));
@@ -216,6 +216,6 @@ void AnimatedEntity::setRenderTexture() {
     }
 }
 
-bool AnimatedEntity::hasAnimationLooped() {
+bool Animation::hasAnimationLooped() {
     return current_frame_ == static_cast<int>(current_frame_list_->size()) - 1;
 }

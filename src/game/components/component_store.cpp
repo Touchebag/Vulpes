@@ -19,39 +19,39 @@ void ComponentStore::setComponent(std::shared_ptr<Collision> component) {
 }
 
 template <>
-std::shared_ptr<MovableEntity> ComponentStore::getComponent() const {
-    return movableEntity;
+std::shared_ptr<Movement> ComponentStore::getComponent() const {
+    return movement;
 }
 template <>
-void ComponentStore::setComponent(std::shared_ptr<MovableEntity> component) {
-    movableEntity = component;
-}
-
-template <>
-std::shared_ptr<RenderableEntity> ComponentStore::getComponent() const {
-    return renderableEntity;
-}
-template <>
-void ComponentStore::setComponent(std::shared_ptr<RenderableEntity> component) {
-    renderableEntity = component;
+void ComponentStore::setComponent(std::shared_ptr<Movement> component) {
+    movement = component;
 }
 
 template <>
-std::shared_ptr<AnimatedEntity> ComponentStore::getComponent() const {
-    return animatedEntity;
+std::shared_ptr<Rendering> ComponentStore::getComponent() const {
+    return rendering;
 }
 template <>
-void ComponentStore::setComponent(std::shared_ptr<AnimatedEntity> component) {
-    animatedEntity = component;
+void ComponentStore::setComponent(std::shared_ptr<Rendering> component) {
+    rendering = component;
 }
 
 template <>
-std::shared_ptr<StatefulEntity> ComponentStore::getComponent() const {
-    return statefulEntity;
+std::shared_ptr<Animation> ComponentStore::getComponent() const {
+    return animation;
 }
 template <>
-void ComponentStore::setComponent(std::shared_ptr<StatefulEntity> component) {
-    statefulEntity = component;
+void ComponentStore::setComponent(std::shared_ptr<Animation> component) {
+    animation = component;
+}
+
+template <>
+std::shared_ptr<Stateful> ComponentStore::getComponent() const {
+    return stateful;
+}
+template <>
+void ComponentStore::setComponent(std::shared_ptr<Stateful> component) {
+    stateful = component;
 }
 
 template <>

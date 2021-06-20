@@ -187,7 +187,7 @@ void Camera::updateTargetView() {
 
     if (player) {
         auto p_trans = player->getComponent<Transform>();
-        auto p_move = player->getComponent<MovableEntity>();
+        auto p_move = player->getComponent<Movement>();
 
         if (p_trans && p_move) {
             auto ratio = calculatePlayerPositionRatio(p_trans->getX(), p_trans->getY());

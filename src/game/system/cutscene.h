@@ -10,7 +10,7 @@ class Cutscene {
     struct EntityInformation {
         std::shared_ptr<BaseEntity> entity;
         std::shared_ptr<Actions> actions;
-        std::shared_ptr<StatefulEntity> state;
+        std::shared_ptr<Stateful> state;
         std::shared_ptr<Physics> physics;
     };
 

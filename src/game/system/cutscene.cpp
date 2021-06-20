@@ -11,13 +11,13 @@ void Cutscene::addPlayer(std::shared_ptr<Player> player) {
     // TODO Replace with cutscene version
     player->setComponent<Actions>({});
 
-    if (player->getComponent<MovableEntity>()) {
+    if (player->getComponent<Movement>()) {
         // Reset speed
-        player->getComponent<MovableEntity>()->move(0.0, 0.0);
+        player->getComponent<Movement>()->move(0.0, 0.0);
     }
 
-    temp_player.state = player->getComponent<StatefulEntity>();
-    player->setComponent<StatefulEntity>({});
+    temp_player.state = player->getComponent<Stateful>();
+    player->setComponent<Stateful>({});
 
     temp_player.physics = player->getComponent<Physics>();
     player->setComponent<Physics>({});

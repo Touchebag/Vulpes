@@ -85,7 +85,7 @@ void EditorRender::render(sf::RenderWindow& window, float frame_fraction) {
 
     if (auto env = editor_env_.lock()) {
         if (auto ent = env->current_entity) {
-            std::pair<float, float> size = ent->getComponent<RenderableEntity>()->getScaledSize();
+            std::pair<float, float> size = ent->getComponent<Rendering>()->getScaledSize();
             auto trans = ent->getComponent<Transform>();
             sf::RectangleShape rectangle(sf::Vector2f(size.first, size.second));
             rectangle.setPosition(static_cast<float>(trans->getX()) - (size.first / 2.0f), static_cast<float>(trans->getY()) - (size.second / 2.0f));
@@ -144,7 +144,7 @@ void EditorRender::setEditorEnvironment(std::weak_ptr<EditorEnvironment> editor_
     editor_env_ = editor_env;
 }
 
-void EditorRender::addEntity(std::weak_ptr<RenderableEntity> entity) {
+void EditorRender::addEntity(std::weak_ptr<Rendering> entity) {
     render_.addEntity(entity);
 }
 
@@ -152,7 +152,7 @@ void EditorRender::setBackground(std::string background) {
     render_.setBackground(background);
 }
 
-void EditorRender::setPlayer(std::weak_ptr<RenderableEntity> entity) {
+void EditorRender::setPlayer(std::weak_ptr<Rendering> entity) {
     render_.setPlayer(entity);
 }
 

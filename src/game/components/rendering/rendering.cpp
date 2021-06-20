@@ -5,11 +5,11 @@
 #include "utils/common.h"
 #include "components/component_store.h"
 
-RenderableEntity::RenderableEntity(std::weak_ptr<ComponentStore> components) :
+Rendering::Rendering(std::weak_ptr<ComponentStore> components) :
     Component(components) {
 }
 
-void RenderableEntity::setTexture(std::shared_ptr<sf::Texture> texture) {
+void Rendering::setTexture(std::shared_ptr<sf::Texture> texture) {
     texture_ = texture;
 
     sprite_.setTexture(*texture_, true);
@@ -20,7 +20,7 @@ void RenderableEntity::setTexture(std::shared_ptr<sf::Texture> texture) {
 
 }
 
-bool RenderableEntity::loadTexture(std::string file_path, File file_instance) {
+bool Rendering::loadTexture(std::string file_path, File file_instance) {
     if (std::optional<sf::Texture> texture = file_instance.loadTexture(file_path)) {
         setTexture(std::make_shared<sf::Texture>(texture.value()));
         texture_name_ = file_path;
@@ -31,15 +31,15 @@ bool RenderableEntity::loadTexture(std::string file_path, File file_instance) {
     return true;
 }
 
-std::shared_ptr<RenderableEntity> RenderableEntity::createFromJson(nlohmann::json j, std::weak_ptr<ComponentStore> components, File file_instance) {
-    auto ret_ptr = std::make_shared<RenderableEntity>(components);
+std::shared_ptr<Rendering> Rendering::createFromJson(nlohmann::json j, std::weak_ptr<ComponentStore> components, File file_instance) {
+    auto ret_ptr = std::make_shared<Rendering>(components);
 
     ret_ptr->reloadFromJson(j, file_instance);
 
     return ret_ptr;
 }
 
-void RenderableEntity::reloadFromJson(nlohmann::json j, File file_instance) {
+void Rendering::reloadFromJson(nlohmann::json j, File file_instance) {
     if (j.contains("height")) {
         height_ = j["height"];
     }
@@ -65,7 +65,7 @@ void RenderableEntity::reloadFromJson(nlohmann::json j, File file_instance) {
     loadTexture(j["texture"].get<std::string>(), file_instance);
 }
 
-void RenderableEntity::recalculateTextureRect() {
+void Rendering::recalculateTextureRect() {
     int texture_rect_x;
     int texture_rect_y;
 
@@ -84,18 +84,18 @@ void RenderableEntity::recalculateTextureRect() {
     setTextureCoords(0, 0, texture_rect_x, texture_rect_y);
 }
 
-std::pair<int, int> RenderableEntity::getTiling() {
+std::pair<int, int> Rendering::getTiling() {
     return {tiling_x_, tiling_y_};
 }
 
-void RenderableEntity::setTiling(int tiling_x, int tiling_y) {
+void Rendering::setTiling(int tiling_x, int tiling_y) {
     tiling_x_ = tiling_x;
     tiling_y_ = tiling_y;
 
     recalculateTextureRect();
 }
 
-std::optional<nlohmann::json> RenderableEntity::outputToJson() {
+std::optional<nlohmann::json> Rendering::outputToJson() {
     nlohmann::json j;
 
     j["texture"] = texture_name_;
@@ -116,13 +116,13 @@ std::optional<nlohmann::json> RenderableEntity::outputToJson() {
     return {j};
 }
 
-void RenderableEntity::setTextureCoords(int pos_x, int pos_y, int width, int height) {
+void Rendering::setTextureCoords(int pos_x, int pos_y, int width, int height) {
     sprite_.setOrigin(static_cast<float>(width / 2.0), static_cast<float>(height / 2.0));
     sprite_.setTextureRect(sf::IntRect(pos_x, pos_y, width, height));
 
     // Mirror sprites facing left
     auto mirror_scale = 1.0;
-    if (auto move = getComponent<MovableEntity>()) {
+    if (auto move = getComponent<Movement>()) {
         mirror_scale = move->isFacingRight() ? 1.0 : -1.0;
     }
 
@@ -145,36 +145,36 @@ void RenderableEntity::setTextureCoords(int pos_x, int pos_y, int width, int hei
                      static_cast<float>(y_scale * y_scale_));
 }
 
-void RenderableEntity::setSize(int width, int height) {
+void Rendering::setSize(int width, int height) {
     width_ = width;
     height_ = height;
 
     recalculateTextureRect();
 }
 
-std::pair<int, int> RenderableEntity::getSize() {
+std::pair<int, int> Rendering::getSize() {
     return {width_, height_};
 }
 
-std::pair<float, float> RenderableEntity::getScaledSize() {
+std::pair<float, float> Rendering::getScaledSize() {
     auto size_rect = sprite_.getGlobalBounds();
     return {size_rect.width, size_rect.height};
 }
 
-void RenderableEntity::setColor(sf::Color color) {
+void Rendering::setColor(sf::Color color) {
     sprite_.setColor(color);
 }
 
-void RenderableEntity::clearColor() {
+void Rendering::clearColor() {
     sprite_.setColor({255, 255, 255, 255});
 }
 
-void RenderableEntity::render(sf::RenderTarget& target, float frame_fraction) {
+void Rendering::render(sf::RenderTarget& target, float frame_fraction) {
     // Used for interpolation between physics frames
     auto vel_x = 0.0;
     auto vel_y = 0.0;
 
-    if (auto move = getComponent<MovableEntity>()) {
+    if (auto move = getComponent<Movement>()) {
         vel_x = move->getVelX() * frame_fraction;
         vel_y = move->getVelY() * frame_fraction;
     }
@@ -191,25 +191,25 @@ void RenderableEntity::render(sf::RenderTarget& target, float frame_fraction) {
     }
 }
 
-int RenderableEntity::getLayer() {
+int Rendering::getLayer() {
     return layer_;
 }
 
-void RenderableEntity::setLayer(int layer) {
+void Rendering::setLayer(int layer) {
     layer_ = layer;
 }
 
-void RenderableEntity::loadShader(std::string shader_name) {
+void Rendering::loadShader(std::string shader_name) {
     auto shader = File().loadShader(shader_name);
 
     shader_ = shader;
 }
 
-void RenderableEntity::setScale(float x_scale, float y_scale) {
+void Rendering::setScale(float x_scale, float y_scale) {
     x_scale_ = x_scale;
     y_scale_ = y_scale;
 }
 
-void RenderableEntity::update() {
-    LOGW("RenderableEntity::update, this should not be called");
+void Rendering::update() {
+    LOGW("Rendering::update, this should not be called");
 }

@@ -24,10 +24,10 @@ class ComponentStore {
     // Components
     std::shared_ptr<Transform> transform = nullptr;
     std::shared_ptr<Collision> collision = nullptr;
-    std::shared_ptr<MovableEntity> movableEntity = nullptr;
-    std::shared_ptr<RenderableEntity> renderableEntity = nullptr;
-    std::shared_ptr<AnimatedEntity> animatedEntity = nullptr;
-    std::shared_ptr<StatefulEntity> statefulEntity = nullptr;
+    std::shared_ptr<Movement> movement = nullptr;
+    std::shared_ptr<Rendering> rendering = nullptr;
+    std::shared_ptr<Animation> animation = nullptr;
+    std::shared_ptr<Stateful> stateful = nullptr;
     std::shared_ptr<Actions> actions = nullptr;
     std::shared_ptr<Physics> physics = nullptr;
     std::shared_ptr<AI> ai = nullptr;

@@ -79,18 +79,18 @@ void BaseEntity::reloadFromJson(const nlohmann::json& j) {
 
     createComponentFromJson(Collision, "Collision", file_instance);
 
-    createComponentFromJson(MovableEntity, "Movable", file_instance);
+    createComponentFromJson(Movement, "Movable", file_instance);
 
-    createComponentFromJson(RenderableEntity, "Renderable", file_instance);
+    createComponentFromJson(Rendering, "Renderable", file_instance);
 
-    createComponentFromJson(AnimatedEntity, "Animated", file_instance);
+    createComponentFromJson(Animation, "Animated", file_instance);
 
     createComponentFromJson(Subentity, "Subentity", file_instance);
 
-    createComponentFromJson(StatefulEntity, "Stateful", file_instance);
+    createComponentFromJson(Stateful, "Stateful", file_instance);
 
-    if (getComponent<StatefulEntity>()) {
-        getComponent<StatefulEntity>()->incomingEvent(state_utils::Event::START);
+    if (getComponent<Stateful>()) {
+        getComponent<Stateful>()->incomingEvent(state_utils::Event::START);
     }
 
     createComponentFromJson(Physics, "Physics", file_instance);
@@ -111,13 +111,13 @@ std::optional<nlohmann::json> BaseEntity::outputToJson() {
 
     saveComponentToJson("Collision", Collision);
 
-    saveComponentToJson("Movable", MovableEntity);
+    saveComponentToJson("Movable", Movement);
 
-    saveComponentToJson("Renderable", RenderableEntity);
+    saveComponentToJson("Renderable", Rendering);
 
-    saveComponentToJson("Animated", AnimatedEntity);
+    saveComponentToJson("Animated", Animation);
 
-    saveComponentToJson("Stateful", StatefulEntity);
+    saveComponentToJson("Stateful", Stateful);
 
     saveComponentToJson("Actions", Actions);
 
@@ -147,19 +147,19 @@ void BaseEntity::setComponent(std::shared_ptr<T> component) {
 void BaseEntity::update() {
     // Check before decreasing
     // If previous frame was the last one (i.e. ticked down to 0) then trigger event before this frame
-    update_component(StatefulEntity);
+    update_component(Stateful);
 
     update_component(AI);
 
     update_component(Physics);
 
-    update_component(MovableEntity);
+    update_component(Movement);
 
     update_component(Actions);
 
     update_component(Collision);
 
-    update_component(AnimatedEntity);
+    update_component(Animation);
 
     update_component(Damageable);
 
