@@ -46,7 +46,7 @@ const nlohmann::json entity_json = nlohmann::json::parse(R"--(
     },
     "Death": {
         "death_entity": {
-            "Entity": "enemy.json"
+            "Entity": "test_enemy.json"
         }
     },
     "Movable": null,
@@ -89,7 +89,7 @@ const nlohmann::json entity_json = nlohmann::json::parse(R"--(
 
 TEST(TestComponents, TestLoadSaveAllComponents) {
     nlohmann::json file_entity;
-    file_entity["Entity"] = "enemy";
+    file_entity["Entity"] = "test_enemy";
 
     // Fill with some arbitrary overrides
     file_entity["Stateful"] = entity_json["Stateful"];
