@@ -13,7 +13,7 @@
             "attack2": true
         }
     },
-    "Animated": null,
+    "Animation": null,
     "Collision": {
         "type": "player_hurtbox",
         "height": 200,
@@ -24,7 +24,7 @@
         "health": 100
     },
     "Death": null,
-    "Movable": null,
+    "Movement": null,
     "Physics": {
         "ground_acceleration": 7.0,
         "ground_friction": 0.7,
@@ -45,7 +45,7 @@
         "air_dive_multiplier": 5.0,
         "air_dive_impulse": -30.0
     },
-    "Renderable": {
+    "Rendering": {
         "height": 200,
         "texture": "Player",
         "tile_x": false,

@@ -21,7 +21,7 @@ class DynamicCollisionTestFixture : public ::testing::Test {
         "pos_x": 100,
         "pos_y": 100
     },
-    "Movable": null,
+    "Movement": null,
     "Collision": {
         "type": "static",
         "height": 50,
@@ -143,7 +143,7 @@ TEST_F(DynamicCollisionTestFixture, MoveDiagonalStuckOnCorner) {
         "height": 10,
         "width": 10
     },
-    "Movable": null,
+    "Movement": null,
     "Transform": {
         "pos_x": 0,
         "pos_y": 0
@@ -188,7 +188,7 @@ TEST_F(DynamicCollisionTestFixture, TunnelingOneDirection) {
         "height": 10,
         "width": 10
     },
-    "Movable": null,
+    "Movement": null,
     "Transform": {
         "pos_x": 0,
         "pos_y": 0
@@ -250,7 +250,7 @@ TEST_F(DynamicCollisionTestFixture, TunnelingStuckInCorner) {
         "height": 10,
         "width": 10
     },
-    "Movable": null,
+    "Movement": null,
     "Transform": {
         "pos_x": 0,
         "pos_y": 0
@@ -295,7 +295,7 @@ TEST_F(DynamicCollisionTestFixture, TunnelingOnlyXSlideDown) {
         "height": 10,
         "width": 10
     },
-    "Movable": null,
+    "Movement": null,
     "Transform": {
         "pos_x": 0,
         "pos_y": 0
@@ -340,7 +340,7 @@ TEST_F(DynamicCollisionTestFixture, GrazeAgainstCornerButNoCollision) {
         "height": 10,
         "width": 10
     },
-    "Movable": null,
+    "Movement": null,
     "Transform": {
         "pos_x": 0,
         "pos_y": 0

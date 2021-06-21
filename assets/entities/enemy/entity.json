@@ -1,7 +1,7 @@
 {
     "Actions": null,
     "AI": null,
-    "Animated": {
+    "Animation": {
         "frame_list": [
             "Open",
             "Open",
@@ -40,7 +40,7 @@
             "Entity": "health"
         }
     },
-    "Movable": null,
+    "Movement": null,
     "Physics": {
         "ground_acceleration": 3.0,
         "ground_friction": 0.7,
@@ -48,7 +48,7 @@
         "max_vertical_speed": 20.0,
         "min_vertical_speed": -80.0
     },
-    "Renderable": {
+    "Rendering": {
         "height": 90,
         "texture": "Enemy",
         "tile_x": true,

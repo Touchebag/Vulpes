@@ -6,7 +6,7 @@
                 "height": 200,
                 "width": 50
             },
-            "Renderable": {
+            "Rendering": {
                 "texture": "box.png",
                 "tile_x": 0,
                 "tile_y": 0,
@@ -25,7 +25,7 @@
                 "height": 200,
                 "width": 50
             },
-            "Renderable": {
+            "Rendering": {
                 "texture": "box.png",
                 "tile_x": 0,
                 "tile_y": 0,
@@ -44,7 +44,7 @@
                 "height": 50,
                 "width": 200
             },
-            "Renderable": {
+            "Rendering": {
                 "texture": "box.png",
                 "tile_x": 0,
                 "tile_y": 0,
@@ -63,7 +63,7 @@
                 "height": 50,
                 "width": 200
             },
-            "Renderable": {
+            "Rendering": {
                 "texture": "box.png",
                 "tile_x": 0,
                 "tile_y": 0,
@@ -82,7 +82,7 @@
                 "height": 50,
                 "width": 200
             },
-            "Renderable": {
+            "Rendering": {
                 "texture": "box.png",
                 "tile_x": 0,
                 "tile_y": 0,

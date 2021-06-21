@@ -22,7 +22,7 @@
 const nlohmann::json entity_json = nlohmann::json::parse(R"--(
 {
     "Actions": null,
-    "Animated": {
+    "Animation": {
         "frame_list": [
             "Idle0",
             "Idle9",
@@ -49,7 +49,7 @@ const nlohmann::json entity_json = nlohmann::json::parse(R"--(
             "Entity": "test_enemy.json"
         }
     },
-    "Movable": null,
+    "Movement": null,
     "Physics": {
         "ground_acceleration": 7.0,
         "ground_friction": 0.7,
@@ -70,7 +70,7 @@ const nlohmann::json entity_json = nlohmann::json::parse(R"--(
         "air_dive_multiplier": 5.0,
         "air_dive_impulse": -30.0
     },
-    "Renderable": {
+    "Rendering": {
         "height": 200,
         "width": 100,
         "texture": "box.png",

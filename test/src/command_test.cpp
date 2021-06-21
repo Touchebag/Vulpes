@@ -158,7 +158,7 @@ TEST_F(CommandTestFixture, MoveObject) {
     ASSERT_EQ(entity->getComponent<Transform>()->getY(), 17);
 }
 
-TEST_F(CommandTestFixture, ToggleRenderable) {
+TEST_F(CommandTestFixture, ToggleRendering) {
     assertWorldEmpty();
 
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
@@ -194,7 +194,7 @@ TEST_F(CommandTestFixture, ToggleCollision) {
     ASSERT_TRUE(entity->getComponent<Collision>());
 }
 
-TEST_F(CommandTestFixture, ToggleMovable) {
+TEST_F(CommandTestFixture, ToggleMovement) {
     assertWorldEmpty();
 
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
@@ -288,7 +288,7 @@ TEST_F(CommandTestFixture, ChangeTexture) {
 
     editor_env->current_entity = entity;
 
-    ASSERT_EQ(entity->outputToJson().value()["Renderable"]["texture"].get<std::string>(), "box.png");
+    ASSERT_EQ(entity->outputToJson().value()["Rendering"]["texture"].get<std::string>(), "box.png");
 
     editor_env->command->handleCommand(Command::Commands::RENDERABLE_SPRITE_CHANGE);
 
@@ -296,7 +296,7 @@ TEST_F(CommandTestFixture, ChangeTexture) {
 
     editor_env->command->stopCommand();
 
-    ASSERT_EQ(entity->outputToJson().value()["Renderable"]["texture"].get<std::string>(), "box_bg1.png");
+    ASSERT_EQ(entity->outputToJson().value()["Rendering"]["texture"].get<std::string>(), "box_bg1.png");
 
     // Actual input will arrive character by character
     editor_env->command->handleCommand(Command::Commands::RENDERABLE_SPRITE_CHANGE);
@@ -311,5 +311,5 @@ TEST_F(CommandTestFixture, ChangeTexture) {
 
     editor_env->command->stopCommand();
 
-    ASSERT_EQ(entity->outputToJson().value()["Renderable"]["texture"].get<std::string>(), "box.png");
+    ASSERT_EQ(entity->outputToJson().value()["Rendering"]["texture"].get<std::string>(), "box.png");
 }

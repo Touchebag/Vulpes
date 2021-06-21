@@ -12,7 +12,7 @@
                 "type": "static",
                 "width": 1470
             },
-            "Renderable": {
+            "Rendering": {
                 "height": 184,
                 "layer": 0,
                 "texture": "Forest/Grass",
@@ -31,7 +31,7 @@
                 "type": "static",
                 "width": 210
             },
-            "Renderable": {
+            "Rendering": {
                 "height": 1119,
                 "layer": 0,
                 "texture": "Forest/Tree",
@@ -50,7 +50,7 @@
                 "type": "static",
                 "width": 204
             },
-            "Renderable": {
+            "Rendering": {
                 "height": 1088,
                 "layer": 0,
                 "texture": "Forest/Tree",
@@ -69,7 +69,7 @@
                 "type": "static",
                 "width": 1917
             },
-            "Renderable": {
+            "Rendering": {
                 "height": 234,
                 "layer": 0,
                 "texture": "Forest/Canopy",
@@ -132,7 +132,7 @@
             }
         },
         {
-            "Renderable": {
+            "Rendering": {
                 "height": 1429,
                 "layer": -1,
                 "texture": "Forest/Tree_bg2",

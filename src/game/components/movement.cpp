@@ -85,7 +85,7 @@ void Movement::move(double velX, double velY) {
             vely_ = 0;
         }
     } else {
-        LOGW("Movable: Missing transform");
+        LOGW("Movement: Missing transform");
     }
 }
 

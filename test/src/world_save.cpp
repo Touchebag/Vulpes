@@ -35,7 +35,7 @@ TEST_F(WorldTestFixture, SaveLoadWorldFailure) {
                 "height": 200,
                 "width": 50
             },
-            "Renderable": {
+            "Rendering": {
                 "scale": 1.0,
                 "texture": "box.png",
                 "layer": 0
@@ -67,7 +67,7 @@ TEST_F(WorldTestFixture, EnsureHudNotSaved) {
                 "height": 200,
                 "width": 50
             },
-            "Renderable": {
+            "Rendering": {
                 "scale": 1.0,
                 "texture": "box.png",
                 "layer": 0

@@ -6,20 +6,23 @@
 
 #include <unistd.h>
 
+#define Q(str) #str
+#define QUOTE(str) Q(str)
+
 // If the original json contains a value it should override what is
 // loaded from the entity file
-#define createComponentFromJson(component_type, component_name, file)\
-    if (entity_json.contains(component_name)) {\
-        setComponent<component_type>(component_type::createFromJson(entity_json[component_name], components_, file));\
+#define createComponentFromJson(component, file)\
+    if (entity_json.contains(QUOTE(component))) {\
+        setComponent<component>(component::createFromJson(entity_json[QUOTE(component)], components_, file));\
     } else {\
-        setComponent<component_type>({});\
+        setComponent<component>({});\
     }
 
 // Only explicitly save if not read from entity file
-#define saveComponentToJson(component_name, component_type)\
-    if (getComponent<component_type>() && (!entity_file_exclusives_.contains(component_name))) {\
-        if (auto opt = getComponent<component_type>()->outputToJson()) {\
-            j[component_name] = opt.value();\
+#define saveComponentToJson(component)\
+    if (getComponent<component>() && (!entity_file_exclusives_.contains(QUOTE(component)))) {\
+        if (auto opt = getComponent<component>()->outputToJson()) {\
+            j[QUOTE(component)] = opt.value();\
         }\
     }
 
@@ -71,33 +74,33 @@ void BaseEntity::reloadFromJson(const nlohmann::json& j) {
         entity_json[it.key()] = it.value();
     }
 
-    createComponentFromJson(Transform, "Transform", file_instance);
+    createComponentFromJson(Transform, file_instance);
 
-    createComponentFromJson(Death, "Death", file_instance);
+    createComponentFromJson(Death, file_instance);
 
-    createComponentFromJson(Actions, "Actions", file_instance);
+    createComponentFromJson(Actions, file_instance);
 
-    createComponentFromJson(Collision, "Collision", file_instance);
+    createComponentFromJson(Collision, file_instance);
 
-    createComponentFromJson(Movement, "Movable", file_instance);
+    createComponentFromJson(Movement, file_instance);
 
-    createComponentFromJson(Rendering, "Renderable", file_instance);
+    createComponentFromJson(Rendering, file_instance);
 
-    createComponentFromJson(Animation, "Animated", file_instance);
+    createComponentFromJson(Animation, file_instance);
 
-    createComponentFromJson(Subentity, "Subentity", file_instance);
+    createComponentFromJson(Subentity, file_instance);
 
-    createComponentFromJson(Stateful, "Stateful", file_instance);
+    createComponentFromJson(Stateful, file_instance);
 
     if (getComponent<Stateful>()) {
         getComponent<Stateful>()->incomingEvent(state_utils::Event::START);
     }
 
-    createComponentFromJson(Physics, "Physics", file_instance);
+    createComponentFromJson(Physics, file_instance);
 
-    createComponentFromJson(AI, "AI", file_instance);
+    createComponentFromJson(AI, file_instance);
 
-    createComponentFromJson(Damageable, "Damageable", file_instance);
+    createComponentFromJson(Damageable, file_instance);
 }
 
 std::optional<nlohmann::json> BaseEntity::outputToJson() {
@@ -107,29 +110,29 @@ std::optional<nlohmann::json> BaseEntity::outputToJson() {
         j["Entity"] = entity_file_name_;
     }
 
-    saveComponentToJson("Transform", Transform);
+    saveComponentToJson(Transform);
 
-    saveComponentToJson("Collision", Collision);
+    saveComponentToJson(Collision);
 
-    saveComponentToJson("Movable", Movement);
+    saveComponentToJson(Movement);
 
-    saveComponentToJson("Renderable", Rendering);
+    saveComponentToJson(Rendering);
 
-    saveComponentToJson("Animated", Animation);
+    saveComponentToJson(Animation);
 
-    saveComponentToJson("Stateful", Stateful);
+    saveComponentToJson(Stateful);
 
-    saveComponentToJson("Actions", Actions);
+    saveComponentToJson(Actions);
 
-    saveComponentToJson("Physics", Physics);
+    saveComponentToJson(Physics);
 
-    saveComponentToJson("AI", AI);
+    saveComponentToJson(AI);
 
-    saveComponentToJson("Damageable", Damageable);
+    saveComponentToJson(Damageable);
 
-    saveComponentToJson("Subentity", Subentity);
+    saveComponentToJson(Subentity);
 
-    saveComponentToJson("Death", Death);
+    saveComponentToJson(Death);
 
     return {j};
 }

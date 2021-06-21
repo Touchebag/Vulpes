@@ -1,5 +1,5 @@
 {
-    "Animated": {
+    "Animation": {
         "frame_list": [
             "Open",
             "Open",
@@ -30,7 +30,7 @@
             "invincibility": 80
         }
     },
-    "Renderable": {
+    "Rendering": {
         "height": 90,
         "texture": "Enemy",
         "tile_x": true,

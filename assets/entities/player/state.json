@@ -195,7 +195,7 @@
             "frame_timer": 0,
             "spawn_entity": {
                 "Entity": "attack",
-                "Movable": {
+                "Movement": {
                     "x_speed": 20
                 }
             },

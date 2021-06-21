@@ -28,12 +28,12 @@ void Subentity::set_position() {
 
         if (ent_trans && ent_move) {
             auto trans = getComponent<Transform>();
-            auto movable = getComponent<Movement>();
+            auto move = getComponent<Movement>();
 
-            if (trans && movable) {
-                ent_trans->setPosition(trans->getX() + (ent_trans->getX() * (movable->isFacingRight() ? 1 : -1)) ,
+            if (trans && move) {
+                ent_trans->setPosition(trans->getX() + (ent_trans->getX() * (move->isFacingRight() ? 1 : -1)) ,
                                        trans->getY() + ent_trans->getY());
-                ent_move->setFacingRight(movable->isFacingRight());
+                ent_move->setFacingRight(move->isFacingRight());
             }
         }
     }

@@ -47,7 +47,7 @@ std::shared_ptr<MenuEntry> makeCollisionEntry(std::shared_ptr<BaseEntity> curren
 
 std::shared_ptr<MenuEntry> makeMovableEntry(std::shared_ptr<BaseEntity> current_entity) {
     auto color = current_entity->getComponent<Movement>() ? sf::Color::Green : sf::Color::Red;
-    auto entry = makeMenuEntry("Movable", color, std::nullopt);
+    auto entry = makeMenuEntry("Movement", color, std::nullopt);
 
     entry->addEntry(makeMenuEntry("Enable/Disable", color, {Command::Commands::TOGGLE_MOVABLE}));
 

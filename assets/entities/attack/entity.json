@@ -1,7 +1,7 @@
 {
     "Actions": null,
     "AI": null,
-    "Animated": {
+    "Animation": {
         "frame_list": [
             "Attack1_1",
             "Attack1_1",
@@ -35,8 +35,8 @@
         }
     },
     "Death": null,
-    "Movable": null,
-    "Renderable": {
+    "Movement": null,
+    "Rendering": {
         "texture": "Attack",
         "height": 350,
         "layer": 0

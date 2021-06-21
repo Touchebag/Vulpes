@@ -2,7 +2,7 @@
     "Actions": null,
     "AI": null,
     "Death": null,
-    "Renderable": {
+    "Rendering": {
         "height": 50,
         "layer": 0,
         "texture": "Collectible",

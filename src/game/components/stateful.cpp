@@ -5,6 +5,8 @@
 #include "json.hpp"
 #include "base_entity.h"
 
+#include "utils/log.h"
+
 Stateful::Stateful(std::weak_ptr<ComponentStore> components) :
     Component(components) {
 }
@@ -60,9 +62,8 @@ void Stateful::incomingEvent(state_utils::Event event) {
         }
 
         if (!getEntity().empty()) {
-            auto entity = std::make_shared<BaseEntity>();
             auto ent_json = getEntity();
-            entity->reloadFromJson(ent_json);
+            auto entity = BaseEntity::createFromJson(ent_json);
 
             // Inherit parent direction
             if (auto move = getComponent<Movement>()) {
@@ -70,7 +71,8 @@ void Stateful::incomingEvent(state_utils::Event event) {
                     other_move->setFacingRight(move->isFacingRight());
 
                     // Force reload to set initial direction
-                    other_move->reloadFromJson(ent_json["Movable"]);
+                    other_move->reloadFromJson(ent_json["Movement"]);
+
                 }
             }
 
