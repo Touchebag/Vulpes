@@ -1,5 +1,7 @@
 #include "environment.h"
 
+#include "system/system.h"
+
 #include "utils/log.h"
 
 bool Environment::getFlag(std::string name) {
@@ -17,4 +19,6 @@ bool Environment::getFlag(std::string name) {
 
 void Environment::setFlag(std::string name) {
     flags_.insert(name);
+
+    System::IWorldModify::addConditionalEntities(name);
 }

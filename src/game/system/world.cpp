@@ -64,6 +64,15 @@ void World::update() {
 
     // Delete all expired entities at end of frame
     clearDeletedEntities();
+
+    // Add any new entities based on conditional flags
+    if (!triggered_conditions_.empty()) {
+        for (auto cond : triggered_conditions_) {
+            addConditionalEntities(cond);
+        }
+
+        triggered_conditions_.clear();
+    }
 }
 
 util::Point World::getPlayerPosition() {
@@ -72,6 +81,8 @@ util::Point World::getPlayerPosition() {
 
 void World::clearWorld() {
     world_objects_.clear();
+
+    conditional_objects_.clear();
 
     for (auto& it : collideables_) {
         it.clear();
@@ -118,21 +129,15 @@ void World::addEntriesToWorld(nlohmann::json j) {
         System::getCamera()->setCameraBox({0.0f, 0.0f, 0.0f, 0.0f});
     }
 
-    auto env = System::getEnvironment();
-
     for (auto it : j["entities"]) {
-        bool should_create = true;
+        auto ent = BaseEntity::createFromJson(it);
 
-        // If condition exists it must be set to add entity
+        std::optional<std::string> condition = std::nullopt;
         if (it.contains("condition")) {
-            auto condition = it["condition"].get<std::string>();
-            should_create = env->getFlag(condition);
+            condition = {it["condition"].get<std::string>()};
         }
 
-        if (should_create) {
-            auto ent = BaseEntity::createFromJson(it);
-            addEntity(ent);
-        }
+        addEntity(ent, condition);
     }
 
     // Shaders
@@ -285,16 +290,22 @@ nlohmann::json World::saveWorldToJson() {
     return j;
 }
 
-void World::addEntity(std::shared_ptr<BaseEntity> entity) {
-    world_objects_.push_back(entity);
+void World::addEntity(std::shared_ptr<BaseEntity> entity, std::optional<std::string> condition) {
+    if (!condition || System::getEnvironment()->getFlag(condition.value())) {
+        auto env = System::getEnvironment();
 
-    auto coll = entity->getComponent<Collision>();
-    if (coll && coll->getCollideable()) {
-        addCollideable(coll->getCollideable());
-    }
+        world_objects_.push_back(entity);
 
-    if (auto render = entity->getComponent<Rendering>()) {
-        System::getRender()->addEntity(render);
+        auto coll = entity->getComponent<Collision>();
+        if (coll && coll->getCollideable()) {
+            addCollideable(coll->getCollideable());
+        }
+
+        if (auto render = entity->getComponent<Rendering>()) {
+            System::getRender()->addEntity(render);
+        }
+    } else {
+        conditional_objects_.insert({condition.value(), entity});
     }
 }
 
@@ -317,6 +328,13 @@ void World::addPlayer(std::shared_ptr<Player> player) {
     }
 
     System::getRender()->setPlayer(player_->getComponent<Rendering>());
+}
+
+void World::addConditionalEntities(std::string condition) {
+    while (conditional_objects_.count(condition) > 0) {
+        auto it = conditional_objects_.extract(condition);
+        addEntity(it.mapped());
+    }
 }
 
 void World::loadRoom(std::string room_name, int entrance_id) {

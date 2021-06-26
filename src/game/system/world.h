@@ -31,9 +31,11 @@ class World {
 
     void clearWorld();
 
-    void addEntity(std::shared_ptr<BaseEntity> entity);
+    void addEntity(std::shared_ptr<BaseEntity> entity, std::optional<std::string> condition = std::nullopt);
     void removeEntity(std::shared_ptr<BaseEntity> entity);
     void addPlayer(std::shared_ptr<Player> player);
+
+    void addConditionalEntities(std::string condition);
 
     void addCollideable(std::shared_ptr<Collideable> collideable);
 
@@ -64,6 +66,10 @@ class World {
     std::vector<std::shared_ptr<BaseEntity>> world_objects_;
     // Temporary storage to delete entities simultaneuosly at frame end
     std::vector<std::shared_ptr<BaseEntity>> deleted_objects_;
+
+    // Conditional entities
+    std::unordered_set<std::string> triggered_conditions_;
+    std::multimap<std::string, std::shared_ptr<BaseEntity>> conditional_objects_;
 
     std::array<std::vector<std::weak_ptr<const Collideable>>, static_cast<int>(Collideable::CollisionType::MAX_NUM)> collideables_;
 

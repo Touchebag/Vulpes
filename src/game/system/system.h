@@ -20,6 +20,7 @@ class System {
 
     static std::shared_ptr<Input> getInput();
 
+    static void setEnvironment(std::shared_ptr<Environment> environment);
     static std::shared_ptr<Environment> getEnvironment();
 
     // World Interfaces
@@ -40,8 +41,10 @@ class System {
 
     class IWorldModify {
       public:
-        static void addEntity(std::shared_ptr<BaseEntity> entity);
+        static void addEntity(std::shared_ptr<BaseEntity> entity, std::optional<std::string> condition = std::nullopt);
         static void removeEntity(std::shared_ptr<BaseEntity> entity);
+
+        static void addConditionalEntities(std::string condition);
 
         static void addCollideable(std::shared_ptr<Collideable> collideable);
 

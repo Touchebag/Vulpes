@@ -25,6 +25,10 @@ std::shared_ptr<CutsceneHandler> System::getCutscene() {
     return System::getInstance().cutscene_handler_;
 }
 
+void System::setEnvironment(std::shared_ptr<Environment> environment) {
+    System::getInstance().environment_ = environment;
+}
+
 std::shared_ptr<Environment> System::getEnvironment() {
     return System::getInstance().environment_;
 }
