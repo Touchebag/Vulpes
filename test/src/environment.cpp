@@ -89,3 +89,30 @@ TEST_F(EnvironmentTestFixture, DieWhenConditionMet) {
     System::IWorldModify::update();
     EXPECT_EQ(System::IWorldModify::getWorldObjects().size(), 0);
 }
+
+TEST_F(EnvironmentTestFixture, AddComponentOnNegation) {
+    std::string condition = "testCondition";
+    std::string negated_condition = "!" + condition;
+
+    // Set before test
+    System::getEnvironment()->setFlag(condition);
+    ASSERT_TRUE(isConditionSet(condition));
+
+    ASSERT_EQ(System::IWorldModify::getWorldObjects().size(), 0);
+
+    auto entity = BaseEntity::createFromJson({});
+    System::IWorldModify::addEntity(entity, negated_condition);
+
+    // Should still be zero as condition is not met
+    EXPECT_EQ(System::IWorldModify::getWorldObjects().size(), 0);
+
+    System::getEnvironment()->setFlag(negated_condition);
+
+    // Should not happen before next frame update
+    EXPECT_EQ(System::IWorldModify::getWorldObjects().size(), 0);
+
+    System::IWorldModify::update();
+
+    // Should now be added to main object list
+    EXPECT_EQ(System::IWorldModify::getWorldObjects().size(), 1);
+}
