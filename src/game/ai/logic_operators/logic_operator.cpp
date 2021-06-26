@@ -9,6 +9,7 @@
 #include "frame_timer.h"
 #include "animation_loop.h"
 #include "collides.h"
+#include "flag.h"
 #include "ai/ai_utils.h"
 
 #include "utils/log.h"
@@ -52,6 +53,11 @@ std::shared_ptr<const LogicalOperator> LogicalOperator::createFromString(const s
         return std::make_shared<AnimationLoop>();
     } else if (operation == "collides") {
         return std::make_shared<Collides>(arguments[0]);
+    } else if (operation == "flag") {
+        if (arguments.size() != 1) {
+            throw std::invalid_argument("flag: invalid name");
+        }
+        return std::make_shared<Flag>(arguments[0]);
     };
 
     throw std::invalid_argument("LogicalOperator: invalid operation: " + operation);

@@ -1,4 +1,6 @@
 {
+    "AI": null,
+    "Actions": null,
     "Animation": {
         "frame_list": [
             "Open",
@@ -30,6 +32,7 @@
             "invincibility": 80
         }
     },
+    "Death": null,
     "Rendering": {
         "height": 90,
         "texture": "Enemy",

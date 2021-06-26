@@ -3,7 +3,7 @@
         "main": {
             "actions": [
                 {
-                    "condition": "flag (Collectible.ID.2)",
+                    "condition": "flag (testCondition)",
                     "action": "die"
                 }
             ]

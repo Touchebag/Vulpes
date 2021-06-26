@@ -70,3 +70,22 @@ TEST_F(EnvironmentTestFixture, AddMultipleComponents) {
     System::IWorldModify::update();
     EXPECT_EQ(System::IWorldModify::getWorldObjects().size(), 3);
 }
+
+TEST_F(EnvironmentTestFixture, DieWhenConditionMet) {
+    std::string condition = "testCondition";
+
+    // Ensure unset before test
+    ASSERT_FALSE(isConditionSet(condition));
+
+    nlohmann::json j;
+    j["Entity"] = "condition_die";
+
+    auto entity = BaseEntity::createFromJson(j);
+    System::IWorldModify::addEntity(entity);
+    ASSERT_EQ(System::IWorldModify::getWorldObjects().size(), 1);
+
+    // Should be gone after setting flag
+    System::getEnvironment()->setFlag(condition);
+    System::IWorldModify::update();
+    EXPECT_EQ(System::IWorldModify::getWorldObjects().size(), 0);
+}
