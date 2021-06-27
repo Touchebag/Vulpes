@@ -17,6 +17,10 @@ std::shared_ptr<Input> System::getInput() {
     return System::getInstance().input_;
 }
 
+void System::setCamera(std::shared_ptr<Camera> camera) {
+    System::getInstance().camera_instance_ = camera;
+}
+
 std::shared_ptr<Camera> System::getCamera() {
     return System::getInstance().camera_instance_;
 }

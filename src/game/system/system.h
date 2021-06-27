@@ -14,6 +14,7 @@ class System {
     static void setRender(std::shared_ptr<IRender> render);
     static std::shared_ptr<IRender> getRender();
 
+    static void setCamera(std::shared_ptr<Camera> camera);
     static std::shared_ptr<Camera> getCamera();
 
     static std::shared_ptr<CutsceneHandler> getCutscene();

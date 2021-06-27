@@ -59,6 +59,30 @@ std::pair<double, double> checkMovement(double velX, double velY,
     return {x, y};
 }
 
+std::pair<int, int> checkCameraMargins(int x, int y) {
+    if (auto camera = System::getCamera()) {
+        auto camera_box = camera->getCameraBox();
+
+        if (x < static_cast<int>(camera_box.left_margin)) {
+            x = static_cast<int>(camera_box.left_margin);
+        }
+
+        if (x > static_cast<int>(camera_box.right_margin)) {
+            x = static_cast<int>(camera_box.right_margin);
+        }
+
+        if (y < static_cast<int>(camera_box.top_margin)) {
+            y = static_cast<int>(camera_box.top_margin);
+        }
+
+        if (y > static_cast<int>(camera_box.bottom_margin)) {
+            y = static_cast<int>(camera_box.bottom_margin);
+        }
+    }
+
+    return {x, y};
+}
+
 } // namespace
 
 Movement::Movement(std::weak_ptr<ComponentStore> components) :
@@ -78,7 +102,10 @@ void Movement::move(double velX, double velY) {
 
         int x = trans->getX();
         int y = trans->getY();
-        trans->setPosition(x + static_cast<int>(velx_), y + static_cast<int>(vely_));
+
+        auto adjusted_pos = checkCameraMargins(x + static_cast<int>(velx_), y + static_cast<int>(vely_));
+
+        trans->setPosition(adjusted_pos.first, adjusted_pos.second);
 
         if (getMovementAttributes().on_slope) {
             // Reset y velocity if adjusted by slope to avoid overshooting next frame

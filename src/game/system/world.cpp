@@ -106,27 +106,29 @@ void World::addEntriesToWorld(nlohmann::json j) {
         }
     }
 
-    if (j.contains("camera")) {
-        auto jcam = j["camera"];
-        if (!(jcam.contains("left") &&
-             jcam.contains("right") &&
-             jcam.contains("top") &&
-             jcam.contains("bottom"))) {
-            LOGW("World: missing camera parameters");
-            camera_box_.reset();
+    if (System::getCamera()) {
+        if (j.contains("camera")) {
+            auto jcam = j["camera"];
+            if (!(jcam.contains("left") &&
+                 jcam.contains("right") &&
+                 jcam.contains("top") &&
+                 jcam.contains("bottom"))) {
+                LOGW("World: missing camera parameters");
+                camera_box_.reset();
+            } else {
+                camera_box_ = {jcam["left"], jcam["right"], jcam["top"], jcam["bottom"]};
+            }
         } else {
-            camera_box_ = {jcam["left"], jcam["right"], jcam["top"], jcam["bottom"]};
+            LOGV("World: missing camera data");
+            camera_box_.reset();
         }
-    } else {
-        LOGV("World: missing camera data");
-        camera_box_.reset();
-    }
 
-    // Camera margins
-    if (camera_box_) {
-        System::getCamera()->setCameraBox(camera_box_.value());
-    } else {
-        System::getCamera()->setCameraBox({0.0f, 0.0f, 0.0f, 0.0f});
+        // Camera margins
+        if (camera_box_) {
+            System::getCamera()->setCameraBox(camera_box_.value());
+        } else {
+            System::getCamera()->setCameraBox({0.0f, 0.0f, 0.0f, 0.0f});
+        }
     }
 
     for (auto it : j["entities"]) {
@@ -372,10 +374,12 @@ void World::setEntrance(int entrance_id) {
         setShiftedPlayerPosition(Collideable::CollisionType::STATIC);
         setShiftedPlayerPosition(Collideable::CollisionType::SEMI_SOLID);
 
-        auto view = System::getCamera()->getView();
-        view.x_pos = static_cast<float>(p_trans->getX());
-        view.y_pos = static_cast<float>(p_trans->getY());
-        System::getCamera()->setView(view);
+        if (System::getCamera()) {
+            auto view = System::getCamera()->getView();
+            view.x_pos = static_cast<float>(p_trans->getX());
+            view.y_pos = static_cast<float>(p_trans->getY());
+            System::getCamera()->setView(view);
+        }
     } else {
         throw std::invalid_argument("Entrance id not found");
     }

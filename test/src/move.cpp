@@ -3,11 +3,18 @@
 #include "components/movement.h"
 #include "components/component_store.h"
 
+#include "system/system.h"
+
 class MovableTestFixture : public ::testing::Test {
   public:
     MovableTestFixture() {
         components_->setComponent<Transform>(std::make_shared<Transform>(components_));
         components_->setComponent<Movement>(std::make_shared<Movement>(components_));
+        System::setCamera({});
+    }
+
+    ~MovableTestFixture() {
+        System::setCamera(std::make_shared<Camera>());
     }
 
     void SetUp() override {

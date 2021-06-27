@@ -8,6 +8,11 @@ class DynamicCollisionTestFixture : public ::testing::Test {
   public:
     DynamicCollisionTestFixture() {
         entity_ = BaseEntity::createFromJson(nlohmann::json::parse(entity_json_));
+        System::setCamera({});
+    }
+
+    ~DynamicCollisionTestFixture() {
+        System::setCamera(std::make_shared<Camera>());
     }
 
     void SetUp() override {
