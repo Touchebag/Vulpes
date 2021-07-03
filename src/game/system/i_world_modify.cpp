@@ -8,10 +8,6 @@ void System::IWorldModify::removeEntity(std::shared_ptr<BaseEntity> entity) {
     System::getInstance().world_->removeEntity(entity);
 }
 
-void System::IWorldModify::addConditionalEntities(std::string condition) {
-    System::getInstance().world_->triggered_conditions_.insert(condition);
-}
-
 void System::IWorldModify::addCollideable(std::shared_ptr<Collideable> collideable) {
     System::getInstance().world_->addCollideable(collideable);
 }

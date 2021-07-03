@@ -30,7 +30,7 @@ bool Environment::getFlag(std::string name) {
 
 void Environment::setFlag(std::string name) {
     // Flag with negation sign first
-    System::IWorldModify::addConditionalEntities(name);
+    triggered_conditions_.insert(name);
 
     bool invert = removeNegationChar(name);
 
@@ -39,4 +39,26 @@ void Environment::setFlag(std::string name) {
     } else {
         flags_.erase(name);
     }
+}
+
+void Environment::addConditionalEvent(std::string condition, std::shared_ptr<event_triggers::IEventTrigger> event) {
+    conditional_events_.insert({condition, event});
+}
+
+void Environment::triggerConditionalEvents() {
+    if (!triggered_conditions_.empty()) {
+        for (auto cond : triggered_conditions_) {
+            while (conditional_events_.count(cond) > 0) {
+                auto it = conditional_events_.extract(cond);
+                it.mapped()->onEvent();
+            }
+        }
+
+        triggered_conditions_.clear();
+    }
+}
+
+void Environment::clearConditionalEvents() {
+    triggered_conditions_.clear();
+    conditional_events_.clear();
 }

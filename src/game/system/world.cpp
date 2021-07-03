@@ -4,6 +4,8 @@
 #include "utils/file.h"
 #include "system/system.h"
 
+#include "event_triggers/add_entity.h"
+
 std::vector<std::shared_ptr<BaseEntity>>& World::getWorldObjects() {
     return world_objects_;
 }
@@ -65,14 +67,7 @@ void World::update() {
     // Delete all expired entities at end of frame
     clearDeletedEntities();
 
-    // Add any new entities based on conditional flags
-    if (!triggered_conditions_.empty()) {
-        for (auto cond : triggered_conditions_) {
-            addConditionalEntities(cond);
-        }
-
-        triggered_conditions_.clear();
-    }
+    System::getEnvironment()->triggerConditionalEvents();
 }
 
 util::Point World::getPlayerPosition() {
@@ -82,7 +77,7 @@ util::Point World::getPlayerPosition() {
 void World::clearWorld() {
     world_objects_.clear();
 
-    conditional_objects_.clear();
+    System::getEnvironment()->clearConditionalEvents();
 
     for (auto& it : collideables_) {
         it.clear();
@@ -307,7 +302,8 @@ void World::addEntity(std::shared_ptr<BaseEntity> entity, std::optional<std::str
             System::getRender()->addEntity(render);
         }
     } else {
-        conditional_objects_.insert({condition.value(), entity});
+        auto evt_trigger = std::make_shared<event_triggers::AddEntity>(entity);
+        System::getEnvironment()->addConditionalEvent(condition.value(), evt_trigger);
     }
 }
 
@@ -330,13 +326,6 @@ void World::addPlayer(std::shared_ptr<Player> player) {
     }
 
     System::getRender()->setPlayer(player_->getComponent<Rendering>());
-}
-
-void World::addConditionalEntities(std::string condition) {
-    while (conditional_objects_.count(condition) > 0) {
-        auto it = conditional_objects_.extract(condition);
-        addEntity(it.mapped());
-    }
 }
 
 void World::loadRoom(std::string room_name, int entrance_id) {

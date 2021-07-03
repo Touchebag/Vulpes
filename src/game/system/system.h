@@ -45,7 +45,7 @@ class System {
         static void addEntity(std::shared_ptr<BaseEntity> entity, std::optional<std::string> condition = std::nullopt);
         static void removeEntity(std::shared_ptr<BaseEntity> entity);
 
-        static void addConditionalEntities(std::string condition);
+        static void triggerConditionalEvents(std::string condition);
 
         static void addCollideable(std::shared_ptr<Collideable> collideable);
 
