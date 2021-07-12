@@ -23,8 +23,9 @@ std::shared_ptr<MenuEntry> makeRenderableEntry(std::shared_ptr<BaseEntity> curre
 
         auto tiling_entry = makeMenuEntry("Tiling", color, std::nullopt);
 
-        auto tile_x = current_entity->getComponent<Rendering>()->tiling_x_;
-        auto tile_y = current_entity->getComponent<Rendering>()->tiling_y_;
+        // TODO Enable
+        // auto tile_x = current_entity->getComponent<Rendering>()->tiling_x_;
+        // auto tile_y = current_entity->getComponent<Rendering>()->tiling_y_;
 
         auto tiling_color = sf::Color::Green;
         tiling_entry->addEntry(makeMenuEntry("Tile X", tiling_color, {Command::Commands::RENDERABLE_TILING_X}));

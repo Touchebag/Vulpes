@@ -24,9 +24,9 @@ enum class Event {
     AIR_DIVING,
     DIVE_BOUNCE,
 
-    // Actions
-    ATTACKING1,
-    ATTACKING2,
+    #define GENERATE_ENUM(x) ACTION_##x,
+    #include "components/actions/actions_enum.h"
+    #undef GENERATE_ENUM
 
     // Effects
     DAMAGED,
@@ -54,8 +54,8 @@ const std::map<std::string, Event> string_event_map {
     {"air_diving", Event::AIR_DIVING},
     {"dive_bounce", Event::DIVE_BOUNCE},
 
-    {"attacking1", Event::ATTACKING1},
-    {"attacking2", Event::ATTACKING2},
+    {"attacking1", Event::ACTION_ATTACK1},
+    {"attacking2", Event::ACTION_ATTACK1},
 
     {"damaged", Event::DAMAGED},
 
