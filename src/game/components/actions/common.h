@@ -1,18 +1,9 @@
 const Bimap<std::string, Actions::Action> string_action_map = {
     {"unknown", Actions::Action::UNKNOWN},
-    {"move_left", Actions::Action::MOVE_LEFT},
-    {"move_right", Actions::Action::MOVE_RIGHT},
-    {"jump", Actions::Action::JUMP},
 
-    {"wall_jump", Actions::Action::WALL_JUMP},
-    {"double_jump", Actions::Action::DOUBLE_JUMP},
-    {"dash", Actions::Action::DASH},
-    {"attack1", Actions::Action::ATTACK1},
-    {"attack2", Actions::Action::ATTACK2},
-    {"air_dive", Actions::Action::AIR_DIVE},
-    {"air_dive_bounce", Actions::Action::AIR_DIVE_BOUNCE},
-
-    {"interact", Actions::Action::INTERACT},
+    #define GENERATE_ENUM(action, string) {string, Actions::Action::action},
+    #include "actions_enum.h"
+    #undef GENERATE_ENUM
 
     {"ai_event_1", Actions::Action::AI_EVENT_1},
     {"ai_event_2", Actions::Action::AI_EVENT_2},

@@ -11,7 +11,9 @@
 class Actions : public Component {
   public:
     enum class Action {
-        #define GENERATE_ENUM(x) x,
+        UNKNOWN,
+
+        #define GENERATE_ENUM(action, string) action,
         #include "actions_enum.h"
         #undef GENERATE_ENUM
 
