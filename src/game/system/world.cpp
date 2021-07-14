@@ -29,7 +29,8 @@ void World::update() {
                 auto death_entity = BaseEntity::createFromJson(death_entity_json.value());
 
                 if ((*it)->getComponent<Transform>() && death_entity->getComponent<Transform>()) {
-                    death_entity->getComponent<Transform>()->setPosition((*it)->getComponent<Transform>()->getPosition());
+                    auto new_position = (*it)->getComponent<Transform>()->getPosition();
+                    death_entity->getComponent<Transform>()->setPosition(new_position);
                 }
 
                 addEntity(death_entity);
