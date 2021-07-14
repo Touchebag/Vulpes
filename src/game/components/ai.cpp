@@ -1,6 +1,7 @@
 #include "ai.h"
 
 #include "utils/log.h"
+#include "utils/bimap.h"
 #include "utils/file.h"
 #include "utils/common.h"
 
@@ -11,6 +12,16 @@
 #include "ai/values/constant.h"
 #include "ai/values/player_value.h"
 #include "ai/values/this.h"
+
+namespace {
+
+const Bimap<Actions::Action, state_utils::Event> action_event_map = {
+    #define GENERATE_ENUM(action, name) {Actions::Action::action, state_utils::Event::ACTION_##action},
+    #include "components/actions/actions_enum.h"
+    #undef GENERATE_ENUM
+};
+
+} // namespace
 
 AI::AI(std::weak_ptr<ComponentStore> components) :
     Component(components) {
@@ -31,18 +42,15 @@ void AI::update() {
 
         for (auto& it : states_.getStateData()) {
             if (it.first->getValue(values)) {
+                // Add resulting action
                 auto action = it.second;
-                switch (action) {
-                    // AI_EVENTs should be treated differently from input actions
-                    case Actions::Action::AI_EVENT_1:
-                        states_.incomingEvent(state_utils::Event::AI_EVENT_1);
-                        break;
-                    case Actions::Action::AI_EVENT_2:
-                        states_.incomingEvent(state_utils::Event::AI_EVENT_2);
-                        break;
-                    default:
-                        act->addAction(it.second);
-                        break;
+                act->addAction(action);
+
+                if (action != Actions::Action::DIE) {
+                    // Update any effects of said action
+                    // (e.g. AI actions)
+                    auto corresponding_event = action_event_map.at(action);
+                    states_.incomingEvent(corresponding_event);
                 }
             }
         }

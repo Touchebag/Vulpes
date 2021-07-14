@@ -2,23 +2,23 @@
     "states": {
         "main": {
             "next_states": [
-                { "event": "ai_event_1", "state": "move_right_turnaround" },
-                { "event": "ai_event_2", "state": "move_left_turnaround" }
+                { "event": "action_ai1", "state": "move_right_turnaround" },
+                { "event": "action_ai2", "state": "move_left_turnaround" }
             ],
             "actions": [
                 {
                     "condition": "grt (player position x) (this position x)",
-                    "action": "ai_event_1"
+                    "action": "ai1"
                 },
                 {
                     "condition": "lss (player position x) (this position x)",
-                    "action": "ai_event_2"
+                    "action": "ai2"
                 }
             ]
         },
         "move_right_turnaround": {
             "next_states": [
-                { "event": "ai_event_1", "state": "move_right" }
+                { "event": "action_ai1", "state": "move_right" }
             ],
             "actions": [
                 {
@@ -27,13 +27,13 @@
                 },
                 {
                     "condition": "frame_timer (constant 30)",
-                    "action": "ai_event_1"
+                    "action": "ai1"
                 }
             ]
         },
         "move_right": {
             "next_states": [
-                { "event": "ai_event_1", "state": "move_left_turnaround" }
+                { "event": "action_ai1", "state": "move_left_turnaround" }
             ],
             "actions": [
                 {
@@ -42,13 +42,13 @@
                 },
                 {
                     "condition": "lss (player position x) (this position x)",
-                    "action": "ai_event_1"
+                    "action": "ai1"
                 }
             ]
         },
         "move_left_turnaround": {
             "next_states": [
-                { "event": "ai_event_1", "state": "move_left" }
+                { "event": "action_ai1", "state": "move_left" }
             ],
             "actions": [
                 {
@@ -57,18 +57,18 @@
                 },
                 {
                     "condition": "frame_timer (constant 30)",
-                    "action": "ai_event_1"
+                    "action": "ai1"
                 }
             ]
         },
         "move_left": {
             "next_states": [
-                { "event": "ai_event_1", "state": "move_right_turnaround" }
+                { "event": "action_ai1", "state": "move_right_turnaround" }
             ],
             "actions": [
                 {
                     "condition": "grt (player position x) (this position x)",
-                    "action": "ai_event_1"
+                    "action": "ai1"
                 },
                 {
                     "condition": "lss (player position x) (this position x)",

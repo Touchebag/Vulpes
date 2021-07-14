@@ -3,9 +3,21 @@
 #include "actions_player.h"
 
 #include "common.h"
+#include "utils/bimap.h"
+#include "utils/state_utils.h"
 #include "utils/log.h"
 
 #include "components/component_store.h"
+
+namespace {
+
+const Bimap<Actions::Action, state_utils::Event> action_event_map = {
+    #define GENERATE_ENUM(action, name) {Actions::Action::action, state_utils::Event::ACTION_##action},
+    #include "actions_enum.h"
+    #undef GENERATE_ENUM
+};
+
+} // namespace
 
 Actions::Actions(std::weak_ptr<ComponentStore> components) :
     Component(components) {
@@ -67,6 +79,12 @@ void Actions::addAction(Action action) {
         it->second = ActionState::ACTIVE;
     } else {
         current_actions_.insert_or_assign(action, ActionState::FIRST_FRAME);
+    }
+
+    // Trigger corresponding event
+    if (auto state = getComponent<Stateful>()) {
+        auto corresponding_event = action_event_map.at(action);
+        state->incomingEvent(corresponding_event);
     }
 }
 

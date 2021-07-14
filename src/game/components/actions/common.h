@@ -5,9 +5,6 @@ const Bimap<std::string, Actions::Action> string_action_map = {
     #include "actions_enum.h"
     #undef GENERATE_ENUM
 
-    {"ai_event_1", Actions::Action::AI_EVENT_1},
-    {"ai_event_2", Actions::Action::AI_EVENT_2},
-
     {"die", Actions::Action::DIE},
 };
 

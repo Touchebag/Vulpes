@@ -20,12 +20,6 @@ class Actions : public Component {
         // Number of normal actions
         NUM_ACTIONS,
 
-        // These actions are treated separately
-
-        // AI events
-        AI_EVENT_1,
-        AI_EVENT_2,
-
         // Misc
         DIE,
     };

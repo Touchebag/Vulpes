@@ -33,10 +33,6 @@ enum class Event {
 
     // Misc
     FRAME_TIMEOUT,
-
-    // AI events
-    AI_EVENT_1,
-    AI_EVENT_2,
 };
 
 const std::map<std::string, Event> string_event_map {
@@ -61,9 +57,6 @@ const std::map<std::string, Event> string_event_map {
     {"damaged", Event::DAMAGED},
 
     {"frame_timeout", Event::FRAME_TIMEOUT},
-
-    {"ai_event_1", Event::AI_EVENT_1},
-    {"ai_event_2", Event::AI_EVENT_2},
 };
 
 struct PhysicsProperties {
