@@ -12,29 +12,13 @@ class Actions : public Component {
   public:
     enum class Action {
         UNKNOWN,
-        MOVE_LEFT,
-        MOVE_RIGHT,
-        JUMP,
 
-        // Upgrades
-        WALL_JUMP,
-        DOUBLE_JUMP,
-        DASH,
-        ATTACK1,
-        ATTACK2,
-        AIR_DIVE,
-        AIR_DIVE_BOUNCE,
-
-        INTERACT,
+        #define GENERATE_ENUM(action, string) action,
+        #include "actions_enum.h"
+        #undef GENERATE_ENUM
 
         // Number of normal actions
         NUM_ACTIONS,
-
-        // These actions are treated separately
-
-        // AI events
-        AI_EVENT_1,
-        AI_EVENT_2,
 
         // Misc
         DIE,

@@ -24,19 +24,15 @@ enum class Event {
     AIR_DIVING,
     DIVE_BOUNCE,
 
-    // Actions
-    ATTACKING1,
-    ATTACKING2,
+    #define GENERATE_ENUM(action, string) ACTION_##action,
+    #include "components/actions/actions_enum.h"
+    #undef GENERATE_ENUM
 
     // Effects
     DAMAGED,
 
     // Misc
     FRAME_TIMEOUT,
-
-    // AI events
-    AI_EVENT_1,
-    AI_EVENT_2,
 };
 
 const std::map<std::string, Event> string_event_map {
@@ -54,15 +50,13 @@ const std::map<std::string, Event> string_event_map {
     {"air_diving", Event::AIR_DIVING},
     {"dive_bounce", Event::DIVE_BOUNCE},
 
-    {"attacking1", Event::ATTACKING1},
-    {"attacking2", Event::ATTACKING2},
+    #define GENERATE_ENUM(action, string) {"action_" string, Event::ACTION_##action},
+    #include "components/actions/actions_enum.h"
+    #undef GENERATE_ENUM
 
     {"damaged", Event::DAMAGED},
 
     {"frame_timeout", Event::FRAME_TIMEOUT},
-
-    {"ai_event_1", Event::AI_EVENT_1},
-    {"ai_event_2", Event::AI_EVENT_2},
 };
 
 struct PhysicsProperties {

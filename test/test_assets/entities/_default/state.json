@@ -17,7 +17,7 @@
                 {"event": "jumping", "state": "jumping"},
                 {"event": "airborne", "state": "falling"},
                 {"event": "dashing", "state": "dashing"},
-                {"event": "attacking1", "state": "attack"},
+                {"event": "action_attack1", "state": "attack"},
                 {"event": "damaged", "state": "taking_damage"}
             ],
             "frame_names": [
@@ -62,7 +62,7 @@
                 {"event": "jumping", "state": "jumping"},
                 {"event": "airborne", "state": "falling"},
                 {"event": "dashing", "state": "dashing"},
-                {"event": "attacking1", "state": "attack"},
+                {"event": "action_attack1", "state": "attack"},
                 {"event": "damaged", "state": "taking_damage"}
             ],
             "frame_names": [
