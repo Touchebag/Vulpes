@@ -2,7 +2,7 @@
 
 #include "i_shader_uniform.h"
 
-#include <json.hpp>
+#include "nlohmann/json.hpp"
 
 class RelativeTimer : public IShaderUniform {
   public:

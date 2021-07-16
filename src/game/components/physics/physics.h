@@ -1,7 +1,6 @@
 #pragma once
 
 #include <memory>
-#include <json.hpp>
 
 #include "components/stateful.h"
 #include "components/rendering/rendering.h"

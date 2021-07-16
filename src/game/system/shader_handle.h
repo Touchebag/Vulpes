@@ -1,6 +1,6 @@
 #pragma once
 
-#include <json.hpp>
+#include "nlohmann/json.hpp"
 
 #include "uniforms/i_shader_uniform.h"
 

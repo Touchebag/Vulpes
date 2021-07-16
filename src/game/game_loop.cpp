@@ -1,6 +1,6 @@
 #include <memory>
 
-#include <json.hpp>
+#include "nlohmann/json.hpp"
 
 #include "base_entity.h"
 #include "system/system.h"

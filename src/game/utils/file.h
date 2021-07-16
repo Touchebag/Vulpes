@@ -5,7 +5,7 @@
 #include <filesystem>
 #include <SFML/Graphics.hpp>
 
-#include "json.hpp"
+#include "nlohmann/json.hpp"
 
 class File {
   public:

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <json.hpp>
-
 #include "utils/state.h"
 #include "components/actions/actions.h"
 #include "components/animation.h"

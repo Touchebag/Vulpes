@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "utils/state_utils.h"
-#include "json.hpp"
+#include "nlohmann/json.hpp"
 
 template <class T>
 class State {

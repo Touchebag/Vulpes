@@ -1,7 +1,6 @@
 #pragma once
 
 #include <memory>
-#include <json.hpp>
 #include <SFML/Graphics.hpp>
 
 #include "components/transform.h"

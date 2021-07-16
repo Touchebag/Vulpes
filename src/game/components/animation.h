@@ -2,7 +2,6 @@
 
 #include <unordered_map>
 #include <SFML/Graphics.hpp>
-#include <json.hpp>
 
 #include "utils/common.h"
 #include "components/rendering/rendering.h"

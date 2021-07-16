@@ -3,7 +3,7 @@
 #include <tuple>
 
 #include "utils/common.h"
-#include "json.hpp"
+#include "nlohmann/json.hpp"
 
 class Hitbox {
   public:

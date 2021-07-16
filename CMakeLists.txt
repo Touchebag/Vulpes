@@ -6,6 +6,7 @@ set(CMAKE_INSTALL_PREFIX build)
 # Targets
 set(GAME_LIB_TARGET game_lib)
 set(GAME_TARGET vulpes)
+set(LIBS_DIR libs)
 set(EDITOR_LIB_TARGET editor_lib)
 set(EDITOR_TARGET level_editor)
 set(STATE_GRAPH_TARGET state_graph)
@@ -16,6 +17,12 @@ set(CC_OPTIONS -std=c++17 -Wall -Wextra -Wpedantic -Wconversion -Wold-style-cast
 set(ASSETS_DIR assets)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# Nlohmann json
+find_package(nlohmann_json)
+IF (nlohmann_json_FOUND)
+    set(JSON_LIBS nlohmann_json::nlohmann_json)
+ENDIF()
 
 # SFML
 set(BUILD_SHARED_LIBS false)
@@ -43,17 +50,17 @@ list(REMOVE_ITEM GAME_LIB_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/game/main.cpp)
 
 add_library(${GAME_LIB_TARGET} STATIC ${GAME_LIB_SOURCES})
 target_compile_options(${GAME_LIB_TARGET} PUBLIC ${CC_OPTIONS})
-target_include_directories(${GAME_LIB_TARGET} PUBLIC src/game/ libs/nlohmann)
+target_include_directories(${GAME_LIB_TARGET} PUBLIC src/game/ ${LIBS_DIR})
 
-target_link_libraries(${GAME_LIB_TARGET} ${SFML_LIBS})
+target_link_libraries(${GAME_LIB_TARGET} ${SFML_LIBS} ${JSON_LIBS})
 
 # Game target
 file(GLOB_RECURSE GAME_SOURCES src/game/main.cpp)
 add_executable(${GAME_TARGET} ${GAME_SOURCES})
 target_compile_options(${GAME_TARGET} PUBLIC ${CC_OPTIONS})
-target_include_directories(${GAME_TARGET} PUBLIC src/ libs/nlohmann)
+target_include_directories(${GAME_TARGET} PUBLIC src/ ${LIBS_DIR})
 
-target_link_libraries(${GAME_TARGET} ${GAME_LIB_TARGET} ${SFML_LIBS})
+target_link_libraries(${GAME_TARGET} ${GAME_LIB_TARGET} ${SFML_LIBS} ${JSON_LIBS})
 
 add_dependencies(${GAME_TARGET} COPY_ASSETS)
 
@@ -62,17 +69,17 @@ file(GLOB_RECURSE EDITOR_LIB_SOURCES src/level_editor/*.cpp)
 list(REMOVE_ITEM EDITOR_LIB_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/level_editor/main.cpp)
 add_library(${EDITOR_LIB_TARGET} ${EDITOR_LIB_SOURCES})
 target_compile_options(${EDITOR_LIB_TARGET} PUBLIC ${CC_OPTIONS})
-target_include_directories(${EDITOR_LIB_TARGET} PUBLIC src/game/ src/level_editor/ libs/nlohmann)
+target_include_directories(${EDITOR_LIB_TARGET} PUBLIC src/game/ src/level_editor/ ${LIBS_DIR})
 
-target_link_libraries(${EDITOR_LIB_TARGET} ${GAME_LIB_TARGET} ${SFML_LIBS})
+target_link_libraries(${EDITOR_LIB_TARGET} ${GAME_LIB_TARGET} ${SFML_LIBS} ${JSON_LIBS})
 
 # Level editor target
 file(GLOB_RECURSE EDITOR_SOURCES src/level_editor/main.cpp)
 add_executable(${EDITOR_TARGET} ${EDITOR_SOURCES})
 target_compile_options(${EDITOR_TARGET} PUBLIC ${CC_OPTIONS})
-target_include_directories(${EDITOR_TARGET} PUBLIC src/game/ libs/nlohmann)
+target_include_directories(${EDITOR_TARGET} PUBLIC src/game/ ${LIBS_DIR})
 
-target_link_libraries(${EDITOR_TARGET} ${EDITOR_LIB_TARGET} ${GAME_LIB_TARGET} ${SFML_LIBS})
+target_link_libraries(${EDITOR_TARGET} ${EDITOR_LIB_TARGET} ${GAME_LIB_TARGET} ${SFML_LIBS} ${JSON_LIBS})
 
 # State editor target
 # TODO Broken since game/level editor merge. Fix when adding enemies
@@ -92,9 +99,9 @@ if (GTest_FOUND)
 
     add_executable(${TEST_TARGET} ${TEST_SOURCES})
     target_compile_options(${TEST_TARGET} PUBLIC ${CC_OPTIONS})
-    target_include_directories(${TEST_TARGET} PUBLIC src/ libs/nlohmann ${GTEST_INCLUDE_DIRS})
+    target_include_directories(${TEST_TARGET} PUBLIC src/ ${LIBS_DIR} ${GTEST_INCLUDE_DIRS})
 
-    target_link_libraries(${TEST_TARGET} ${GAME_LIB_TARGET} ${EDITOR_LIB_TARGET} ${SFML_LIBS} ${GTEST_BOTH_LIBRARIES})
+    target_link_libraries(${TEST_TARGET} ${GAME_LIB_TARGET} ${EDITOR_LIB_TARGET} ${SFML_LIBS} ${JSON_LIBS} ${GTEST_BOTH_LIBRARIES})
 
     add_dependencies(${TEST_TARGET} COPY_TEST_ASSETS)
 endif()

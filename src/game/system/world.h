@@ -5,7 +5,7 @@
 
 #include "base_entity.h"
 #include "player.h"
-#include "json.hpp"
+#include "nlohmann/json.hpp"
 #include "components/rendering/rendering_text.h"
 #include "camera.h"
 

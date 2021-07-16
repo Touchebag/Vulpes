@@ -2,7 +2,6 @@
 
 #include "utils/file.h"
 #include "utils/common.h"
-#include "json.hpp"
 #include "base_entity.h"
 
 #include "utils/log.h"

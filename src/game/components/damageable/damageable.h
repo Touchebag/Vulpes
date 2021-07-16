@@ -2,8 +2,6 @@
 
 #include <memory>
 
-#include "json.hpp"
-
 #include "components/collision/collision.h"
 #include "components/death.h"
 #include "components/stateful.h"

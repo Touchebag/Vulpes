@@ -6,7 +6,6 @@
 #include "utils/bimap.h"
 
 #include <unordered_map>
-#include <json.hpp>
 
 class Actions : public Component {
   public:
