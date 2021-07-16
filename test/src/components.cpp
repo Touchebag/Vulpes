@@ -318,14 +318,7 @@ TEST(TestComponents, TestSaveLoadPlayerActions) {
     nlohmann::json j2 = actions->outputToJson().value();
     ASSERT_TRUE(j1 == j2) << j1.dump() << std::endl << j2.dump() << std::endl;
 
-    j1["enabled_actions"]["movement_x"] = true;
-    j1["enabled_actions"]["dash"] = true;
-    j1["enabled_actions"]["jump"] = true;
-    j1["enabled_actions"]["wall_jump"] = true;
-    j1["enabled_actions"]["double_jump"] = true;
-    j1["enabled_actions"]["attack1"] = true;
-    j1["enabled_actions"]["attack2"] = true;
-    j1["enabled_actions"]["interact"] = true;
+    j1["disabled_actions"] = {"attack2", "dash", "wall_jump"};
 
     actions = std::dynamic_pointer_cast<ActionsPlayer>(Actions::createFromJson(j1, {}));
     // Ensure dynamic cast valid

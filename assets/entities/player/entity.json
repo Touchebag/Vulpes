@@ -1,17 +1,10 @@
 {
     "Actions": {
         "type": "player",
-        "enabled_actions": {
-            "movement_x": true,
-            "jump": true,
-            "wall_jump": true,
-            "double_jump": true,
-            "air_dive": true,
-            "air_dive_bounce": true,
-            "interact": true,
-            "dash": true,
-            "attack2": true
-        }
+        "disabled_actions": [
+            "dash",
+            "attack1"
+        ]
     },
     "Animation": null,
     "Collision": {

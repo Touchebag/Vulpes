@@ -114,57 +114,17 @@ std::shared_ptr<Actions> Actions::createFromJson(nlohmann::json j, std::weak_ptr
 }
 
 void Actions::reloadFromJson(nlohmann::json j, File /* file_instance */) {
-    if (!j.contains("enabled_actions")) {
-        // Enabled everything by default
-        setAllEnabled(true);
-        return;
-    }
+    // Enable everything by default
+    setAllEnabled(true);
 
-    // If whitelist then disable everything by default
-    setAllEnabled(false);
+    if (j.contains("disabled_actions")) {
+        auto j_actions = j["disabled_actions"];
 
-    auto j_actions = j["enabled_actions"];
-
-    // TODO See if possible to use string action map for loop
-    if (j_actions.contains("movement_x")) {
-        enableAction(Action::MOVE_RIGHT, true);
-        enableAction(Action::MOVE_LEFT, true);
-    }
-
-    if (j_actions.contains(string_action_map.at(Action::JUMP))) {
-        enableAction(Action::JUMP, true);
-    }
-
-    if (j_actions.contains(string_action_map.at(Action::WALL_JUMP))) {
-        enableAction(Action::WALL_JUMP, true);
-    }
-
-    if (j_actions.contains(string_action_map.at(Action::DOUBLE_JUMP))) {
-        enableAction(Action::DOUBLE_JUMP, true);
-    }
-
-    if (j_actions.contains(string_action_map.at(Action::DASH))) {
-        enableAction(Action::DASH, true);
-    }
-
-    if (j_actions.contains(string_action_map.at(Action::ATTACK1))) {
-        enableAction(Action::ATTACK1, true);
-    }
-
-    if (j_actions.contains(string_action_map.at(Action::ATTACK2))) {
-        enableAction(Action::ATTACK2, true);
-    }
-
-    if (j_actions.contains(string_action_map.at(Action::INTERACT))) {
-        enableAction(Action::INTERACT, true);
-    }
-
-    if (j_actions.contains(string_action_map.at(Action::AIR_DIVE))) {
-        enableAction(Action::AIR_DIVE, true);
-    }
-
-    if (j_actions.contains(string_action_map.at(Action::AIR_DIVE_BOUNCE))) {
-        enableAction(Action::AIR_DIVE_BOUNCE, true);
+        for (auto it : j_actions) {
+            if (string_action_map.contains(it.get<std::string>())) {
+                enableAction(string_action_map.at(it.get<std::string>()), false);
+            }
+        }
     }
 }
 
@@ -173,50 +133,18 @@ std::optional<nlohmann::json> Actions::outputToJson() {
 
     // Everything is enabled by default. If any action is not enabled then we store the whitelist.
     if (std::any_of(enabled_actions_.begin(), enabled_actions_.end(), [](bool b) { return !b; })) {
-        nlohmann::json j_actions;
+        std::vector<std::string> disabled_actions;
 
-        if (isActionEnabled(Action::MOVE_RIGHT) &&
-            isActionEnabled(Action::MOVE_LEFT)) {
-            j_actions["movement_x"] = true;
+        for (auto i = 0; i < static_cast<int>(Action::NUM_ACTIONS); i++) {
+            if (!enabled_actions_.at(i)) {
+                disabled_actions.push_back(string_action_map.at(static_cast<Action>(i)));
+            }
         }
 
-        if (isActionEnabled(Action::JUMP)) {
-            j_actions[string_action_map.at(Action::JUMP)] = true;
-        }
+        // Force lexiographical order to align with rest of json structure
+        std::sort(disabled_actions.begin(), disabled_actions.end());
 
-        if (isActionEnabled(Action::WALL_JUMP)) {
-            j_actions[string_action_map.at(Action::WALL_JUMP)] = true;
-        }
-
-        if (isActionEnabled(Action::DOUBLE_JUMP)) {
-            j_actions[string_action_map.at(Action::DOUBLE_JUMP)] = true;
-        }
-
-        if (isActionEnabled(Action::DASH)) {
-            j_actions[string_action_map.at(Action::DASH)] = true;
-        }
-
-        if (isActionEnabled(Action::ATTACK1)) {
-            j_actions[string_action_map.at(Action::ATTACK1)] = true;
-        }
-
-        if (isActionEnabled(Action::ATTACK2)) {
-            j_actions[string_action_map.at(Action::ATTACK2)] = true;
-        }
-
-        if (isActionEnabled(Action::INTERACT)) {
-            j_actions[string_action_map.at(Action::INTERACT)] = true;
-        }
-
-        if (isActionEnabled(Action::AIR_DIVE)) {
-            j_actions[string_action_map.at(Action::AIR_DIVE)] = true;
-        }
-
-        if (isActionEnabled(Action::AIR_DIVE_BOUNCE)) {
-            j_actions[string_action_map.at(Action::AIR_DIVE_BOUNCE)] = true;
-        }
-
-        j["enabled_actions"] = j_actions;
+        j["disabled_actions"] = disabled_actions;
     }
 
     return j;
