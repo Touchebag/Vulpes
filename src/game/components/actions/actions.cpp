@@ -1,8 +1,7 @@
 #include "actions.h"
 
-#include "actions_player.h"
-
 #include "common.h"
+#include "system/system.h"
 #include "utils/bimap.h"
 #include "utils/state_utils.h"
 #include "utils/log.h"
@@ -30,13 +29,13 @@ Actions::Actions(std::weak_ptr<ComponentStore> components) :
 
 void Actions::update() {
     for (auto it = current_actions_.begin(); it != current_actions_.end();) {
-        switch(it->second) {
-            case ActionState::ACTIVE:
-            case ActionState::FIRST_FRAME:
-                it->second = ActionState::NOT_ACTIVE;
+        switch(it->second.active) {
+            case ActionState::ActiveState::ACTIVE:
+                it->second.active = ActionState::ActiveState::NOT_ACTIVE;
+                it->second.frame_count++;
                 it++;
                 break;
-            case ActionState::NOT_ACTIVE:
+            case ActionState::ActiveState::NOT_ACTIVE:
                 it = current_actions_.erase(it);
                 break;
         }
@@ -46,8 +45,7 @@ void Actions::update() {
 bool Actions::getActionState(Action action, bool first_frame) {
     auto it = current_actions_.find(action);
     return (it != current_actions_.end() &&
-            it->second != ActionState::NOT_ACTIVE &&
-            (!first_frame || it->second == ActionState::FIRST_FRAME));
+           (!first_frame || it->second.frame_count <= 1)); // This allows for a one frame buffer
 }
 
 void Actions::addAction(Action action) {
@@ -76,9 +74,12 @@ void Actions::addAction(Action action) {
     // If action is already in map, update to still be active
     // else add new first frame action
     if (it != current_actions_.end()) {
-        it->second = ActionState::ACTIVE;
+        it->second.active = ActionState::ActiveState::ACTIVE;
     } else {
-        current_actions_.insert_or_assign(action, ActionState::FIRST_FRAME);
+        ActionState action_state;
+        action_state.active = ActionState::ActiveState::ACTIVE;
+        action_state.frame_count = 0;
+        current_actions_.insert_or_assign(action, action_state);
     }
 
     // Trigger corresponding event
@@ -102,12 +103,7 @@ Actions::Action Actions::fromString(const std::string& action) {
 }
 
 std::shared_ptr<Actions> Actions::createFromJson(nlohmann::json j, std::weak_ptr<ComponentStore> components, File /* file_instance */) {
-    std::shared_ptr<Actions> actions;
-    if (j.contains("type") && j["type"].get<std::string>() == "player") {
-        actions = std::make_shared<ActionsPlayer>(components);
-    } else {
-        actions = std::make_shared<Actions>(components);
-    }
+    std::shared_ptr<Actions> actions = std::make_shared<Actions>(components);
 
     actions->reloadFromJson(j);
     return actions;

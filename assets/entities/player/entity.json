@@ -1,6 +1,5 @@
 {
     "Actions": {
-        "type": "player",
         "disabled_actions": [
             "dash",
             "attack1"

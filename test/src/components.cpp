@@ -2,8 +2,6 @@
 
 #include "base_entity.h"
 
-#include "components/actions/actions_player.h"
-
 #include "components/collision/collideables/collideable_collectible.h"
 #include "components/collision/collideables/collideable_player_hurtbox.h"
 #include "components/collision/collideables/collideable_transition.h"
@@ -302,29 +300,6 @@ TEST(TestComponents, TestSaveLoadSlope) {
     ASSERT_TRUE(coll);
 
     nlohmann::json j2 = coll->outputToJson().value();
-    ASSERT_TRUE(j1 == j2) << j1.dump() << std::endl << j2.dump() << std::endl;
-}
-
-TEST(TestComponents, TestSaveLoadPlayerActions) {
-    nlohmann::json j1;
-
-    j1["type"] = "player";
-
-    std::shared_ptr<ActionsPlayer> actions =
-        std::dynamic_pointer_cast<ActionsPlayer>(Actions::createFromJson(j1, {}));
-    // Ensure dynamic cast valid
-    ASSERT_TRUE(actions);
-
-    nlohmann::json j2 = actions->outputToJson().value();
-    ASSERT_TRUE(j1 == j2) << j1.dump() << std::endl << j2.dump() << std::endl;
-
-    j1["disabled_actions"] = {"attack2", "dash", "wall_jump"};
-
-    actions = std::dynamic_pointer_cast<ActionsPlayer>(Actions::createFromJson(j1, {}));
-    // Ensure dynamic cast valid
-    ASSERT_TRUE(actions) << "ActionsPlayer, cast failed" << std::endl;
-
-    j2 = actions->outputToJson().value();
     ASSERT_TRUE(j1 == j2) << j1.dump() << std::endl << j2.dump() << std::endl;
 }
 

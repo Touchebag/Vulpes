@@ -44,10 +44,6 @@ std::weak_ptr<Player> System::IWorldModify::getPlayer() {
     return System::getInstance().world_->getPlayer();
 }
 
-void System::IWorldModify::triggerInterract() {
-    System::getInstance().world_->interact_triggered_ = true;
-}
-
 void System::IWorldModify::loadRoom(std::string room_name, int entrance_id) {
     // Enqueue new room load at frame end
     System::getInstance().world_->new_room_ = {room_name, entrance_id};

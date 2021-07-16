@@ -33,8 +33,6 @@ class System {
 
         static std::weak_ptr<const Player> getPlayer();
 
-        static bool hasInteractTriggered();
-
         static std::string getCurrentRoomName();
 
         static std::vector<util::Point> getEntrances();
@@ -61,8 +59,6 @@ class System {
 
         static std::vector<std::shared_ptr<BaseEntity>>& getWorldObjects();
         static std::weak_ptr<Player> getPlayer();
-
-        static void triggerInterract();
 
         static void loadRoom(std::string room_name, int entrance_id);
 

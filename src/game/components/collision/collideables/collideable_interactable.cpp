@@ -48,9 +48,17 @@ std::optional<nlohmann::json> CollideableInteractable::outputToJson() {
 }
 
 void CollideableInteractable::update() {
-    if (System::IWorldRead::hasInteractTriggered()) {
-        for (auto it : System::IWorldRead::getCollideables(Collideable::CollisionType::PLAYER_HURTBOX)) {
-            if (collides(it)) {
+    if (auto player = System::IWorldModify::getPlayer().lock()) {
+        auto player_actions = player->getComponent<Actions>();
+
+        // If player has not triggered interact, return early
+        if (!player_actions || !player_actions->getActionState(Actions::Action::INTERACT, true)) {
+            return;
+        }
+
+        // If we collide with player, execute interact
+        if (auto player_coll = player->getComponent<Collision>()) {
+            if (collides(player_coll->getCollideable())) {
                 if (transition_) {
                     System::IWorldModify::loadRoom(transition_.value().first, transition_.value().second);
                 }

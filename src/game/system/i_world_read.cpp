@@ -12,10 +12,6 @@ std::weak_ptr<const Player> System::IWorldRead::getPlayer() {
     return System::getInstance().world_->getPlayer();
 }
 
-bool System::IWorldRead::hasInteractTriggered() {
-    return System::getInstance().world_->interact_triggered_;
-}
-
 std::string System::IWorldRead::getCurrentRoomName() {
     return System::getInstance().world_->current_room_name_;
 }

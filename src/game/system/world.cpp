@@ -72,9 +72,6 @@ void World::update() {
         new_room_.reset();
     }
 
-    // Reset interaction trigger at end of frame
-    interact_triggered_ = false;
-
     // Delete all expired entities at end of frame
     clearDeletedEntities();
 

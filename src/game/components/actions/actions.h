@@ -48,13 +48,18 @@ class Actions : public Component {
 
     void setAllEnabled(bool enable);
 
-    // ACTIVE = action has been held since at least one frame
-    // FIRST_FRAME = action was triggered this frame
-    // NOT_ACTIVE = action is stale and will be removed if no ACTIVE input is triggered
-    enum ActionState {
-        ACTIVE,
-        FIRST_FRAME,
-        NOT_ACTIVE,
+    struct ActionState {
+        // ACTIVE = action has been held since at least one frame
+        // NOT_ACTIVE = action is stale and will be removed if no ACTIVE input is triggered
+        enum ActiveState {
+            ACTIVE,
+            NOT_ACTIVE,
+        };
+
+        ActiveState active;
+
+        // Number of frames that action has been active
+        unsigned int frame_count = 0;
     };
 
     // Buttons currently pressed will be stored in this

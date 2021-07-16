@@ -71,8 +71,6 @@ class World {
 
     std::optional<std::pair<std::string, int>> new_room_;
 
-    bool interact_triggered_ = false;
-
     // Meta data
     // Needed for saving world to file
     // TODO Store all meta data directly as json?
