@@ -45,7 +45,7 @@
             }
         },
         {
-            "condition": "Collectible.ID.2",
+            "condition": "Collectible.attack1",
             "Entity": "enemy",
             "Transform": {
                 "pos_x": 740,
@@ -391,16 +391,11 @@
             }
         },
         {
-            "Collision": {
-                "height": 50,
-                "id": 2,
-                "type": "collectible",
-                "width": 50
-            },
-            "condition": "!Collectible.ID.2",
+            "condition": "!Collectible.attack1",
             "Death": {
                 "flags": [
-                    "Collectible.ID.2"
+                    "Action.attack1",
+                    "Collectible.attack1"
                 ]
             },
             "Entity": "collectible",

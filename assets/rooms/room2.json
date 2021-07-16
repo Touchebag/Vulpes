@@ -113,16 +113,11 @@
             }
         },
         {
-            "Collision": {
-                "height": 50,
-                "id": 1,
-                "type": "collectible",
-                "width": 50
-            },
-            "condition": "!Collectible.ID.1",
+            "condition": "!Collectible.dash",
             "Death": {
                 "flags": [
-                    "Collectible.ID.1"
+                    "Action.dash",
+                    "Collectible.dash"
                 ]
             },
             "Entity": "collectible",

@@ -4,10 +4,9 @@
 
 #include "components/actions/actions_player.h"
 
+#include "components/collision/collideables/collideable_collectible.h"
 #include "components/collision/collideables/collideable_player_hurtbox.h"
 #include "components/collision/collideables/collideable_transition.h"
-#include "components/collision/collideables/collideable_health.h"
-#include "components/collision/collideables/collideable_collectible.h"
 #include "components/collision/collideables/collideable_interactable.h"
 
 #include "components/collision/collideables/movement/collideable_static.h"
@@ -212,20 +211,6 @@ TEST(TestComponents, TestSaveLoadTransition) {
     ASSERT_TRUE(j1 == j2) << j1.dump() << std::endl << j2.dump() << std::endl;
 }
 
-TEST(TestComponents, TestSaveLoadHealthCollectible) {
-    nlohmann::json j1 = nlohmann::json::parse("{ \"width\": 46, \"height\": 52 }");
-    j1["health"] = 10;
-
-    j1["type"] = "health";
-    std::shared_ptr<CollideableHealth> coll =
-        std::dynamic_pointer_cast<CollideableHealth>(Collideable::createFromJson(j1, {}));
-    // Ensure dynamic cast valid
-    ASSERT_TRUE(coll);
-
-    nlohmann::json j2 = coll->outputToJson().value();
-    ASSERT_TRUE(j1 == j2) << j1.dump() << std::endl << j2.dump() << std::endl;
-}
-
 TEST(TestComponents, TestSaveLoadPlayerDamageable) {
     nlohmann::json j1;
 
@@ -244,7 +229,6 @@ TEST(TestComponents, TestSaveLoadPlayerDamageable) {
 TEST(TestComponents, TestSaveLoadCollisionCollectible) {
     nlohmann::json j1 = nlohmann::json::parse("{ \"width\": 46, \"height\": 52 }");
 
-    j1["id"] = 2;
     j1["type"] = "collectible";
 
     std::shared_ptr<CollideableCollectible> coll =
@@ -253,6 +237,16 @@ TEST(TestComponents, TestSaveLoadCollisionCollectible) {
     ASSERT_TRUE(coll);
 
     nlohmann::json j2 = coll->outputToJson().value();
+    ASSERT_TRUE(j1 == j2) << j1.dump() << std::endl << j2.dump() << std::endl;
+
+    // Test with health field
+    j1["health"] = 10;
+
+    coll = std::dynamic_pointer_cast<CollideableCollectible>(Collideable::createFromJson(j1, {}));
+    // Ensure dynamic cast valid
+    ASSERT_TRUE(coll);
+
+    j2 = coll->outputToJson().value();
     ASSERT_TRUE(j1 == j2) << j1.dump() << std::endl << j2.dump() << std::endl;
 }
 

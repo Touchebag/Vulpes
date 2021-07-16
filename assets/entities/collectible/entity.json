@@ -1,6 +1,11 @@
 {
     "Actions": null,
     "AI": null,
+    "Collision": {
+        "height": 50,
+        "type": "collectible",
+        "width": 50
+    },
     "Death": null,
     "Rendering": {
         "height": 50,

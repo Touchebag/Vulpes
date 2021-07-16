@@ -4,7 +4,6 @@
 
 #include "collideables/collideable_player_hurtbox.h"
 #include "collideables/collideable_transition.h"
-#include "collideables/collideable_health.h"
 #include "collideables/collideable_collectible.h"
 #include "collideables/collideable_interactable.h"
 
@@ -28,7 +27,6 @@ const std::map<std::string, Collideable::CollisionType> string_type_map {
     {"player_dive", Collideable::CollisionType::PLAYER_HITBOX},
     {"enemy_hitbox", Collideable::CollisionType::ENEMY_HITBOX},
     {"transition", Collideable::CollisionType::TRANSITION},
-    {"health", Collideable::CollisionType::HEALTH},
     {"collectible", Collideable::CollisionType::COLLECTIBLE},
     {"interactable", Collideable::CollisionType::INTERACTABLE},
 };

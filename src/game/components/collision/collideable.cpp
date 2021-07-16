@@ -4,7 +4,6 @@
 
 #include "components/collision/collideables/collideable_player_hurtbox.h"
 #include "components/collision/collideables/collideable_transition.h"
-#include "components/collision/collideables/collideable_health.h"
 #include "components/collision/collideables/collideable_collectible.h"
 #include "components/collision/collideables/collideable_interactable.h"
 
@@ -31,7 +30,6 @@ const std::map<std::string, Collideable::CollisionType> string_type_map {
     {"player_dive", Collideable::CollisionType::PLAYER_DIVE},
     {"enemy_hitbox", Collideable::CollisionType::ENEMY_HITBOX},
     {"transition", Collideable::CollisionType::TRANSITION},
-    {"health", Collideable::CollisionType::HEALTH},
     {"collectible", Collideable::CollisionType::COLLECTIBLE},
     {"interactable", Collideable::CollisionType::INTERACTABLE},
 };
@@ -112,12 +110,6 @@ std::shared_ptr<Collideable> Collideable::createFromJson(nlohmann::json j, std::
         case CollisionType::TRANSITION:
             {
                 auto coll = std::make_shared<CollideableTransition>(components);
-                coll->reloadFromJson(j);
-                return coll;
-            }
-        case CollisionType::HEALTH:
-            {
-                auto coll = std::make_shared<CollideableHealth>(components);
                 coll->reloadFromJson(j);
                 return coll;
             }

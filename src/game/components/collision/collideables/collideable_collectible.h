@@ -9,10 +9,10 @@ class CollideableCollectible : public Collideable {
     void reloadFromJson(nlohmann::json j) override;
     virtual std::optional<nlohmann::json> outputToJson() override;
 
+    int getHealth() const;
+
     Collideable::CollisionType getType() const override;
 
-    int getId() const;
-
   private:
-    int id_;
+    int health_ = 0;
 };

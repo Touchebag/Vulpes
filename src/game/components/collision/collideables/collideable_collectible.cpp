@@ -7,23 +7,25 @@ CollideableCollectible::CollideableCollectible(std::weak_ptr<ComponentStore> com
 void CollideableCollectible::reloadFromJson(nlohmann::json j) {
     Collideable::reloadFromJson(j);
 
-    if (j.contains("id")) {
-        id_ = j["id"].get<int>();
+    if (j.contains("health")) {
+        health_ = j["health"].get<int>();
     }
 }
 
 std::optional<nlohmann::json> CollideableCollectible::outputToJson() {
     nlohmann::json j = Collideable::outputToJson().value();
 
-    j["id"] = getId();
+    if (health_ != 0) {
+        j["health"] = health_;
+    }
 
     return j;
 }
 
-Collideable::CollisionType CollideableCollectible::getType() const {
-    return CollisionType::COLLECTIBLE;
+int CollideableCollectible::getHealth() const {
+    return health_;
 }
 
-int CollideableCollectible::getId() const {
-    return id_;
+Collideable::CollisionType CollideableCollectible::getType() const {
+    return CollisionType::COLLECTIBLE;
 }

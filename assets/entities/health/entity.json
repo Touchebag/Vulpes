@@ -4,7 +4,7 @@
     "Collision": {
         "health": 20,
         "height": 50,
-        "type": "health",
+        "type": "collectible",
         "width": 50
     },
     "Death": null,
