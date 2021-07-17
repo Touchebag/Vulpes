@@ -5,12 +5,19 @@
 #include <map>
 #include <memory>
 
+#include "nlohmann/json.hpp"
+
 #include "event_triggers/event_trigger.h"
 
 class Environment {
   public:
     bool getFlag(std::string name);
     void setFlag(std::string name);
+
+    void loadEnvFromJson(nlohmann::json j);
+    nlohmann::json outputEnvToJson();
+
+    void clearEnv();
 
     void addConditionalEvent(std::string condition, std::shared_ptr<event_triggers::IEventTrigger> event);
     void triggerConditionalEvents();

@@ -41,6 +41,22 @@ void Environment::setFlag(std::string name) {
     }
 }
 
+void Environment::loadEnvFromJson(nlohmann::json j) {
+    clearEnv();
+
+    for (auto it : j["flags"]) {
+        setFlag(it.get<std::string>());
+    }
+}
+
+nlohmann::json Environment::outputEnvToJson() {
+    nlohmann::json j;
+
+    j["flags"] = flags_;
+
+    return j;
+}
+
 void Environment::addConditionalEvent(std::string condition, std::shared_ptr<event_triggers::IEventTrigger> event) {
     conditional_events_.insert({condition, event});
 }
@@ -61,4 +77,8 @@ void Environment::triggerConditionalEvents() {
 void Environment::clearConditionalEvents() {
     triggered_conditions_.clear();
     conditional_events_.clear();
+}
+
+void Environment::clearEnv() {
+    flags_.clear();
 }

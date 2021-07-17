@@ -28,6 +28,9 @@ class File {
     std::optional<nlohmann::json> loadRoom(std::string filepath);
     std::optional<nlohmann::json> loadRoomTemplate(std::string filepath);
 
+    nlohmann::json loadSaveFile();
+    void writeSaveFile(nlohmann::json j);
+
     std::ifstream openSpriteMapFile(std::string file);
 
     std::shared_ptr<sf::Shader> loadShader(std::string filepath);

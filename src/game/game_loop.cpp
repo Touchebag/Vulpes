@@ -13,6 +13,9 @@
 int game_main(sf::RenderWindow& window) {
     auto worldInstWrite = System::IWorldModify();
 
+    // Load save file
+    System::getEnvironment()->loadEnvFromJson(File().loadSaveFile());
+
     // Rendering produces time, physics consumes
     // This stores how much "unconsumed" time is available
     sf::Time time_rendered;
@@ -49,6 +52,7 @@ int game_main(sf::RenderWindow& window) {
         render_clock.restart();
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
+            File().writeSaveFile(System::getEnvironment()->outputEnvToJson());
             window.close();
         }
 

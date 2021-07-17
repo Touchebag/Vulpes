@@ -14,6 +14,8 @@ const std::string AI_FILE = "ai";
 const std::string STATE_FILE = "state";
 const std::string ANIMATIONS_FILE = "animations";
 
+const std::string SAVE_FILE = "data.sav";
+
 namespace {
 
 bool stringEndsWith(const std::string &full_string, const std::string& suffix) {
@@ -76,7 +78,7 @@ std::optional<nlohmann::json> File::loadJson(std::string filepath) {
         return nlohmann::json::parse(openFileForInput(filepath));
     } catch (nlohmann::json::parse_error& e) {
         LOGE("Unable to load file %s: %s", filepath.c_str(), e.what());
-        return {};
+        return std::nullopt;
     }
 }
 
@@ -160,4 +162,28 @@ std::shared_ptr<sf::Shader> File::loadShader(std::string shader_name) {
     }
 
     return shader;
+}
+
+nlohmann::json File::loadSaveFile() {
+    nlohmann::json save;
+
+    std::ifstream fs(SAVE_FILE);
+
+    if (fs) {
+        save = nlohmann::json::parse(fs);
+    } else {
+        LOGD("No save file found");
+    }
+
+    return save;
+}
+
+void File::writeSaveFile(nlohmann::json j) {
+    std::ofstream fs(SAVE_FILE);
+
+    if (fs) {
+        fs << j.dump();
+    } else {
+        LOGD("Couldn't write to save file");
+    }
 }
