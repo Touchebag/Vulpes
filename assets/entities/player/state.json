@@ -17,7 +17,7 @@
             "template": "grounded",
             "next_states": [
                 {"event": "moving", "state": "running"},
-                {"event": "jumping", "state": "jumping"},
+                {"event": "jumping", "state": "jump_start"},
                 {"event": "airborne", "state": "falling"},
                 {"event": "dashing", "state": "dashing"},
                 {"event": "action_attack1", "state": "attack"},
@@ -30,7 +30,7 @@
             "template": "grounded",
             "next_states": [
                 {"event": "no_movement", "state": "idle"},
-                {"event": "jumping", "state": "jumping"},
+                {"event": "jumping", "state": "jump_start"},
                 {"event": "airborne", "state": "falling"},
                 {"event": "dashing", "state": "dashing"},
                 {"event": "action_attack1", "state": "attack"},
@@ -38,6 +38,22 @@
                 {"event": "damaged", "state": "taking_damage"}
             ],
             "animation": "running"
+        },
+        "jump_start": {
+            "properties": {
+                "touching_ground": false,
+                "can_jump": false,
+                "can_air_dive": false
+            },
+            "frame_timer": 3,
+            "next_states": [
+                {"event": "touching_floor", "state": "idle"},
+                {"event": "touching_wall", "state": "wall_slide_rising"},
+                {"event": "frame_timeout", "state": "jumping"},
+                {"event": "dashing", "state": "dashing"},
+                {"event": "damaged", "state": "taking_damage"}
+            ],
+            "animation": "jumping"
         },
         "jumping": {
             "properties": {
@@ -48,7 +64,7 @@
             "next_states": [
                 {"event": "touching_floor", "state": "idle"},
                 {"event": "touching_wall", "state": "wall_slide_rising"},
-                {"event": "jumping", "state": "jumping"},
+                {"event": "jumping", "state": "jump_start"},
                 {"event": "falling", "state": "falling"},
                 {"event": "dashing", "state": "dashing"},
                 {"event": "air_diving", "state": "air_dive_start"},
@@ -65,7 +81,7 @@
             "next_states": [
                 {"event": "touching_floor", "state": "idle"},
                 {"event": "touching_wall", "state": "wall_slide"},
-                {"event": "jumping", "state": "jumping"},
+                {"event": "jumping", "state": "jump_start"},
                 {"event": "dashing", "state": "dashing"},
                 {"event": "air_diving", "state": "air_dive_start"},
                 {"event": "damaged", "state": "taking_damage"}
@@ -131,7 +147,7 @@
             "next_states": [
                 {"event": "touching_wall", "state": "wall_slide"},
                 {"event": "dashing", "state": "dashing"},
-                {"event": "frame_timeout", "state": "jumping"},
+                {"event": "frame_timeout", "state": "jump_start"},
                 {"event": "air_diving", "state": "air_dive_start"},
                 {"event": "damaged", "state": "taking_damage"}
             ],
@@ -149,7 +165,7 @@
             "next_states": [
                 {"event": "touching_floor", "state": "idle"},
                 {"event": "touching_wall", "state": "wall_slide"},
-                {"event": "jumping", "state": "jumping"},
+                {"event": "jumping", "state": "jump_start"},
                 {"event": "frame_timeout", "state": "falling"},
                 {"event": "damaged", "state": "taking_damage"}
             ],
@@ -166,7 +182,7 @@
                 "Entity": "attack"
             },
             "next_states": [
-                {"event": "jumping", "state": "jumping"},
+                {"event": "jumping", "state": "jump_start"},
                 {"event": "frame_timeout", "state": "attack_end_lag"},
                 {"event": "damaged", "state": "taking_damage"}
             ],
@@ -180,7 +196,7 @@
             },
             "frame_timer": 30,
             "next_states": [
-                {"event": "jumping", "state": "jumping"},
+                {"event": "jumping", "state": "jump_start"},
                 {"event": "frame_timeout", "state": "idle"},
                 {"event": "damaged", "state": "taking_damage"}
             ],
@@ -200,7 +216,7 @@
                 }
             },
             "next_states": [
-                {"event": "jumping", "state": "jumping"},
+                {"event": "jumping", "state": "jump_start"},
                 {"event": "frame_timeout", "state": "shoot_end_lag"},
                 {"event": "damaged", "state": "taking_damage"}
             ],
@@ -214,7 +230,7 @@
             },
             "frame_timer": 30,
             "next_states": [
-                {"event": "jumping", "state": "jumping"},
+                {"event": "jumping", "state": "jump_start"},
                 {"event": "frame_timeout", "state": "idle"},
                 {"event": "damaged", "state": "taking_damage"}
             ],
@@ -291,7 +307,7 @@
             },
             "frame_timer": 20,
             "next_states": [
-                {"event": "jumping", "state": "jumping"},
+                {"event": "jumping", "state": "jump_start"},
                 {"event": "frame_timeout", "state": "idle"},
                 {"event": "damaged", "state": "taking_damage"}
             ],
