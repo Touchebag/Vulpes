@@ -31,11 +31,11 @@ void Command::update() {
 
                             // If result would be negative, don't change
                             if (mouse_world_dist.first > 0
-                               || (abs(mouse_world_dist.first) < coll["width"].get<float>() / 2.0)) {
+                               || (fabs(mouse_world_dist.first) < coll["width"].get<float>() / 2.0)) {
                                 new_width = static_cast<int>(coll["width"].get<float>() + (mouse_world_dist.first * 2.0));
                             }
                             if (mouse_world_dist.second > 0
-                               || (abs(mouse_world_dist.second) < coll["height"].get<float>() / 2.0)) {
+                               || (fabs(mouse_world_dist.second) < coll["height"].get<float>() / 2.0)) {
                                 new_height = static_cast<int>(coll["height"].get<float>() + (mouse_world_dist.second * 2.0));
                             }
 
