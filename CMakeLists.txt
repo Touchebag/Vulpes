@@ -6,7 +6,6 @@ set(CMAKE_INSTALL_PREFIX build)
 # Targets
 set(GAME_LIB_TARGET game_lib)
 set(GAME_TARGET vulpes)
-set(LIBS_DIR libs)
 set(EDITOR_LIB_TARGET editor_lib)
 set(EDITOR_TARGET level_editor)
 set(STATE_GRAPH_TARGET state_graph)
@@ -19,8 +18,10 @@ set(ASSETS_DIR assets)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Nlohmann json
-find_package(nlohmann_json)
-IF (nlohmann_json_FOUND)
+IF(DEFINED ENV{JSON_LIB_DIR})
+    set(LIBS_DIR $ENV{JSON_LIB_DIR})
+ELSE()
+    find_package(nlohmann_json REQUIRED)
     set(JSON_LIBS nlohmann_json::nlohmann_json)
 ENDIF()
 

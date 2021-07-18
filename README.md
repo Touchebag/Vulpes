@@ -12,7 +12,7 @@ Custom game engine project.
 
 All of these (along with general c++ build tools) are available as packages on most Linux distributions. Windows users will have to add them to cmake environment manually (no instructions here currently).
 
-Nlohmann-json can also be included manually as header-only as <repo root>/libs/nlohmann/json.hpp.
+Nlohmann-json can also be included manually as header-only by specifying the directory using the environment variable JSON_LIB_DIR (<JSON_LIB_DIR>/nlohmann/json.hpp).
 
 Note: the art assets are stored using git-lfs so you will also have to run
 
