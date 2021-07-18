@@ -94,7 +94,7 @@ TEST_F(WorldTestFixture, TestLoadConditionalEntity) {
 
     w_modify::clearWorld();
 
-    ASSERT_TRUE(w_modify::getWorldObjects().empty);
+    ASSERT_TRUE(w_modify::getWorldObjects().empty());
 
     nlohmann::json j = nlohmann::json::parse( R"--(
         {
@@ -107,7 +107,7 @@ TEST_F(WorldTestFixture, TestLoadConditionalEntity) {
 
     // Should not be added since flag is not set
     w_modify::loadWorldFromJson(j);
-    EXPECT_TRUE(w_modify::getWorldObjects().empty);
+    EXPECT_TRUE(w_modify::getWorldObjects().empty());
 
     // After setting flag entity should be added
     System::getEnvironment()->setFlag("test_conditional_entity_flag");
@@ -120,7 +120,7 @@ TEST_F(WorldTestFixture, TestLoadConditionalEntityNegated) {
 
     w_modify::clearWorld();
 
-    ASSERT_TRUE(w_modify::getWorldObjects().empty);
+    ASSERT_TRUE(w_modify::getWorldObjects().empty());
 
     nlohmann::json j = nlohmann::json::parse( R"--(
         {
@@ -138,5 +138,5 @@ TEST_F(WorldTestFixture, TestLoadConditionalEntityNegated) {
     // After setting flag entity should not be added
     System::getEnvironment()->setFlag("test_conditional_entity_flag_negated");
     w_modify::loadWorldFromJson(j);
-    EXPECT_TRUE(w_modify::getWorldObjects().empty);
+    EXPECT_TRUE(w_modify::getWorldObjects().empty());
 }
