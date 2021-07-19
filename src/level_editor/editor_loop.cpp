@@ -8,21 +8,27 @@
 #include "editor_loop/editor_environment.h"
 #include "editor_loop/editor_mouse.h"
 
+#include <imgui.h>
+#include <imgui-SFML.h>
+
 #include "operation.h"
 
 bool render_current_layer_only = false;
 
 int level_editor_main(sf::RenderWindow& window) {
+    ImGui::SFML::Init(window);
+    sf::Clock delta_clock;
+
     auto editor_env = EditorEnvironment::create_environment(window);
 
     auto renderInst = std::dynamic_pointer_cast<EditorRender>(System::getRender());
     renderInst->setEditorEnvironment(editor_env);
 
-    auto cameraInst = System::getCamera();
-
     if (!renderInst) {
         throw std::runtime_error("Could not cast render instance");
     }
+
+    auto cameraInst = System::getCamera();
 
     if (auto player = System::IWorldRead::getPlayer().lock()) {
         editor_env->view_pos_x = static_cast<float>(player->getComponent<Transform>()->getX());
@@ -36,7 +42,9 @@ int level_editor_main(sf::RenderWindow& window) {
 
         sf::Event event;
         while (window.pollEvent(event)) {
-        editor_env->event = event;
+            editor_env->event = event;
+            ImGui::SFML::ProcessEvent(event);
+
             if (editor_env->menu) {
                 if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::E) {
                     editor_env->menu.reset();
@@ -195,6 +203,7 @@ int level_editor_main(sf::RenderWindow& window) {
         }
 
         editor_env->command->update();
+        ImGui::SFML::Update(window, delta_clock.restart());
 
         if (editor_env->current_command == Command::Commands::CAMERA_MOVE) {
             auto mouse_dist = editor_env->mouse->getMouseDistance();
@@ -265,8 +274,15 @@ int level_editor_main(sf::RenderWindow& window) {
         texture.display();
         window.draw(sf::Sprite(texture.getTexture()));
 
+        ImGui::Begin("Hello, world!");
+        ImGui::Button("Look at this pretty button");
+        ImGui::End();
+        ImGui::SFML::Render(window);
+
         window.display();
     }
+
+    ImGui::SFML::Shutdown();
 
     return 0;
 }
