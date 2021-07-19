@@ -19,11 +19,14 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Nlohmann json
 IF(DEFINED ENV{JSON_LIB_DIR})
-    set(LIBS_DIR $ENV{JSON_LIB_DIR})
+    set(JSON_INCLUDE_DIRS $ENV{JSON_LIB_DIR})
 ELSE()
     find_package(nlohmann_json REQUIRED)
     set(JSON_LIBS nlohmann_json::nlohmann_json)
 ENDIF()
+
+# ImGui for the level editor
+find_package(ImGui-SFML)
 
 # SFML
 set(BUILD_SHARED_LIBS false)
@@ -51,7 +54,7 @@ list(REMOVE_ITEM GAME_LIB_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/game/main.cpp)
 
 add_library(${GAME_LIB_TARGET} STATIC ${GAME_LIB_SOURCES})
 target_compile_options(${GAME_LIB_TARGET} PUBLIC ${CC_OPTIONS})
-target_include_directories(${GAME_LIB_TARGET} PUBLIC src/game/ ${LIBS_DIR})
+target_include_directories(${GAME_LIB_TARGET} PUBLIC src/game/ ${JSON_INCLUDE_DIRS})
 
 target_link_libraries(${GAME_LIB_TARGET} ${SFML_LIBS} ${JSON_LIBS})
 
@@ -59,28 +62,39 @@ target_link_libraries(${GAME_LIB_TARGET} ${SFML_LIBS} ${JSON_LIBS})
 file(GLOB_RECURSE GAME_SOURCES src/game/main.cpp)
 add_executable(${GAME_TARGET} ${GAME_SOURCES})
 target_compile_options(${GAME_TARGET} PUBLIC ${CC_OPTIONS})
-target_include_directories(${GAME_TARGET} PUBLIC src/ ${LIBS_DIR})
+target_include_directories(${GAME_TARGET} PUBLIC src/ ${JSON_INCLUDE_DIRS})
 
 target_link_libraries(${GAME_TARGET} ${GAME_LIB_TARGET} ${SFML_LIBS} ${JSON_LIBS})
 
 add_dependencies(${GAME_TARGET} COPY_ASSETS)
 
-# Level editor library
-file(GLOB_RECURSE EDITOR_LIB_SOURCES src/level_editor/*.cpp)
-list(REMOVE_ITEM EDITOR_LIB_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/level_editor/main.cpp)
-add_library(${EDITOR_LIB_TARGET} ${EDITOR_LIB_SOURCES})
-target_compile_options(${EDITOR_LIB_TARGET} PUBLIC ${CC_OPTIONS})
-target_include_directories(${EDITOR_LIB_TARGET} PUBLIC src/game/ src/level_editor/ ${LIBS_DIR})
+IF(ImGui-SFML_FOUND)
+    # Add ImGui as system to avoid compiler warnings
+    # include_directories(SYSTEM libs/imgui
+    include_directories(SYSTEM ${CMAKE_PREFIX_PATH}/include)
 
-target_link_libraries(${EDITOR_LIB_TARGET} ${GAME_LIB_TARGET} ${SFML_LIBS} ${JSON_LIBS})
+    set(IMGUI_PATH libs/imgui)
+    file(GLOB IMGUI_SOURCES ${IMGUI_PATH}/*.cpp)
+    add_library(ImGui ${IMGUI_SOURCES})
+    target_include_directories(ImGui PUBLIC ${IMGUI_PATH})
 
-# Level editor target
-file(GLOB_RECURSE EDITOR_SOURCES src/level_editor/main.cpp)
-add_executable(${EDITOR_TARGET} ${EDITOR_SOURCES})
-target_compile_options(${EDITOR_TARGET} PUBLIC ${CC_OPTIONS})
-target_include_directories(${EDITOR_TARGET} PUBLIC src/game/ ${LIBS_DIR})
+    # Level editor library
+    file(GLOB_RECURSE EDITOR_LIB_SOURCES src/level_editor/*.cpp)
+    list(REMOVE_ITEM EDITOR_LIB_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/level_editor/main.cpp)
+    add_library(${EDITOR_LIB_TARGET} ${EDITOR_LIB_SOURCES})
+    target_compile_options(${EDITOR_LIB_TARGET} PUBLIC ${CC_OPTIONS})
 
-target_link_libraries(${EDITOR_TARGET} ${EDITOR_LIB_TARGET} ${GAME_LIB_TARGET} ${SFML_LIBS} ${JSON_LIBS})
+    target_include_directories(${EDITOR_LIB_TARGET} PUBLIC src/game/ src/level_editor/ ${JSON_INCLUDE_DIRS})
+    target_link_libraries(${EDITOR_LIB_TARGET} ${GAME_LIB_TARGET} ${SFML_LIBS} ${JSON_LIBS} ImGui-SFML::ImGui-SFML ImGui)
+
+    # Level editor target
+    file(GLOB_RECURSE EDITOR_SOURCES src/level_editor/main.cpp)
+    add_executable(${EDITOR_TARGET} ${EDITOR_SOURCES})
+    target_compile_options(${EDITOR_TARGET} PUBLIC ${CC_OPTIONS})
+
+    target_include_directories(${EDITOR_TARGET} PUBLIC src/game/ ${JSON_INCLUDE_DIRS})
+    target_link_libraries(${EDITOR_TARGET} ${EDITOR_LIB_TARGET} ${GAME_LIB_TARGET} ${SFML_LIBS} ${JSON_LIBS} ImGui-SFML::ImGui-SFML ImGui)
+ENDIF()
 
 # State editor target
 # TODO Broken since game/level editor merge. Fix when adding enemies
@@ -100,7 +114,7 @@ if (GTest_FOUND)
 
     add_executable(${TEST_TARGET} ${TEST_SOURCES})
     target_compile_options(${TEST_TARGET} PUBLIC ${CC_OPTIONS})
-    target_include_directories(${TEST_TARGET} PUBLIC src/ ${LIBS_DIR} ${GTEST_INCLUDE_DIRS})
+    target_include_directories(${TEST_TARGET} PUBLIC src/ ${JSON_INCLUDE_DIRS} ${GTEST_INCLUDE_DIRS})
 
     target_link_libraries(${TEST_TARGET} ${GAME_LIB_TARGET} ${EDITOR_LIB_TARGET} ${SFML_LIBS} ${JSON_LIBS} ${GTEST_BOTH_LIBRARIES})
 
