@@ -49,37 +49,11 @@ void EditorMouse::handleMousePress(std::shared_ptr<EditorEnvironment> editor_env
             }
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LAlt)) {
-            editor_env->current_command = Command::Commands::CAMERA_MOVE;
-        }
     } else if (editor_env->event.mouseButton.button == sf::Mouse::Button::Right) {
         // Store current mouse position
         editor_env->mouse->saveMousePosition();
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LAlt)) {
-            editor_env->current_command = Command::Commands::CAMERA_ZOOM;
-        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
-            auto coll = editor_env->current_entity->getComponent<Collision>();
-            if (editor_env->current_entity && coll) {
-                auto collideable = coll->getCollideable();
-                int width = static_cast<int>(
-                        std::round(static_cast<float>(collideable->getHitbox()->width_) / 5.0) * 5.0);
-                int height = static_cast<int>(
-                        std::round(static_cast<float>(collideable->getHitbox()->height_) / 5.0) * 5.0);
-
-                editor_env->current_entity->getComponent<Collision>()->getCollideable()->setHitbox(width, height);
-            }
-        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
-            if (editor_env->current_entity) {
-                if(auto transform = editor_env->current_entity->getComponent<Transform>()) {
-                    auto pos = transform->getPosition();
-                    int x = static_cast<int>(std::round(static_cast<float>(pos.x) / 5.0) * 5.0);
-                    int y = static_cast<int>(std::round(static_cast<float>(pos.y) / 5.0) * 5.0);
-
-                    transform->setPosition(x, y);
-                }
-            }
-        }
+        editor_env->current_command = Command::Commands::CAMERA_MOVE;
     }
 }
 
