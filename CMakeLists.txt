@@ -70,13 +70,8 @@ add_dependencies(${GAME_TARGET} COPY_ASSETS)
 
 IF(ImGui-SFML_FOUND)
     # Add ImGui as system to avoid compiler warnings
-    # include_directories(SYSTEM libs/imgui
+    include_directories(SYSTEM libs/imgui)
     include_directories(SYSTEM ${CMAKE_PREFIX_PATH}/include)
-
-    set(IMGUI_PATH libs/imgui)
-    file(GLOB IMGUI_SOURCES ${IMGUI_PATH}/*.cpp)
-    add_library(ImGui ${IMGUI_SOURCES})
-    target_include_directories(ImGui PUBLIC ${IMGUI_PATH})
 
     # Level editor library
     file(GLOB_RECURSE EDITOR_LIB_SOURCES src/level_editor/*.cpp)
@@ -85,7 +80,7 @@ IF(ImGui-SFML_FOUND)
     target_compile_options(${EDITOR_LIB_TARGET} PUBLIC ${CC_OPTIONS})
 
     target_include_directories(${EDITOR_LIB_TARGET} PUBLIC src/game/ src/level_editor/ ${JSON_INCLUDE_DIRS})
-    target_link_libraries(${EDITOR_LIB_TARGET} ${GAME_LIB_TARGET} ${SFML_LIBS} ${JSON_LIBS} ImGui-SFML::ImGui-SFML ImGui)
+    target_link_libraries(${EDITOR_LIB_TARGET} ${GAME_LIB_TARGET} ${SFML_LIBS} ${JSON_LIBS} ImGui-SFML::ImGui-SFML)
 
     # Level editor target
     file(GLOB_RECURSE EDITOR_SOURCES src/level_editor/main.cpp)
@@ -93,7 +88,7 @@ IF(ImGui-SFML_FOUND)
     target_compile_options(${EDITOR_TARGET} PUBLIC ${CC_OPTIONS})
 
     target_include_directories(${EDITOR_TARGET} PUBLIC src/game/ ${JSON_INCLUDE_DIRS})
-    target_link_libraries(${EDITOR_TARGET} ${EDITOR_LIB_TARGET} ${GAME_LIB_TARGET} ${SFML_LIBS} ${JSON_LIBS} ImGui-SFML::ImGui-SFML ImGui)
+    target_link_libraries(${EDITOR_TARGET} ${EDITOR_LIB_TARGET} ${GAME_LIB_TARGET} ${SFML_LIBS} ${JSON_LIBS} ImGui-SFML::ImGui-SFML)
 ENDIF()
 
 # State editor target

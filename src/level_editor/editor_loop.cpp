@@ -37,7 +37,7 @@ int level_editor_main(sf::RenderWindow& window) {
 
     while (window.isOpen()) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
-            window.close();
+            editor_env->current_entity.reset();
         }
 
         sf::Event event;
@@ -252,31 +252,24 @@ int level_editor_main(sf::RenderWindow& window) {
                     "\nMouse Y: " + std::to_string(static_cast<int>(mouse_world_pos.second)));
         }
 
-        auto current_entity_hud_text = editor_env->editor_entities[EditorEnvironment::EditorEntities::CURRENT_ENTITY_HUD_TEXT];
-
         if (editor_env->current_entity) {
             auto transform = editor_env->current_entity->getComponent<Transform>();
             auto coll = editor_env->current_entity->getComponent<Collision>();
 
             if (transform && coll) {
-                std::static_pointer_cast<RenderingText>(current_entity_hud_text->getComponent<Rendering>())
-                    ->setText(std::string("X:") + std::to_string(transform->getX()) +
-                              " Y: " + std::to_string(transform->getY()) +
-                              "\nW:" + std::to_string(coll->getCollideable()->getHitbox()->width_) +
-                              " H: " + std::to_string(coll->getCollideable()->getHitbox()->height_));
+                ImGui::Begin("Entity");
+                ImGui::Text("X: %i", transform->getX());
+                ImGui::Text("Y: %i", transform->getY());
+                ImGui::Text("Width: %i", coll->getCollideable()->getHitbox()->width_);
+                ImGui::Text("Height: %i", coll->getCollideable()->getHitbox()->height_);
+                ImGui::End();
             }
-        } else {
-            std::static_pointer_cast<RenderingText>(current_entity_hud_text->getComponent<Rendering>())
-                ->setText("");
         }
 
         // Needed for cursor positions to map correctly when zoomed
         texture.display();
         window.draw(sf::Sprite(texture.getTexture()));
 
-        ImGui::Begin("Hello, world!");
-        ImGui::Button("Look at this pretty button");
-        ImGui::End();
         ImGui::SFML::Render(window);
 
         window.display();
