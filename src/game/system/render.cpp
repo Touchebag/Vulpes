@@ -170,6 +170,8 @@ void Render::setBackground(std::string background) {
 void Render::setWindowSize(sf::RenderWindow& window, int width, int height) {
     auto view = window.getView();
     view.setSize({static_cast<float>(width), static_cast<float>(height)});
+    view.setCenter({static_cast<float>(width) / 2.0f, static_cast<float>(height) / 2.0f});
+
     window.setView(view);
     System::getCamera()->setWindowSize(width, height);
 
