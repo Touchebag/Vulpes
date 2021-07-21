@@ -23,10 +23,10 @@ class EditorRender : public IRender {
     void setParallaxEnabled(bool enable);
     bool getParallaxEnabled();
 
-    void toggleHitboxRendering();
-    void toggleEntranceRendering();
-
     void setCameraBox(Camera::CameraBoundingBox camera_box);
+
+    bool render_hitboxes_ = false;
+    bool render_entrances_ = false;
 
   private:
     void drawCameraBoundaries(sf::RenderTarget& target);
@@ -34,7 +34,4 @@ class EditorRender : public IRender {
     Render render_;
 
     std::weak_ptr<EditorEnvironment> editor_env_;
-
-    bool render_hitboxes_ = false;
-    bool render_entrances_ = false;
 };

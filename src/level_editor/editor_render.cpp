@@ -168,14 +168,6 @@ bool EditorRender::getParallaxEnabled() {
     return render_.parallax_enabled_;
 }
 
-void EditorRender::toggleHitboxRendering() {
-    render_hitboxes_ = !render_hitboxes_;
-}
-
-void EditorRender::toggleEntranceRendering() {
-    render_entrances_ = !render_entrances_;
-}
-
 void EditorRender::setWindowSize(sf::RenderWindow& window, int width, int height) {
     render_.setWindowSize(window, width, height);
 }
