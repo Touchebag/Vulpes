@@ -7,9 +7,7 @@
 #include "editor_render.h"
 #include "editor_loop/editor_environment.h"
 #include "editor_loop/editor_mouse.h"
-
-#include <imgui.h>
-#include <imgui-SFML.h>
+#include "menus/menu_main.h"
 
 #include "operation.h"
 
@@ -147,12 +145,6 @@ int level_editor_main(sf::RenderWindow& window) {
                                     editor_env->menu = std::make_shared<Menu>(editor_env);
                                 }
                                 break;
-                            case sf::Keyboard::Key::Num1:
-                                renderInst->toggleHitboxRendering();
-                                break;
-                            case sf::Keyboard::Key::Num2:
-                                renderInst->toggleEntranceRendering();
-                                break;
                             // Move camera margins
                             case sf::Keyboard::Key::Left:
                                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
@@ -252,25 +244,11 @@ int level_editor_main(sf::RenderWindow& window) {
                     "\nMouse Y: " + std::to_string(static_cast<int>(mouse_world_pos.second)));
         }
 
-        if (editor_env->current_entity) {
-            auto transform = editor_env->current_entity->getComponent<Transform>();
-            auto coll = editor_env->current_entity->getComponent<Collision>();
-
-            if (transform && coll) {
-                ImGui::Begin("Entity");
-                ImGui::Text("X: %i", transform->getX());
-                ImGui::Text("Y: %i", transform->getY());
-                ImGui::Text("Width: %i", coll->getCollideable()->getHitbox()->width_);
-                ImGui::Text("Height: %i", coll->getCollideable()->getHitbox()->height_);
-                ImGui::End();
-            }
-        }
-
         // Needed for cursor positions to map correctly when zoomed
         texture.display();
         window.draw(sf::Sprite(texture.getTexture()));
 
-        ImGui::SFML::Render(window);
+        render_menus(window, editor_env);
 
         window.display();
     }
