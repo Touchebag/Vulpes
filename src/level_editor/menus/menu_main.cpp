@@ -1,10 +1,12 @@
 #include "menu_main.h"
 
 #include "menu_collision.h"
+#include "menu_movement.h"
 
 namespace menu {
 
 bool collision_menu_open = false;
+bool movement_menu_open = false;
 
 void renderMenus(sf::RenderWindow& window, std::shared_ptr<EditorEnvironment> editor_env) {
     topMenu(window, editor_env);
@@ -31,10 +33,19 @@ void renderMenus(sf::RenderWindow& window, std::shared_ptr<EditorEnvironment> ed
             if (ImGui::MenuItem("Collision")) {
                 collision_menu_open = !collision_menu_open;
             }
+
+            ImGui::Bullet();
+            if (ImGui::MenuItem("Movement")) {
+                movement_menu_open = !movement_menu_open;
+            }
         }
 
         if (collision_menu_open) {
             componentCollisionMenu(editor_env);
+        }
+
+        if (movement_menu_open) {
+            componentMovementMenu(editor_env);
         }
 
         ImGui::End();
