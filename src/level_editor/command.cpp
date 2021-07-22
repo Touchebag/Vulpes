@@ -199,6 +199,24 @@ void Command::handleCommand(Commands command) {
                 editor_env->history->addOperation(editor_env->current_operation);
                 break;
             }
+        case (Commands::TOGGLE_COLLISION):
+            {
+                editor_env->current_operation = std::make_shared<Operation>();
+                editor_env->current_operation->entity_ = editor_env->current_entity;
+                editor_env->current_operation->before_ = editor_env->current_entity->outputToJson();
+
+                System::IWorldModify::removeEntity(editor_env->current_entity);
+                if (editor_env->current_entity->getComponent<Collision>()) {
+                    editor_env->current_entity->setComponent<Collision>({});
+                } else {
+                    editor_env->current_entity->setComponent<Collision>(std::make_shared<Collision>(editor_env->current_entity->components_));
+                }
+                System::IWorldModify::addEntity(editor_env->current_entity);
+                editor_env->current_operation->after_ = editor_env->current_entity->outputToJson();
+
+                editor_env->history->addOperation(editor_env->current_operation);
+                break;
+            }
         case (Commands::TOGGLE_MOVABLE):
             {
                 editor_env->current_operation = std::make_shared<Operation>();
