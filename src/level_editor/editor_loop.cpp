@@ -33,6 +33,9 @@ int level_editor_main(sf::RenderWindow& window) {
         editor_env->view_pos_y = static_cast<float>(player->getComponent<Transform>()->getY());
     }
 
+    // Trigger one update to initiate all entities
+    System::IWorldModify::update();
+
     while (window.isOpen()) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
             editor_env->current_entity.reset();
@@ -248,7 +251,7 @@ int level_editor_main(sf::RenderWindow& window) {
         texture.display();
         window.draw(sf::Sprite(texture.getTexture()));
 
-        render_menus(window, editor_env);
+        menu::renderMenus(window, editor_env);
 
         window.display();
     }
