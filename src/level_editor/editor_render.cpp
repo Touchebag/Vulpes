@@ -85,12 +85,16 @@ void EditorRender::render(sf::RenderWindow& window, float frame_fraction) {
 
     if (auto env = editor_env_.lock()) {
         if (auto ent = env->current_entity) {
-            std::pair<float, float> size = ent->getComponent<Rendering>()->getScaledSize();
+            auto rend = ent->getComponent<Rendering>();
             auto trans = ent->getComponent<Transform>();
-            sf::RectangleShape rectangle(sf::Vector2f(size.first, size.second));
-            rectangle.setPosition(static_cast<float>(trans->getX()) - (size.first / 2.0f), static_cast<float>(trans->getY()) - (size.second / 2.0f));
-            rectangle.setFillColor(sf::Color(255, 255, 255, 64));
-            texture.draw(rectangle);
+
+            if (rend && trans) {
+                std::pair<float, float> size = ent->getComponent<Rendering>()->getScaledSize();
+                sf::RectangleShape rectangle(sf::Vector2f(size.first, size.second));
+                rectangle.setPosition(static_cast<float>(trans->getX()) - (size.first / 2.0f), static_cast<float>(trans->getY()) - (size.second / 2.0f));
+                rectangle.setFillColor(sf::Color(255, 255, 255, 64));
+                texture.draw(rectangle);
+            }
         }
     }
 
