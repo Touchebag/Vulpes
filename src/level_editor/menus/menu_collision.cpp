@@ -23,7 +23,7 @@ void toggleCollsion(std::shared_ptr<EditorEnvironment> editor_env) {
 } // collision
 
 void componentCollisionMenu(std::shared_ptr<EditorEnvironment> editor_env) {
-    ImGui::Begin("Component#Collision");
+    ImGui::Begin("Collision");
 
     auto coll = editor_env->current_entity->getComponent<Collision>();
     bool enabled = coll ? true : false;

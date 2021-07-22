@@ -1,6 +1,6 @@
-#include "menu_collision.h"
+#include "menu_movement.h"
 
-#include "components/collision/collision.h"
+#include "components/movement.h"
 
 #include "utils/log.h"
 
@@ -23,7 +23,7 @@ void toggleMovement(std::shared_ptr<EditorEnvironment> editor_env) {
 } // movement
 
 void componentMovementMenu(std::shared_ptr<EditorEnvironment> editor_env) {
-    ImGui::Begin("Component#Movement");
+    ImGui::Begin("Movement");
 
     auto move = editor_env->current_entity->getComponent<Movement>();
     bool enabled = move ? true : false;
