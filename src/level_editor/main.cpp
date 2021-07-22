@@ -23,12 +23,12 @@ int main(int argc, char** argv) {
     System::IWorldModify::setEntrance(0);
 
     while (window.isOpen()) {
-        game_main(window);
+        level_editor_main(window);
 
         if (!window.isOpen()) {
             break;
         }
 
-        level_editor_main(window);
+        game_main(window);
     }
 }
