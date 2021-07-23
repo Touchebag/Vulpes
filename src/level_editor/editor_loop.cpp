@@ -100,89 +100,91 @@ int level_editor_main(sf::RenderWindow& window) {
                         EditorMouse::handleMouseScroll(editor_env);
                         break;
                     case sf::Event::KeyPressed:
-                        switch (event.key.code) {
-                            case sf::Keyboard::Key::P:
-                                // Remove editor hud when switching back
-                                for (auto it : editor_env->editor_entities) {
-                                    System::IWorldModify::removeEntity(it);
-                                }
-                                return 0;
-                                break;
-                            case sf::Keyboard::Key::S:
-                                System::IWorldModify::saveWorldToFile(System::IWorldRead::getCurrentRoomName());
-                                break;
-                            case sf::Keyboard::Key::A:
-                                editor_env->command->add();
-                                break;
-                            case sf::Keyboard::Key::D:
-                                editor_env->command->remove(editor_env->current_entity);
-                                break;
-                            case sf::Keyboard::Key::C:
-                                editor_env->command->copy(editor_env->current_entity);
-                                break;
-                            case sf::Keyboard::Key::V:
-                                render_current_layer_only = !render_current_layer_only;
-                                renderInst->setParallaxEnabled(!renderInst->getParallaxEnabled());
-                                break;
-                            case sf::Keyboard::Key::Z:
-                                if (editor_env->current_command == Command::Commands::NONE) {
-                                    editor_env->history->undo();
-                                }
-                                break;
-                            case sf::Keyboard::Key::J:
-                                System::getCamera()->addTrauma(0.2f);
-                                break;
-                            case sf::Keyboard::Key::K:
-                                System::getCamera()->addTrauma(0.5f);
-                                break;
-                            case sf::Keyboard::Key::L:
-                                System::getCamera()->addTrauma(1.0f);
-                                break;
-                            case sf::Keyboard::Key::R:
-                                if (editor_env->current_command == Command::Commands::NONE) {
-                                    editor_env->history->redo();
-                                }
-                                break;
-                            case sf::Keyboard::Key::E:
-                                if (!editor_env->menu) {
-                                    editor_env->menu = std::make_shared<Menu>(editor_env);
-                                }
-                                break;
-                            // Move camera margins
-                            case sf::Keyboard::Key::Left:
-                                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
-                                    auto mouse_world_pos = editor_env->mouse->getMouseWorldPosition();
-                                    auto camera_box = cameraInst->getCameraBox();
-                                    camera_box.left_margin = mouse_world_pos.first;
-                                    renderInst->setCameraBox(camera_box);
-                                }
-                                break;
-                            case sf::Keyboard::Key::Right:
-                                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
-                                    auto mouse_world_pos = editor_env->mouse->getMouseWorldPosition();
-                                    auto camera_box = cameraInst->getCameraBox();
-                                    camera_box.right_margin = mouse_world_pos.first;
-                                    renderInst->setCameraBox(camera_box);
-                                }
-                                break;
-                            case sf::Keyboard::Key::Up:
-                                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
-                                    auto mouse_world_pos = editor_env->mouse->getMouseWorldPosition();
-                                    auto camera_box = cameraInst->getCameraBox();
-                                    camera_box.top_margin = mouse_world_pos.second;
-                                    renderInst->setCameraBox(camera_box);
-                                }
-                                break;
-                            case sf::Keyboard::Key::Down:
-                                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
-                                    auto mouse_world_pos = editor_env->mouse->getMouseWorldPosition();
-                                    auto camera_box = cameraInst->getCameraBox();
-                                    camera_box.bottom_margin = mouse_world_pos.second;
-                                    renderInst->setCameraBox(camera_box);
-                                }
-                                break;
-                            default:
-                                break;
+                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
+                            switch (event.key.code) {
+                                case sf::Keyboard::Key::P:
+                                    // Remove editor hud when switching back
+                                    for (auto it : editor_env->editor_entities) {
+                                        System::IWorldModify::removeEntity(it);
+                                    }
+                                    return 0;
+                                    break;
+                                case sf::Keyboard::Key::S:
+                                    System::IWorldModify::saveWorldToFile(System::IWorldRead::getCurrentRoomName());
+                                    break;
+                                case sf::Keyboard::Key::A:
+                                    editor_env->command->add();
+                                    break;
+                                case sf::Keyboard::Key::D:
+                                    editor_env->command->remove(editor_env->current_entity);
+                                    break;
+                                case sf::Keyboard::Key::C:
+                                    editor_env->command->copy(editor_env->current_entity);
+                                    break;
+                                case sf::Keyboard::Key::V:
+                                    render_current_layer_only = !render_current_layer_only;
+                                    renderInst->setParallaxEnabled(!renderInst->getParallaxEnabled());
+                                    break;
+                                case sf::Keyboard::Key::Z:
+                                    if (editor_env->current_command == Command::Commands::NONE) {
+                                        editor_env->history->undo();
+                                    }
+                                    break;
+                                case sf::Keyboard::Key::J:
+                                    System::getCamera()->addTrauma(0.2f);
+                                    break;
+                                case sf::Keyboard::Key::K:
+                                    System::getCamera()->addTrauma(0.5f);
+                                    break;
+                                case sf::Keyboard::Key::L:
+                                    System::getCamera()->addTrauma(1.0f);
+                                    break;
+                                case sf::Keyboard::Key::R:
+                                    if (editor_env->current_command == Command::Commands::NONE) {
+                                        editor_env->history->redo();
+                                    }
+                                    break;
+                                case sf::Keyboard::Key::E:
+                                    if (!editor_env->menu) {
+                                        editor_env->menu = std::make_shared<Menu>(editor_env);
+                                    }
+                                    break;
+                                // Move camera margins
+                                case sf::Keyboard::Key::Left:
+                                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
+                                        auto mouse_world_pos = editor_env->mouse->getMouseWorldPosition();
+                                        auto camera_box = cameraInst->getCameraBox();
+                                        camera_box.left_margin = mouse_world_pos.first;
+                                        renderInst->setCameraBox(camera_box);
+                                    }
+                                    break;
+                                case sf::Keyboard::Key::Right:
+                                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
+                                        auto mouse_world_pos = editor_env->mouse->getMouseWorldPosition();
+                                        auto camera_box = cameraInst->getCameraBox();
+                                        camera_box.right_margin = mouse_world_pos.first;
+                                        renderInst->setCameraBox(camera_box);
+                                    }
+                                    break;
+                                case sf::Keyboard::Key::Up:
+                                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
+                                        auto mouse_world_pos = editor_env->mouse->getMouseWorldPosition();
+                                        auto camera_box = cameraInst->getCameraBox();
+                                        camera_box.top_margin = mouse_world_pos.second;
+                                        renderInst->setCameraBox(camera_box);
+                                    }
+                                    break;
+                                case sf::Keyboard::Key::Down:
+                                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
+                                        auto mouse_world_pos = editor_env->mouse->getMouseWorldPosition();
+                                        auto camera_box = cameraInst->getCameraBox();
+                                        camera_box.bottom_margin = mouse_world_pos.second;
+                                        renderInst->setCameraBox(camera_box);
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
                         break;
                     case sf::Event::MouseButtonPressed:
