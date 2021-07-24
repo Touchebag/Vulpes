@@ -4,8 +4,6 @@
 
 #include "utils/log.h"
 
-namespace menu {
-
 namespace animation {
 
 void toggleAnimation(std::shared_ptr<EditorEnvironment> editor_env) {
@@ -22,11 +20,10 @@ void toggleAnimation(std::shared_ptr<EditorEnvironment> editor_env) {
 
 } // animation
 
-void componentAnimationMenu(std::shared_ptr<EditorEnvironment> editor_env) {
+void MenuAnimation::drawMenu(std::shared_ptr<EditorEnvironment> editor_env) {
     ImGui::Begin("Animation");
 
-    auto move = editor_env->current_entity->getComponent<Animation>();
-    bool enabled = move ? true : false;
+    bool enabled = editor_env->current_entity->getComponent<Animation>() ? true : false;
 
     if (ImGui::Checkbox("Enabled", &enabled)) {
         animation::toggleAnimation(editor_env);
@@ -34,5 +31,3 @@ void componentAnimationMenu(std::shared_ptr<EditorEnvironment> editor_env) {
 
     ImGui::End();
 }
-
-} // menu

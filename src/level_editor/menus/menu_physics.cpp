@@ -4,8 +4,6 @@
 
 #include "utils/log.h"
 
-namespace menu {
-
 namespace physics {
 
 void togglePhysics(std::shared_ptr<EditorEnvironment> editor_env) {
@@ -22,11 +20,10 @@ void togglePhysics(std::shared_ptr<EditorEnvironment> editor_env) {
 
 } // physics
 
-void componentPhysicsMenu(std::shared_ptr<EditorEnvironment> editor_env) {
+void MenuPhysics::drawMenu(std::shared_ptr<EditorEnvironment> editor_env) {
     ImGui::Begin("Physics");
 
-    auto move = editor_env->current_entity->getComponent<Physics>();
-    bool enabled = move ? true : false;
+    bool enabled = editor_env->current_entity->getComponent<Physics>() ? true : false;
 
     if (ImGui::Checkbox("Enabled", &enabled)) {
         physics::togglePhysics(editor_env);
@@ -34,5 +31,3 @@ void componentPhysicsMenu(std::shared_ptr<EditorEnvironment> editor_env) {
 
     ImGui::End();
 }
-
-} // menu

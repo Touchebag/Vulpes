@@ -4,8 +4,6 @@
 
 #include "utils/log.h"
 
-namespace menu {
-
 namespace stateful {
 
 void toggleStateful(std::shared_ptr<EditorEnvironment> editor_env) {
@@ -22,11 +20,10 @@ void toggleStateful(std::shared_ptr<EditorEnvironment> editor_env) {
 
 } // stateful
 
-void componentStatefulMenu(std::shared_ptr<EditorEnvironment> editor_env) {
+void MenuStateful::drawMenu(std::shared_ptr<EditorEnvironment> editor_env) {
     ImGui::Begin("Stateful");
 
-    auto move = editor_env->current_entity->getComponent<Stateful>();
-    bool enabled = move ? true : false;
+    bool enabled = editor_env->current_entity->getComponent<Stateful>() ? true : false;
 
     if (ImGui::Checkbox("Enabled", &enabled)) {
         stateful::toggleStateful(editor_env);
@@ -34,5 +31,3 @@ void componentStatefulMenu(std::shared_ptr<EditorEnvironment> editor_env) {
 
     ImGui::End();
 }
-
-} // menu

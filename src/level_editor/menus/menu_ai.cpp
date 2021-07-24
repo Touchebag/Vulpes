@@ -4,8 +4,6 @@
 
 #include "utils/log.h"
 
-namespace menu {
-
 namespace ai {
 
 void toggleAi(std::shared_ptr<EditorEnvironment> editor_env) {
@@ -22,11 +20,10 @@ void toggleAi(std::shared_ptr<EditorEnvironment> editor_env) {
 
 } // ai
 
-void componentAiMenu(std::shared_ptr<EditorEnvironment> editor_env) {
+void MenuAI::drawMenu(std::shared_ptr<EditorEnvironment> editor_env) {
     ImGui::Begin("Ai");
 
-    auto move = editor_env->current_entity->getComponent<AI>();
-    bool enabled = move ? true : false;
+    bool enabled = editor_env->current_entity->getComponent<AI>() ? true : false;
 
     if (ImGui::Checkbox("Enabled", &enabled)) {
         ai::toggleAi(editor_env);
@@ -34,5 +31,3 @@ void componentAiMenu(std::shared_ptr<EditorEnvironment> editor_env) {
 
     ImGui::End();
 }
-
-} // menu

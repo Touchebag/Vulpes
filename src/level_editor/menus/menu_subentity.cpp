@@ -4,8 +4,6 @@
 
 #include "utils/log.h"
 
-namespace menu {
-
 namespace subentity {
 
 void toggleSubentity(std::shared_ptr<EditorEnvironment> editor_env) {
@@ -22,11 +20,10 @@ void toggleSubentity(std::shared_ptr<EditorEnvironment> editor_env) {
 
 } // subentity
 
-void componentSubentityMenu(std::shared_ptr<EditorEnvironment> editor_env) {
+void MenuSubentity::drawMenu(std::shared_ptr<EditorEnvironment> editor_env) {
     ImGui::Begin("Subentity");
 
-    auto move = editor_env->current_entity->getComponent<Subentity>();
-    bool enabled = move ? true : false;
+    bool enabled = editor_env->current_entity->getComponent<Subentity>() ? true : false;
 
     if (ImGui::Checkbox("Enabled", &enabled)) {
         subentity::toggleSubentity(editor_env);
@@ -34,5 +31,3 @@ void componentSubentityMenu(std::shared_ptr<EditorEnvironment> editor_env) {
 
     ImGui::End();
 }
-
-} // menu

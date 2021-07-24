@@ -13,30 +13,38 @@
 #include "menu_subentity.h"
 #include "menu_transform.h"
 
+#include "menu_component.h"
+
 namespace menu {
 
 namespace {
 
-struct OpenMenus {
-    bool Actions = false;
-    bool AI = false;
-    bool Animation = false;
-    bool Collision = false;
-    bool Damageable = false;
-    bool Death = false;
-    bool Movement = false;
-    bool Physics = false;
-    bool Rendering = false;
-    bool Stateful = false;
-    bool Subentity = false;
-    bool Transform = false;
+struct {
+    MenuActions Actions;
+    MenuAI AI;
+    MenuAnimation Animation;
+    MenuCollision Collision;
+    MenuDamageable Damageable;
+    MenuDeath Death;
+    MenuMovement Movement;
+    MenuPhysics Physics;
+    MenuRendering Rendering;
+    MenuStateful Stateful;
+    MenuSubentity Subentity;
+    MenuTransform Transform;
 } open_menus;
 
 #define Q(x) #x
 
 #define QUOTE(x) Q(x)
 
-#define componentMenu(component) { \
+#define openComponentMenu(comp) { \
+    if (open_menus.comp.is_menu_open_) { \
+        open_menus.comp.drawMenu(editor_env); \
+    } \
+}
+
+#define componentEntry(component) { \
     if (ent->getComponent<component>()) { \
         ImGui::Bullet(); \
     } else { \
@@ -45,8 +53,23 @@ struct OpenMenus {
     } \
     \
     if (ImGui::MenuItem(QUOTE(component))) { \
-        open_menus.component = !open_menus.component; \
+        open_menus.component.is_menu_open_ = !open_menus.component.is_menu_open_; \
     } \
+}
+
+#define executeFunctionOnAllComponents(function) { \
+        function(Actions); \
+        function(AI); \
+        function(Animation); \
+        function(Collision); \
+        function(Damageable); \
+        function(Death); \
+        function(Movement); \
+        function(Physics); \
+        function(Rendering); \
+        function(Stateful); \
+        function(Subentity); \
+        function(Transform); \
 }
 
 } // namespace
@@ -79,57 +102,11 @@ void renderMenus(sf::RenderWindow& window, std::shared_ptr<EditorEnvironment> ed
         ImGui::Text("Components");
         ImGui::Separator();
 
-        componentMenu(Actions);
-        componentMenu(AI);
-        componentMenu(Animation);
-        componentMenu(Collision);
-        componentMenu(Damageable);
-        componentMenu(Death);
-        componentMenu(Movement);
-        componentMenu(Physics);
-        componentMenu(Rendering);
-        componentMenu(Stateful);
-        componentMenu(Subentity);
-        componentMenu(Transform);
+        executeFunctionOnAllComponents(componentEntry);
 
         ImGui::End();
 
-        if (open_menus.Actions) {
-            componentActionsMenu(editor_env);
-        }
-        if (open_menus.AI) {
-            componentAiMenu(editor_env);
-        }
-        if (open_menus.Animation) {
-            componentAnimationMenu(editor_env);
-        }
-        if (open_menus.Collision) {
-            componentCollisionMenu(editor_env);
-        }
-        if (open_menus.Damageable) {
-            componentDamageableMenu(editor_env);
-        }
-        if (open_menus.Death) {
-            componentDeathMenu(editor_env);
-        }
-        if (open_menus.Movement) {
-            componentMovementMenu(editor_env);
-        }
-        if (open_menus.Physics) {
-            componentPhysicsMenu(editor_env);
-        }
-        if (open_menus.Rendering) {
-            componentRenderingMenu(editor_env);
-        }
-        if (open_menus.Stateful) {
-            componentStatefulMenu(editor_env);
-        }
-        if (open_menus.Subentity) {
-            componentSubentityMenu(editor_env);
-        }
-        if (open_menus.Transform) {
-            componentTransformMenu(editor_env);
-        }
+        executeFunctionOnAllComponents(openComponentMenu);
     }
 
     ImGui::SFML::Render(window);

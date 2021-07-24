@@ -4,8 +4,6 @@
 
 #include "utils/log.h"
 
-namespace menu {
-
 namespace death {
 
 void toggleDeath(std::shared_ptr<EditorEnvironment> editor_env) {
@@ -22,11 +20,10 @@ void toggleDeath(std::shared_ptr<EditorEnvironment> editor_env) {
 
 } // death
 
-void componentDeathMenu(std::shared_ptr<EditorEnvironment> editor_env) {
+void MenuDeath::drawMenu(std::shared_ptr<EditorEnvironment> editor_env) {
     ImGui::Begin("Death");
 
-    auto move = editor_env->current_entity->getComponent<Death>();
-    bool enabled = move ? true : false;
+    bool enabled = editor_env->current_entity->getComponent<Death>() ? true : false;
 
     if (ImGui::Checkbox("Enabled", &enabled)) {
         death::toggleDeath(editor_env);
@@ -34,5 +31,3 @@ void componentDeathMenu(std::shared_ptr<EditorEnvironment> editor_env) {
 
     ImGui::End();
 }
-
-} // menu

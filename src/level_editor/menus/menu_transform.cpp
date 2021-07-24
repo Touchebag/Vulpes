@@ -4,8 +4,6 @@
 
 #include "utils/log.h"
 
-namespace menu {
-
 namespace transform {
 
 void toggleTransform(std::shared_ptr<EditorEnvironment> editor_env) {
@@ -22,11 +20,10 @@ void toggleTransform(std::shared_ptr<EditorEnvironment> editor_env) {
 
 } // transform
 
-void componentTransformMenu(std::shared_ptr<EditorEnvironment> editor_env) {
+void MenuTransform::drawMenu(std::shared_ptr<EditorEnvironment> editor_env) {
     ImGui::Begin("Transform");
 
-    auto move = editor_env->current_entity->getComponent<Transform>();
-    bool enabled = move ? true : false;
+    bool enabled = editor_env->current_entity->getComponent<Transform>() ? true : false;
 
     if (ImGui::Checkbox("Enabled", &enabled)) {
         transform::toggleTransform(editor_env);
@@ -34,5 +31,3 @@ void componentTransformMenu(std::shared_ptr<EditorEnvironment> editor_env) {
 
     ImGui::End();
 }
-
-} // menu

@@ -4,8 +4,6 @@
 
 #include "utils/log.h"
 
-namespace menu {
-
 namespace rendering {
 
 constexpr int BUFFER_SIZE = 1024;
@@ -45,7 +43,7 @@ void textureName(std::shared_ptr<Rendering> render, nlohmann::json j) {
 
 } // rendering
 
-void componentRenderingMenu(std::shared_ptr<EditorEnvironment> editor_env) {
+void MenuRendering::drawMenu(std::shared_ptr<EditorEnvironment> editor_env) {
     ImGui::Begin("Rendering");
 
     auto render = editor_env->current_entity->getComponent<Rendering>();
@@ -66,5 +64,3 @@ void componentRenderingMenu(std::shared_ptr<EditorEnvironment> editor_env) {
 
     ImGui::End();
 }
-
-} // menu

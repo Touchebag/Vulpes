@@ -4,8 +4,6 @@
 
 #include "utils/log.h"
 
-namespace menu {
-
 namespace damageable {
 
 void toggleDamageable(std::shared_ptr<EditorEnvironment> editor_env) {
@@ -22,11 +20,10 @@ void toggleDamageable(std::shared_ptr<EditorEnvironment> editor_env) {
 
 } // damageable
 
-void componentDamageableMenu(std::shared_ptr<EditorEnvironment> editor_env) {
+void MenuDamageable::drawMenu(std::shared_ptr<EditorEnvironment> editor_env) {
     ImGui::Begin("Damageable");
 
-    auto move = editor_env->current_entity->getComponent<Damageable>();
-    bool enabled = move ? true : false;
+    bool enabled = editor_env->current_entity->getComponent<Damageable>() ? true : false;
 
     if (ImGui::Checkbox("Enabled", &enabled)) {
         damageable::toggleDamageable(editor_env);
@@ -34,5 +31,3 @@ void componentDamageableMenu(std::shared_ptr<EditorEnvironment> editor_env) {
 
     ImGui::End();
 }
-
-} // menu

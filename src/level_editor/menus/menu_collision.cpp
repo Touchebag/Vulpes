@@ -4,8 +4,6 @@
 
 #include "utils/log.h"
 
-namespace menu {
-
 namespace collision {
 
 void toggleCollsion(std::shared_ptr<EditorEnvironment> editor_env) {
@@ -22,11 +20,10 @@ void toggleCollsion(std::shared_ptr<EditorEnvironment> editor_env) {
 
 } // collision
 
-void componentCollisionMenu(std::shared_ptr<EditorEnvironment> editor_env) {
+void MenuCollision::drawMenu(std::shared_ptr<EditorEnvironment> editor_env) {
     ImGui::Begin("Collision");
 
-    auto coll = editor_env->current_entity->getComponent<Collision>();
-    bool enabled = coll ? true : false;
+    bool enabled = editor_env->current_entity->getComponent<Collision>() ? true : false;
 
     if (ImGui::Checkbox("Enabled", &enabled)) {
         collision::toggleCollsion(editor_env);
@@ -34,5 +31,3 @@ void componentCollisionMenu(std::shared_ptr<EditorEnvironment> editor_env) {
 
     ImGui::End();
 }
-
-} // menu

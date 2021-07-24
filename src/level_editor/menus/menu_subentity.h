@@ -1,10 +1,8 @@
-#include <imgui.h>
-#include <imgui-SFML.h>
+#pragma once
 
-#include "editor_loop/editor_environment.h"
+#include "menu_component.h"
 
-namespace menu {
-
-void componentSubentityMenu(std::shared_ptr<EditorEnvironment> editor_env);
-
-} // menu
+class MenuSubentity : public MenuComponent {
+  public:
+    void drawMenu(std::shared_ptr<EditorEnvironment> editor_env) override;
+};
