@@ -41,10 +41,43 @@ void textureName(std::shared_ptr<Rendering> render, nlohmann::json j) {
     }
 }
 
+void tiling(std::shared_ptr<Rendering> render) {
+    if (render) {
+        int tiling_x = render->tiling_x_;
+        int tiling_y = render->tiling_y_;
+
+        ImGui::InputInt("Tiling X", &tiling_x);
+        ImGui::InputInt("Tiling Y", &tiling_y);
+
+        render->setTiling(tiling_x, tiling_y);
+    } else {
+        ImGui::TextDisabled("Tiling X");
+        ImGui::TextDisabled("Tiling Y");
+    }
+}
+
+void size(std::shared_ptr<Rendering> render) {
+    if (render) {
+        auto size = render->getSize();
+        int width = size.first;
+        int height = size.second;
+
+        ImGui::InputInt("Width", &width);
+        ImGui::InputInt("Height", &height);
+
+        render->setSize(width, height);
+    } else {
+        ImGui::TextDisabled("Width");
+        ImGui::TextDisabled("Height");
+    }
+}
+
 } // rendering
 
 void MenuRendering::drawMenu(std::shared_ptr<EditorEnvironment> editor_env) {
-    ImGui::Begin("Rendering");
+    ImGui::Begin("Rendering", nullptr, 0
+            | ImGuiWindowFlags_AlwaysAutoResize
+            );
 
     auto render = editor_env->current_entity->getComponent<Rendering>();
     bool enabled = render ? true : false;
@@ -61,6 +94,8 @@ void MenuRendering::drawMenu(std::shared_ptr<EditorEnvironment> editor_env) {
     }
 
     rendering::textureName(render, j);
+    rendering::size(render);
+    rendering::tiling(render);
 
     ImGui::End();
 }
