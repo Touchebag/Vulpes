@@ -56,23 +56,36 @@ void tiling(std::shared_ptr<Rendering> render) {
     }
 }
 
-void size(std::shared_ptr<Rendering> render) {
+std::pair<int, int> getCollisionSize(std::shared_ptr<EditorEnvironment> editor_env) {
+    if (auto coll = editor_env->current_entity->getComponent<Collision>()) {
+        auto hbox = coll->getCollideable()->getHitbox();
+        return {hbox->width_, hbox->height_};
+    }
+
+    return {0, 0};
+}
+
+} // rendering
+
+void MenuRendering::drawSize(std::shared_ptr<EditorEnvironment> editor_env, std::shared_ptr<Rendering> render) {
     if (render) {
         auto size = render->getSize();
-        int width = size.first;
-        int height = size.second;
 
-        ImGui::InputInt("Width", &width);
-        ImGui::InputInt("Height", &height);
+        ImGui::Checkbox("Match collision size", &match_collision_size_);
 
-        render->setSize(width, height);
+        if (match_collision_size_) {
+            size = rendering::getCollisionSize(editor_env);
+        }
+
+        ImGui::InputInt("Width", &size.first);
+        ImGui::InputInt("Height", &size.second);
+
+        render->setSize(size.first, size.second);
     } else {
         ImGui::TextDisabled("Width");
         ImGui::TextDisabled("Height");
     }
 }
-
-} // rendering
 
 void MenuRendering::drawMenu(std::shared_ptr<EditorEnvironment> editor_env) {
     ImGui::Begin("Rendering", nullptr, 0
@@ -94,7 +107,7 @@ void MenuRendering::drawMenu(std::shared_ptr<EditorEnvironment> editor_env) {
     }
 
     rendering::textureName(render, j);
-    rendering::size(render);
+    drawSize(editor_env, render);
     rendering::tiling(render);
 
     ImGui::End();

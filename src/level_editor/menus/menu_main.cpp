@@ -15,6 +15,8 @@
 
 #include "menu_component.h"
 
+#include "utils/log.h"
+
 namespace menu {
 
 namespace {
@@ -57,6 +59,10 @@ struct {
     } \
 }
 
+#define recreateMenuInstances(component) { \
+    open_menus.component = Menu##component{}; \
+}
+
 #define executeFunctionOnAllComponents(function) { \
         function(Actions); \
         function(AI); \
@@ -72,12 +78,21 @@ struct {
         function(Transform); \
 }
 
+// This is used to see if the menu was opened this frame
+bool open_last_frame;
+
 } // namespace
 
 void renderMenus(sf::RenderWindow& window, std::shared_ptr<EditorEnvironment> editor_env) {
     topMenu(window, editor_env);
 
     if (auto ent = editor_env->current_entity) {
+        if (!open_last_frame) {
+            executeFunctionOnAllComponents(recreateMenuInstances);
+        }
+
+        open_last_frame = true;
+
         ImGui::Begin("Entity", nullptr, 0
                 | ImGuiWindowFlags_AlwaysAutoResize
                 );
@@ -107,6 +122,8 @@ void renderMenus(sf::RenderWindow& window, std::shared_ptr<EditorEnvironment> ed
         ImGui::End();
 
         executeFunctionOnAllComponents(openComponentMenu);
+    } else {
+        open_last_frame = false;
     }
 
     ImGui::SFML::Render(window);

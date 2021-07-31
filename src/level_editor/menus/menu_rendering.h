@@ -5,4 +5,9 @@
 class MenuRendering : public MenuComponent {
   public:
     void drawMenu(std::shared_ptr<EditorEnvironment> editor_env) override;
+
+  private:
+    void drawSize(std::shared_ptr<EditorEnvironment> editor_env, std::shared_ptr<Rendering>);
+
+    bool match_collision_size_ = false;
 };
