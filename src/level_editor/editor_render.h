@@ -3,6 +3,7 @@
 #include "system/i_render.h"
 #include "system/render.h"
 #include "editor_loop/editor_environment.h"
+#include "components/collision/collideable.h"
 
 class EditorRender : public IRender {
   public:
@@ -25,6 +26,9 @@ class EditorRender : public IRender {
 
     void setCameraBox(Camera::CameraBoundingBox camera_box);
 
+    // Used for the collision editor menu
+    void renderCollideable(std::shared_ptr<Collideable> coll);
+
     bool render_hitboxes_ = false;
     bool render_entrances_ = false;
 
@@ -34,4 +38,6 @@ class EditorRender : public IRender {
     Render render_;
 
     std::weak_ptr<EditorEnvironment> editor_env_;
+
+    std::shared_ptr<Collideable> collideable_render_;
 };

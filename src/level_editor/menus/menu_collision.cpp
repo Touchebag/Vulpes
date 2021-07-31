@@ -1,6 +1,7 @@
 #include "menu_collision.h"
 
 #include "components/collision/collision.h"
+#include "editor_render.h"
 
 #include "utils/log.h"
 
@@ -63,6 +64,10 @@ void MenuCollision::drawMenu(std::shared_ptr<EditorEnvironment> editor_env) {
 
     if (ImGui::Checkbox("Enabled", &enabled)) {
         collision::toggleCollsion(editor_env);
+    }
+
+    if (enabled) {
+        std::dynamic_pointer_cast<EditorRender>(System::getRender())->renderCollideable(coll->getCollideable());
     }
 
     drawSize(editor_env, coll);
