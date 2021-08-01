@@ -4,11 +4,16 @@ Custom game engine project.
 ## Building instructions
 
 ### Requirements
+#### Main binary
 - cmake
 - SFML development libraries
-- Google test (optional)
 - git-lfs (runtime assets)
 - nlohmann-json
+#### Editor (optional)
+- Imgui
+- Imgui-SFML
+#### Tests (optional)
+- Google test
 
 All of these (along with general c++ build tools) are available as packages on most Linux distributions. Windows users will have to add them to cmake environment manually (no instructions here currently).
 
