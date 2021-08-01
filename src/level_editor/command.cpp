@@ -40,7 +40,7 @@ void Command::add() {
 void Command::add(std::shared_ptr<BaseEntity> entity) {
     auto editor_env = editor_env_.lock();
 
-    if (auto entity = editor_env->current_entity) {
+    if (editor_env->current_entity) {
         return;
     }
 
@@ -67,7 +67,7 @@ void Command::remove() {
 
     if (auto entity = editor_env->current_entity) {
         // Ensure weak_ptr in render expires
-        entity->getComponent<Rendering>().reset();
+        entity->setComponent<Rendering>({});
 
         System::IWorldModify::removeEntity(entity);
         editor_env->current_entity = nullptr;

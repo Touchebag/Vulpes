@@ -6,9 +6,6 @@
 
 namespace rendering {
 
-constexpr int BUFFER_SIZE = 1024;
-char texture_name_buf[BUFFER_SIZE];
-
 void toggleRendering(std::shared_ptr<EditorEnvironment> editor_env) {
     System::IWorldModify::removeEntity(editor_env->current_entity);
 
@@ -21,41 +18,6 @@ void toggleRendering(std::shared_ptr<EditorEnvironment> editor_env) {
     System::IWorldModify::addEntity(editor_env->current_entity);
 }
 
-void textureName(std::shared_ptr<Rendering> render, nlohmann::json j) {
-    if (render) {
-        std::string sprite_name = j["texture"];
-
-        ImGui::Text("Texture");
-        ImGui::InputTextWithHint(".png", sprite_name.c_str(), texture_name_buf, BUFFER_SIZE);
-        if (ImGui::IsItemDeactivatedAfterEdit()) {
-            try {
-                // Load texture and reset field
-                render->loadTexture(texture_name_buf, File());
-                texture_name_buf[0] = 0;
-            } catch (std::invalid_argument& e) {
-                LOGW("Unable to parse input text");
-            }
-        }
-    } else {
-        ImGui::TextDisabled("Texture");
-    }
-}
-
-void tiling(std::shared_ptr<Rendering> render) {
-    if (render) {
-        int tiling_x = render->tiling_x_;
-        int tiling_y = render->tiling_y_;
-
-        ImGui::InputInt("Tiling X", &tiling_x);
-        ImGui::InputInt("Tiling Y", &tiling_y);
-
-        render->setTiling(tiling_x, tiling_y);
-    } else {
-        ImGui::TextDisabled("Tiling X");
-        ImGui::TextDisabled("Tiling Y");
-    }
-}
-
 std::pair<int, int> getCollisionSize(std::shared_ptr<EditorEnvironment> editor_env) {
     if (auto coll = editor_env->current_entity->getComponent<Collision>()) {
         auto hbox = coll->getCollideable()->getHitbox();
@@ -66,6 +28,49 @@ std::pair<int, int> getCollisionSize(std::shared_ptr<EditorEnvironment> editor_e
 }
 
 } // rendering
+
+void MenuRendering::drawTextureName(std::shared_ptr<Rendering> render, nlohmann::json j) {
+    if (render) {
+        std::string sprite_name = j["texture"];
+
+        ImGui::Text("Texture");
+        ImGui::InputTextWithHint(".png", sprite_name.c_str(), texture_name_buf, BUFFER_SIZE);
+        if (ImGui::IsItemDeactivatedAfterEdit()) {
+            try {
+                // Load texture and reset field
+                setTexture(render, texture_name_buf);
+                texture_name_buf[0] = 0;
+            } catch (std::invalid_argument& e) {
+                LOGW("Unable to parse input text");
+            }
+        }
+    } else {
+        ImGui::TextDisabled("Texture");
+    }
+}
+
+void MenuRendering::setTexture(std::shared_ptr<Rendering> render, std::string texture) {
+    render->loadTexture(texture, File());
+}
+
+void MenuRendering::drawTiling(std::shared_ptr<Rendering> render) {
+    if (render) {
+        int tiling_x = render->tiling_x_;
+        int tiling_y = render->tiling_y_;
+
+        ImGui::InputInt("Tiling X", &tiling_x);
+        ImGui::InputInt("Tiling Y", &tiling_y);
+
+        setTiling(render, tiling_x, tiling_y);
+    } else {
+        ImGui::TextDisabled("Tiling X");
+        ImGui::TextDisabled("Tiling Y");
+    }
+}
+
+void MenuRendering::setTiling(std::shared_ptr<Rendering> render, int x, int y) {
+    render->setTiling(x, y);
+}
 
 void MenuRendering::drawSize(std::shared_ptr<EditorEnvironment> editor_env, std::shared_ptr<Rendering> render) {
     if (render) {
@@ -106,9 +111,9 @@ void MenuRendering::drawMenu(std::shared_ptr<EditorEnvironment> editor_env) {
         j = render->outputToJson().value();
     }
 
-    rendering::textureName(render, j);
+    drawTextureName(render, j);
     drawSize(editor_env, render);
-    rendering::tiling(render);
+    drawTiling(render);
 
     ImGui::End();
 }
