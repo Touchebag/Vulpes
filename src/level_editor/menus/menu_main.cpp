@@ -21,28 +21,13 @@ namespace menu {
 
 namespace {
 
-struct {
-    MenuActions Actions;
-    MenuAI AI;
-    MenuAnimation Animation;
-    MenuCollision Collision;
-    MenuDamageable Damageable;
-    MenuDeath Death;
-    MenuMovement Movement;
-    MenuPhysics Physics;
-    MenuRendering Rendering;
-    MenuStateful Stateful;
-    MenuSubentity Subentity;
-    MenuTransform Transform;
-} open_menus;
-
 #define Q(x) #x
 
 #define QUOTE(x) Q(x)
 
 #define openComponentMenu(comp) { \
-    if (open_menus.comp.is_menu_open_) { \
-        open_menus.comp.drawMenu(editor_env); \
+    if (editor_env->menus.comp->is_menu_open_) { \
+        editor_env->menus.comp->drawMenu(editor_env); \
     } \
 }
 
@@ -55,12 +40,12 @@ struct {
     } \
     \
     if (ImGui::MenuItem(QUOTE(component))) { \
-        open_menus.component.is_menu_open_ = !open_menus.component.is_menu_open_; \
+        editor_env->menus.component->is_menu_open_ = !editor_env->menus.component->is_menu_open_; \
     } \
 }
 
 #define recreateMenuInstances(component) { \
-    open_menus.component = Menu##component{}; \
+    editor_env->menus.component = std::make_shared<Menu##component>(); \
 }
 
 #define executeFunctionOnAllComponents(function) { \
