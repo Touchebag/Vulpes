@@ -4,23 +4,41 @@
 
 #include "base_entity.h"
 #include "mouse.h"
-#include "command.h"
-#include "menu.h"
 #include "editor_loop/common.h"
+#include "command.h"
 
 #include <SFML/Graphics.hpp>
 
+class MenuActions;
+class MenuAI;
+class MenuAnimation;
+class MenuCollision;
+class MenuDamageable;
+class MenuDeath;
+class MenuMovement;
+class MenuPhysics;
+class MenuRendering;
+class MenuStateful;
+class MenuSubentity;
+class MenuTransform;
+
+struct MenuList {
+    std::shared_ptr<MenuActions> Actions;
+    std::shared_ptr<MenuAI> AI;
+    std::shared_ptr<MenuAnimation> Animation;
+    std::shared_ptr<MenuCollision> Collision;
+    std::shared_ptr<MenuDamageable> Damageable;
+    std::shared_ptr<MenuDeath> Death;
+    std::shared_ptr<MenuMovement> Movement;
+    std::shared_ptr<MenuPhysics> Physics;
+    std::shared_ptr<MenuRendering> Rendering;
+    std::shared_ptr<MenuStateful> Stateful;
+    std::shared_ptr<MenuSubentity> Subentity;
+    std::shared_ptr<MenuTransform> Transform;
+};
+
 class EditorEnvironment {
   public:
-
-    enum EditorEntities {
-        LAYER_HUD_TEXT,
-        MOUSE_HUD_TEXT,
-        CURRENT_ENTITY_HUD_TEXT,
-
-        MAX_ENTITIES,
-    };
-
     static constexpr float VIEW_POS_X = 500.0;
     static constexpr float VIEW_POS_Y = 500.0;
     static constexpr float VIEW_SIZE = 1000.0;
@@ -33,24 +51,21 @@ class EditorEnvironment {
     sf::Event event;
     std::shared_ptr<Mouse> mouse;
 
-    std::shared_ptr<History> history = std::make_shared<History>();
-    std::shared_ptr<Operation> current_operation = std::make_shared<Operation>();
-
-    std::shared_ptr<Menu> menu;
-
     Command::Commands current_command = Command::Commands::NONE;
     std::shared_ptr<Command> command = nullptr;
 
     int current_layer = 0;
 
     std::shared_ptr<BaseEntity> current_entity;
-    std::array<std::shared_ptr<BaseEntity>, EditorEntities::MAX_ENTITIES> editor_entities;
 
     float view_pos_x;
     float view_pos_y;
     float view_size;
 
+    nlohmann::json entity_clipboard;
+
+    MenuList menus;
+
   private:
     EditorEnvironment(sf::RenderWindow& window);
-
 };

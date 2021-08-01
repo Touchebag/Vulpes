@@ -3,6 +3,8 @@
 #include "level_editor/editor_loop/editor_environment.h"
 #include "mocks/mock_mouse.h"
 
+#include "menus/menu_rendering.h"
+
 #include "components/collision/collideables/movement/collideable_static.h"
 
 class CommandTestFixture : public ::testing::Test {
@@ -11,8 +13,6 @@ class CommandTestFixture : public ::testing::Test {
     }
 
     void SetUp() override {
-        std::shared_ptr<Operation> operation = std::make_shared<Operation>();
-
         System::IWorldModify::loadWorldFromJson(nlohmann::json::parse("{\"entities\": null}"));
 
         MockMouse::setMouseWorldPosition({0, 0});
@@ -61,8 +61,9 @@ TEST_F(CommandTestFixture, RemoveObject) {
 
     assertCorrectNumberOfEntities(4);
 
+    editor_env->current_entity = entity;
     editor_env->command->current_layer_ = 0;
-    editor_env->command->remove(entity);
+    editor_env->command->remove();
 
     assertCorrectNumberOfEntities(3);
 }
@@ -76,11 +77,16 @@ TEST_F(CommandTestFixture, CopyObjectRemoveOriginal) {
 
     assertCorrectNumberOfEntities(1);
 
-    editor_env->command->copy(entity);
+    editor_env->current_entity = entity;
+
+    editor_env->command->copy();
+    editor_env->current_entity = nullptr;
+    editor_env->command->paste();
 
     assertCorrectNumberOfEntities(2);
 
-    editor_env->command->remove(entity);
+    editor_env->current_entity = entity;
+    editor_env->command->remove();
 
     assertCorrectNumberOfEntities(1);
 }
@@ -94,7 +100,11 @@ TEST_F(CommandTestFixture, CopyObjectCheckEqual) {
 
     assertCorrectNumberOfEntities(1);
 
-    editor_env->command->copy(entity);
+    editor_env->current_entity = entity;
+    editor_env->command->copy();
+
+    editor_env->current_entity = nullptr;
+    editor_env->command->paste();
 
     assertCorrectNumberOfEntities(2);
 
@@ -103,34 +113,6 @@ TEST_F(CommandTestFixture, CopyObjectCheckEqual) {
     ASSERT_EQ(2, j["entities"].size());
 
     EXPECT_TRUE(j["entities"][0] == j["entities"][1]);
-}
-
-TEST_F(CommandTestFixture, ResizeObject) {
-    assertWorldEmpty();
-
-    MockMouse::setMouseWorldPosition({0, 0});
-
-    std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    editor_env->command->add(entity);
-    entity->getComponent<Transform>()->setPosition(0, 0);
-    entity->setComponent<Collision>(std::make_shared<Collision>(entity->components_));
-    entity->getComponent<Collision>()->getCollideable()->setHitbox(50, 50);
-
-    editor_env->mouse->saveMousePosition();
-
-    assertCorrectNumberOfEntities(1);
-
-    editor_env->current_entity = entity;
-    editor_env->command->handleCommand(Command::Commands::RESIZE);
-
-    MockMouse::setMouseWorldPosition({10, 9});
-    editor_env->command->update();
-    editor_env->command->stopCommand();
-
-    window_.close();
-
-    ASSERT_EQ(entity->getComponent<Collision>()->getCollideable()->getHitbox()->width_, 70);
-    ASSERT_EQ(entity->getComponent<Collision>()->getCollideable()->getHitbox()->height_, 68);
 }
 
 TEST_F(CommandTestFixture, MoveObject) {
@@ -158,97 +140,7 @@ TEST_F(CommandTestFixture, MoveObject) {
     ASSERT_EQ(entity->getComponent<Transform>()->getY(), 17);
 }
 
-TEST_F(CommandTestFixture, ToggleRendering) {
-    assertWorldEmpty();
-
-    std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    editor_env->command->add(entity);
-
-    assertCorrectNumberOfEntities(1);
-    ASSERT_TRUE(entity->getComponent<Rendering>());
-
-    editor_env->current_entity = entity;
-    editor_env->command->handleCommand(Command::Commands::TOGGLE_RENDERABLE);
-
-    ASSERT_FALSE(entity->getComponent<Rendering>());
-
-    editor_env->command->handleCommand(Command::Commands::TOGGLE_RENDERABLE);
-    ASSERT_TRUE(entity->getComponent<Rendering>());
-}
-
-TEST_F(CommandTestFixture, ToggleCollision) {
-    assertWorldEmpty();
-
-    std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    entity->setComponent<Collision>(std::make_shared<Collision>(entity->components_));
-    editor_env->command->add(entity);
-
-    assertCorrectNumberOfEntities(1);
-
-    editor_env->current_entity = entity;
-    editor_env->command->handleCommand(Command::Commands::TOGGLE_COLLISION);
-
-    ASSERT_FALSE(entity->getComponent<Collision>());
-
-    editor_env->command->handleCommand(Command::Commands::TOGGLE_COLLISION);
-    ASSERT_TRUE(entity->getComponent<Collision>());
-}
-
-TEST_F(CommandTestFixture, ToggleMovement) {
-    assertWorldEmpty();
-
-    std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    entity->setComponent<Movement>(std::make_shared<Movement>(entity->components_));
-    editor_env->command->add(entity);
-
-    assertCorrectNumberOfEntities(1);
-
-    editor_env->current_entity = entity;
-    editor_env->command->handleCommand(Command::Commands::TOGGLE_MOVABLE);
-
-    ASSERT_FALSE(entity->getComponent<Movement>());
-
-    editor_env->command->handleCommand(Command::Commands::TOGGLE_MOVABLE);
-    ASSERT_TRUE(entity->getComponent<Movement>());
-}
-
-TEST_F(CommandTestFixture, TogglePhysics) {
-    assertWorldEmpty();
-
-    std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    entity->setComponent<Physics>(std::make_shared<Physics>(entity->components_));
-    editor_env->command->add(entity);
-
-    assertCorrectNumberOfEntities(1);
-
-    editor_env->current_entity = entity;
-    editor_env->command->handleCommand(Command::Commands::TOGGLE_PHYSICS);
-
-    ASSERT_FALSE(entity->getComponent<Physics>());
-
-    editor_env->command->handleCommand(Command::Commands::TOGGLE_PHYSICS);
-    ASSERT_TRUE(entity->getComponent<Physics>());
-}
-
-TEST_F(CommandTestFixture, ToggleActions) {
-    assertWorldEmpty();
-
-    std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
-    entity->setComponent<Actions>(std::make_shared<Actions>(entity->components_));
-    editor_env->command->add(entity);
-
-    assertCorrectNumberOfEntities(1);
-
-    editor_env->current_entity = entity;
-    editor_env->command->handleCommand(Command::Commands::TOGGLE_ACTIONS);
-
-    ASSERT_FALSE(entity->getComponent<Actions>());
-
-    editor_env->command->handleCommand(Command::Commands::TOGGLE_ACTIONS);
-    ASSERT_TRUE(entity->getComponent<Actions>());
-}
-
-TEST_F(CommandTestFixture, ToggleTiling) {
+TEST_F(CommandTestFixture, ChangeTiling) {
     assertWorldEmpty();
 
     std::shared_ptr<BaseEntity> entity = std::make_shared<BaseEntity>();
@@ -263,16 +155,12 @@ TEST_F(CommandTestFixture, ToggleTiling) {
 
     editor_env->current_entity = entity;
 
-    editor_env->command->handleCommand(Command::Commands::RENDERABLE_TILING_X);
-    editor_env->command->text_input_->enterText("1");
-    editor_env->command->stopCommand();
+    editor_env->menus.Rendering->setTiling(entity->getComponent<Rendering>(), 1, 0);
 
     ASSERT_EQ(1, entity->getComponent<Rendering>()->tiling_x_);
     ASSERT_EQ(0, entity->getComponent<Rendering>()->tiling_y_);
 
-    editor_env->command->handleCommand(Command::Commands::RENDERABLE_TILING_Y);
-    editor_env->command->text_input_->enterText("2");
-    editor_env->command->stopCommand();
+    editor_env->menus.Rendering->setTiling(entity->getComponent<Rendering>(), 1, 2);
 
     ASSERT_EQ(1, entity->getComponent<Rendering>()->tiling_x_);
     ASSERT_EQ(2, entity->getComponent<Rendering>()->tiling_y_);
@@ -290,26 +178,7 @@ TEST_F(CommandTestFixture, ChangeTexture) {
 
     ASSERT_EQ(entity->outputToJson().value()["Rendering"]["texture"].get<std::string>(), "box.png");
 
-    editor_env->command->handleCommand(Command::Commands::RENDERABLE_SPRITE_CHANGE);
-
-    editor_env->command->text_input_->enterText("box_bg1.png");
-
-    editor_env->command->stopCommand();
+    editor_env->menus.Rendering->setTexture(entity->getComponent<Rendering>(), "box_bg1.png");
 
     ASSERT_EQ(entity->outputToJson().value()["Rendering"]["texture"].get<std::string>(), "box_bg1.png");
-
-    // Actual input will arrive character by character
-    editor_env->command->handleCommand(Command::Commands::RENDERABLE_SPRITE_CHANGE);
-
-    editor_env->command->text_input_->enterText("b");
-    editor_env->command->text_input_->enterText("o");
-    editor_env->command->text_input_->enterText("x");
-    editor_env->command->text_input_->enterText(".");
-    editor_env->command->text_input_->enterText("p");
-    editor_env->command->text_input_->enterText("n");
-    editor_env->command->text_input_->enterText("g");
-
-    editor_env->command->stopCommand();
-
-    ASSERT_EQ(entity->outputToJson().value()["Rendering"]["texture"].get<std::string>(), "box.png");
 }

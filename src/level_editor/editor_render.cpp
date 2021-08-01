@@ -13,32 +13,36 @@ const std::array<std::pair<Collideable::CollisionType, sf::Color>, 10> type_colo
     {Collideable::CollisionType::STATIC, sf::Color(0, 128, 0, 200)},
     {Collideable::CollisionType::SEMI_SOLID, sf::Color(0, 255, 255, 200)},
     {Collideable::CollisionType::SLOPE, sf::Color(0, 0, 128, 200)},
-    {Collideable::CollisionType::ENEMY_HITBOX, sf::Color(255, 0, 0, 200)},
     {Collideable::CollisionType::PLAYER_HURTBOX, sf::Color(255, 255, 0, 200)},
     {Collideable::CollisionType::PLAYER_HITBOX, sf::Color(255, 128, 0, 200)},
     {Collideable::CollisionType::PLAYER_DIVE, sf::Color(200, 128, 0, 200)},
+    {Collideable::CollisionType::ENEMY_HITBOX, sf::Color(255, 0, 0, 200)},
     {Collideable::CollisionType::TRANSITION, sf::Color(128, 128, 128, 200)},
-    {Collideable::CollisionType::INTERACTABLE, sf::Color(255, 128, 0, 200)},
     {Collideable::CollisionType::COLLECTIBLE, sf::Color(255, 0, 255, 200)},
+    {Collideable::CollisionType::INTERACTABLE, sf::Color(255, 128, 0, 200)},
 }};
+
+void renderSingleHitbox(sf::RenderTarget& target, std::shared_ptr<const Collideable> coll, sf::Color color) {
+    auto hitbox = coll->getHitbox();
+    auto trans = coll->getTransform().lock();
+
+    if (!trans) {
+        LOGD("EditorRender: unable to lock transform");
+        return;
+    }
+
+    sf::RectangleShape rectangle(sf::Vector2f(static_cast<float>(hitbox->width_), static_cast<float>(hitbox->height_)));
+    rectangle.setPosition(static_cast<float>(trans->getX() + (hitbox->getLeft())), static_cast<float>(trans->getY() + hitbox->getTop()));
+    rectangle.setFillColor(color);
+    target.draw(rectangle);
+}
 
 void renderHitboxes(sf::RenderTarget& target, Collideable::CollisionType coll_type, sf::Color color) {
     auto colls = System::IWorldRead::getCollideables(coll_type);
 
     for (auto it : colls) {
         if (auto ptr = it.lock()) {
-            auto hitbox = ptr->getHitbox();
-            auto trans = ptr->getTransform().lock();
-
-            if (!trans) {
-                LOGD("EditorRender: unable to lock transform");
-                continue;
-            }
-
-            sf::RectangleShape rectangle(sf::Vector2f(static_cast<float>(hitbox->width_), static_cast<float>(hitbox->height_)));
-            rectangle.setPosition(static_cast<float>(trans->getX() + (hitbox->getLeft())), static_cast<float>(trans->getY() + hitbox->getTop()));
-            rectangle.setFillColor(color);
-            target.draw(rectangle);
+            renderSingleHitbox(target, ptr, color);
         }
     }
 }
@@ -85,12 +89,16 @@ void EditorRender::render(sf::RenderWindow& window, float frame_fraction) {
 
     if (auto env = editor_env_.lock()) {
         if (auto ent = env->current_entity) {
-            std::pair<float, float> size = ent->getComponent<Rendering>()->getScaledSize();
+            auto rend = ent->getComponent<Rendering>();
             auto trans = ent->getComponent<Transform>();
-            sf::RectangleShape rectangle(sf::Vector2f(size.first, size.second));
-            rectangle.setPosition(static_cast<float>(trans->getX()) - (size.first / 2.0f), static_cast<float>(trans->getY()) - (size.second / 2.0f));
-            rectangle.setFillColor(sf::Color(255, 255, 255, 64));
-            texture.draw(rectangle);
+
+            if (rend && trans) {
+                std::pair<float, float> size = ent->getComponent<Rendering>()->getScaledSize();
+                sf::RectangleShape rectangle(sf::Vector2f(size.first, size.second));
+                rectangle.setPosition(static_cast<float>(trans->getX()) - (size.first / 2.0f), static_cast<float>(trans->getY()) - (size.second / 2.0f));
+                rectangle.setFillColor(sf::Color(255, 255, 255, 64));
+                texture.draw(rectangle);
+            }
         }
     }
 
@@ -98,6 +106,10 @@ void EditorRender::render(sf::RenderWindow& window, float frame_fraction) {
         for (auto it : type_color_map) {
             renderHitboxes(texture, it.first, it.second);
         }
+    } else if (collideable_render_) {
+        renderSingleHitbox(texture, collideable_render_,
+                type_color_map.at(static_cast<int>(collideable_render_->getType())).second);
+        collideable_render_.reset();
     }
 
     if (render_entrances_) {
@@ -168,14 +180,6 @@ bool EditorRender::getParallaxEnabled() {
     return render_.parallax_enabled_;
 }
 
-void EditorRender::toggleHitboxRendering() {
-    render_hitboxes_ = !render_hitboxes_;
-}
-
-void EditorRender::toggleEntranceRendering() {
-    render_entrances_ = !render_entrances_;
-}
-
 void EditorRender::setWindowSize(sf::RenderWindow& window, int width, int height) {
     render_.setWindowSize(window, width, height);
 }
@@ -197,4 +201,8 @@ void EditorRender::clearLayerShaders() {
 
 void EditorRender::loadLayerShaders(nlohmann::json j) {
     render_.loadLayerShaders(j);
+}
+
+void EditorRender::renderCollideable(std::shared_ptr<Collideable> coll) {
+    collideable_render_ = coll;
 }

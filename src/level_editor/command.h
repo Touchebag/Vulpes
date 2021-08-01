@@ -2,11 +2,8 @@
 
 #include <memory>
 
-#include "history.h"
 #include "mouse.h"
-#include "text_input.h"
-
-#include "operation.h"
+#include "base_entity.h"
 
 class EditorEnvironment;
 
@@ -38,18 +35,18 @@ class Command {
 
     void add();
     void add(std::shared_ptr<BaseEntity> entity);
-    void remove(std::shared_ptr<BaseEntity> entity);
-    void copy(std::shared_ptr<BaseEntity> entity);
+    void remove();
+
+    void copy();
+    void paste();
 
     void handleCommand(Commands action);
     void stopCommand();
 
-    void closeTextInput();
-
     int current_layer_ = 0;
-
-    std::shared_ptr<TextInput> text_input_;
 
   private:
     std::weak_ptr<EditorEnvironment> editor_env_;
+
+    std::pair<int, int> original_entity_position_;
 };
