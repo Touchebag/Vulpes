@@ -1,0 +1,34 @@
+{
+    "entities": [
+        {
+            "Rendering": {
+                "texture": "box.png",
+                "tile_x": 0,
+                "tile_y": 0,
+                "height": 200,
+                "width": 40,
+                "layer": -1
+            },
+            "Transform": {
+                "pos_x": 200,
+                "pos_y": 100
+            }
+        }
+    ],
+    "entrances": [
+        {
+            "id": 0,
+            "pos_x": 350,
+            "pos_y": 1300
+        }
+    ],
+    "camera": {
+        "top": 50.0,
+        "bottom": 25.0,
+        "left": 27.0,
+        "right": 178.0
+    },
+    "templates": [
+        "template.json"
+    ]
+}

@@ -140,3 +140,13 @@ TEST_F(WorldTestFixture, TestLoadConditionalEntityNegated) {
     w_modify::loadWorldFromJson(j);
     EXPECT_TRUE(w_modify::getWorldObjects().empty());
 }
+
+TEST_F(WorldTestFixture, TestSaveLoadTemplate) {
+    nlohmann::json world_json = File().loadRoom("test_world_template.json").value();
+
+    System::IWorldModify::loadWorldFromJson(world_json);
+    nlohmann::json world_json_2 = System::IWorldModify::saveWorldToJson();
+
+    // _EQ does not work with nlohmann::json
+    ASSERT_TRUE(world_json == world_json_2) << world_json.dump() << std::endl << world_json_2.dump() << std::endl;
+}

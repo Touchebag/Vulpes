@@ -1,0 +1,53 @@
+{
+    "camera": {
+        "bottom": 2950.0,
+        "left": -2000.0,
+        "right": 2700.0,
+        "top": -1700.0
+    },
+    "entities": [
+        {
+            "Collision": {
+                "height": 4000,
+                "type": "static",
+                "width": 245
+            },
+            "Transform": {
+                "pos_x": 200,
+                "pos_y": 100
+            }
+        }
+    ],
+    "shaders": [
+        {
+            "layer": 1,
+            "shaders": [
+                {
+                    "shader": "color_fade.frag",
+                    "uniforms": [
+                        {
+                            "type": "constant_float",
+                            "name": "intensity",
+                            "value": 0.3
+                        },
+                        {
+                            "type": "constant_vec4",
+                            "name": "target_color",
+                            "a": 0.5,
+                            "b": 0.8,
+                            "c": 1.0,
+                            "d": 0.0
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "entrances": [
+        {
+            "id": 1,
+            "pos_x": 50,
+            "pos_y": 100
+        }
+    ]
+}

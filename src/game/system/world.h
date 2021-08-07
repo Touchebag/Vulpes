@@ -14,8 +14,6 @@ class System;
 class World {
 /* This class is intended to store all world objects like walls.
  * This is to be able to move the collision logic into the player/enemy enities
- *
- * TODO Figure out if this is a good idea
  */
   public:
     friend System;
@@ -41,7 +39,7 @@ class World {
     void loadWorldFromFile(std::string file);
     void loadWorldTemplate(std::string file);
 
-    void addEntriesToWorld(nlohmann::json j);
+    void addEntriesToWorld(nlohmann::json j, bool is_template = false);
 
     void loadRoom(std::string room_name, int entrance_id);
 
@@ -70,6 +68,10 @@ class World {
     std::vector<util::Point> entrances_;
 
     std::optional<std::pair<std::string, int>> new_room_;
+
+    // Loaded template stuff
+    std::vector<std::string> template_file_names_;
+    std::unordered_set<std::shared_ptr<BaseEntity>> template_objects_;
 
     // Meta data
     // Needed for saving world to file

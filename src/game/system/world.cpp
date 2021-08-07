@@ -92,9 +92,12 @@ void World::clearWorld() {
     }
 
     entrances_.clear();
+
+    template_file_names_.clear();
+    template_objects_.clear();
 }
 
-void World::addEntriesToWorld(nlohmann::json j) {
+void World::addEntriesToWorld(nlohmann::json j, bool is_template) {
     if (j.contains("entrances")) {
         entrances_.resize(j["entrances"].size());
         for (auto it : j["entrances"]) {
@@ -143,6 +146,10 @@ void World::addEntriesToWorld(nlohmann::json j) {
         }
 
         addEntity(ent, condition);
+
+        if (is_template) {
+            template_objects_.insert(ent);
+        }
     }
 
     // Shaders
@@ -158,6 +165,8 @@ void World::loadWorldTemplate(std::string file) {
         LOGE("Unable to load template from file");
         exit(EXIT_FAILURE);
     }
+
+    template_file_names_.push_back(file);
 
     auto j = j_opt.value();
 
@@ -177,7 +186,7 @@ void World::loadWorldTemplate(std::string file) {
         }
     }
 
-    addEntriesToWorld(j);
+    addEntriesToWorld(j, true);
 }
 
 void World::loadWorldFromFile(std::string path) {
@@ -253,10 +262,13 @@ nlohmann::json World::saveWorldToJson() {
     nlohmann::json json_object_list;
 
     for (auto it : world_objects_) {
-        if (auto object = it->outputToJson()) {
-            // Do not store if HUD object
-            if (!(it->getComponent<Rendering>()) || (it->getComponent<Rendering>()->getLayer() != INT_MAX)) {
-                json_object_list.push_back(*object);
+        // Only save if it's not a template entity
+        if (template_objects_.count(it) == 0) {
+            if (auto object = it->outputToJson()) {
+                // Do not store if HUD object
+                if (!(it->getComponent<Rendering>()) || (it->getComponent<Rendering>()->getLayer() != INT_MAX)) {
+                    json_object_list.push_back(*object);
+                }
             }
         }
     }
@@ -290,6 +302,10 @@ nlohmann::json World::saveWorldToJson() {
         j_camera["right"] = camera.right_margin;
 
         j["camera"] = j_camera;
+    }
+
+    if (!template_file_names_.empty()) {
+        j["templates"] = template_file_names_;
     }
 
     return j;
@@ -388,6 +404,11 @@ void World::setEntrance(int entrance_id) {
 
 std::vector<std::shared_ptr<BaseEntity>>::iterator World::deleteEntity(std::vector<std::shared_ptr<BaseEntity>>::iterator entity_it) {
     deleted_objects_.push_back(*entity_it);
+
+    auto template_it = template_objects_.find(*entity_it);
+    if (template_it != template_objects_.end()) {
+        template_objects_.erase(template_it);
+    }
 
     return world_objects_.erase(entity_it);
 }
