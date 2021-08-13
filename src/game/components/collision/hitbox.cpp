@@ -14,17 +14,21 @@ void Hitbox::setOffset(std::pair<int, int> offset) {
     offset_ = offset;
 }
 
+std::pair<int, int> Hitbox::getOffset() {
+    return {offset_.first * direction_multiplier_, offset_.second};
+}
+
 void Hitbox::moveOffset(std::pair<int, int> offset) {
     offset_.first += offset.first;
     offset_.second += offset.second;
 }
 
 int Hitbox::getRight() const {
-    return offset_.first + (width_ / 2);
+    return (offset_.first * direction_multiplier_) + (width_ / 2);
 }
 
 int Hitbox::getLeft() const {
-    return offset_.first - (width_ / 2);
+    return (offset_.first * direction_multiplier_) - (width_ / 2);
 }
 
 int Hitbox::getTop() const {

@@ -4,6 +4,30 @@
             "properties": {
                 "can_interact": true
             }
+        },
+        "ledge_climb_sensors": {
+            "collideables": [
+                {
+                    "type": "sensor",
+                    "name": "ledge_climb_top",
+                    "width": 100,
+                    "height": 200,
+                    "offset": {
+                        "x": 50,
+                        "y": -200
+                    }
+                },
+                {
+                    "type": "sensor",
+                    "name": "ledge_climb_bottom",
+                    "width": 30,
+                    "height": 150,
+                    "offset": {
+                        "x": 40,
+                        "y": 0
+                    }
+                }
+            ]
         }
     },
     "states": {
@@ -68,9 +92,11 @@
                 {"event": "falling", "state": "falling"},
                 {"event": "dashing", "state": "dashing"},
                 {"event": "air_diving", "state": "air_dive_start"},
-                {"event": "damaged", "state": "taking_damage"}
+                {"event": "damaged", "state": "taking_damage"},
+                {"event": "ledge_climb", "state": "ledge_climb"}
             ],
-            "animation": "jumping"
+            "animation": "jumping",
+            "template": "ledge_climb_sensors"
         },
         "falling": {
             "properties": {
@@ -84,9 +110,11 @@
                 {"event": "jumping", "state": "jump_start"},
                 {"event": "dashing", "state": "dashing"},
                 {"event": "air_diving", "state": "air_dive_start"},
-                {"event": "damaged", "state": "taking_damage"}
+                {"event": "damaged", "state": "taking_damage"},
+                {"event": "ledge_climb", "state": "ledge_climb"}
             ],
-            "animation": "falling"
+            "animation": "falling",
+            "template": "ledge_climb_sensors"
         },
         "wall_slide_rising": {
             "properties": {
@@ -101,9 +129,11 @@
                 {"event": "jumping", "state": "wall_jump"},
                 {"event": "falling", "state": "wall_slide"},
                 {"event": "airborne", "state": "wall_jump_grace_period"},
-                {"event": "damaged", "state": "taking_damage"}
+                {"event": "damaged", "state": "taking_damage"},
+                {"event": "ledge_climb", "state": "ledge_climb"}
             ],
-            "animation": "jumping"
+            "animation": "jumping",
+            "template": "ledge_climb_sensors"
         },
         "wall_slide": {
             "properties": {
@@ -117,9 +147,11 @@
                 {"event": "touching_floor", "state": "idle"},
                 {"event": "jumping", "state": "wall_jump"},
                 {"event": "airborne", "state": "wall_jump_grace_period"},
-                {"event": "damaged", "state": "taking_damage"}
+                {"event": "damaged", "state": "taking_damage"},
+                {"event": "ledge_climb", "state": "ledge_climb"}
             ],
-            "animation": "wall_slide"
+            "animation": "wall_slide",
+            "template": "ledge_climb_sensors"
         },
         "wall_jump_grace_period": {
             "properties": {
@@ -265,15 +297,17 @@
             ],
             "animation": "air_diving",
             "frame_timer": 14,
-            "collideable": {
-                "type": "player_dive",
-                "width": 150,
-                "height": 200,
-                "offset": {
-                    "x": 0,
-                    "y": 200
+            "collideables": [
+                {
+                    "type": "player_dive",
+                    "width": 150,
+                    "height": 200,
+                    "offset": {
+                        "x": 0,
+                        "y": 200
+                    }
                 }
-            }
+            ]
         },
         "air_dive": {
             "properties": {
@@ -289,15 +323,17 @@
                 {"event": "damaged", "state": "taking_damage"}
             ],
             "animation": "falling",
-            "collideable": {
-                "type": "player_dive",
-                "width": 150,
-                "height": 200,
-                "offset": {
-                    "x": 0,
-                    "y": 200
+            "collideables": [
+                {
+                    "type": "player_dive",
+                    "width": 150,
+                    "height": 200,
+                    "offset": {
+                        "x": 0,
+                        "y": 200
+                    }
                 }
-            }
+            ]
         },
         "hard_landing": {
             "properties": {
@@ -312,6 +348,19 @@
                 {"event": "damaged", "state": "taking_damage"}
             ],
             "animation": "hard_landing"
+        },
+        "ledge_climb": {
+            "properties": {
+                "movement_locked_x": true,
+                "movement_locked_y": true,
+                "can_dash": false,
+                "can_jump": false
+            },
+            "frame_timer": 20,
+            "next_states": [
+                {"event": "frame_timeout", "state": "idle"}
+            ],
+            "animation": "idle"
         }
     }
 }

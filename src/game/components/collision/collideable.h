@@ -13,13 +13,18 @@ class Collideable {
         STATIC,
         SEMI_SOLID,
         SLOPE,
+
         PLAYER_HURTBOX,
         PLAYER_HITBOX,
         PLAYER_DIVE,
+
         ENEMY_HITBOX,
+
         TRANSITION,
         COLLECTIBLE,
         INTERACTABLE,
+
+        SENSOR,
 
         MAX_NUM
     };
@@ -48,6 +53,8 @@ class Collideable {
 
     // Type-specific functions
     virtual CollisionType getType() const = 0;
+
+    void setDirectionMultiplier(int multiplier);
 
   protected:
     std::weak_ptr<ComponentStore> components_;

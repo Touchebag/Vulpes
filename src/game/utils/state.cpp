@@ -92,8 +92,8 @@ State<state_utils::EntityContent> State<state_utils::EntityContent>::loadStateFr
         state_props.animation_name = j["animation"];
     }
 
-    if (j.contains("collideable")) {
-        state_props.collideable = j["collideable"];
+    if (j.contains("collideables")) {
+        state_props.collideable = j["collideables"];
     }
 
     if (props_json.contains("can_interact")) {

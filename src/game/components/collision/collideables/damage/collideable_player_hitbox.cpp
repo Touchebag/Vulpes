@@ -8,7 +8,7 @@ CollideablePlayerHitbox::CollideablePlayerHitbox(std::weak_ptr<ComponentStore> c
 
 void CollideablePlayerHitbox::reloadFromJson(nlohmann::json j) {
     if (!j.contains("type") || !(j["type"].get<std::string>() == "player_hitbox")) {
-        throw std::invalid_argument("Player hitbox invalid type" + j["type"].get<std::string>());
+        throw std::invalid_argument("Player hitbox invalid type " + j["type"].get<std::string>());
     }
 
     Collideable::reloadFromJson(j);

@@ -15,6 +15,8 @@
 #include "components/collision/collideables/damage/collideable_player_dive.h"
 #include "components/collision/collideables/damage/collideable_enemy_hitbox.h"
 
+#include "components/collision/collideables/collideable_sensor.h"
+
 #include "collision_utils.h"
 
 #include "components/component_store.h"
@@ -25,13 +27,18 @@ const std::map<std::string, Collideable::CollisionType> string_type_map {
     {"static", Collideable::CollisionType::STATIC},
     {"semi_solid", Collideable::CollisionType::SEMI_SOLID},
     {"slope", Collideable::CollisionType::SLOPE},
+
     {"player_hurtbox", Collideable::CollisionType::PLAYER_HURTBOX},
     {"player_hitbox", Collideable::CollisionType::PLAYER_HITBOX},
     {"player_dive", Collideable::CollisionType::PLAYER_DIVE},
+
     {"enemy_hitbox", Collideable::CollisionType::ENEMY_HITBOX},
+
     {"transition", Collideable::CollisionType::TRANSITION},
     {"collectible", Collideable::CollisionType::COLLECTIBLE},
     {"interactable", Collideable::CollisionType::INTERACTABLE},
+
+    {"sensor", Collideable::CollisionType::SENSOR},
 };
 
 } // namespace
@@ -125,6 +132,12 @@ std::shared_ptr<Collideable> Collideable::createFromJson(nlohmann::json j, std::
                 coll->reloadFromJson(j);
                 return coll;
             }
+        case CollisionType::SENSOR:
+            {
+                auto coll = std::make_shared<CollideableSensor>(components);
+                coll->reloadFromJson(j);
+                return coll;
+            }
         default:
             LOGW("Collideable: This should never happen");
             break;
@@ -196,4 +209,8 @@ std::weak_ptr<const Transform> Collideable::getTransform() const {
     } else {
         return {};
     }
+}
+
+void Collideable::setDirectionMultiplier(int multiplier) {
+    hbox_->direction_multiplier_ = multiplier;
 }

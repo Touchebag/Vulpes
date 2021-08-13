@@ -35,9 +35,9 @@ class Movement : public Component {
     bool isFacingRight();
     void setFacingRight(bool facing_right);
 
-  private:
     std::pair<double, double> getMaximumMovement(double velX, double velY);
 
+  private:
     double velx_ = 0.0;
     double vely_ = 0.0;
 

@@ -10,9 +10,6 @@ CollideablePlayerHurtbox::CollideablePlayerHurtbox(std::weak_ptr<ComponentStore>
     Collideable(components) {
 }
 
-void CollideablePlayerHurtbox::update() {
-}
-
 Collideable::CollisionType CollideablePlayerHurtbox::getType() const {
     return Collideable::CollisionType::PLAYER_HURTBOX;
 }

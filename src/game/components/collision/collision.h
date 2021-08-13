@@ -1,12 +1,15 @@
 #pragma once
 
 #include <memory>
+#include <unordered_map>
 
 #include "components/component.h"
 #include "components/transform.h"
 #include "components/actions/actions.h"
 #include "hitbox.h"
 #include "collideable.h"
+
+class CollideableSensor;
 
 class Collision : public Component {
   public:
@@ -34,11 +37,15 @@ class Collision : public Component {
     void addTemporaryCollideable(nlohmann::json temp_coll);
     void clearTemporaryCollideables();
 
+    bool isSensorTriggered(std::string sensor_name);
+
     // Type-specific functions
     virtual Collideable::CollisionType getType() const;
 
   protected:
     std::shared_ptr<Collideable> collideable_;
 
-    std::shared_ptr<Collideable> temp_coll_;
+    std::vector<std::shared_ptr<Collideable>> temp_colls_;
+
+    std::unordered_map<std::string, std::weak_ptr<CollideableSensor>> sensor_colls_;
 };

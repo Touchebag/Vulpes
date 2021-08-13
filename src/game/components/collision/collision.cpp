@@ -14,24 +14,9 @@
 #include "collideables/damage/collideable_player_hitbox.h"
 #include "collideables/damage/collideable_enemy_hitbox.h"
 
+#include "collideables/collideable_sensor.h"
+
 #include "system/system.h"
-
-namespace {
-
-const std::map<std::string, Collideable::CollisionType> string_type_map {
-    {"static", Collideable::CollisionType::STATIC},
-    {"semi_solid", Collideable::CollisionType::SEMI_SOLID},
-    {"slope", Collideable::CollisionType::SLOPE},
-    {"player_hurtbox", Collideable::CollisionType::PLAYER_HURTBOX},
-    {"player_hitbox", Collideable::CollisionType::PLAYER_HITBOX},
-    {"player_dive", Collideable::CollisionType::PLAYER_HITBOX},
-    {"enemy_hitbox", Collideable::CollisionType::ENEMY_HITBOX},
-    {"transition", Collideable::CollisionType::TRANSITION},
-    {"collectible", Collideable::CollisionType::COLLECTIBLE},
-    {"interactable", Collideable::CollisionType::INTERACTABLE},
-};
-
-} // namespace
 
 Collision::Collision(std::weak_ptr<ComponentStore> components) :
     Component(components) {
@@ -40,11 +25,19 @@ Collision::Collision(std::weak_ptr<ComponentStore> components) :
 }
 
 void Collision::update() {
-    if (temp_coll_) {
-        temp_coll_->update();
+    int direction_multiplier = 1;
+
+    if (auto move = getComponent<Movement>()) {
+        direction_multiplier = move->isFacingRight() ? 1 : -1;
+    }
+
+    for (auto it : temp_colls_) {
+        it->update();
+        it->setDirectionMultiplier(direction_multiplier);
     }
 
     collideable_->update();
+    collideable_->setDirectionMultiplier(direction_multiplier);
 }
 
 std::shared_ptr<Collision> Collision::createFromJson(nlohmann::json j, std::weak_ptr<ComponentStore> components, File /* file_instance */) {
@@ -87,14 +80,35 @@ std::shared_ptr<Collideable> Collision::getCollideable() const {
     return collideable_;
 }
 
-void Collision::addTemporaryCollideable(nlohmann::json j) {
-    temp_coll_ = Collideable::createFromJson(j, component_store_);
+bool Collision::isSensorTriggered(std::string sensor_name) {
+    try {
+        if (auto coll = sensor_colls_.at(sensor_name).lock()) {
+            return coll->hasTriggered();
+        }
+    } catch (std::out_of_range &e) {
+        // No such sensor active, do nothing
+    }
 
-    System::IWorldModify::addCollideable(temp_coll_);
+    return false;
+}
+
+void Collision::addTemporaryCollideable(nlohmann::json j) {
+    for (nlohmann::json j_coll : j) {
+        auto coll = Collideable::createFromJson(j_coll, component_store_);
+
+        temp_colls_.push_back(coll);
+
+        if (auto sens_coll = std::dynamic_pointer_cast<CollideableSensor>(coll)) {
+            sensor_colls_.insert({sens_coll->getName(), sens_coll});
+        }
+
+        System::IWorldModify::addCollideable(coll);
+    }
 }
 
 void Collision::clearTemporaryCollideables() {
-    temp_coll_ = nullptr;
+    temp_colls_.clear();
+    sensor_colls_.clear();
 }
 
 void Collision::setCollideable(nlohmann::json j) {

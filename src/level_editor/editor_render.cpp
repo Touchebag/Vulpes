@@ -9,7 +9,7 @@
 
 namespace {
 
-const std::array<std::pair<Collideable::CollisionType, sf::Color>, 10> type_color_map = {{
+const std::array<std::pair<Collideable::CollisionType, sf::Color>, 11> type_color_map = {{
     {Collideable::CollisionType::STATIC, sf::Color(0, 128, 0, 200)},
     {Collideable::CollisionType::SEMI_SOLID, sf::Color(0, 255, 255, 200)},
     {Collideable::CollisionType::SLOPE, sf::Color(0, 0, 128, 200)},
@@ -20,6 +20,7 @@ const std::array<std::pair<Collideable::CollisionType, sf::Color>, 10> type_colo
     {Collideable::CollisionType::TRANSITION, sf::Color(128, 128, 128, 200)},
     {Collideable::CollisionType::COLLECTIBLE, sf::Color(255, 0, 255, 200)},
     {Collideable::CollisionType::INTERACTABLE, sf::Color(255, 128, 0, 200)},
+    {Collideable::CollisionType::SENSOR, sf::Color(128, 0, 128, 200)},
 }};
 
 void renderSingleHitbox(sf::RenderTarget& target, std::shared_ptr<const Collideable> coll, sf::Color color) {
