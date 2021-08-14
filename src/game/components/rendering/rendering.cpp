@@ -174,13 +174,22 @@ void Rendering::render(sf::RenderTarget& target, float frame_fraction) {
     auto vel_x = 0.0;
     auto vel_y = 0.0;
 
+    auto x_offset = x_offset_;
+    auto y_offset = y_offset_;
+
     if (auto move = getComponent<Movement>()) {
         vel_x = move->getVelX() * frame_fraction;
         vel_y = move->getVelY() * frame_fraction;
+
+        if (!move->isFacingRight()) {
+            x_offset = -x_offset;
+        }
     }
 
     if (auto trans = getComponent<Transform>()) {
-        sprite_.setPosition(static_cast<float>(trans->getX() + vel_x), static_cast<float>(trans->getY() + vel_y));
+        sprite_.setPosition(
+                static_cast<float>(trans->getX() + x_offset + vel_x),
+                static_cast<float>(trans->getY() + y_offset + vel_y));
         if (shader_) {
             target.draw(sprite_, shader_.get());
         } else {
@@ -208,6 +217,11 @@ void Rendering::loadShader(std::string shader_name) {
 void Rendering::setScale(float x_scale, float y_scale) {
     x_scale_ = x_scale;
     y_scale_ = y_scale;
+}
+
+void Rendering::setOffset(int x_offset, int y_offset) {
+    x_offset_ = x_offset;
+    y_offset_ = y_offset;
 }
 
 void Rendering::update() {

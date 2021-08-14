@@ -356,11 +356,11 @@
                 "can_dash": false,
                 "can_jump": false
             },
-            "frame_timer": 20,
+            "frame_timer": 5,
             "next_states": [
                 {"event": "frame_timeout", "state": "idle"}
             ],
-            "animation": "idle"
+            "animation": "ledge_climb"
         }
     }
 }

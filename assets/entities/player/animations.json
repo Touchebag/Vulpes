@@ -307,5 +307,49 @@
                 "y_scale": 0.9
             }
         ]
+    },
+    {
+        "name": "ledge_climb",
+        "frame_list": [
+            "Falling",
+            "Falling",
+            "Falling",
+            "Jumping",
+            "Jumping",
+            "Jumping",
+            "Idle0"
+        ],
+        "meta_data": [
+            {
+                "frame": 0,
+                "x_offset": -50,
+                "y_offset": 190
+            },
+            {
+                "frame": 1,
+                "x_offset": -50,
+                "y_offset": 190
+            },
+            {
+                "frame": 2,
+                "x_offset": -50,
+                "y_offset": 190
+            },
+            {
+                "frame": 3,
+                "x_offset": -25,
+                "y_offset": 100
+            },
+            {
+                "frame": 4,
+                "x_offset": -25,
+                "y_offset": 100
+            },
+            {
+                "frame": 5,
+                "x_offset": -25,
+                "y_offset": 100
+            }
+        ]
     }
 ]

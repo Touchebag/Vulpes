@@ -81,6 +81,14 @@ std::shared_ptr<std::vector<Animation::AnimationFrameData>> Animation::loadAnima
                 frame_data.y_scale = it["y_scale"].get<float>();
             }
 
+            if (it.contains("x_offset")) {
+                frame_data.x_offset = it["x_offset"].get<int>();
+            }
+
+            if (it.contains("y_offset")) {
+                frame_data.y_offset = it["y_offset"].get<int>();
+            }
+
             if (it.contains("frame")) {
                 meta_data.insert({it["frame"].get<int>(), frame_data});
             } else {
@@ -97,6 +105,8 @@ std::shared_ptr<std::vector<Animation::AnimationFrameData>> Animation::loadAnima
             auto frame_md = meta_data.at(i);
             frame_data.x_scale = frame_md.x_scale;
             frame_data.y_scale = frame_md.y_scale;
+            frame_data.x_offset = frame_md.x_offset;
+            frame_data.y_offset = frame_md.y_offset;
         }
 
         frame_data_list->push_back(frame_data);
@@ -211,6 +221,7 @@ void Animation::setRenderTexture() {
         renderable->setTextureCoords(sprite_rect.x, sprite_rect.y, sprite_rect.width, sprite_rect.height);
 
         renderable->setScale(frame_data.x_scale, frame_data.y_scale);
+        renderable->setOffset(frame_data.x_offset, frame_data.y_offset);
     } else {
         LOGW("Animated: Missing renderable");
     }

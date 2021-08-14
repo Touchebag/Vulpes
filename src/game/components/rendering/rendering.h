@@ -31,6 +31,8 @@ class Rendering : public Component {
 
     void setScale(float x_scale, float y_scale);
 
+    void setOffset(int x_offset, int y_offset);
+
     virtual void setColor(sf::Color color);
     virtual void clearColor();
 
@@ -59,6 +61,9 @@ class Rendering : public Component {
 
     float x_scale_ = 1.0;
     float y_scale_ = 1.0;
+
+    int x_offset_ = 0;
+    int y_offset_ = 0;
 
     // Needed for level editor
     std::string texture_name_;

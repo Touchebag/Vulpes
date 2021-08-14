@@ -30,6 +30,8 @@ class Animation : public Component {
         util::Rectangle sprite_rectangle;
         float x_scale = 1.0;
         float y_scale = 1.0;
+        int x_offset = 0;
+        int y_offset = 0;
     };
 
     AnimationFrameData getFrameData();
