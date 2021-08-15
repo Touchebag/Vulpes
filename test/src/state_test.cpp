@@ -118,7 +118,27 @@ TEST_F(StateTestFixture, TemplateLoad) {
 {
     "templates": {
         "test_templ": {
-            "frame_timer": 5
+            "frame_timer": 5,
+            "next_states": [
+                {"event": "falling", "state": "main3"}
+            ],
+            "properties": {
+                "movement_locked_x": false,
+                "can_jump": false
+            },
+            "animation": "template",
+            "collideables": [
+                {
+                    "type": "sensor",
+                    "name": "ledge_climb_top",
+                    "width": 100,
+                    "height": 200,
+                    "offset": {
+                        "x": 50,
+                        "y": -200
+                    }
+                }
+            ]
         }
     },
     "states": {
@@ -127,6 +147,24 @@ TEST_F(StateTestFixture, TemplateLoad) {
             "next_states": [
                 {"event": "start", "state": "main2"},
                 {"event": "touching_floor", "state": "main4"}
+            ],
+            "properties": {
+                "movement_locked_x": true,
+                "movement_locked_y": true,
+                "can_dash": false
+            },
+            "animation": "override",
+            "collideables": [
+                {
+                    "type": "sensor",
+                    "name": "ledge_climb_bottom",
+                    "width": 30,
+                    "height": 150,
+                    "offset": {
+                        "x": 40,
+                        "y": 0
+                    }
+                }
             ]
         }
     }
@@ -135,5 +173,21 @@ TEST_F(StateTestFixture, TemplateLoad) {
 
     state_handler_.reloadFromJson(nlohmann::json::parse(template_json));
 
-    ASSERT_EQ(state_handler_.getStateData().state_props.frame_timer_, 5);
+    auto state_props = state_handler_.getStateData().state_props;
+
+    // Should take from template
+    ASSERT_EQ(state_props.frame_timer_, 5);
+
+    ASSERT_EQ(state_props.collideables.size(), 2);
+
+    auto physics_props = state_handler_.getStateData().physics_props;
+
+    // Should override template
+    ASSERT_EQ(state_handler_.getStateData().state_props.animation_name, "override");
+
+    // Should merge but override duplicates
+    EXPECT_EQ(physics_props.movement_locked_x_, true);
+    EXPECT_EQ(physics_props.movement_locked_y_, true);
+    EXPECT_EQ(physics_props.can_dash_, false);
+    EXPECT_EQ(physics_props.can_jump_, false);
 }

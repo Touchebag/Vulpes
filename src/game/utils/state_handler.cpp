@@ -34,7 +34,19 @@ void StateHandler<T>::reloadFromJson(const nlohmann::json& j) {
         if (st.contains("template")) {
             try {
                 auto temp_state = template_map.at(st["template"].get<std::string>());
-                temp_state.update(st);
+
+                for (auto entry = st.begin(); entry != st.end(); ++entry) {
+                    if (entry->type() == nlohmann::json::value_t::array) {
+                        // Merge lists
+                        for (auto it : entry.value()) {
+                            temp_state[entry.key()] += it;
+                        }
+                    } else if (entry->type() == nlohmann::json::value_t::object) {
+                        temp_state[entry.key()].update(entry.value());
+                    } else {
+                        temp_state[entry.key()] = entry.value();
+                    }
+                }
                 st = temp_state;
             } catch (std::out_of_range& e) {
                 LOGE("State template %s not found", st["template"].get<std::string>().c_str());

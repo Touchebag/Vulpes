@@ -24,5 +24,5 @@ class State {
     void loadNextStateListFromJson(nlohmann::json j);
 
     const T data_;
-    std::map<state_utils::Event, std::string> next_states_;
+    std::unordered_map<state_utils::Event, std::string> next_states_;
 };

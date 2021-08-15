@@ -93,7 +93,7 @@ State<state_utils::EntityContent> State<state_utils::EntityContent>::loadStateFr
     }
 
     if (j.contains("collideables")) {
-        state_props.collideable = j["collideables"];
+        state_props.collideables = j["collideables"];
     }
 
     if (props_json.contains("can_interact")) {

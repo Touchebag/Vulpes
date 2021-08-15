@@ -6,6 +6,9 @@
             }
         },
         "ledge_climb_sensors": {
+            "next_states": [
+                {"event": "ledge_climb", "state": "ledge_climb"}
+            ],
             "collideables": [
                 {
                     "type": "sensor",
@@ -92,8 +95,7 @@
                 {"event": "falling", "state": "falling"},
                 {"event": "dashing", "state": "dashing"},
                 {"event": "air_diving", "state": "air_dive_start"},
-                {"event": "damaged", "state": "taking_damage"},
-                {"event": "ledge_climb", "state": "ledge_climb"}
+                {"event": "damaged", "state": "taking_damage"}
             ],
             "animation": "jumping",
             "template": "ledge_climb_sensors"
@@ -110,8 +112,7 @@
                 {"event": "jumping", "state": "jump_start"},
                 {"event": "dashing", "state": "dashing"},
                 {"event": "air_diving", "state": "air_dive_start"},
-                {"event": "damaged", "state": "taking_damage"},
-                {"event": "ledge_climb", "state": "ledge_climb"}
+                {"event": "damaged", "state": "taking_damage"}
             ],
             "animation": "falling",
             "template": "ledge_climb_sensors"
@@ -129,8 +130,7 @@
                 {"event": "jumping", "state": "wall_jump"},
                 {"event": "falling", "state": "wall_slide"},
                 {"event": "airborne", "state": "wall_jump_grace_period"},
-                {"event": "damaged", "state": "taking_damage"},
-                {"event": "ledge_climb", "state": "ledge_climb"}
+                {"event": "damaged", "state": "taking_damage"}
             ],
             "animation": "jumping",
             "template": "ledge_climb_sensors"
@@ -147,8 +147,7 @@
                 {"event": "touching_floor", "state": "idle"},
                 {"event": "jumping", "state": "wall_jump"},
                 {"event": "airborne", "state": "wall_jump_grace_period"},
-                {"event": "damaged", "state": "taking_damage"},
-                {"event": "ledge_climb", "state": "ledge_climb"}
+                {"event": "damaged", "state": "taking_damage"}
             ],
             "animation": "wall_slide",
             "template": "ledge_climb_sensors"

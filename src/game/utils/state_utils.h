@@ -76,10 +76,9 @@ struct PhysicsProperties {
 
 struct StateProperties {
     unsigned int frame_timer_ = UINT_MAX;
-    std::unordered_map<state_utils::Event, std::string> next_states_;
     std::string animation_name;
 
-    nlohmann::json collideable;
+    nlohmann::json collideables;
 
     bool can_interact = false;
 };
