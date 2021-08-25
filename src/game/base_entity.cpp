@@ -74,6 +74,12 @@ void BaseEntity::reloadFromJson(const nlohmann::json& j) {
         entity_json[it.key()] = it.value();
     }
 
+    if (j.contains("condition")) {
+        condition_ = j["condition"].get<std::string>();
+    } else {
+        condition_.clear();
+    }
+
     createComponentFromJson(Transform, file_instance);
 
     createComponentFromJson(Death, file_instance);
@@ -108,6 +114,10 @@ std::optional<nlohmann::json> BaseEntity::outputToJson() {
 
     if (!entity_file_name_.empty()) {
         j["Entity"] = entity_file_name_;
+    }
+
+    if (!condition_.empty()) {
+        j["condition"] = condition_;
     }
 
     saveComponentToJson(Transform);

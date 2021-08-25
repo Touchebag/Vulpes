@@ -32,4 +32,6 @@ class BaseEntity {
     // and components loaded via entity file when saving
     std::string entity_file_name_;
     nlohmann::json entity_file_exclusives_;
+
+    std::string condition_;
 };

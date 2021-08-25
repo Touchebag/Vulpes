@@ -1,6 +1,7 @@
 #include "system.h"
 
 void System::IWorldModify::addEntity(std::shared_ptr<BaseEntity> entity, std::optional<std::string> condition) {
+    // TODO Iterator invalidation
     System::getInstance().world_->addEntity(entity, condition);
 }
 

@@ -109,10 +109,23 @@ TEST_F(WorldTestFixture, TestLoadConditionalEntity) {
     w_modify::loadWorldFromJson(j);
     EXPECT_TRUE(w_modify::getWorldObjects().empty());
 
-    // After setting flag entity should be added
+    nlohmann::json j2 = w_modify::saveWorldToJson();
+    ASSERT_TRUE(j == j2) << j.dump() << std::endl << j2.dump() << std::endl;
+
+    // After setting flag entity should be added automatically
     System::getEnvironment()->setFlag("test_conditional_entity_flag");
+    w_modify::update();
+    EXPECT_TRUE(w_modify::getWorldObjects().size() == 1) << "Size: " << w_modify::getWorldObjects().size();
+
+    j2 = w_modify::saveWorldToJson();
+    ASSERT_TRUE(j == j2) << j.dump() << std::endl << j2.dump() << std::endl;
+
+    // It should also be added at new room load
     w_modify::loadWorldFromJson(j);
-    EXPECT_TRUE(w_modify::getWorldObjects().size() == 1);
+    EXPECT_TRUE(w_modify::getWorldObjects().size() == 1) << "Size: " << w_modify::getWorldObjects().size();
+
+    j2 = w_modify::saveWorldToJson();
+    ASSERT_TRUE(j == j2) << j.dump() << std::endl << j2.dump() << std::endl;
 }
 
 TEST_F(WorldTestFixture, TestLoadConditionalEntityNegated) {
@@ -135,10 +148,16 @@ TEST_F(WorldTestFixture, TestLoadConditionalEntityNegated) {
     w_modify::loadWorldFromJson(j);
     EXPECT_TRUE(w_modify::getWorldObjects().size() == 1);
 
+    nlohmann::json j2 = w_modify::saveWorldToJson();
+    ASSERT_TRUE(j == j2) << j.dump() << std::endl << j2.dump() << std::endl;
+
     // After setting flag entity should not be added
     System::getEnvironment()->setFlag("test_conditional_entity_flag_negated");
     w_modify::loadWorldFromJson(j);
     EXPECT_TRUE(w_modify::getWorldObjects().empty());
+
+    j2 = w_modify::saveWorldToJson();
+    ASSERT_TRUE(j == j2) << j.dump() << std::endl << j2.dump() << std::endl;
 }
 
 TEST_F(WorldTestFixture, TestSaveLoadTemplate) {

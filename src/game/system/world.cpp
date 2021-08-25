@@ -75,6 +75,7 @@ void World::update() {
     // Delete all expired entities at end of frame
     clearDeletedEntities();
 
+    // TODO Move to in between world_objects update and deferred objects update
     System::getEnvironment()->triggerConditionalEvents();
 }
 
@@ -95,6 +96,8 @@ void World::clearWorld() {
 
     template_file_names_.clear();
     template_objects_.clear();
+
+    conditional_entities_.clear();
 }
 
 void World::addEntriesToWorld(nlohmann::json j, bool is_template) {
@@ -273,6 +276,17 @@ nlohmann::json World::saveWorldToJson() {
         }
     }
 
+    for (auto it : conditional_entities_) {
+        if (auto ent = it.lock()) {
+            // Don't output as conditional if already added as normal entity
+            if (std::find(world_objects_.begin(), world_objects_.end(), ent) == world_objects_.end()) {
+                if (auto object = ent->outputToJson()) {
+                    json_object_list.push_back(*object);
+                }
+            }
+        }
+    }
+
     j["entities"] = json_object_list;
 
     if (!entrances_.empty()) {
@@ -328,6 +342,7 @@ void World::addEntity(std::shared_ptr<BaseEntity> entity, std::optional<std::str
     } else {
         auto evt_trigger = std::make_shared<event_triggers::AddEntity>(entity);
         System::getEnvironment()->addConditionalEvent(condition.value(), evt_trigger);
+        conditional_entities_.push_back(entity);
     }
 }
 

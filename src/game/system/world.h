@@ -73,6 +73,9 @@ class World {
     std::vector<std::string> template_file_names_;
     std::unordered_set<std::shared_ptr<BaseEntity>> template_objects_;
 
+    // Conditional entities used for saving world
+    std::vector<std::weak_ptr<BaseEntity>> conditional_entities_;
+
     // Meta data
     // Needed for saving world to file
     // TODO Store all meta data directly as json?
