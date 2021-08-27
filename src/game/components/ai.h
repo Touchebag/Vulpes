@@ -5,7 +5,6 @@
 #include "components/transform.h"
 
 #include "utils/state_handler.h"
-#include "ai/logic_operators/logic_operator.h"
 
 class AI : public Component {
   public:
@@ -18,7 +17,9 @@ class AI : public Component {
     std::optional<nlohmann::json> outputToJson() override;
 
   private:
+    bool evaluateCondition(std::vector<int> condition);
+
     unsigned int frame_timer_ = 0;
 
-    StateHandler<std::vector<std::pair<std::shared_ptr<const ai::condition::LogicalOperator>, Actions::Action>>> states_;
+    StateHandler<std::vector<std::pair<std::vector<int>, Actions::Action>>> states_;
 };

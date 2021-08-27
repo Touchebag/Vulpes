@@ -2,7 +2,6 @@
 
 #include "log.h"
 
-#include "ai/logic_operators/logic_operator.h"
 #include "components/actions/actions.h"
 
 #include "ai/ai_utils.h"
@@ -115,7 +114,7 @@ State<state_utils::EntityContent> State<state_utils::EntityContent>::loadStateFr
     return new_state;
 }
 
-#define AI_CONDITION_TYPE std::pair<std::shared_ptr<const ai::condition::LogicalOperator>, Actions::Action>
+#define AI_CONDITION_TYPE std::pair<std::vector<int>, Actions::Action>
 
 template <>
 State<std::vector<AI_CONDITION_TYPE>>
@@ -127,11 +126,7 @@ State<std::vector<AI_CONDITION_TYPE>>::loadStateFromJson(nlohmann::json j) {
     std::vector<AI_CONDITION_TYPE> ai_behavior;
 
     for (auto it : j["actions"]) {
-        nlohmann::json temp_j;
-        temp_j["condition"] = "true";
-        auto condition = ai::condition::LogicalOperator::createFromJson(temp_j["condition"]);
-
-        auto program = ai_utils::loadInstructions(it["condition"]);
+        auto condition = ai_utils::loadInstructions(it["condition"]);
         Actions::Action action = Actions::fromString(it["action"]);
         ai_behavior.push_back(std::make_pair(condition, action));
     }
