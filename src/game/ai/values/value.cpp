@@ -31,7 +31,7 @@ std::unique_ptr<const Value> Value::createFromString(std::string str) {
     } else if (type == "this") {
         return std::make_unique<This>(arguments);
     } else if (type == "distance") {
-        auto args = ai_utils::extractSubstrings(str.substr(index + 1, str.size()));
+        auto args = ai_utils::extractArguments(str.substr(index + 1, str.size()));
         if (args.size() != 2) {
             throw std::invalid_argument("distance: incorrect number of arguments");
         }

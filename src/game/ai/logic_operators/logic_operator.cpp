@@ -25,7 +25,7 @@ std::shared_ptr<const LogicalOperator> LogicalOperator::createFromString(const s
 
     if (index != std::string::npos) {
         // index +1 to skip extra space
-        arguments = ai_utils::extractSubstrings(str.substr(index + 1, str.size()));
+        arguments = ai_utils::extractArguments(str.substr(index + 1, str.size()));
     }
 
     if (operation == "true") {

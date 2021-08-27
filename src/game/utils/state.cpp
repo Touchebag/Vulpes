@@ -5,6 +5,8 @@
 #include "ai/logic_operators/logic_operator.h"
 #include "components/actions/actions.h"
 
+#include "ai/ai_utils.h"
+
 template <class T>
 State<T>::State(T data) :
     data_(data) {
@@ -125,7 +127,11 @@ State<std::vector<AI_CONDITION_TYPE>>::loadStateFromJson(nlohmann::json j) {
     std::vector<AI_CONDITION_TYPE> ai_behavior;
 
     for (auto it : j["actions"]) {
-        auto condition = ai::condition::LogicalOperator::createFromJson(it["condition"]);
+        nlohmann::json temp_j;
+        temp_j["condition"] = "true";
+        auto condition = ai::condition::LogicalOperator::createFromJson(temp_j["condition"]);
+
+        auto program = ai_utils::loadInstructions(it["condition"]);
         Actions::Action action = Actions::fromString(it["action"]);
         ai_behavior.push_back(std::make_pair(condition, action));
     }
