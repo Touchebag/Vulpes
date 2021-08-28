@@ -1,11 +1,13 @@
+#pragma once
+
 #include <vector>
 #include <string>
 
+#include "instructions.h"
+
 namespace ai_utils {
 
-std::vector<int> loadInstructions(std::string str);
-
-std::vector<std::string> extractArguments(std::string str);
+std::pair<std::vector<int>, ai::InstructionData> loadInstructions(std::vector<std::string> str);
 
 std::vector<std::string> tokenizeString(std::string str);
 

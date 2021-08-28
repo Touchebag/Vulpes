@@ -39,33 +39,47 @@ enum class Instruction {
     ACTION,
 };
 
-struct InstructionData {
-    Instruction instruction;
-    int number_of_args;
+enum class Type {
+    VOID = 0x00,
+
+    // 0x0 = numbers
+    INT = 0x01,
+
+    // 0x1 = Other primitives
+    BOOL = 0x11,
+
+    // 0x2 Complex types
+    STRING = 0x21,
 };
 
-std::unordered_map<std::string, InstructionData> string_instruction_map = {
-    {"int", {Instruction::INT, 1}},
-    {"true", {Instruction::TRUE, 0}},
-    {"false", {Instruction::FALSE, 0}},
+struct InstructionData {
+    Instruction instruction;
+    Type return_type;
+    std::vector<Type> args_return_type;
+};
 
-    {"frame_timer", {Instruction::FRAME_TIMER, 1}},
+static const std::unordered_map<std::string, InstructionData> string_instruction_map = {
+    {"int", {Instruction::INT, Type::INT, {Type::INT}}},
+    {"true", {Instruction::TRUE, Type::BOOL, {}}},
+    {"false", {Instruction::FALSE, Type::BOOL, {}}},
 
-    {"player", {Instruction::PLAYER, 1}},
-    {"this", {Instruction::THIS, 1}},
+    {"frame_timer", {Instruction::FRAME_TIMER, Type::INT, {Type::INT}}},
 
-    {"position_x", {Instruction::POSITION_X, 0}},
+    {"player", {Instruction::PLAYER, Type::INT, {Type::INT}}},
+    {"this", {Instruction::THIS, Type::INT, {Type::INT}}},
 
-    {"collides", {Instruction::COLLIDES, 1}},
-    {"flag", {Instruction::FLAG, 1}},
+    {"position_x", {Instruction::POSITION_X, Type::INT, {}}},
 
-    {"grt", {Instruction::GRT, 2}},
-    {"lss", {Instruction::LSS, 2}},
+    {"collides", {Instruction::COLLIDES, Type::BOOL, {Type::INT}}},
+    {"flag", {Instruction::FLAG, Type::BOOL, {Type::STRING}}},
 
-    {"and", {Instruction::AND, 2}},
-    {"or", {Instruction::OR, 2}},
+    {"grt", {Instruction::GRT, Type::BOOL, {Type::INT, Type::INT}}},
+    {"lss", {Instruction::LSS, Type::BOOL, {Type::INT, Type::INT}}},
 
-    {"action", {Instruction::ACTION, 1}},
+    {"and", {Instruction::AND, Type::BOOL, {Type::BOOL, Type::BOOL}}},
+    {"or", {Instruction::OR, Type::BOOL, {Type::BOOL, Type::BOOL}}},
+
+    {"action", {Instruction::ACTION, Type::VOID, {Type::STRING}}},
 };
 
 } // ai
