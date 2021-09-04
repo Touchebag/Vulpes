@@ -5,6 +5,8 @@
 #include "utils/file.h"
 #include "utils/common.h"
 
+#include "ai/interpreter.h"
+#include "ai/ai_utils.h"
 #include "system/system.h"
 
 namespace {
@@ -21,18 +23,18 @@ AI::AI(std::weak_ptr<ComponentStore> components) :
     Component(components) {
 }
 
-bool AI::evaluateCondition(std::vector<int> condition) {
-    return true;
-}
-
 void AI::update() {
     auto act = getComponent<Actions>();
 
     frame_timer_++;
 
     if (act) {
+        Interpreter::ExtraInputData extra_data;
+        extra_data.frame_timer = frame_timer_;
+        extra_data.this_components = component_store_.lock();
+
         for (auto& it : states_.getStateData()) {
-            if (evaluateCondition(it.first)) {
+            if (Interpreter::executeProgram(it.first, extra_data) == ai::Bool::TRUE) {
                 // Add resulting action
                 auto action = it.second;
                 act->addAction(action);

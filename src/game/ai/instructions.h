@@ -52,6 +52,16 @@ enum class Type {
     STRING = 0x21,
 };
 
+enum Bool {
+    FALSE = 0,
+    TRUE = 1,
+};
+
+enum Target {
+    THIS,
+    PLAYER,
+};
+
 struct InstructionData {
     Instruction instruction;
     Type return_type;

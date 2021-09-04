@@ -12,13 +12,35 @@ std::vector<int> parseInstruction(ai::InstructionData data, std::vector<std::vec
     std::vector<int> ret_program;
 
     auto instruction = data.instruction;
-    ret_program.push_back(static_cast<int>(instruction));
 
+    // Need to evaluate arguments first
     switch (instruction) {
         case ai::Instruction::FLAG:
             LOGE("Fix strings");
             // TODO Do that ^
             ret_program.push_back(0);
+
+            // Push original operation
+            ret_program.push_back(static_cast<int>(instruction));
+            break;
+        case ai::Instruction::PLAYER:
+        case ai::Instruction::THIS:
+            // Push original operation
+            ret_program.push_back(static_cast<int>(instruction));
+
+            for (int i = 0; i < static_cast<int>(args.size()); i++) {
+                auto parsed_arg = loadInstructions(args[i]);
+
+                if (parsed_arg.second.return_type != data.args_return_type[i]) {
+                    std::stringstream error_message;
+                    error_message << "type error. Expected " << static_cast<int>(data.args_return_type[i]) <<
+                                     ", got " << static_cast<int>(parsed_arg.second.return_type);
+                    throw std::invalid_argument(error_message.str());
+                }
+
+                // Push arguments
+                ret_program.insert(ret_program.end(), parsed_arg.first.begin(), parsed_arg.first.end());
+            }
             break;
         default:
             for (int i = 0; i < static_cast<int>(args.size()); i++) {
@@ -31,8 +53,13 @@ std::vector<int> parseInstruction(ai::InstructionData data, std::vector<std::vec
                     throw std::invalid_argument(error_message.str());
                 }
 
+                // Push arguments
                 ret_program.insert(ret_program.end(), parsed_arg.first.begin(), parsed_arg.first.end());
             }
+
+            // Push original operation
+            ret_program.push_back(static_cast<int>(instruction));
+
             break;
     }
 
@@ -96,9 +123,15 @@ std::pair<std::vector<int>, ai::InstructionData> loadInstructions(std::vector<st
         // If not int, just continue parsing as normal
     }
 
+    // Seperate catches to avoid multiple printouts due to recursion
     try {
         instruction_data = ai::string_instruction_map.at(operation);
+    } catch (std::out_of_range& e) {
+        LOGE("AI: Invalid operation %s", operation.c_str());
+        throw e;
+    }
 
+    try {
         // Check correct number of arguments
         if (arguments.size() < instruction_data.args_return_type.size()) {
             std::stringstream error_message;
@@ -108,9 +141,6 @@ std::pair<std::vector<int>, ai::InstructionData> loadInstructions(std::vector<st
         }
 
         instructions = parseInstruction(instruction_data, {arguments.begin() + 1, arguments.end()});
-    } catch (std::out_of_range& e) {
-        LOGE("AI: Invalid operation %s", operation.c_str());
-        throw e;
     } catch (std::invalid_argument& e) {
         std::stringstream error_message;
         error_message << "Operation " << operation << ": " << e.what();

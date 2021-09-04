@@ -17,8 +17,6 @@ class AI : public Component {
     std::optional<nlohmann::json> outputToJson() override;
 
   private:
-    bool evaluateCondition(std::vector<int> condition);
-
     unsigned int frame_timer_ = 0;
 
     StateHandler<std::vector<std::pair<std::vector<int>, Actions::Action>>> states_;
