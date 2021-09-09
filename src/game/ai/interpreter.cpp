@@ -74,6 +74,14 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                 LOGV("FALSE");
                 PUSH(Bool::FALSE);
                 break;
+            case ai::Instruction::STRING:
+                LOGV("STRING");
+                pc++;
+
+                LOGV("%i", *pc);
+
+                PUSH(*pc);
+                break;
             case ai::Instruction::PLAYER:
                 LOGV("PLAYER");
                 PUSH(Target::PLAYER);
@@ -121,10 +129,20 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                 }
                 break;
             case ai::Instruction::FLAG:
+            {
                 LOGV("FLAG");
-                pc++;
-                PUSH(Bool::FALSE);
+
+                auto str = program.getString(POP());
+                LOGV("%s", str.c_str());
+
+                if (System::getEnvironment()->getFlag(str)) {
+                    PUSH(Bool::TRUE);
+                } else {
+                    PUSH(Bool::FALSE);
+                }
+
                 break;
+            }
             case ai::Instruction::ANIMATION_LOOPED:
                 LOGV("ANIMATION_LOOPED");
                 if (auto anim = extra_input.this_components->getComponent<Animation>()) {

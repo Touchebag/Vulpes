@@ -44,12 +44,11 @@ ai::InstructionData parseInstruction(std::string instruction) {
         // If not int, just continue parsing as normal
     }
 
-    // Seperate catches to avoid multiple printouts due to recursion
     try {
         instruction_data = ai::string_instruction_map.at(instruction);
     } catch (std::out_of_range& e) {
-        LOGE("Program: Invalid operation %s", instruction.c_str());
-        throw e;
+        // If unable to parse, assume string
+        instruction_data = {ai::Instruction::STRING, ai::Type::STRING, {}};
     }
 
     return instruction_data;
@@ -130,13 +129,12 @@ ai::Type Program::translateAndStore(std::vector<std::string> lexed_input) {
             program_.push_back(static_cast<int>(ai::Instruction::INT));
             program_.push_back(std::stoi(lexed_input[0]));
             break;
-        case ai::Instruction::FLAG:
-            LOGE("Fix strings");
-            // TODO Do that ^
+        case ai::Instruction::STRING:
+            program_.push_back(static_cast<int>(ai::Instruction::STRING));
 
-            // Push original operation
-            program_.push_back(static_cast<int>(instruction_data.instruction));
-            program_.push_back(0);
+            strings_.insert({string_id_counter_, lexed_input[0]});
+            program_.push_back(string_id_counter_);
+            string_id_counter_++;
             break;
         default:
             // Push arguments
@@ -160,4 +158,8 @@ ai::Type Program::translateAndStore(std::vector<std::string> lexed_input) {
 
 const std::vector<int> Program::getProgram() {
     return program_;
+}
+
+const std::string& Program::getString(int id) {
+    return strings_.at(id);
 }

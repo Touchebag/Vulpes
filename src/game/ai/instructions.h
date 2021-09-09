@@ -9,6 +9,7 @@ enum class Instruction {
     INT,
     TRUE,
     FALSE,
+    STRING,
 
     // Dynamic values
     FRAME_TIMER,
