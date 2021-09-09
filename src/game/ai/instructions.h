@@ -7,8 +7,7 @@ namespace ai {
 enum class Instruction {
     // Literal values
     INT,
-    TRUE,
-    FALSE,
+    BOOL,
     STRING,
 
     // Dynamic values
@@ -70,9 +69,6 @@ struct InstructionData {
 };
 
 static const std::unordered_map<std::string, InstructionData> string_instruction_map = {
-    {"true", {Instruction::TRUE, Type::BOOL, {}}},
-    {"false", {Instruction::FALSE, Type::BOOL, {}}},
-
     {"frame_timer", {Instruction::FRAME_TIMER, Type::INT, {Type::INT}}},
 
     {"player", {Instruction::PLAYER, Type::TARGET, {}}},

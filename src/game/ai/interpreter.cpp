@@ -66,13 +66,9 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
 
                 PUSH(*pc);
                 break;
-            case ai::Instruction::TRUE:
-                LOGV("TRUE");
-                PUSH(Bool::TRUE);
-                break;
-            case ai::Instruction::FALSE:
-                LOGV("FALSE");
-                PUSH(Bool::FALSE);
+            case ai::Instruction::BOOL:
+                pc++;
+                PUSH(*pc);
                 break;
             case ai::Instruction::STRING:
                 LOGV("STRING");

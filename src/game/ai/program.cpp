@@ -44,6 +44,12 @@ ai::InstructionData parseInstruction(std::string instruction) {
         // If not int, just continue parsing as normal
     }
 
+    if (instruction == "true" || instruction == "false") {
+        instruction_data = {ai::Instruction::BOOL, ai::Type::BOOL, {}};
+
+        return instruction_data;
+    }
+
     try {
         instruction_data = ai::string_instruction_map.at(instruction);
     } catch (std::out_of_range& e) {
@@ -128,6 +134,16 @@ ai::Type Program::translateAndStore(std::vector<std::string> lexed_input) {
         case ai::Instruction::INT:
             program_.push_back(static_cast<int>(ai::Instruction::INT));
             program_.push_back(std::stoi(lexed_input[0]));
+            break;
+        case ai::Instruction::BOOL:
+            program_.push_back(static_cast<int>(ai::Instruction::BOOL));
+
+            if (lexed_input[0] == "true") {
+                program_.push_back(ai::Bool::TRUE);
+            } else {
+                program_.push_back(ai::Bool::FALSE);
+            }
+
             break;
         case ai::Instruction::STRING:
             program_.push_back(static_cast<int>(ai::Instruction::STRING));
