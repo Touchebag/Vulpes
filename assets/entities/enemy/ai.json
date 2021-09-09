@@ -7,11 +7,11 @@
             ],
             "actions": [
                 {
-                    "condition": "grt (player position_x) (this position_x)",
+                    "condition": "grt (position_x player) (position_x this)",
                     "action": "ai1"
                 },
                 {
-                    "condition": "lss (player position_x) (this position_x)",
+                    "condition": "lss (position_x player) (position_x this)",
                     "action": "ai2"
                 }
             ]
@@ -37,11 +37,11 @@
             ],
             "actions": [
                 {
-                    "condition": "grt (player position_x) (this position_x)",
+                    "condition": "grt (position_x player) (position_x this)",
                     "action": "move_right"
                 },
                 {
-                    "condition": "lss (player position_x) (this position_x)",
+                    "condition": "lss (position_x player) (position_x this)",
                     "action": "ai1"
                 }
             ]
@@ -67,11 +67,11 @@
             ],
             "actions": [
                 {
-                    "condition": "grt (player position_x) (this position_x)",
+                    "condition": "grt (position_x player) (position_x this)",
                     "action": "ai1"
                 },
                 {
-                    "condition": "lss (player position_x) (this position_x)",
+                    "condition": "lss (position_x player) (position_x this)",
                     "action": "move_left"
                 }
             ]

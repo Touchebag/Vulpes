@@ -4,6 +4,8 @@
 #include "components/collision/collision.h"
 #include "components/transform.h"
 
+#include "ai/program.h"
+
 #include "utils/state_handler.h"
 
 class AI : public Component {
@@ -19,5 +21,5 @@ class AI : public Component {
   private:
     unsigned int frame_timer_ = 0;
 
-    StateHandler<std::vector<std::pair<std::vector<int>, Actions::Action>>> states_;
+    StateHandler<std::vector<std::pair<Program, Actions::Action>>> states_;
 };

@@ -23,6 +23,7 @@ enum class Instruction {
     // Checks
     COLLIDES,
     FLAG,
+    ANIMATION_LOOPED,
 
     // Comparisons
     GRT,
@@ -40,16 +41,15 @@ enum class Instruction {
 };
 
 enum class Type {
-    VOID = 0x00,
+    VOID,
 
-    // 0x0 = numbers
-    INT = 0x01,
+    INT,
+    BOOL,
 
-    // 0x1 = Other primitives
-    BOOL = 0x11,
+    // To avoid mixups with normal ints
+    TARGET,
 
-    // 0x2 Complex types
-    STRING = 0x21,
+    STRING,
 };
 
 enum Bool {
@@ -69,19 +69,19 @@ struct InstructionData {
 };
 
 static const std::unordered_map<std::string, InstructionData> string_instruction_map = {
-    {"int", {Instruction::INT, Type::INT, {Type::INT}}},
     {"true", {Instruction::TRUE, Type::BOOL, {}}},
     {"false", {Instruction::FALSE, Type::BOOL, {}}},
 
     {"frame_timer", {Instruction::FRAME_TIMER, Type::INT, {Type::INT}}},
 
-    {"player", {Instruction::PLAYER, Type::INT, {Type::INT}}},
-    {"this", {Instruction::THIS, Type::INT, {Type::INT}}},
+    {"player", {Instruction::PLAYER, Type::TARGET, {}}},
+    {"this", {Instruction::THIS, Type::TARGET, {}}},
 
-    {"position_x", {Instruction::POSITION_X, Type::INT, {}}},
+    {"position_x", {Instruction::POSITION_X, Type::INT, {Type::TARGET}}},
 
-    {"collides", {Instruction::COLLIDES, Type::BOOL, {Type::INT}}},
+    {"collides", {Instruction::COLLIDES, Type::BOOL, {Type::TARGET}}},
     {"flag", {Instruction::FLAG, Type::BOOL, {Type::STRING}}},
+    {"animation_looped", {Instruction::ANIMATION_LOOPED, Type::BOOL, {}}},
 
     {"grt", {Instruction::GRT, Type::BOOL, {Type::INT, Type::INT}}},
     {"lss", {Instruction::LSS, Type::BOOL, {Type::INT, Type::INT}}},

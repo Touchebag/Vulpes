@@ -1,7 +1,8 @@
 #include <gtest/gtest.h>
 
 #include "ai/interpreter.h"
-#include "ai/ai_utils.h"
+#include "ai/program.h"
+#include "components/rendering/rendering.h"
 #include "system/system.h"
 
 using ai::Bool;
@@ -23,9 +24,8 @@ class InterpreterTestFixture : public ::testing::Test {
     }
 
     int parseAndRun(std::string source) {
-        auto lexer_output = ai_utils::tokenizeString(source);
-        auto program = ai_utils::loadInstructions(lexer_output);
-        return Interpreter::executeProgram(program.first, extra_data_);
+        auto program = Program::loadProgram(source);
+        return Interpreter::executeProgram(program, extra_data_);
     }
 
   protected:
@@ -97,26 +97,26 @@ TEST_F(InterpreterTestFixture, Or) {
 }
 
 TEST_F(InterpreterTestFixture, PlayerPosition) {
-    auto output = parseAndRun("player position_x");
+    auto output = parseAndRun("position_x player");
 
     EXPECT_EQ(output, 0);
 
     System::IWorldModify::getPlayer().lock()->getComponent<Transform>()->setPosition(5, 2);
 
-    output = parseAndRun("player position_x");
+    output = parseAndRun("position_x player");
 
     EXPECT_EQ(output, 5);
 }
 
 TEST_F(InterpreterTestFixture, ThisPosition) {
-    auto output = parseAndRun("this position_x");
+    auto output = parseAndRun("position_x this");
 
     EXPECT_EQ(output, 0);
 
     extra_data_.this_components->setComponent<Transform>(std::make_shared<Transform>(extra_data_.this_components));
     extra_data_.this_components->getComponent<Transform>()->setPosition(3, 6);
 
-    output = parseAndRun("this position_x");
+    output = parseAndRun("position_x this");
 
     EXPECT_EQ(output, 3);
 }
@@ -142,5 +142,28 @@ TEST_F(InterpreterTestFixture, Flag) {
 
     System::getEnvironment()->setFlag("InterperTestFlag");
     output = parseAndRun("flag InterperTestFlag");
+    EXPECT_EQ(output, Bool::TRUE);
+}
+
+TEST_F(InterpreterTestFixture, AnimationLooped) {
+    auto output = parseAndRun("animation_looped");
+
+    EXPECT_EQ(output, Bool::FALSE);
+
+    auto str = R"--({
+        "Entity": "test_enemy"
+    })--";
+
+    auto entity = BaseEntity::createFromJson(nlohmann::json::parse(str));
+
+    extra_data_.this_components = entity->components_;
+
+    for (auto i = 0; i < 15; i++) {
+        output = parseAndRun("animation_looped");
+        EXPECT_EQ(output, Bool::FALSE);
+        extra_data_.this_components->getComponent<Animation>()->update();
+    }
+
+    output = parseAndRun("animation_looped");
     EXPECT_EQ(output, Bool::TRUE);
 }

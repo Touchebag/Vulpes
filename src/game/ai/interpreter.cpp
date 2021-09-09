@@ -2,7 +2,6 @@
 
 #include <stack>
 
-#include "ai_utils.h"
 #include "system/system.h"
 
 #include "utils/log.h"
@@ -47,7 +46,7 @@ int pop_with_stack(std::stack<int>& stack) {
 
 } // namespace
 
-int Interpreter::executeProgram(std::vector<int> program, ExtraInputData extra_input) {
+int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
     std::stack<int> stack;
 
     std::shared_ptr<ComponentStore> player_components = std::make_shared<ComponentStore>();
@@ -55,7 +54,9 @@ int Interpreter::executeProgram(std::vector<int> program, ExtraInputData extra_i
         player_components = player->components_;
     }
 
-    for (auto pc = program.begin(); pc != program.end(); pc++) {
+    auto byte_code = program.getProgram();
+
+    for (auto pc = byte_code.begin(); pc != byte_code.end(); pc++) {
         switch (static_cast<ai::Instruction>(*pc)) {
             case ai::Instruction::INT:
                 LOGV("INT");
@@ -105,9 +106,15 @@ int Interpreter::executeProgram(std::vector<int> program, ExtraInputData extra_i
                 break;
             case ai::Instruction::COLLIDES:
                 LOGV("COLLIDES");
-                if (auto this_coll = extra_input.this_components->getComponent<Collision>()) {
-                    if (this_coll->collides(player_components->getComponent<Collision>())) {
-                        PUSH(Bool::TRUE);
+                if (POP() == ai::Target::PLAYER) {
+                    if (auto this_coll = extra_input.this_components->getComponent<Collision>()) {
+                        if (this_coll->collides(player_components->getComponent<Collision>())) {
+                            PUSH(Bool::TRUE);
+                        } else {
+                            PUSH(Bool::FALSE);
+                        }
+                    } else {
+                        PUSH(Bool::FALSE);
                     }
                 } else {
                     PUSH(Bool::FALSE);
@@ -115,8 +122,18 @@ int Interpreter::executeProgram(std::vector<int> program, ExtraInputData extra_i
                 break;
             case ai::Instruction::FLAG:
                 LOGV("FLAG");
-                POP();
+                pc++;
                 PUSH(Bool::FALSE);
+                break;
+            case ai::Instruction::ANIMATION_LOOPED:
+                LOGV("ANIMATION_LOOPED");
+                if (auto anim = extra_input.this_components->getComponent<Animation>()) {
+                    if (anim->hasAnimationLooped()) {
+                        PUSH(Bool::TRUE);
+                    } else {
+                        PUSH(Bool::FALSE);
+                    }
+                }
                 break;
             case ai::Instruction::GRT:
             {

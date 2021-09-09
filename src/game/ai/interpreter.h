@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "components/component_store.h"
+#include "ai/program.h"
 
 class Interpreter {
   public:
@@ -11,5 +12,5 @@ class Interpreter {
         int frame_timer = 0;
     };
 
-    static int executeProgram(std::vector<int> program, ExtraInputData extra_data);
+    static int executeProgram(Program program, ExtraInputData extra_data);
 };
