@@ -1,7 +1,7 @@
 #include "utils/state_handler.h"
 
-#include "ai/logic_operators/logic_operator.h"
 #include "components/actions/actions.h"
+#include "ai/program.h"
 
 #include "utils/log.h"
 
@@ -82,4 +82,4 @@ const T& StateHandler<T>::getStateData() {
 
 
 template class StateHandler<state_utils::EntityContent>;
-template class StateHandler<std::vector<std::pair<std::shared_ptr<const ai::condition::LogicalOperator>, Actions::Action>>>;
+template class StateHandler<std::vector<std::pair<Program, Actions::Action>>>;

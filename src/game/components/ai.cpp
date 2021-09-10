@@ -5,13 +5,8 @@
 #include "utils/file.h"
 #include "utils/common.h"
 
+#include "ai/interpreter.h"
 #include "system/system.h"
-
-#include "ai/logic_operators/greater.h"
-#include "ai/logic_operators/less.h"
-#include "ai/values/constant.h"
-#include "ai/values/player_value.h"
-#include "ai/values/this.h"
 
 namespace {
 
@@ -33,15 +28,12 @@ void AI::update() {
     frame_timer_++;
 
     if (act) {
-        ai::condition::LogicalOperator::aiValues values {
-            getComponent<Transform>(),
-            getComponent<Collision>(),
-            getComponent<Animation>(),
-            frame_timer_
-        };
+        Interpreter::ExtraInputData extra_data;
+        extra_data.frame_timer = frame_timer_;
+        extra_data.this_components = component_store_.lock();
 
         for (auto& it : states_.getStateData()) {
-            if (it.first->getValue(values)) {
+            if (Interpreter::executeProgram(it.first, extra_data) == ai::Bool::TRUE) {
                 // Add resulting action
                 auto action = it.second;
                 act->addAction(action);
@@ -69,7 +61,7 @@ std::shared_ptr<AI> AI::createFromJson(nlohmann::json j, std::weak_ptr<Component
 
 void AI::reloadFromJson(nlohmann::json /* j */, File file) {
     if (auto ai_json = file.loadAiBehavior()) {
-        states_ = StateHandler<std::vector<std::pair<std::shared_ptr<const ai::condition::LogicalOperator>, Actions::Action>>>();
+        states_ = StateHandler<std::vector<std::pair<Program, Actions::Action>>>();
 
         auto ai_behavior = ai_json.value();
         states_.reloadFromJson(ai_behavior);

@@ -3,7 +3,7 @@
         "main": {
             "actions": [
                 {
-                    "condition": "animation_loop",
+                    "condition": "animation_looped",
                     "action": "die"
                 }
             ]

@@ -4,8 +4,9 @@
 #include "components/collision/collision.h"
 #include "components/transform.h"
 
+#include "ai/program.h"
+
 #include "utils/state_handler.h"
-#include "ai/logic_operators/logic_operator.h"
 
 class AI : public Component {
   public:
@@ -20,5 +21,5 @@ class AI : public Component {
   private:
     unsigned int frame_timer_ = 0;
 
-    StateHandler<std::vector<std::pair<std::shared_ptr<const ai::condition::LogicalOperator>, Actions::Action>>> states_;
+    StateHandler<std::vector<std::pair<Program, Actions::Action>>> states_;
 };

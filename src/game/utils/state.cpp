@@ -2,8 +2,9 @@
 
 #include "log.h"
 
-#include "ai/logic_operators/logic_operator.h"
 #include "components/actions/actions.h"
+
+#include "ai/program.h"
 
 template <class T>
 State<T>::State(T data) :
@@ -113,7 +114,7 @@ State<state_utils::EntityContent> State<state_utils::EntityContent>::loadStateFr
     return new_state;
 }
 
-#define AI_CONDITION_TYPE std::pair<std::shared_ptr<const ai::condition::LogicalOperator>, Actions::Action>
+#define AI_CONDITION_TYPE std::pair<Program, Actions::Action>
 
 template <>
 State<std::vector<AI_CONDITION_TYPE>>
@@ -125,7 +126,9 @@ State<std::vector<AI_CONDITION_TYPE>>::loadStateFromJson(nlohmann::json j) {
     std::vector<AI_CONDITION_TYPE> ai_behavior;
 
     for (auto it : j["actions"]) {
-        auto condition = ai::condition::LogicalOperator::createFromJson(it["condition"]);
+        auto condition = Program::loadProgram(it["condition"]);
+        // TODO Check correct type
+
         Actions::Action action = Actions::fromString(it["action"]);
         ai_behavior.push_back(std::make_pair(condition, action));
     }

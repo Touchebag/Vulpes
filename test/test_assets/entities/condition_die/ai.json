@@ -3,7 +3,7 @@
         "main": {
             "actions": [
                 {
-                    "condition": "flag (testCondition)",
+                    "condition": "flag testCondition",
                     "action": "die"
                 }
             ]

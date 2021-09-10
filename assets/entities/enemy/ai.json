@@ -7,11 +7,11 @@
             ],
             "actions": [
                 {
-                    "condition": "grt (player position x) (this position x)",
+                    "condition": "grt (position_x player) (position_x this)",
                     "action": "ai1"
                 },
                 {
-                    "condition": "lss (player position x) (this position x)",
+                    "condition": "lss (position_x player) (position_x this)",
                     "action": "ai2"
                 }
             ]
@@ -26,7 +26,7 @@
                     "action": "move_right"
                 },
                 {
-                    "condition": "frame_timer (constant 30)",
+                    "condition": "frame_timer 30",
                     "action": "ai1"
                 }
             ]
@@ -37,11 +37,11 @@
             ],
             "actions": [
                 {
-                    "condition": "grt (player position x) (this position x)",
+                    "condition": "grt (position_x player) (position_x this)",
                     "action": "move_right"
                 },
                 {
-                    "condition": "lss (player position x) (this position x)",
+                    "condition": "lss (position_x player) (position_x this)",
                     "action": "ai1"
                 }
             ]
@@ -56,7 +56,7 @@
                     "action": "move_left"
                 },
                 {
-                    "condition": "frame_timer (constant 30)",
+                    "condition": "frame_timer 30",
                     "action": "ai1"
                 }
             ]
@@ -67,11 +67,11 @@
             ],
             "actions": [
                 {
-                    "condition": "grt (player position x) (this position x)",
+                    "condition": "grt (position_x player) (position_x this)",
                     "action": "ai1"
                 },
                 {
-                    "condition": "lss (player position x) (this position x)",
+                    "condition": "lss (position_x player) (position_x this)",
                     "action": "move_left"
                 }
             ]

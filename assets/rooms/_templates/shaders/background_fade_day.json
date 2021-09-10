@@ -1,6 +1,6 @@
 {
     "background": "Forest/Background",
-    "condition": "!Collectible.ID.2",
+    "condition": "!Collectible.attack1",
     "shaders": [
         {
             "layer": -5,
