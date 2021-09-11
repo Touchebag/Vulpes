@@ -105,15 +105,18 @@ void Camera::resizeView(float width, float height) {
     auto camera_box_width = camera_box_.right_margin - camera_box_.left_margin;
     auto camera_box_height = camera_box_.bottom_margin - camera_box_.top_margin;
 
+    // Enforce aspect ratio
+    width = height * aspect_ratio_;
+
+    // Ensure neither direction spills outside camera box
     if (height > camera_box_height) {
         height = camera_box_height;
         width = height * aspect_ratio_;
-    } else if (width > camera_box_width) {
+    }
+
+    if (width > camera_box_width) {
         width = camera_box_width;
         height = width / aspect_ratio_;
-    } else {
-        // Ensure aspect ratio is maintained
-        width = height * aspect_ratio_;
     }
 
     view_.width = width;
@@ -196,18 +199,20 @@ void Camera::updateTargetView() {
 
             // Check if player is moving
             if (!(util::closeToZero(p_move->getVelX(), 0.01) && util::closeToZero(p_move->getVelY(), 0.01))) {
-                // Using height as base for nicer view
-                target_view_.height = 2000.0f;
-                target_view_.width = target_view_.height * aspect_ratio_;
                 idle_frame_counter_ = 210;
-            } else if (idle_frame_counter_ <= 0) {
-                // Using height as base for nicer view
-                target_view_.height = 1000.0f;
-                target_view_.width = target_view_.height * aspect_ratio_;
             } else {
                 idle_frame_counter_--;
             }
         }
+    }
+
+    // Zoom in when standing still
+    if (idle_frame_counter_ <= 0) {
+        // Using height as base for nicer view
+        target_view_.height = 1000.0f;
+    } else {
+        // Using height as base for nicer view
+        target_view_.height = 2000.0f;
     }
 
     auto half_width = view_.width / 2.0f;
