@@ -20,6 +20,8 @@ class EditorRender : public IRender {
     void clearLayerShaders() override;
     void loadLayerShaders(nlohmann::json j) override;
 
+    void addShader(std::shared_ptr<ShaderHandle> shader, int layer) override;
+
     void renderLayer(sf::RenderTarget& target, int layer);
     void setParallaxEnabled(bool enable);
     bool getParallaxEnabled();

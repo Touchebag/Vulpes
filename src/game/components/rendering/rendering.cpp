@@ -191,7 +191,8 @@ void Rendering::render(sf::RenderTarget& target, float frame_fraction) {
                 static_cast<float>(trans->getX() + x_offset + vel_x),
                 static_cast<float>(trans->getY() + y_offset + vel_y));
         if (shader_) {
-            target.draw(sprite_, shader_.get());
+            shader_->update();
+            target.draw(sprite_, shader_->getShader());
         } else {
             target.draw(sprite_);
         }
@@ -209,9 +210,7 @@ void Rendering::setLayer(int layer) {
 }
 
 void Rendering::loadShader(std::string shader_name) {
-    auto shader = File().loadShader(shader_name);
-
-    shader_ = shader;
+    shader_ = ShaderHandle::createFromJson(shader_name);
 }
 
 void Rendering::setScale(float x_scale, float y_scale) {

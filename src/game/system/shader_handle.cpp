@@ -15,7 +15,7 @@ ShaderHandle::ShaderHandle(std::shared_ptr<sf::Shader> shader) :
     shader_(shader) {
 }
 
-ShaderHandle ShaderHandle::createFromJson(nlohmann::json j) {
+std::shared_ptr<ShaderHandle> ShaderHandle::createFromJson(nlohmann::json j) {
     ShaderHandle handle{File().loadShader(j["shader"].get<std::string>())};
 
     if (j.contains("uniforms")) {
@@ -53,17 +53,15 @@ ShaderHandle ShaderHandle::createFromJson(nlohmann::json j) {
         }
     }
 
-    return handle;
+    return std::make_shared<ShaderHandle>(handle);
 }
 
-ShaderHandle& ShaderHandle::update() {
+void ShaderHandle::update() {
     for (auto it : uniforms_) {
         it->applyUniform(shader_);
     }
-
-    return *this;
 }
 
-sf::Shader* ShaderHandle::get() {
+sf::Shader* ShaderHandle::getShader() {
     return shader_.get();
 }

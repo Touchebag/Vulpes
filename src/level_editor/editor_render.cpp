@@ -204,6 +204,10 @@ void EditorRender::loadLayerShaders(nlohmann::json j) {
     render_.loadLayerShaders(j);
 }
 
+void EditorRender::addShader(std::shared_ptr<ShaderHandle> shader, int layer) {
+    render_.addShader(shader, layer);
+}
+
 void EditorRender::renderCollideable(std::shared_ptr<Collideable> coll) {
     collideable_render_ = coll;
 }

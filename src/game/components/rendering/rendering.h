@@ -5,6 +5,7 @@
 
 #include "components/transform.h"
 #include "components/movement.h"
+#include "system/shader_handle.h"
 
 class Rendering : public Component {
   public:
@@ -73,5 +74,5 @@ class Rendering : public Component {
 
     sf::IntRect original_texture_rect_;
 
-    std::shared_ptr<sf::Shader> shader_;
+    std::shared_ptr<ShaderHandle> shader_;
 };

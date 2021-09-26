@@ -22,6 +22,8 @@ class Render : public IRender {
     void clearLayerShaders() override;
     void loadLayerShaders(nlohmann::json j) override;
 
+    void addShader(std::shared_ptr<ShaderHandle> shader, int layer) override;
+
   private:
     void drawHud(sf::RenderWindow& window);
     void drawBackground(sf::RenderWindow& window);
@@ -32,7 +34,7 @@ class Render : public IRender {
     // Layers
     struct RenderLayer {
         std::vector<std::weak_ptr<Rendering>> renderables;
-        std::vector<ShaderHandle> shaders;
+        std::vector<std::shared_ptr<ShaderHandle>> shaders;
         float parallax_multiplier;
     };
 
