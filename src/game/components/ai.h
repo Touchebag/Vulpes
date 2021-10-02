@@ -19,8 +19,8 @@ class AI : public Component {
     void reloadFromJson(nlohmann::json j, File file_instance = File()) override;
     std::optional<nlohmann::json> outputToJson() override;
 
+    StateHandler<std::vector<STATE_AI_CONDITION_TYPE>> states_;
+
   private:
     unsigned int frame_timer_ = 0;
-
-    StateHandler<std::vector<STATE_AI_CONDITION_TYPE>> states_;
 };

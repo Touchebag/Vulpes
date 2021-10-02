@@ -10,10 +10,7 @@
 #include "nlohmann/json.hpp"
 #include "ai/program.h"
 
-// TODO Remove
-#include "components/actions/actions.h"
-
-using STATE_AI_CONDITION_TYPE = std::pair<Program, Actions::Action>;
+using STATE_AI_CONDITION_TYPE = std::pair<Program, Program>;
 
 template <class T>
 class State {

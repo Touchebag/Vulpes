@@ -1,5 +1,7 @@
 #include "program.h"
 
+#include "components/actions/common.h" // For string_action_map
+
 #include "utils/log.h"
 
 #include <sstream>
@@ -7,6 +9,10 @@
 #include <regex>
 
 namespace {
+
+bool stringStartsWith(const std::string &full_string, const std::string& prefix) {
+    return full_string.rfind(prefix, 0) == 0;
+}
 
 void checkType(ai::Type expected, ai::Type actual) {
     if (expected != actual) {
@@ -50,6 +56,12 @@ ai::InstructionData parseInstruction(std::string instruction) {
         }
 
         instruction_data = {ai::Instruction::STRING, ai::Type::STRING, {}};
+
+        return instruction_data;
+    }
+
+    if (stringStartsWith(instruction, "action_")) {
+        instruction_data = {ai::Instruction::ACTION, ai::Type::VOID, {}};
 
         return instruction_data;
     }
@@ -161,6 +173,10 @@ ai::Type Program::translateAndStore(std::vector<std::string> lexed_input) {
             strings_.insert({string_id_counter_, std::string(lexed_input[0].begin() + 1, lexed_input[0].end() - 1)});
             program_.push_back(string_id_counter_);
             string_id_counter_++;
+            break;
+        case ai::Instruction::ACTION:
+            program_.push_back(static_cast<int>(ai::Instruction::ACTION));
+            program_.push_back(static_cast<int>(string_action_map.at(lexed_input[0].substr(7))));
             break;
         default:
             // Push arguments

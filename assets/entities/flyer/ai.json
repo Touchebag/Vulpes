@@ -4,7 +4,7 @@
             "actions": [
                 {
                     "condition": "flag 'Collectible.attack1'",
-                    "action": "die"
+                    "action": "action_die"
                 }
             ]
         }

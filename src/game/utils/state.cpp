@@ -127,7 +127,7 @@ State<std::vector<STATE_AI_CONDITION_TYPE>>::loadStateFromJson(nlohmann::json j)
         auto condition = Program::loadProgram(it["condition"]);
         // TODO Check correct type
 
-        Actions::Action action = Actions::fromString(it["action"]);
+        auto action = Program::loadProgram(it["action"]);
         ai_behavior.push_back(std::make_pair(condition, action));
     }
 

@@ -136,12 +136,12 @@ TEST_F(InterpreterTestFixture, FrameTimer) {
 }
 
 TEST_F(InterpreterTestFixture, Flag) {
-    auto output = parseAndRun("flag InterperTestFlag");
+    auto output = parseAndRun("flag 'InterperTestFlag'");
 
     EXPECT_EQ(output, Bool::FALSE);
 
     System::getEnvironment()->setFlag("InterperTestFlag");
-    output = parseAndRun("flag InterperTestFlag");
+    output = parseAndRun("flag 'InterperTestFlag'");
     EXPECT_EQ(output, Bool::TRUE);
 }
 

@@ -8,11 +8,11 @@
             "actions": [
                 {
                     "condition": "grt (position_x player) (position_x this)",
-                    "action": "ai1"
+                    "action": "action_ai1"
                 },
                 {
                     "condition": "lss (position_x player) (position_x this)",
-                    "action": "ai2"
+                    "action": "action_ai2"
                 }
             ]
         },
@@ -23,11 +23,11 @@
             "actions": [
                 {
                     "condition": "true",
-                    "action": "move_right"
+                    "action": "action_move_right"
                 },
                 {
                     "condition": "frame_timer 30",
-                    "action": "ai1"
+                    "action": "action_ai1"
                 }
             ]
         },
@@ -38,11 +38,11 @@
             "actions": [
                 {
                     "condition": "grt (position_x player) (position_x this)",
-                    "action": "move_right"
+                    "action": "action_move_right"
                 },
                 {
                     "condition": "lss (position_x player) (position_x this)",
-                    "action": "ai1"
+                    "action": "action_ai1"
                 }
             ]
         },
@@ -53,11 +53,11 @@
             "actions": [
                 {
                     "condition": "true",
-                    "action": "move_left"
+                    "action": "action_move_left"
                 },
                 {
                     "condition": "frame_timer 30",
-                    "action": "ai1"
+                    "action": "action_ai1"
                 }
             ]
         },
@@ -68,11 +68,11 @@
             "actions": [
                 {
                     "condition": "grt (position_x player) (position_x this)",
-                    "action": "ai1"
+                    "action": "action_ai1"
                 },
                 {
                     "condition": "lss (position_x player) (position_x this)",
-                    "action": "move_left"
+                    "action": "action_move_left"
                 }
             ]
         }
