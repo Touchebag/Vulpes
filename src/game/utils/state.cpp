@@ -114,16 +114,14 @@ State<state_utils::EntityContent> State<state_utils::EntityContent>::loadStateFr
     return new_state;
 }
 
-#define AI_CONDITION_TYPE std::pair<Program, Actions::Action>
-
 template <>
-State<std::vector<AI_CONDITION_TYPE>>
-State<std::vector<AI_CONDITION_TYPE>>::loadStateFromJson(nlohmann::json j) {
+State<std::vector<STATE_AI_CONDITION_TYPE>>
+State<std::vector<STATE_AI_CONDITION_TYPE>>::loadStateFromJson(nlohmann::json j) {
     if (!j.contains("actions")) {
         throw std::invalid_argument("AI, missing actions");
     }
 
-    std::vector<AI_CONDITION_TYPE> ai_behavior;
+    std::vector<STATE_AI_CONDITION_TYPE> ai_behavior;
 
     for (auto it : j["actions"]) {
         auto condition = Program::loadProgram(it["condition"]);
@@ -141,4 +139,4 @@ State<std::vector<AI_CONDITION_TYPE>>::loadStateFromJson(nlohmann::json j) {
 }
 
 template class State<state_utils::EntityContent>;
-template class State<std::vector<AI_CONDITION_TYPE>>;
+template class State<std::vector<STATE_AI_CONDITION_TYPE>>;

@@ -3,7 +3,7 @@
         "main": {
             "actions": [
                 {
-                    "condition": "flag Collectible.attack1",
+                    "condition": "flag 'Collectible.attack1'",
                     "action": "die"
                 }
             ]

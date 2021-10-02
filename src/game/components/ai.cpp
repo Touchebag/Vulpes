@@ -61,7 +61,7 @@ std::shared_ptr<AI> AI::createFromJson(nlohmann::json j, std::weak_ptr<Component
 
 void AI::reloadFromJson(nlohmann::json /* j */, File file) {
     if (auto ai_json = file.loadAiBehavior()) {
-        states_ = StateHandler<std::vector<std::pair<Program, Actions::Action>>>();
+        states_ = StateHandler<std::vector<STATE_AI_CONDITION_TYPE>>();
 
         auto ai_behavior = ai_json.value();
         states_.reloadFromJson(ai_behavior);

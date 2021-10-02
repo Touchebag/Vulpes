@@ -7,6 +7,7 @@
 #include "ai/program.h"
 
 #include "utils/state_handler.h"
+#include "utils/state.h"
 
 class AI : public Component {
   public:
@@ -21,5 +22,5 @@ class AI : public Component {
   private:
     unsigned int frame_timer_ = 0;
 
-    StateHandler<std::vector<std::pair<Program, Actions::Action>>> states_;
+    StateHandler<std::vector<STATE_AI_CONDITION_TYPE>> states_;
 };

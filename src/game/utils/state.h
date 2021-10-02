@@ -8,6 +8,12 @@
 
 #include "utils/state_utils.h"
 #include "nlohmann/json.hpp"
+#include "ai/program.h"
+
+// TODO Remove
+#include "components/actions/actions.h"
+
+using STATE_AI_CONDITION_TYPE = std::pair<Program, Actions::Action>;
 
 template <class T>
 class State {

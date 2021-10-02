@@ -1,7 +1,6 @@
 #include "utils/state_handler.h"
 
 #include "components/actions/actions.h"
-#include "ai/program.h"
 
 #include "utils/log.h"
 
@@ -82,4 +81,4 @@ const T& StateHandler<T>::getStateData() {
 
 
 template class StateHandler<state_utils::EntityContent>;
-template class StateHandler<std::vector<std::pair<Program, Actions::Action>>>;
+template class StateHandler<std::vector<STATE_AI_CONDITION_TYPE>>;

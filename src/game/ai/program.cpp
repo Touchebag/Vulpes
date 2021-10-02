@@ -19,7 +19,7 @@ void checkType(ai::Type expected, ai::Type actual) {
 
 std::vector<std::string> tokenizeString(std::string str) {
     std::vector<std::string> ret_vec;
-    const std::regex re("[A-z0-9\\._]+|\\(|\\)");
+    const std::regex re("[A-z0-9\\._']+|\\(|\\)");
 
     std::smatch sm;
     while (std::regex_search(str, sm, re)) {
@@ -44,6 +44,16 @@ ai::InstructionData parseInstruction(std::string instruction) {
         // If not int, just continue parsing as normal
     }
 
+    if (instruction.front() == '\'') {
+        if (instruction.back() != '\'') {
+            throw std::invalid_argument("Program: Parse error, unmatched '");
+        }
+
+        instruction_data = {ai::Instruction::STRING, ai::Type::STRING, {}};
+
+        return instruction_data;
+    }
+
     if (instruction == "true" || instruction == "false") {
         instruction_data = {ai::Instruction::BOOL, ai::Type::BOOL, {}};
 
@@ -53,8 +63,7 @@ ai::InstructionData parseInstruction(std::string instruction) {
     try {
         instruction_data = ai::string_instruction_map.at(instruction);
     } catch (std::out_of_range& e) {
-        // If unable to parse, assume string
-        instruction_data = {ai::Instruction::STRING, ai::Type::STRING, {}};
+        throw std::invalid_argument("Program: Unknown instruction " + instruction);
     }
 
     return instruction_data;
@@ -148,7 +157,8 @@ ai::Type Program::translateAndStore(std::vector<std::string> lexed_input) {
         case ai::Instruction::STRING:
             program_.push_back(static_cast<int>(ai::Instruction::STRING));
 
-            strings_.insert({string_id_counter_, lexed_input[0]});
+            // Remove surrounding quotation marks
+            strings_.insert({string_id_counter_, std::string(lexed_input[0].begin() + 1, lexed_input[0].end() - 1)});
             program_.push_back(string_id_counter_);
             string_id_counter_++;
             break;
