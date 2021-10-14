@@ -20,7 +20,6 @@ class Render : public IRender {
     void setWindowSize(sf::RenderWindow& window, int width, int height) override;
 
     void clearLayerShaders() override;
-    void loadLayerShaders(nlohmann::json j) override;
 
     void addShader(std::shared_ptr<ShaderHandle> shader, int layer) override;
 

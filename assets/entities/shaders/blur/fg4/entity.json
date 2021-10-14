@@ -1,0 +1,79 @@
+{
+    "Actions": null,
+    "AI": null,
+    "Rendering": {
+        "layer": 0,
+        "shaders": [
+            {
+                "shader": "kawase.frag",
+                "uniforms": [
+                    {
+                        "type": "constant_float",
+                        "name": "distance",
+                        "value": 0.0
+                    },
+                    {
+                        "type": "window_size",
+                        "name": "render_size"
+                    }
+                ]
+            },
+            {
+                "shader": "kawase.frag",
+                "uniforms": [
+                    {
+                        "type": "constant_float",
+                        "name": "distance",
+                        "value": 1.0
+                    },
+                    {
+                        "type": "window_size",
+                        "name": "render_size"
+                    }
+                ]
+            },
+            {
+                "shader": "kawase.frag",
+                "uniforms": [
+                    {
+                        "type": "constant_float",
+                        "name": "distance",
+                        "value": 2.0
+                    },
+                    {
+                        "type": "window_size",
+                        "name": "render_size"
+                    }
+                ]
+            },
+            {
+                "shader": "kawase.frag",
+                "uniforms": [
+                    {
+                        "type": "constant_float",
+                        "name": "distance",
+                        "value": 2.0
+                    },
+                    {
+                        "type": "window_size",
+                        "name": "render_size"
+                    }
+                ]
+            },
+            {
+                "shader": "kawase.frag",
+                "uniforms": [
+                    {
+                        "type": "constant_float",
+                        "name": "distance",
+                        "value": 3.0
+                    },
+                    {
+                        "type": "window_size",
+                        "name": "render_size"
+                    }
+                ]
+            }
+        ]
+    }
+}

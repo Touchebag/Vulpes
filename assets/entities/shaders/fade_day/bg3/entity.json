@@ -1,0 +1,27 @@
+{
+    "Actions": null,
+    "AI": null,
+    "Rendering": {
+        "layer": 0,
+        "shaders": [
+            {
+                "shader": "color_fade.frag",
+                "uniforms": [
+                    {
+                        "type": "constant_float",
+                        "name": "intensity",
+                        "value": 0.05
+                    },
+                    {
+                        "type": "constant_vec4",
+                        "name": "target_color",
+                        "a": 0.5,
+                        "b": 0.8,
+                        "c": 1.0,
+                        "d": 0.0
+                    }
+                ]
+            }
+        ]
+    }
+}

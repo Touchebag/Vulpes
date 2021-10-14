@@ -62,7 +62,19 @@ void Rendering::reloadFromJson(nlohmann::json j, File file_instance) {
         throw std::invalid_argument("Entity missing layer");
     }
 
-    loadTexture(j["texture"].get<std::string>(), file_instance);
+    if (j.contains("shaders")) {
+        for (auto shader : j["shaders"]) {
+            loadShader(shader);
+        }
+    }
+
+    if (j.contains("texture")) {
+        loadTexture(j["texture"].get<std::string>(), file_instance);
+    }
+
+    if (!(texture_ || shader_)) {
+        LOGW("Rendering: No texture or shader");
+    }
 }
 
 void Rendering::recalculateTextureRect() {
@@ -170,6 +182,12 @@ void Rendering::clearColor() {
 }
 
 void Rendering::render(sf::RenderTarget& target, float frame_fraction) {
+    // Do not render if texture missing
+    // Used for global shaders
+    if (!texture_) {
+        return;
+    }
+
     // Used for interpolation between physics frames
     auto vel_x = 0.0;
     auto vel_y = 0.0;
@@ -209,8 +227,12 @@ void Rendering::setLayer(int layer) {
     layer_ = layer;
 }
 
-void Rendering::loadShader(std::string shader_name) {
-    shader_ = ShaderHandle::createFromJson(shader_name);
+void Rendering::loadShader(nlohmann::json j) {
+    shader_ = ShaderHandle::createFromJson(j);
+}
+
+std::shared_ptr<ShaderHandle> Rendering::getShader() {
+    return shader_;
 }
 
 void Rendering::setScale(float x_scale, float y_scale) {

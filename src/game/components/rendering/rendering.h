@@ -44,7 +44,7 @@ class Rendering : public Component {
     int getLayer();
     void setLayer(int layer);
 
-    void loadShader(std::string shader_name);
+    std::shared_ptr<ShaderHandle> getShader();
 
     // Number of repeated sprites
     // 0 = infinite tiling
@@ -65,6 +65,8 @@ class Rendering : public Component {
 
     int x_offset_ = 0;
     int y_offset_ = 0;
+
+    void loadShader(nlohmann::json j);
 
     // Needed for level editor
     std::string texture_name_;

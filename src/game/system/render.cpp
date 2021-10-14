@@ -234,16 +234,3 @@ void Render::clearLayerShaders() {
         layer.shaders.clear();
     }
 }
-
-void Render::loadLayerShaders(nlohmann::json j) {
-    for (auto& it : j) {
-        if (!it.contains("layer")) {
-            throw std::invalid_argument("Shader missing layer");
-        }
-
-        auto layer = it["layer"].get<int>();
-        for (auto shader : it["shaders"]) {
-            addShader(ShaderHandle::createFromJson(shader), layer);
-        }
-    }
-}

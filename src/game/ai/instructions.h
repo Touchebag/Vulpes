@@ -38,6 +38,8 @@ enum class Instruction {
 
     // Actions
     ACTION,
+
+    ADD_SHADER_TO_LAYER,
 };
 
 enum class Type {
@@ -87,6 +89,8 @@ static const std::unordered_map<std::string, InstructionData> string_instruction
     {"or", {Instruction::OR, Type::BOOL, {Type::BOOL, Type::BOOL}}},
 
     {"action", {Instruction::ACTION, Type::VOID, {Type::STRING}}},
+
+    {"add_shader_to_layer", {Instruction::ADD_SHADER_TO_LAYER, Type::VOID, {Type::INT}}},
 };
 
 } // ai

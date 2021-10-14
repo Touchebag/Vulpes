@@ -13,22 +13,16 @@ AI::AI(std::weak_ptr<ComponentStore> components) :
 }
 
 void AI::update() {
-    auto act = getComponent<Actions>();
-
     frame_timer_++;
 
-    if (act) {
-        Interpreter::ExtraInputData extra_data;
-        extra_data.frame_timer = frame_timer_;
-        extra_data.this_components = component_store_.lock();
+    Interpreter::ExtraInputData extra_data;
+    extra_data.frame_timer = frame_timer_;
+    extra_data.this_components = component_store_.lock();
 
-        for (auto& it : states_.getStateData()) {
-            if (Interpreter::executeProgram(it.first, extra_data) == ai::Bool::TRUE) {
-                Interpreter::executeProgram(it.second, extra_data);
-            }
+    for (auto& it : states_.getStateData()) {
+        if (Interpreter::executeProgram(it.first, extra_data) == ai::Bool::TRUE) {
+            Interpreter::executeProgram(it.second, extra_data);
         }
-    } else {
-        LOGW("AI: Missing actions");
     }
 }
 

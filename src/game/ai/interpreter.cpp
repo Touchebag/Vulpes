@@ -223,6 +223,18 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                 }
 
                 break;
+            case ai::Instruction::ADD_SHADER_TO_LAYER:
+                LOGV("ADD_SHADER_TO_LAYER");
+
+                if (auto rndr = extra_input.this_components->getComponent<Rendering>()) {
+                    int layer = POP();
+
+                    System::getRender()->addShader(rndr->getShader(), layer);
+                } else {
+                    LOGW("AI ADD_SHADER_TO_LAYER: Missing Rendering component");
+                }
+
+                break;
             default:
                 LOGW("Invalid operation %i", *pc);
                 return 0;

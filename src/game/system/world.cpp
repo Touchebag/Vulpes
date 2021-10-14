@@ -154,11 +154,6 @@ void World::addEntriesToWorld(nlohmann::json j, bool is_template) {
             template_objects_.insert(ent);
         }
     }
-
-    // Shaders
-    if (j.contains("shaders")) {
-        System::getRender()->loadLayerShaders(j["shaders"]);
-    }
 }
 
 void World::loadWorldTemplate(std::string file) {

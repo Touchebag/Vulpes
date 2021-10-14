@@ -25,7 +25,7 @@ void checkType(ai::Type expected, ai::Type actual) {
 
 std::vector<std::string> tokenizeString(std::string str) {
     std::vector<std::string> ret_vec;
-    const std::regex re("[A-z0-9\\._']+|\\(|\\)");
+    const std::regex re("[A-z0-9\\._'\\-]+|\\(|\\)");
 
     std::smatch sm;
     while (std::regex_search(str, sm, re)) {
