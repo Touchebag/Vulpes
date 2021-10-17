@@ -2,8 +2,6 @@
     "background": "Forest/Background",
     "condition": "!Collectible.attack1",
     "entities": [
-        {"Entity": "shaders/fade_day/bg3"},
-        {"Entity": "shaders/fade_day/bg4"},
-        {"Entity": "shaders/fade_day/bg5"}
+        {"Entity": "shaders/fade_day"}
     ]
 }

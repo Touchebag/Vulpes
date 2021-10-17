@@ -6,7 +6,9 @@
 #include "components/component_store.h"
 
 Rendering::Rendering(std::weak_ptr<ComponentStore> components) :
-    Component(components) {
+        Component(components) {
+    front_render_texture_ = std::make_shared<sf::RenderTexture>();
+    back_render_texture_ = std::make_shared<sf::RenderTexture>();
 }
 
 void Rendering::setTexture(std::shared_ptr<sf::Texture> texture) {
@@ -62,17 +64,28 @@ void Rendering::reloadFromJson(nlohmann::json j, File file_instance) {
         throw std::invalid_argument("Entity missing layer");
     }
 
-    if (j.contains("shaders")) {
-        for (auto shader : j["shaders"]) {
-            loadShader(shader);
-        }
-    }
-
     if (j.contains("texture")) {
         loadTexture(j["texture"].get<std::string>(), file_instance);
     }
 
-    if (!(texture_ || shader_)) {
+    if (j.contains("shaders")) {
+        shaders_.clear();
+        for (auto shader : j["shaders"]) {
+            loadShader(shader);
+        }
+
+        if (texture_) {
+            auto size = texture_->getSize();
+
+            front_render_texture_->create(size.x, size.y);
+            front_render_texture_->clear(sf::Color(0, 0, 0, 0));
+
+            back_render_texture_->create(size.x, size.y);
+            back_render_texture_->clear(sf::Color(0, 0, 0, 0));
+        }
+    }
+
+    if (!texture_ && shaders_.empty()) {
         LOGW("Rendering: No texture or shader");
     }
 }
@@ -208,12 +221,31 @@ void Rendering::render(sf::RenderTarget& target, float frame_fraction) {
         sprite_.setPosition(
                 static_cast<float>(trans->getX() + x_offset + vel_x),
                 static_cast<float>(trans->getY() + y_offset + vel_y));
-        if (shader_) {
-            shader_->update();
-            target.draw(sprite_, shader_->getShader());
-        } else {
-            target.draw(sprite_);
+
+        if (!shaders_.empty()) {
+            // Render sprite without shaders first
+            sf::Sprite shader_sprite(*texture_);
+
+            front_render_texture_->clear(sf::Color(0, 0, 0, 0));
+            front_render_texture_->draw(shader_sprite);
+            front_render_texture_->display();
+
+            for (auto shader_handle : shaders_) {
+                if (shader_handle) {
+                    // Set previous render texture as base for next render
+                    std::swap(front_render_texture_, back_render_texture_);
+
+                    front_render_texture_->clear(sf::Color(0, 0, 0, 0));
+                    shader_handle->update();
+                    front_render_texture_->draw(sf::Sprite(back_render_texture_->getTexture()), shader_handle->getShader());
+                    front_render_texture_->display();
+                }
+            }
+
+            sprite_.setTexture(front_render_texture_->getTexture());
         }
+
+        target.draw(sprite_);
     } else {
         LOGW("Rendering: Missing transform");
     }
@@ -228,11 +260,11 @@ void Rendering::setLayer(int layer) {
 }
 
 void Rendering::loadShader(nlohmann::json j) {
-    shader_ = ShaderHandle::createFromJson(j);
+    shaders_.push_back(ShaderHandle::createFromJson(j));
 }
 
-std::shared_ptr<ShaderHandle> Rendering::getShader() {
-    return shader_;
+std::vector<std::shared_ptr<ShaderHandle>> Rendering::getShaders() {
+    return shaders_;
 }
 
 void Rendering::setScale(float x_scale, float y_scale) {

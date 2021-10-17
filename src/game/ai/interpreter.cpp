@@ -229,7 +229,23 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                 if (auto rndr = extra_input.this_components->getComponent<Rendering>()) {
                     int layer = POP();
 
-                    System::getRender()->addShader(rndr->getShader(), layer);
+                    // Decrase by one to change indexing
+                    int shader_id = POP() - 1;
+
+                    auto shaders = rndr->getShaders();
+
+                    // If 0 or negative, add all
+                    if (shader_id < 0) {
+                        for (auto shader : shaders) {
+                            System::getRender()->addShader(shader, layer);
+                        }
+                    } else {
+                        if (shaders.size() > static_cast<unsigned long long>(shader_id)) {
+                            System::getRender()->addShader(shaders.at(shader_id), layer);
+                        } else {
+                            LOGW("AI ADD_SHADER_TO_LAYER: Unknown shader id %i", shader_id);
+                        }
+                    }
                 } else {
                     LOGW("AI ADD_SHADER_TO_LAYER: Missing Rendering component");
                 }

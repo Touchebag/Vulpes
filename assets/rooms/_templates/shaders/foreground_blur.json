@@ -1,7 +1,5 @@
 {
     "entities": [
-        {"Entity": "shaders/blur/fg3"},
-        {"Entity": "shaders/blur/fg4"},
-        {"Entity": "shaders/blur/fg5"}
+        {"Entity": "shaders/blur"}
     ]
 }

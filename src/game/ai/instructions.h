@@ -90,7 +90,7 @@ static const std::unordered_map<std::string, InstructionData> string_instruction
 
     {"action", {Instruction::ACTION, Type::VOID, {Type::STRING}}},
 
-    {"add_shader_to_layer", {Instruction::ADD_SHADER_TO_LAYER, Type::VOID, {Type::INT}}},
+    {"add_shader_to_layer", {Instruction::ADD_SHADER_TO_LAYER, Type::VOID, {Type::INT, Type::INT}}},
 };
 
 } // ai

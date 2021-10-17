@@ -44,7 +44,7 @@ class Rendering : public Component {
     int getLayer();
     void setLayer(int layer);
 
-    std::shared_ptr<ShaderHandle> getShader();
+    std::vector<std::shared_ptr<ShaderHandle>> getShaders();
 
     // Number of repeated sprites
     // 0 = infinite tiling
@@ -76,5 +76,8 @@ class Rendering : public Component {
 
     sf::IntRect original_texture_rect_;
 
-    std::shared_ptr<ShaderHandle> shader_;
+    std::vector<std::shared_ptr<ShaderHandle>> shaders_;
+
+    std::shared_ptr<sf::RenderTexture> front_render_texture_;
+    std::shared_ptr<sf::RenderTexture> back_render_texture_;
 };

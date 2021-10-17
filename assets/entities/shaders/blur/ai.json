@@ -7,7 +7,15 @@
             "actions": [
                 {
                     "condition": "true",
-                    "action": "add_shader_to_layer 5"
+                    "action": "add_shader_to_layer 0 3"
+                },
+                {
+                    "condition": "true",
+                    "action": "add_shader_to_layer 0 4"
+                },
+                {
+                    "condition": "true",
+                    "action": "add_shader_to_layer 0 5"
                 },
                 {
                     "condition": "true",
