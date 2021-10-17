@@ -5,6 +5,7 @@
 
 #include "components/transform.h"
 #include "components/movement.h"
+#include "system/shader_handle.h"
 
 class Rendering : public Component {
   public:
@@ -43,7 +44,7 @@ class Rendering : public Component {
     int getLayer();
     void setLayer(int layer);
 
-    void loadShader(std::string shader_name);
+    std::vector<std::shared_ptr<ShaderHandle>> getShaders();
 
     // Number of repeated sprites
     // 0 = infinite tiling
@@ -65,6 +66,8 @@ class Rendering : public Component {
     int x_offset_ = 0;
     int y_offset_ = 0;
 
+    void loadShader(nlohmann::json j);
+
     // Needed for level editor
     std::string texture_name_;
 
@@ -73,5 +76,8 @@ class Rendering : public Component {
 
     sf::IntRect original_texture_rect_;
 
-    std::shared_ptr<sf::Shader> shader_;
+    std::vector<std::shared_ptr<ShaderHandle>> shaders_;
+
+    std::shared_ptr<sf::RenderTexture> front_render_texture_;
+    std::shared_ptr<sf::RenderTexture> back_render_texture_;
 };

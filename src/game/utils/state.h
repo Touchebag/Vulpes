@@ -8,6 +8,9 @@
 
 #include "utils/state_utils.h"
 #include "nlohmann/json.hpp"
+#include "ai/program.h"
+
+using STATE_AI_CONDITION_TYPE = std::pair<Program, Program>;
 
 template <class T>
 class State {

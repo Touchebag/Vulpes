@@ -30,6 +30,12 @@ using ai::Target;
 
 namespace {
 
+const Bimap<Actions::Action, state_utils::Event> action_event_map = {
+    #define GENERATE_ENUM(action, name) {Actions::Action::action, state_utils::Event::ACTION_##action},
+    #include "components/actions/actions_enum.h"
+    #undef GENERATE_ENUM
+};
+
 int pop_with_stack(std::stack<int>& stack) {
     if (stack.empty()) {
         // This should be handled by type checker
@@ -198,6 +204,53 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                 PUSH(a || b ? Bool::TRUE : Bool::FALSE);
                 break;
             }
+            case ai::Instruction::ACTION:
+                LOGV("ACTION");
+
+                if (auto act = extra_input.this_components->getComponent<Actions>()) {
+                    pc++;
+
+                    auto action = static_cast<Actions::Action>(*pc);
+                    act->addAction(action);
+
+                    if (auto ai = extra_input.this_components->getComponent<AI>()) {
+                        if (action != Actions::Action::DIE) {
+                            ai->states_.incomingEvent(action_event_map.at(action));
+                        }
+                    }
+                } else {
+                    LOGW("AI ACTION: Missing Actions component");
+                }
+
+                break;
+            case ai::Instruction::ADD_SHADER_TO_LAYER:
+                LOGV("ADD_SHADER_TO_LAYER");
+
+                if (auto rndr = extra_input.this_components->getComponent<Rendering>()) {
+                    int layer = POP();
+
+                    // Decrase by one to change indexing
+                    int shader_id = POP() - 1;
+
+                    auto shaders = rndr->getShaders();
+
+                    // If 0 or negative, add all
+                    if (shader_id < 0) {
+                        for (auto shader : shaders) {
+                            System::getRender()->addShader(shader, layer);
+                        }
+                    } else {
+                        if (shaders.size() > static_cast<unsigned long long>(shader_id)) {
+                            System::getRender()->addShader(shaders.at(shader_id), layer);
+                        } else {
+                            LOGW("AI ADD_SHADER_TO_LAYER: Unknown shader id %i", shader_id);
+                        }
+                    }
+                } else {
+                    LOGW("AI ADD_SHADER_TO_LAYER: Missing Rendering component");
+                }
+
+                break;
             default:
                 LOGW("Invalid operation %i", *pc);
                 return 0;

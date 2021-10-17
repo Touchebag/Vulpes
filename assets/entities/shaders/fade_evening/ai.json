@@ -1,0 +1,35 @@
+{
+    "states": {
+        "main": {
+            "next_states": [
+                { "event": "action_ai1", "state": "idle" }
+            ],
+            "actions": [
+                {
+                    "condition": "true",
+                    "action": "add_shader_to_layer 1 -3"
+                },
+                {
+                    "condition": "true",
+                    "action": "add_shader_to_layer 2 -4"
+                },
+                {
+                    "condition": "true",
+                    "action": "add_shader_to_layer 3 -5"
+                },
+                {
+                    "condition": "true",
+                    "action": "action_ai1"
+                }
+            ]
+        },
+        "idle": {
+            "actions": [
+                {
+                    "condition": "true",
+                    "action": "true"
+                }
+            ]
+        }
+    }
+}

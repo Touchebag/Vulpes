@@ -1,75 +1,7 @@
 {
     "background": "bg_evening",
     "condition": "Collectible.attack1",
-    "shaders": [
-        {
-            "layer": -5,
-            "shaders": [
-                {
-                    "shader": "color_fade.frag",
-                    "uniforms": [
-                        {
-                            "type": "constant_float",
-                            "name": "intensity",
-                            "value": 0.3
-                        },
-                        {
-                            "type": "constant_vec4",
-                            "name": "target_color",
-                            "a": 1.0,
-                            "b": 0.5,
-                            "c": 0.5,
-                            "d": 0.0
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "layer": -4,
-            "shaders": [
-                {
-                    "shader": "color_fade.frag",
-                    "uniforms": [
-                        {
-                            "type": "constant_float",
-                            "name": "intensity",
-                            "value": 0.15
-                        },
-                        {
-                            "type": "constant_vec4",
-                            "name": "target_color",
-                            "a": 1.0,
-                            "b": 0.5,
-                            "c": 0.5,
-                            "d": 0.0
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "layer": -3,
-            "shaders": [
-                {
-                    "shader": "color_fade.frag",
-                    "uniforms": [
-                        {
-                            "type": "constant_float",
-                            "name": "intensity",
-                            "value": 0.05
-                        },
-                        {
-                            "type": "constant_vec4",
-                            "name": "target_color",
-                            "a": 1.0,
-                            "b": 0.5,
-                            "c": 0.5,
-                            "d": 0.0
-                        }
-                    ]
-                }
-            ]
-        }
+    "entities": [
+        {"Entity": "shaders/fade_evening"}
     ]
 }

@@ -6,10 +6,10 @@
 
 class ShaderHandle {
   public:
-    static ShaderHandle createFromJson(nlohmann::json j);
+    static std::shared_ptr<ShaderHandle> createFromJson(nlohmann::json j);
 
-    ShaderHandle& update();
-    sf::Shader* get();
+    void update();
+    sf::Shader* getShader();
 
   private:
     ShaderHandle(std::shared_ptr<sf::Shader> shader);

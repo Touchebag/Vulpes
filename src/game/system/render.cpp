@@ -54,14 +54,17 @@ void Render::renderLayerWithPostProcessing(sf::RenderWindow& window, int layer, 
     to_render_texture_->display();
 
     if (!getLayer(layer).shaders.empty()) {
-        for (auto shader : getLayer(layer).shaders) {
-            // Set previous render texture as base for next render
-            std::swap(to_render_texture_, from_render_texture_);
+        for (auto shader_handle : getLayer(layer).shaders) {
+            if (shader_handle) {
+                // Set previous render texture as base for next render
+                std::swap(to_render_texture_, from_render_texture_);
 
-            to_render_texture_->clear(sf::Color(0, 0, 0, 0));
-            to_render_texture_->setView(window.getView());
-            to_render_texture_->draw(sf::Sprite(from_render_texture_->getTexture()), shader.update().get());
-            to_render_texture_->display();
+                to_render_texture_->clear(sf::Color(0, 0, 0, 0));
+                to_render_texture_->setView(window.getView());
+                shader_handle->update();
+                to_render_texture_->draw(sf::Sprite(from_render_texture_->getTexture()), shader_handle->getShader());
+                to_render_texture_->display();
+            }
         }
     }
 
@@ -219,24 +222,15 @@ void Render::addEntity(std::weak_ptr<Rendering> entity) {
     }
 }
 
+void Render::addShader(std::shared_ptr<ShaderHandle> shader, int layer) {
+    getLayer(layer).shaders.push_back(shader);
+}
+
 void Render::clearLayerShaders() {
     for (auto& layer : background_layers_) {
         layer.shaders.clear();
     }
     for (auto& layer : foreground_layers_) {
         layer.shaders.clear();
-    }
-}
-
-void Render::loadLayerShaders(nlohmann::json j) {
-    for (auto& it : j) {
-        if (!it.contains("layer")) {
-            throw std::invalid_argument("Shader missing layer");
-        }
-
-        auto layer = it["layer"].get<int>();
-        for (auto shader : it["shaders"]) {
-            getLayer(layer).shaders.push_back(ShaderHandle::createFromJson(shader));
-        }
     }
 }

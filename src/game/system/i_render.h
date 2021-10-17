@@ -1,6 +1,7 @@
 #pragma once
 
 #include "components/rendering/rendering.h"
+#include "shader_handle.h"
 
 #include <SFML/Graphics.hpp>
 
@@ -17,5 +18,5 @@ class IRender {
     virtual void setWindowSize(sf::RenderWindow& window, int width, int height) = 0;
 
     virtual void clearLayerShaders() = 0;
-    virtual void loadLayerShaders(nlohmann::json j) = 0;
+    virtual void addShader(std::shared_ptr<ShaderHandle> shader, int layer) = 0;
 };

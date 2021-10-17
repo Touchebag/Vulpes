@@ -1,3 +1,6 @@
+#include "utils/bimap.h"
+#include "actions.h"
+
 const Bimap<std::string, Actions::Action> string_action_map = {
     {"unknown", Actions::Action::UNKNOWN},
 
