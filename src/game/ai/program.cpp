@@ -178,6 +178,31 @@ ai::Type Program::translateAndStore(std::vector<std::string> lexed_input) {
             program_.push_back(static_cast<int>(ai::Instruction::ACTION));
             program_.push_back(static_cast<int>(string_action_map.at(lexed_input[0].substr(7))));
             break;
+        case ai::Instruction::IF:
+        {
+            // Push condition
+            auto condition = arguments[0];
+            auto parsed_condition = parseInstruction(condition);
+
+            checkType(instruction_data.args_return_type[0], parsed_condition.return_type);
+
+            translateAndStore(condition);
+
+            // Push IF statement
+            program_.push_back(static_cast<int>(ai::Instruction::IF));
+
+            // Ignore THEN
+
+            // Push body
+            auto body = arguments[2];
+            auto parsed_body = parseInstruction(body);
+
+            checkType(instruction_data.args_return_type[2], parsed_body.return_type);
+
+            translateAndStore(body);
+
+            break;
+        }
         default:
             // Push arguments
             for (int i = 0; i < static_cast<int>(arguments.size()); i++) {

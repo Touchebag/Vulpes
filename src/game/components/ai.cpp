@@ -20,9 +20,7 @@ void AI::update() {
     extra_data.this_components = component_store_.lock();
 
     for (auto& it : states_.getStateData()) {
-        if (Interpreter::executeProgram(it.first, extra_data) == ai::Bool::TRUE) {
-            Interpreter::executeProgram(it.second, extra_data);
-        }
+        Interpreter::executeProgram(it, extra_data);
     }
 }
 
@@ -36,7 +34,7 @@ std::shared_ptr<AI> AI::createFromJson(nlohmann::json j, std::weak_ptr<Component
 
 void AI::reloadFromJson(nlohmann::json /* j */, File file) {
     if (auto ai_json = file.loadAiBehavior()) {
-        states_ = StateHandler<std::vector<STATE_AI_CONDITION_TYPE>>();
+        states_ = StateHandler<STATE_AI_CONDITION_TYPE>();
 
         auto ai_behavior = ai_json.value();
         states_.reloadFromJson(ai_behavior);

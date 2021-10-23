@@ -62,7 +62,7 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
 
     auto byte_code = program.getProgram();
 
-    for (auto pc = byte_code.begin(); pc != byte_code.end(); pc++) {
+    for (auto pc = byte_code.begin(); pc < byte_code.end(); pc++) {
         switch (static_cast<ai::Instruction>(*pc)) {
             case ai::Instruction::INT:
                 LOGV("INT");
@@ -250,6 +250,23 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                     LOGW("AI ADD_SHADER_TO_LAYER: Missing Rendering component");
                 }
 
+                break;
+            case ai::Instruction::IF:
+            {
+                LOGV("IF");
+                auto condition = POP();
+
+                // If condition is not true ignore rest of program
+                if (condition != Bool::TRUE) {
+                    pc = byte_code.end();
+                }
+
+                // Else just continue executing body
+
+                break;
+            }
+            case ai::Instruction::THEN:
+                // NOP
                 break;
             default:
                 LOGW("Invalid operation %i", *pc);

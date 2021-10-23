@@ -1,11 +1,8 @@
 {
     "states": {
         "main": {
-            "actions": [
-                {
-                    "condition": "flag 'testCondition'",
-                    "action": "action_die"
-                }
+            "ai": [
+                "if (flag 'testCondition') then action_die"
             ]
         }
     }

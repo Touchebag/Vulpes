@@ -1,11 +1,8 @@
 {
     "states": {
         "main": {
-            "actions": [
-                {
-                    "condition": "animation_looped",
-                    "action": "action_die"
-                }
+            "ai": [
+                "if animation_looped then action_die"
             ]
         }
     }

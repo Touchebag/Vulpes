@@ -33,6 +33,10 @@ enum class Instruction {
     AND,
     OR,
 
+    // If statement
+    IF,
+    THEN,
+
     // This is used to restrict access as needed
     READ_ONLY,
 
@@ -52,6 +56,9 @@ enum class Type {
     TARGET,
 
     STRING,
+
+    // To help with parsing
+    THEN,
 };
 
 enum Bool {
@@ -71,7 +78,7 @@ struct InstructionData {
 };
 
 static const std::unordered_map<std::string, InstructionData> string_instruction_map = {
-    {"frame_timer", {Instruction::FRAME_TIMER, Type::INT, {Type::INT}}},
+    {"frame_timer", {Instruction::FRAME_TIMER, Type::BOOL, {Type::INT}}},
 
     {"player", {Instruction::PLAYER, Type::TARGET, {}}},
     {"this", {Instruction::THIS, Type::TARGET, {}}},
@@ -87,6 +94,9 @@ static const std::unordered_map<std::string, InstructionData> string_instruction
 
     {"and", {Instruction::AND, Type::BOOL, {Type::BOOL, Type::BOOL}}},
     {"or", {Instruction::OR, Type::BOOL, {Type::BOOL, Type::BOOL}}},
+
+    {"if", {Instruction::IF, Type::VOID, {Type::BOOL, Type::THEN, Type::VOID}}},
+    {"then", {Instruction::THEN, Type::THEN, {}}},
 
     {"action", {Instruction::ACTION, Type::VOID, {Type::STRING}}},
 
