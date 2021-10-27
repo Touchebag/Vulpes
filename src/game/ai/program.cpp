@@ -15,7 +15,8 @@ bool stringStartsWith(const std::string &full_string, const std::string& prefix)
 }
 
 void checkType(ai::Type expected, ai::Type actual) {
-    if (expected != actual) {
+    // Void can return whatever
+    if (expected != ai::Type::VOID && expected != actual) {
         std::stringstream error_message;
         error_message << "type error. Expected " << static_cast<int>(expected) <<
                          ", got " << static_cast<int>(actual);

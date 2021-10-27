@@ -48,6 +48,103 @@ TEST_F(InterpreterTestFixture, BoolLiteral) {
     EXPECT_EQ(output, Bool::FALSE);
 }
 
+TEST_F(InterpreterTestFixture, StringLiteral) {
+    auto program = Program::loadProgram("'string_literal'");
+
+    EXPECT_EQ(program.getString(0), "string_literal");
+}
+
+TEST_F(InterpreterTestFixture, FrameTimer) {
+    auto output = parseAndRun("frame_timer 2");
+
+    EXPECT_EQ(output, Bool::FALSE);
+
+    extra_data_.frame_timer++;
+    output = parseAndRun("frame_timer 2");
+    EXPECT_EQ(output, Bool::FALSE);
+
+    extra_data_.frame_timer++;
+    output = parseAndRun("frame_timer 2");
+    EXPECT_EQ(output, Bool::TRUE);
+}
+
+TEST_F(InterpreterTestFixture, PlayerPosition) {
+    auto output = parseAndRun("position_x player");
+
+    EXPECT_EQ(output, 0);
+
+    System::IWorldModify::getPlayer().lock()->getComponent<Transform>()->setPosition(5, 2);
+
+    output = parseAndRun("position_x player");
+
+    EXPECT_EQ(output, 5);
+}
+
+TEST_F(InterpreterTestFixture, ThisPosition) {
+    auto output = parseAndRun("position_x this");
+
+    EXPECT_EQ(output, 0);
+
+    extra_data_.this_components->setComponent<Transform>(std::make_shared<Transform>(extra_data_.this_components));
+    extra_data_.this_components->getComponent<Transform>()->setPosition(3, 6);
+
+    output = parseAndRun("position_x this");
+
+    EXPECT_EQ(output, 3);
+}
+
+TEST_F(InterpreterTestFixture, ThisCollides) {
+    System::IWorldModify::getPlayer().lock()->getComponent<Transform>()->setPosition(500, 500);
+
+    extra_data_.this_components->setComponent<Transform>(std::make_shared<Transform>(extra_data_.this_components));
+    extra_data_.this_components->getComponent<Transform>()->setPosition(0, 0);
+    extra_data_.this_components->setComponent<Collision>(std::make_shared<Collision>(extra_data_.this_components));
+    extra_data_.this_components->getComponent<Collision>()->getCollideable()->setHitbox(10, 10);
+
+    auto output = parseAndRun("collides player");
+
+    EXPECT_EQ(output, Bool::FALSE);
+
+    System::IWorldModify::getPlayer().lock()->getComponent<Transform>()->setPosition(0, 0);
+
+    output = parseAndRun("collides player");
+
+    EXPECT_EQ(output, Bool::TRUE);
+}
+
+TEST_F(InterpreterTestFixture, Flag) {
+    auto output = parseAndRun("flag 'InterperTestFlag'");
+
+    EXPECT_EQ(output, Bool::FALSE);
+
+    System::getEnvironment()->setFlag("InterperTestFlag");
+    output = parseAndRun("flag 'InterperTestFlag'");
+    EXPECT_EQ(output, Bool::TRUE);
+}
+
+TEST_F(InterpreterTestFixture, AnimationLooped) {
+    auto output = parseAndRun("animation_looped");
+
+    EXPECT_EQ(output, Bool::FALSE);
+
+    auto str = R"--({
+        "Entity": "test_enemy"
+    })--";
+
+    auto entity = BaseEntity::createFromJson(nlohmann::json::parse(str));
+
+    extra_data_.this_components = entity->components_;
+
+    for (auto i = 0; i < 15; i++) {
+        output = parseAndRun("animation_looped");
+        EXPECT_EQ(output, Bool::FALSE);
+        extra_data_.this_components->getComponent<Animation>()->update();
+    }
+
+    output = parseAndRun("animation_looped");
+    EXPECT_EQ(output, Bool::TRUE);
+}
+
 TEST_F(InterpreterTestFixture, Greater) {
     auto output = parseAndRun("grt 4 2");
 
@@ -96,74 +193,51 @@ TEST_F(InterpreterTestFixture, Or) {
     EXPECT_EQ(output, Bool::FALSE);
 }
 
-TEST_F(InterpreterTestFixture, PlayerPosition) {
-    auto output = parseAndRun("position_x player");
+TEST_F(InterpreterTestFixture, IfThen) {
+    auto output = parseAndRun("if (grt 3 4) then true");
 
     EXPECT_EQ(output, 0);
 
-    System::IWorldModify::getPlayer().lock()->getComponent<Transform>()->setPosition(5, 2);
+    output = parseAndRun("if (grt 4 3) then true");
 
-    output = parseAndRun("position_x player");
-
-    EXPECT_EQ(output, 5);
-}
-
-TEST_F(InterpreterTestFixture, ThisPosition) {
-    auto output = parseAndRun("position_x this");
-
-    EXPECT_EQ(output, 0);
-
-    extra_data_.this_components->setComponent<Transform>(std::make_shared<Transform>(extra_data_.this_components));
-    extra_data_.this_components->getComponent<Transform>()->setPosition(3, 6);
-
-    output = parseAndRun("position_x this");
-
-    EXPECT_EQ(output, 3);
-}
-
-TEST_F(InterpreterTestFixture, FrameTimer) {
-    auto output = parseAndRun("frame_timer 2");
-
-    EXPECT_EQ(output, Bool::FALSE);
-
-    extra_data_.frame_timer++;
-    output = parseAndRun("frame_timer 2");
-    EXPECT_EQ(output, Bool::FALSE);
-
-    extra_data_.frame_timer++;
-    output = parseAndRun("frame_timer 2");
     EXPECT_EQ(output, Bool::TRUE);
 }
 
-TEST_F(InterpreterTestFixture, Flag) {
-    auto output = parseAndRun("flag 'InterperTestFlag'");
+TEST_F(InterpreterTestFixture, Action) {
+    extra_data_.this_components->setComponent<Actions>(std::make_shared<Actions>(extra_data_.this_components));
 
-    EXPECT_EQ(output, Bool::FALSE);
+    EXPECT_FALSE(extra_data_.this_components->getComponent<Actions>()->getActionState(Actions::Action::AI1));
 
-    System::getEnvironment()->setFlag("InterperTestFlag");
-    output = parseAndRun("flag 'InterperTestFlag'");
-    EXPECT_EQ(output, Bool::TRUE);
+    parseAndRun("action_ai1");
+
+    EXPECT_TRUE(extra_data_.this_components->getComponent<Actions>()->getActionState(Actions::Action::AI1));
 }
 
-TEST_F(InterpreterTestFixture, AnimationLooped) {
-    auto output = parseAndRun("animation_looped");
+TEST_F(InterpreterTestFixture, AddShadersToLayer) {
+    auto j = nlohmann::json::parse(R"--({
+        "layer": 0,
+        "shaders": [
+            {
+                "shader": "kawase.frag",
+                "uniforms": [
+                    {
+                        "type": "constant_float",
+                        "name": "distance",
+                        "value": 0.0
+                    },
+                    {
+                        "type": "window_size",
+                        "name": "render_size"
+                    }
+                ]
+            }
+        ]
+    })--");
 
-    EXPECT_EQ(output, Bool::FALSE);
+    extra_data_.this_components->setComponent<Rendering>(std::make_shared<Rendering>(extra_data_.this_components));
+    extra_data_.this_components->getComponent<Rendering>()->reloadFromJson(j);
 
-    auto str = R"--({
-        "Entity": "test_enemy"
-    })--";
-
-    auto entity = BaseEntity::createFromJson(nlohmann::json::parse(str));
-
-    extra_data_.this_components = entity->components_;
-
-    for (auto i = 0; i < 15; i++) {
-        output = parseAndRun("animation_looped");
-        EXPECT_EQ(output, Bool::FALSE);
-        extra_data_.this_components->getComponent<Animation>()->update();
-    }
-
-    output = parseAndRun("animation_looped");
-    EXPECT_EQ(output, Bool::TRUE);
+    // For now only check parsing
+    // TODO Figure out how to verify
+    parseAndRun("add_shader_to_layer 0 3");
 }

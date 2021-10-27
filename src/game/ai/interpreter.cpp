@@ -259,6 +259,13 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                 // If condition is not true ignore rest of program
                 if (condition != Bool::TRUE) {
                     pc = byte_code.end();
+
+                    // Empty stack and push 0 return value
+                    while (!stack.empty()) {
+                        POP();
+                    }
+
+                    PUSH(0);
                 }
 
                 // Else just continue executing body
