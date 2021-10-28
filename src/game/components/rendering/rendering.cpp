@@ -236,7 +236,6 @@ void Rendering::render(sf::RenderTarget& target, float frame_fraction) {
                     std::swap(front_render_texture_, back_render_texture_);
 
                     front_render_texture_->clear(sf::Color(0, 0, 0, 0));
-                    shader_handle->update();
                     front_render_texture_->draw(sf::Sprite(back_render_texture_->getTexture()), shader_handle->getShader());
                     front_render_texture_->display();
                 }
@@ -278,5 +277,9 @@ void Rendering::setOffset(int x_offset, int y_offset) {
 }
 
 void Rendering::update() {
-    LOGW("Rendering::update, this should not be called");
+    for (auto shader_handle : shaders_) {
+        if (shader_handle) {
+            shader_handle->update();
+        }
+    }
 }

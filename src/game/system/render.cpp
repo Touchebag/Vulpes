@@ -53,17 +53,19 @@ void Render::renderLayerWithPostProcessing(sf::RenderWindow& window, int layer, 
     renderLayer(*to_render_texture_, frame_fraction, layer);
     to_render_texture_->display();
 
-    if (!getLayer(layer).shaders.empty()) {
-        for (auto shader_handle : getLayer(layer).shaders) {
-            if (shader_handle) {
+    auto& layer_shaders = getLayer(layer).shaders;
+    if (!layer_shaders.empty()) {
+        for (auto it = layer_shaders.begin(); it < layer_shaders.end(); it++) {
+            if (auto shader_handle = it->lock()) {
                 // Set previous render texture as base for next render
                 std::swap(to_render_texture_, from_render_texture_);
 
                 to_render_texture_->clear(sf::Color(0, 0, 0, 0));
                 to_render_texture_->setView(window.getView());
-                shader_handle->update();
                 to_render_texture_->draw(sf::Sprite(from_render_texture_->getTexture()), shader_handle->getShader());
                 to_render_texture_->display();
+            } else {
+                it = layer_shaders.erase(it);
             }
         }
     }

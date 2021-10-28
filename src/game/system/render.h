@@ -33,7 +33,7 @@ class Render : public IRender {
     // Layers
     struct RenderLayer {
         std::vector<std::weak_ptr<Rendering>> renderables;
-        std::vector<std::shared_ptr<ShaderHandle>> shaders;
+        std::vector<std::weak_ptr<ShaderHandle>> shaders;
         float parallax_multiplier;
     };
 

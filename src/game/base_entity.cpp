@@ -177,5 +177,7 @@ void BaseEntity::update() {
     update_component(Damageable);
 
     update_component(Subentity);
+
+    update_component(Rendering);
 }
 
