@@ -11,7 +11,7 @@ class Render : public IRender {
   public:
     Render();
 
-    void render(sf::RenderWindow& window, float frame_fraction) override;
+    void render(sf::RenderTarget& window, float frame_fraction) override;
 
     void addEntity(std::weak_ptr<Rendering> entity) override;
     void setPlayer(std::weak_ptr<Rendering> entity) override;
@@ -19,16 +19,17 @@ class Render : public IRender {
 
     void setWindowSize(sf::RenderWindow& window, int width, int height) override;
 
-    void clearLayerShaders() override;
+    void clearShaders() override;
 
     void addShader(std::shared_ptr<ShaderHandle> shader, int layer) override;
+    void addGlobalShader(std::shared_ptr<ShaderHandle> shader) override;
 
   private:
-    void drawHud(sf::RenderWindow& window);
-    void drawBackground(sf::RenderWindow& window);
-    void drawPlayer(sf::RenderWindow& window, float frame_fraction);
+    void drawHud(sf::RenderTarget& window);
+    void drawBackground(sf::RenderTarget& window);
+    void drawPlayer(sf::RenderTarget& window, float frame_fraction);
 
-    void renderLayerWithPostProcessing(sf::RenderWindow& window, int layer, float frame_fraction);
+    void renderLayerWithPostProcessing(sf::RenderTarget& window, int layer, float frame_fraction);
 
     // Layers
     struct RenderLayer {
@@ -56,7 +57,11 @@ class Render : public IRender {
 
     bool parallax_enabled_ = true;
 
+    std::vector<std::weak_ptr<ShaderHandle>> global_shaders_;
+
     // Primary/secondary textures
-    std::shared_ptr<sf::RenderTexture> to_render_texture_;
-    std::shared_ptr<sf::RenderTexture> from_render_texture_;
+    std::shared_ptr<sf::RenderTexture> front_render_buffer_;
+    std::shared_ptr<sf::RenderTexture> back_render_buffer_;
+
+    std::shared_ptr<sf::RenderTexture> render_texture_;
 };

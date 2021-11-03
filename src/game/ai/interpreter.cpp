@@ -251,6 +251,32 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                 }
 
                 break;
+            case ai::Instruction::ADD_GLOBAL_SHADER:
+                LOGV("ADD_GLOBAL_SHADER");
+
+                if (auto rndr = extra_input.this_components->getComponent<Rendering>()) {
+                    // Decrase by one to change indexing
+                    int shader_id = POP() - 1;
+
+                    auto shaders = rndr->getShaders();
+
+                    // If 0 or negative, add all
+                    if (shader_id < 0) {
+                        for (auto shader : shaders) {
+                            System::getRender()->addGlobalShader(shader);
+                        }
+                    } else {
+                        if (shaders.size() > static_cast<unsigned long long>(shader_id)) {
+                            System::getRender()->addGlobalShader(shaders.at(shader_id));
+                        } else {
+                            LOGW("AI ADD_GLOBAL_SHADER: Unknown shader id %i", shader_id);
+                        }
+                    }
+                } else {
+                    LOGW("AI ADD_GLOBAL_SHADER: Missing Rendering component");
+                }
+
+                break;
             case ai::Instruction::IF:
             {
                 LOGV("IF");

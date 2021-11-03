@@ -207,7 +207,7 @@ void World::loadWorldFromJson(nlohmann::json j) {
     }
 
     clearWorld();
-    System::getRender()->clearLayerShaders();
+    System::getRender()->clearShaders();
 
     if (j.contains("templates")) {
         for (auto temp : j["templates"]) {

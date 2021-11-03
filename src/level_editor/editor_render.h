@@ -7,7 +7,7 @@
 
 class EditorRender : public IRender {
   public:
-    void render(sf::RenderWindow& window, float frame_fraction = 0.0f) override;
+    void render(sf::RenderTarget& window, float frame_fraction = 0.0f) override;
 
     void setEditorEnvironment(std::weak_ptr<EditorEnvironment> editor_env);
 
@@ -17,9 +17,10 @@ class EditorRender : public IRender {
 
     void setWindowSize(sf::RenderWindow& window, int width, int height) override;
 
-    void clearLayerShaders() override;
+    void clearShaders() override;
 
     void addShader(std::shared_ptr<ShaderHandle> shader, int layer) override;
+    void addGlobalShader(std::shared_ptr<ShaderHandle> shader) override;
 
     void renderLayer(sf::RenderTarget& target, int layer);
     void setParallaxEnabled(bool enable);

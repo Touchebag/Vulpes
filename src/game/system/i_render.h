@@ -9,7 +9,7 @@ class IRender {
   public:
     virtual ~IRender() = default;
 
-    virtual void render(sf::RenderWindow& window, float frame_fraction) = 0;
+    virtual void render(sf::RenderTarget& window, float frame_fraction) = 0;
 
     virtual void addEntity(std::weak_ptr<Rendering> entity) = 0;
     virtual void setPlayer(std::weak_ptr<Rendering> entity) = 0;
@@ -17,6 +17,7 @@ class IRender {
 
     virtual void setWindowSize(sf::RenderWindow& window, int width, int height) = 0;
 
-    virtual void clearLayerShaders() = 0;
+    virtual void clearShaders() = 0;
     virtual void addShader(std::shared_ptr<ShaderHandle> shader, int layer) = 0;
+    virtual void addGlobalShader(std::shared_ptr<ShaderHandle> shader) = 0;
 };

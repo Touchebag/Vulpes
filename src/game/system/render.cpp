@@ -34,6 +34,29 @@ void renderAllEntitesInVector(std::vector<std::weak_ptr<Rendering>>& layer,
     }
 }
 
+// Renders anything from front_buffer plus any shaders into target
+void renderShadersWithDoubleBuffer(sf::RenderTarget& target,
+                                   std::shared_ptr<sf::RenderTexture> front_buffer,
+                                   std::shared_ptr<sf::RenderTexture> back_buffer,
+                                   std::vector<std::weak_ptr<ShaderHandle>>& shaders) {
+    for (auto it = shaders.begin(); it < shaders.end(); it++) {
+        if (auto shader_handle = it->lock()) {
+            // Always render into back buffer
+            back_buffer->clear(sf::Color(0, 0, 0, 0));
+            back_buffer->setView(target.getView());
+            back_buffer->draw(sf::Sprite(front_buffer->getTexture()), shader_handle->getShader());
+
+            // Swap buffers and display new front buffer
+            std::swap(front_buffer, back_buffer);
+            front_buffer->display();
+        } else {
+            it = shaders.erase(it);
+        }
+    }
+
+    target.draw(sf::Sprite(front_buffer->getTexture()));
+}
+
 } // namespace
 
 Render::Render() :
@@ -43,34 +66,19 @@ Render::Render() :
         getLayer(i).parallax_multiplier = parallax_map.at(i);
     }
 
-    to_render_texture_ = std::make_shared<sf::RenderTexture>();
-    from_render_texture_ = std::make_shared<sf::RenderTexture>();
+    front_render_buffer_ = std::make_shared<sf::RenderTexture>();
+    back_render_buffer_  = std::make_shared<sf::RenderTexture>();
+    render_texture_      = std::make_shared<sf::RenderTexture>();
 }
 
-void Render::renderLayerWithPostProcessing(sf::RenderWindow& window, int layer, float frame_fraction) {
-    // Render layer without shaders
-    to_render_texture_->clear(sf::Color(0, 0, 0, 0));
-    renderLayer(*to_render_texture_, frame_fraction, layer);
-    to_render_texture_->display();
+void Render::renderLayerWithPostProcessing(sf::RenderTarget& window, int layer, float frame_fraction) {
+    // First render layer without shaders
+    front_render_buffer_->clear(sf::Color(0, 0, 0, 0));
+    renderLayer(*front_render_buffer_, frame_fraction, layer);
+    front_render_buffer_->display();
 
     auto& layer_shaders = getLayer(layer).shaders;
-    if (!layer_shaders.empty()) {
-        for (auto it = layer_shaders.begin(); it < layer_shaders.end(); it++) {
-            if (auto shader_handle = it->lock()) {
-                // Set previous render texture as base for next render
-                std::swap(to_render_texture_, from_render_texture_);
-
-                to_render_texture_->clear(sf::Color(0, 0, 0, 0));
-                to_render_texture_->setView(window.getView());
-                to_render_texture_->draw(sf::Sprite(from_render_texture_->getTexture()), shader_handle->getShader());
-                to_render_texture_->display();
-            } else {
-                it = layer_shaders.erase(it);
-            }
-        }
-    }
-
-    window.draw(sf::Sprite(to_render_texture_->getTexture()));
+    renderShadersWithDoubleBuffer(window, front_render_buffer_, back_render_buffer_, layer_shaders);
 }
 
 void Render::renderLayer(sf::RenderTarget& target, float frame_fraction, int layer) {
@@ -94,11 +102,11 @@ void Render::renderLayer(sf::RenderTarget& target, float frame_fraction, int lay
     renderAllEntitesInVector(getLayerRenderables(layer), target, frame_fraction);
 }
 
-void Render::drawPlayer(sf::RenderWindow& window, float frame_fraction) {
+void Render::drawPlayer(sf::RenderTarget& window, float frame_fraction) {
     if (auto player = player_.lock()) {
         auto camera = System::getCamera();
 
-        to_render_texture_->clear(sf::Color(0, 0, 0, 0));
+        front_render_buffer_->clear(sf::Color(0, 0, 0, 0));
 
         auto view = camera->getView();
         auto change_speed = System::getCamera()->getChangeVelocity();
@@ -109,16 +117,16 @@ void Render::drawPlayer(sf::RenderWindow& window, float frame_fraction) {
                  (view.y_pos + (change_speed.y_pos * frame_fraction))},
                 {view.width ,
                  view.height});
-        to_render_texture_->setView(viewport);
+        front_render_buffer_->setView(viewport);
 
-        player->render(*to_render_texture_, frame_fraction);
+        player->render(*front_render_buffer_, frame_fraction);
 
-        to_render_texture_->display();
-        window.draw(sf::Sprite(to_render_texture_->getTexture()));
+        front_render_buffer_->display();
+        window.draw(sf::Sprite(front_render_buffer_->getTexture()));
     }
 }
 
-void Render::drawBackground(sf::RenderWindow& window) {
+void Render::drawBackground(sf::RenderTarget& window) {
     auto current_view = window.getView();
 
     auto size = background_.getSize();
@@ -130,7 +138,7 @@ void Render::drawBackground(sf::RenderWindow& window) {
     window.setView(current_view);
 }
 
-void Render::drawHud(sf::RenderWindow& window) {
+void Render::drawHud(sf::RenderTarget& window) {
     auto current_view = window.getView();
 
     // Set static view for HUD
@@ -140,22 +148,30 @@ void Render::drawHud(sf::RenderWindow& window) {
     window.setView(current_view);
 }
 
-void Render::render(sf::RenderWindow& window, float frame_fraction) {
+void Render::render(sf::RenderTarget& window, float frame_fraction) {
     window.clear(sf::Color(0, 0, 0));
+    render_texture_->clear(sf::Color(0, 0, 0));
 
-    drawBackground(window);
+    drawBackground(*render_texture_);
 
     for (int i = -static_cast<int>(background_layers_.size()); i <= -1; ++i) {
-        renderLayerWithPostProcessing(window, i, frame_fraction);
+        renderLayerWithPostProcessing(*render_texture_, i, frame_fraction);
     }
 
-    renderLayerWithPostProcessing(window, 0, frame_fraction);
+    renderLayerWithPostProcessing(*render_texture_, 0, frame_fraction);
 
-    drawPlayer(window, frame_fraction);
+    drawPlayer(*render_texture_, frame_fraction);
 
     for (int i = 1; i <= static_cast<int>(foreground_layers_.size()); ++i) {
-        renderLayerWithPostProcessing(window, i, frame_fraction);
+        renderLayerWithPostProcessing(*render_texture_, i, frame_fraction);
     }
+
+    render_texture_->display();
+
+    renderShadersWithDoubleBuffer(window,
+                                  render_texture_,
+                                  back_render_buffer_,
+                                  global_shaders_);
 
     drawHud(window);
 }
@@ -180,11 +196,15 @@ void Render::setWindowSize(sf::RenderWindow& window, int width, int height) {
     window.setView(view);
     System::getCamera()->setWindowSize(width, height);
 
-    to_render_texture_->create(width, height);
-    to_render_texture_->clear(sf::Color(0, 0, 0, 0));
+    front_render_buffer_->create(width, height);
+    front_render_buffer_->clear(sf::Color(0, 0, 0, 0));
 
-    from_render_texture_->create(width, height);
-    from_render_texture_->clear(sf::Color(0, 0, 0, 0));
+    back_render_buffer_->create(width, height);
+    back_render_buffer_->clear(sf::Color(0, 0, 0, 0));
+
+    render_texture_->create(width, height);
+    render_texture_->clear(sf::Color(0, 0, 0, 0));
+
 }
 
 Render::RenderLayer& Render::getLayer(int layer) {
@@ -228,7 +248,11 @@ void Render::addShader(std::shared_ptr<ShaderHandle> shader, int layer) {
     getLayer(layer).shaders.push_back(shader);
 }
 
-void Render::clearLayerShaders() {
+void Render::addGlobalShader(std::shared_ptr<ShaderHandle> shader) {
+    global_shaders_.push_back(shader);
+}
+
+void Render::clearShaders() {
     for (auto& layer : background_layers_) {
         layer.shaders.clear();
     }

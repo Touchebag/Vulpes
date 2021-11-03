@@ -74,7 +74,7 @@ void drawLine(float x1, float y1, float x2, float y2, sf::RenderTarget& target) 
 
 } // namespace
 
-void EditorRender::render(sf::RenderWindow& window, float frame_fraction) {
+void EditorRender::render(sf::RenderTarget& window, float frame_fraction) {
     render_.render(window, frame_fraction);
 
     auto camera = System::getCamera();
@@ -196,12 +196,16 @@ void EditorRender::setCameraBox(Camera::CameraBoundingBox camera_box) {
     System::getCamera()->setCameraBox(camera_box);
 }
 
-void EditorRender::clearLayerShaders() {
-    render_.clearLayerShaders();
+void EditorRender::clearShaders() {
+    render_.clearShaders();
 }
 
 void EditorRender::addShader(std::shared_ptr<ShaderHandle> shader, int layer) {
     render_.addShader(shader, layer);
+}
+
+void EditorRender::addGlobalShader(std::shared_ptr<ShaderHandle> shader) {
+    render_.addGlobalShader(shader);
 }
 
 void EditorRender::renderCollideable(std::shared_ptr<Collideable> coll) {
