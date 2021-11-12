@@ -1,0 +1,51 @@
+{
+    "background": "checkerboard",
+    "camera": {
+        "bottom": 2000.0,
+        "left": -2000.0,
+        "right": 2000.0,
+        "top": -2000.0
+    },
+    "entities": [
+        {
+            "Collision": {
+                "height": 100,
+                "type": "static",
+                "width": 4000
+            },
+            "Rendering": {
+                "height": 100,
+                "layer": 0,
+                "texture": "Forest/Grass",
+                "tile_x": 0,
+                "tile_y": 0,
+                "width": 4000
+            },
+            "Transform": {
+                "pos_x": 0,
+                "pos_y": 500
+            }
+        },
+        {
+            "Rendering": {
+                "height": 10,
+                "layer": -1,
+                "texture": "Box",
+                "tile_x": 0,
+                "tile_y": 0,
+                "width": 10
+            },
+            "Transform": {
+                "pos_x": 0,
+                "pos_y": 0
+            }
+        }
+    ],
+    "entrances": [
+        {
+            "id": 0,
+            "pos_x": 0,
+            "pos_y": 0
+        }
+    ]
+}
