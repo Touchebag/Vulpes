@@ -3,6 +3,7 @@
 #include "i_shader_uniform.h"
 
 #include "nlohmann/json.hpp"
+#include <SFML/System.hpp>
 
 class RelativeTimer : public IShaderUniform {
   public:
@@ -13,5 +14,5 @@ class RelativeTimer : public IShaderUniform {
     static std::shared_ptr<RelativeTimer> createFromJson(nlohmann::json j);
 
   private:
-    int frame_timer_ = 0;
+    sf::Clock start_time_;
 };

@@ -195,6 +195,13 @@ void Rendering::clearColor() {
 }
 
 void Rendering::render(sf::RenderTarget& target, float frame_fraction) {
+    // Always update shader uniforms
+    for (auto shader_handle : shaders_) {
+        if (shader_handle) {
+            shader_handle->update();
+        }
+    }
+
     // Do not render if texture missing
     // Used for global shaders
     if (!texture_) {
@@ -277,9 +284,4 @@ void Rendering::setOffset(int x_offset, int y_offset) {
 }
 
 void Rendering::update() {
-    for (auto shader_handle : shaders_) {
-        if (shader_handle) {
-            shader_handle->update();
-        }
-    }
 }
