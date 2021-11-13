@@ -61,21 +61,10 @@ void Stateful::incomingEvent(state_utils::Event event) {
         }
 
         if (!getEntity().empty()) {
-            auto ent_json = getEntity();
-            auto entity = BaseEntity::createFromJson(ent_json);
-
-            // Inherit parent direction
-            if (auto move = getComponent<Movement>()) {
-                if (auto other_move = entity->getComponent<Movement>()) {
-                    other_move->setFacingRight(move->isFacingRight());
-
-                    // Force reload to set initial direction
-                    other_move->reloadFromJson(ent_json["Movement"]);
-
-                }
-            }
-
             if (auto subent = getComponent<Subentity>()) {
+                auto ent_json = getEntity();
+                auto entity = BaseEntity::createFromJson(ent_json);
+
                 subent->addEntity(entity);
             }
         }

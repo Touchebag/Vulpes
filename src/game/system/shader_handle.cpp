@@ -6,17 +6,19 @@
 #include "uniforms/constant_vec4.h"
 #include "uniforms/window_size.h"
 #include "uniforms/relative_timer.h"
+#include "uniforms/relative_position.h"
 
 #include "utils/file.h"
 
 #include "utils/log.h"
 
-ShaderHandle::ShaderHandle(std::shared_ptr<sf::Shader> shader) :
-    shader_(shader) {
+ShaderHandle::ShaderHandle(std::shared_ptr<sf::Shader> shader, std::weak_ptr<ComponentStore> components) :
+    shader_(shader),
+    component_store_(components) {
 }
 
-std::shared_ptr<ShaderHandle> ShaderHandle::createFromJson(nlohmann::json j) {
-    ShaderHandle handle{File().loadShader(j["shader"].get<std::string>())};
+std::shared_ptr<ShaderHandle> ShaderHandle::createFromJson(nlohmann::json j, std::weak_ptr<ComponentStore> components) {
+    ShaderHandle handle{File().loadShader(j["shader"].get<std::string>()), components};
 
     if (j.contains("uniforms")) {
         for (auto it : j["uniforms"]) {
@@ -40,6 +42,8 @@ std::shared_ptr<ShaderHandle> ShaderHandle::createFromJson(nlohmann::json j) {
                 uniform = WindowSize::createFromJson(it);
             } else if (type == "relative_timer") {
                 uniform = RelativeTimer::createFromJson(it);
+            } else if (type == "relative_position") {
+                uniform = RelativePosition::createFromJson(it);
             } else {
                 LOGW("Shader uniform: unknown type %s", it["type"].get<std::string>().c_str());
                 continue;
@@ -57,8 +61,9 @@ std::shared_ptr<ShaderHandle> ShaderHandle::createFromJson(nlohmann::json j) {
 }
 
 void ShaderHandle::update() {
+    auto components = component_store_.lock();
     for (auto it : uniforms_) {
-        it->applyUniform(shader_);
+        it->applyUniform(shader_, components);
     }
 }
 

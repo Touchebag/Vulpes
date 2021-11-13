@@ -38,11 +38,13 @@ class Camera {
 
     CameraBoundingBox getCameraBox();
 
+    // Returns the position relative to camera space from 0,0 (upper left) to 1,1 (lower right)
+    // Can go outside range if position is outside camera
+    std::pair<double, double> getRelativePosition(double x, double y);
+
   private:
     void moveView(float x, float y);
     void resizeView(float width, float height);
-
-    std::pair<float, float> calculatePlayerPositionRatio(int x_pos, int y_pos);
 
     void updateTargetView();
 

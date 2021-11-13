@@ -23,18 +23,21 @@ void Subentity::update() {
 
 void Subentity::set_position() {
     if (auto entity = entity_.lock()) {
-        auto ent_trans = entity->getComponent<Transform>();
-        auto ent_move = entity->getComponent<Movement>();
+        auto this_move = getComponent<Movement>();
+        auto sub_move = entity->getComponent<Movement>();
+        int facing_right = 1;
 
-        if (ent_trans && ent_move) {
-            auto trans = getComponent<Transform>();
-            auto move = getComponent<Movement>();
+        if (this_move && sub_move) {
+            facing_right = this_move->isFacingRight() ? 1 : -1;
+            sub_move->setFacingRight(this_move->isFacingRight());
+        }
 
-            if (trans && move) {
-                ent_trans->setPosition(trans->getX() + (ent_trans->getX() * (move->isFacingRight() ? 1 : -1)) ,
-                                       trans->getY() + ent_trans->getY());
-                ent_move->setFacingRight(move->isFacingRight());
-            }
+        auto this_trans = getComponent<Transform>();
+        auto sub_trans = entity->getComponent<Transform>();
+
+        if (this_trans && sub_trans) {
+            sub_trans->setPosition(this_trans->getX() + (sub_trans->getX() * facing_right) ,
+                                   this_trans->getY() +  sub_trans->getY());
         }
     }
 }

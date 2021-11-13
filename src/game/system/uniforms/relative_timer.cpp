@@ -6,7 +6,7 @@ RelativeTimer::RelativeTimer(std::string uniform_name) :
     IShaderUniform(uniform_name) {
 }
 
-void RelativeTimer::applyUniform(std::shared_ptr<sf::Shader> shader) {
+void RelativeTimer::applyUniform(std::shared_ptr<sf::Shader> shader, std::shared_ptr<ComponentStore>) {
     shader->setUniform(uniform_name_, frame_timer_++);
 }
 

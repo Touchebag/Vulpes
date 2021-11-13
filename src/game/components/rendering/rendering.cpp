@@ -259,7 +259,7 @@ void Rendering::setLayer(int layer) {
 }
 
 void Rendering::loadShader(nlohmann::json j) {
-    shaders_.push_back(ShaderHandle::createFromJson(j));
+    shaders_.push_back(ShaderHandle::createFromJson(j, component_store_));
 }
 
 std::vector<std::shared_ptr<ShaderHandle>> Rendering::getShaders() {

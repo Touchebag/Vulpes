@@ -6,7 +6,7 @@ WindowSize::WindowSize(std::string uniform_name) :
     IShaderUniform(uniform_name) {
 }
 
-void WindowSize::applyUniform(std::shared_ptr<sf::Shader> shader) {
+void WindowSize::applyUniform(std::shared_ptr<sf::Shader> shader, std::shared_ptr<ComponentStore>) {
     auto window_size = System::getCamera()->getWindowSize();
     sf::Glsl::Vec2 size = {static_cast<float>(window_size.first), static_cast<float>(window_size.second)};
 

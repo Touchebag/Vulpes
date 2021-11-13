@@ -131,24 +131,6 @@ void Camera::applyCameraShake() {
     addTrauma(-0.01f);
 }
 
-// Calculates the player position as a ratio of the current view
-// This allows for consistent camera movement regardless of the current view/aspect ratio
-std::pair<float, float> Camera::calculatePlayerPositionRatio(int x_pos, int y_pos) {
-    // To prevent division by zero
-    if (view_.width == 0.0 || view_.height == 0.0) {
-        return {0.0, 0.0};
-    }
-
-    auto view_left = view_.x_pos - (view_.width / 2);
-    auto view_top = view_.y_pos - (view_.height / 2);
-
-    float player_x_ratio = (static_cast<float>(x_pos) - view_left) / view_.width;
-    float player_y_ratio = (static_cast<float>(y_pos) - view_top) / view_.height;
-
-    // Offset by 0.5 to get 0 in center
-    return {player_x_ratio - 0.5f, player_y_ratio - 0.5f};
-}
-
 void Camera::addTrauma(float trauma) {
     trauma_ += trauma;
 
@@ -193,9 +175,11 @@ void Camera::updateTargetView() {
         auto p_move = player->getComponent<Movement>();
 
         if (p_trans && p_move) {
-            auto ratio = calculatePlayerPositionRatio(p_trans->getX(), p_trans->getY());
-            target_view_.x_pos = view_.x_pos + ratio.first * X_RATIO_MULTIPLIER;
-            target_view_.y_pos = view_.y_pos + ratio.second * Y_RATIO_MULTIPLIER;
+            auto ratio = getRelativePosition(p_trans->getX(), p_trans->getY());
+
+            // Adjust to have 0 in center
+            target_view_.x_pos = view_.x_pos + (static_cast<float>(ratio.first) - 0.5f) * X_RATIO_MULTIPLIER;
+            target_view_.y_pos = view_.y_pos + (static_cast<float>(ratio.second) - 0.5f) * Y_RATIO_MULTIPLIER;
 
             // Check if player is moving
             if (!(util::closeToZero(p_move->getVelX(), 0.01) && util::closeToZero(p_move->getVelY(), 0.01))) {
@@ -229,4 +213,19 @@ void Camera::updateTargetView() {
     } else if (target_view_.y_pos > camera_box_.bottom_margin - half_height) {
         target_view_.y_pos = camera_box_.bottom_margin - half_height;
     }
+}
+
+std::pair<double, double> Camera::getRelativePosition(double x, double y) {
+    // To prevent potential division by zero
+    if (view_.width == 0.0 || view_.height == 0.0) {
+        return {0.0, 0.0};
+    }
+
+    auto view_left = view_.x_pos - (view_.width / 2);
+    auto view_top = view_.y_pos - (view_.height / 2);
+
+    auto rel_x = (x - view_left) / view_.width;
+    auto rel_y = (y - view_top) / view_.height;
+
+    return {rel_x, rel_y};
 }
