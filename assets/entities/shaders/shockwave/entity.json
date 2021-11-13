@@ -1,0 +1,31 @@
+{
+    "Actions": null,
+    "AI": null,
+    "Death": null,
+    "Rendering": {
+        "layer": 0,
+        "shaders": [
+            {
+                "shader": "shockwave.frag",
+                "uniforms": [
+                    {
+                        "type": "relative_timer",
+                        "name": "time"
+                    },
+                    {
+                        "type": "window_size",
+                        "name": "render_size"
+                    },
+                    {
+                        "type": "relative_position",
+                        "name": "position"
+                    }
+                ]
+            }
+        ]
+    },
+    "Transform": {
+        "pos_x": 0,
+        "pos_y": 0
+    }
+}
