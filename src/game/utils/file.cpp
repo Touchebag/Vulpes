@@ -10,7 +10,6 @@ const std::string FONT_DIR = "fonts";
 const std::string SHADER_DIR = "shaders";
 
 const std::string ENTITY_FILE = "entity";
-const std::string AI_FILE = "ai";
 const std::string STATE_FILE = "state";
 const std::string ANIMATIONS_FILE = "animations";
 
@@ -106,10 +105,6 @@ std::optional<nlohmann::json> File::loadRoomTemplate(std::string filepath) {
 
 std::optional<nlohmann::json> File::loadRoom(std::string filepath) {
     return loadJson(ROOM_DIR + "/" + filepath);
-}
-
-std::optional<nlohmann::json> File::loadAiBehavior() {
-    return loadJson(ENTITY_DIR + "/" + current_namespace_ + "/" + AI_FILE);
 }
 
 std::optional<nlohmann::json> File::loadAnimations() {

@@ -2,6 +2,21 @@
     "states": {
         "main": {
             "next_states": [
+                { "event": "action_move_right", "state": "turnaround" },
+                { "event": "action_move_left", "state": "turnaround" }
+            ],
+            "ai": [
+                "if (grt (position_x player) (position_x this)) then action_move_right",
+                "if (lss (position_x player) (position_x this)) then action_move_left"
+            ]
+        },
+        "turnaround": {
+            "next_states": [
+                { "event": "action_ai1", "state": "main" }
+            ],
+            "ai": [
+                "action_move_forward",
+                "if (frame_timer 30) then action_ai1"
             ]
         }
     }

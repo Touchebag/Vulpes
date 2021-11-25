@@ -30,6 +30,11 @@ void Subentity::set_position() {
         if (this_move && sub_move) {
             facing_right = this_move->isFacingRight() ? 1 : -1;
             sub_move->setFacingRight(this_move->isFacingRight());
+
+            // Reload initial speed according to facing direction
+            auto x = sub_move->getVelX();
+            auto y = sub_move->getVelY();
+            sub_move->setVelocity(x * facing_right, y);
         }
 
         auto this_trans = getComponent<Transform>();

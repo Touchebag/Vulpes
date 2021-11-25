@@ -14,5 +14,6 @@
         "tile_x": 1,
         "tile_y": 1,
         "width": 50
-    }
+    },
+    "Stateful": null
 }

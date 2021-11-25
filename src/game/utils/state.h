@@ -10,8 +10,6 @@
 #include "nlohmann/json.hpp"
 #include "ai/program.h"
 
-using STATE_AI_CONDITION_TYPE = std::vector<Program>;
-
 template <class T>
 class State {
   public:

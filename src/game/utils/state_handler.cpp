@@ -81,4 +81,3 @@ const T& StateHandler<T>::getStateData() {
 
 
 template class StateHandler<state_utils::EntityContent>;
-template class StateHandler<STATE_AI_CONDITION_TYPE>;

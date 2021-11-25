@@ -1,11 +1,14 @@
 #pragma once
 
 #include "utils/state.h"
+#include "utils/state_handler.h"
+
 #include "components/actions/actions.h"
 #include "components/animation.h"
 #include "components/subentity.h"
 #include "components/collision/collision.h"
-#include "utils/state_handler.h"
+
+#include "ai/program.h"
 
 class Stateful : public Component {
   public:
@@ -24,6 +27,7 @@ class Stateful : public Component {
     const state_utils::StateProperties& getStateProperties();
     const state_utils::PhysicsProperties& getPhysicsProperties();
     const nlohmann::json& getEntity();
+    const std::vector<Program>& getAI();
 
   private:
     void loadStates(File file_instance);

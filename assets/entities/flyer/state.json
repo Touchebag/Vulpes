@@ -1,7 +1,8 @@
 {
     "states": {
         "main": {
-            "next_states": [
+            "ai": [
+                "if (flag 'Collectible.attack1') then action_die"
             ]
         }
     }

@@ -94,3 +94,7 @@ const state_utils::PhysicsProperties& Stateful::getPhysicsProperties() {
 const nlohmann::json& Stateful::getEntity() {
     return state_handler_.getStateData().entity;
 }
+
+const std::vector<Program>& Stateful::getAI() {
+    return state_handler_.getStateData().ai;
+}

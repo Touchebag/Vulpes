@@ -39,5 +39,6 @@
         "tile_x": true,
         "tile_y": true,
         "layer": 0
-    }
+    },
+    "Stateful": null
 }

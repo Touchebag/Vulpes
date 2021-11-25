@@ -213,9 +213,9 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                     auto action = static_cast<Actions::Action>(*pc);
                     act->addAction(action);
 
-                    if (auto ai = extra_input.this_components->getComponent<AI>()) {
+                    if (auto state = extra_input.this_components->getComponent<Stateful>()) {
                         if (action != Actions::Action::DIE) {
-                            ai->states_.incomingEvent(action_event_map.at(action));
+                            state->incomingEvent(action_event_map.at(action));
                         }
                     }
                 } else {

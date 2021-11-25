@@ -2,6 +2,48 @@
     "states": {
         "main": {
             "next_states": [
+                { "event": "action_ai1", "state": "move_right_turnaround" },
+                { "event": "action_ai2", "state": "move_left_turnaround" }
+            ],
+            "ai": [
+                "if (grt (position_x player) (position_x this)) then action_ai1",
+                "if (lss (position_x player) (position_x this)) then action_ai2"
+            ]
+        },
+        "move_right_turnaround": {
+            "next_states": [
+                { "event": "action_ai1", "state": "move_right" }
+            ],
+            "ai": [
+                "action_move_right",
+                "if (frame_timer 30) then action_ai1"
+            ]
+        },
+        "move_right": {
+            "next_states": [
+                { "event": "action_ai1", "state": "move_left_turnaround" }
+            ],
+            "ai": [
+                "if (grt (position_x player) (position_x this)) then action_move_right",
+                "if (lss (position_x player) (position_x this)) then action_ai1"
+            ]
+        },
+        "move_left_turnaround": {
+            "next_states": [
+                { "event": "action_ai1", "state": "move_left" }
+            ],
+            "ai": [
+                "action_move_left",
+                "if (frame_timer 30) then action_ai1"
+            ]
+        },
+        "move_left": {
+            "next_states": [
+                { "event": "action_ai1", "state": "move_right_turnaround" }
+            ],
+            "ai": [
+                "if (grt (position_x player) (position_x this)) then action_ai1",
+                "if (lss (position_x player) (position_x this)) then action_move_left"
             ]
         }
     }

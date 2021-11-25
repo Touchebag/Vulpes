@@ -4,6 +4,8 @@
 
 #include "nlohmann/json.hpp"
 
+#include "ai/program.h"
+
 namespace state_utils {
 
 enum class Event {
@@ -87,6 +89,7 @@ struct EntityContent {
     PhysicsProperties physics_props;
     StateProperties state_props;
     nlohmann::json entity;
+    std::vector<Program> ai;
 };
 
 } // state_utils

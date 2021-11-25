@@ -48,6 +48,8 @@ template <>
 State<state_utils::EntityContent> State<state_utils::EntityContent>::loadStateFromJson(nlohmann::json j) {
     state_utils::PhysicsProperties physics_props;
     state_utils::StateProperties state_props;
+    nlohmann::json entity;
+    std::vector<Program> ai;
 
     nlohmann::json props_json = j["properties"];
 
@@ -101,11 +103,19 @@ State<state_utils::EntityContent> State<state_utils::EntityContent>::loadStateFr
         state_props.can_interact = props_json["can_interact"].get<bool>();
     }
 
-    state_utils::EntityContent entity_content = {physics_props, state_props, {}};
-
     if (j.contains("spawn_entity")) {
-        entity_content.entity = j["spawn_entity"];
+        entity = j["spawn_entity"];
     }
+
+    if (j.contains("ai")) {
+        for (auto it : j["ai"]) {
+            auto program = Program::loadProgram(it.get<std::string>());
+            // TODO Check correct type
+            ai.push_back(program);
+        }
+    }
+
+    state_utils::EntityContent entity_content = {physics_props, state_props, entity, ai};
 
     auto new_state = State(entity_content);
 
@@ -114,27 +124,4 @@ State<state_utils::EntityContent> State<state_utils::EntityContent>::loadStateFr
     return new_state;
 }
 
-template <>
-State<STATE_AI_CONDITION_TYPE>
-State<STATE_AI_CONDITION_TYPE>::loadStateFromJson(nlohmann::json j) {
-    if (!j.contains("ai")) {
-        return State({});
-    }
-
-    STATE_AI_CONDITION_TYPE ai_behavior;
-
-    for (auto it : j["ai"]) {
-        auto program = Program::loadProgram(it.get<std::string>());
-        // TODO Check correct type
-        ai_behavior.push_back(program);
-    }
-
-    auto new_state = State(ai_behavior);
-
-    new_state.loadNextStateListFromJson(j["next_states"]);
-
-    return new_state;
-}
-
 template class State<state_utils::EntityContent>;
-template class State<STATE_AI_CONDITION_TYPE>;
