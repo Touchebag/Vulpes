@@ -132,30 +132,34 @@ void Physics::update() {
             variables_.resetDashes();
         }
 
+        // Used to set movement direction
+        double x_movement_direction = 0.0;
         if (!physics_props.movement_locked_x_) {
             if (act->getActionState(Actions::Action::MOVE_LEFT)) {
-                if (physics_props.touching_ground_) {
-                    x -= constants_.ground_acceleration;
-                } else {
-                    x -= constants_.air_acceleration;
-                }
+                x_movement_direction = -1.0;
                 state->incomingEvent(state_utils::Event::MOVING);
 
                 // When moving left facing_right should be false even when speed is zero
                 facing_right.setDirection(x > 0.0);
             } else if (act->getActionState(Actions::Action::MOVE_RIGHT)) {
-                if (physics_props.touching_ground_) {
-                    x += constants_.ground_acceleration;
-                } else {
-                    x += constants_.air_acceleration;
-                }
+                x_movement_direction = 1.0;
                 state->incomingEvent(state_utils::Event::MOVING);
 
                 // When moving right facing_right should be true even when speed is zero
                 facing_right.setDirection(x >= 0.0);
+            } else if (act->getActionState(Actions::Action::MOVE_FORWARD)) {
+                // This is separate to give priority to explicit movement
+                x_movement_direction = facing_right ? 1.0 : -1.0;
             } else {
                 state->incomingEvent(state_utils::Event::NO_MOVEMENT);
             }
+        }
+
+        // Apply movement
+        if (physics_props.touching_ground_) {
+            x += constants_.ground_acceleration * x_movement_direction;
+        } else {
+            x += constants_.air_acceleration * x_movement_direction;
         }
 
         if (physics_props.dashing_) {
