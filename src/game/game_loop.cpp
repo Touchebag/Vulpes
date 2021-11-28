@@ -13,9 +13,6 @@
 int game_main(sf::RenderWindow& window) {
     auto worldInstWrite = System::IWorldModify();
 
-    // Load save file
-    System::getEnvironment()->loadEnvFromJson(File().loadSaveFile());
-
     // Rendering produces time, physics consumes
     // This stores how much "unconsumed" time is available
     sf::Time time_rendered;

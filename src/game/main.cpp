@@ -7,6 +7,9 @@ int main() {
 
     window.setKeyRepeatEnabled(false);
 
+    // Load save file
+    System::getEnvironment()->loadEnvFromJson(File().loadSaveFile());
+
     System::IWorldModify::loadWorldFromFile("world.json");
     System::IWorldModify::setEntrance(0);
 
