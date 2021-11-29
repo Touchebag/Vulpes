@@ -58,7 +58,12 @@ nlohmann::json Environment::outputEnvToJson() {
 }
 
 void Environment::addConditionalEvent(std::string condition, std::shared_ptr<event_triggers::IEventTrigger> event) {
-    conditional_events_.insert({condition, event});
+    if (!getFlag(condition)) {
+        conditional_events_.insert({condition, event});
+    } else {
+        // If condition is already met, trigger instantly
+        event->onEvent();
+    }
 }
 
 void Environment::triggerConditionalEvents() {
