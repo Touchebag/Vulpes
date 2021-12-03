@@ -2,7 +2,6 @@
 
 #include <memory>
 
-#include "components/stateful.h"
 #include "components/rendering/rendering.h"
 #include "components/actions/actions.h"
 #include "components/animation.h"
@@ -18,14 +17,17 @@ class Physics : public Component {
 
     void update() override;
 
-    void setPhysicsConstants(PhysicsConstants constants);
+    void setPhysicsConstants(std::shared_ptr<PhysicsConstants> constants);
     void setPhysicsVariables();
 
     static std::shared_ptr<Physics> createFromJson(nlohmann::json, std::weak_ptr<ComponentStore>, File file_instance = File());
+
+    static PhysicsConstants loadConstantsFromJson(nlohmann::json j);
     void reloadFromJson(nlohmann::json j, File file = File()) override;
     std::optional<nlohmann::json> outputToJson() override;
 
   private:
-    PhysicsConstants constants_;
+    std::shared_ptr<PhysicsConstants> constants_;
+    std::shared_ptr<PhysicsConstants> original_constants_;
     PhysicsVariables variables_;
 };

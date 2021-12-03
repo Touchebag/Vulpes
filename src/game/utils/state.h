@@ -8,7 +8,6 @@
 
 #include "utils/state_utils.h"
 #include "nlohmann/json.hpp"
-#include "ai/program.h"
 
 template <class T>
 class State {

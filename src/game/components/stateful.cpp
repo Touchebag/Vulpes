@@ -54,6 +54,7 @@ void Stateful::incomingEvent(state_utils::Event event) {
 
     if (auto ns = new_state.lock()) {
         auto state_props = ns->getData().state_props;
+        auto physics_constants = ns->getData().physics_constants;
 
         frame_counter_ = state_props.frame_timer_;
         if (auto tmp = getComponent<Animation>()) {
@@ -79,6 +80,10 @@ void Stateful::incomingEvent(state_utils::Event event) {
             } else {
                 coll->clearTemporaryCollideables();
             }
+        }
+
+        if (auto phys = getComponent<Physics>()) {
+            phys->setPhysicsConstants(physics_constants);
         }
     }
 }

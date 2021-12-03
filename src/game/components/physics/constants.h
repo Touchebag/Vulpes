@@ -1,5 +1,7 @@
 #pragma once
 
+#include <limits>
+
 struct PhysicsConstants {
     // Ground movement
     double ground_acceleration = 0.0;
@@ -9,12 +11,12 @@ struct PhysicsConstants {
     double air_acceleration = 0.0;
     double air_friction = 0.0;
     double gravity = 0.0;
-    double fall_multiplier = 0.0;
-    double low_jump_multiplier = 0.0;
-    double max_vertical_speed = 0.0;
-    double min_vertical_speed = 0.0;
-    double max_air_dive_speed = 0.0;
-    double air_dive_multiplier = 0.0;
+    double fall_multiplier = 1.0;
+    double low_jump_multiplier = 1.0;
+    double max_vertical_speed = std::numeric_limits<double>::max();
+    double min_vertical_speed = -std::numeric_limits<double>::max();
+    double max_air_dive_speed = std::numeric_limits<double>::max();
+    double air_dive_multiplier = 1.0;
 
     // Other
     double jump_impulse = 0.0;

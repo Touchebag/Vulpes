@@ -63,7 +63,10 @@ void setShiftedLedgeClimbPosition(std::shared_ptr<Transform> trans, std::shared_
 } // namespace
 
 Physics::Physics(std::weak_ptr<ComponentStore> components) :
-    Component(components) {
+        Component(components) {
+    // Ensure pointer is never null
+    original_constants_ = std::make_shared<PhysicsConstants>();
+    constants_ = original_constants_;
 }
 
 void Physics::update() {
@@ -157,40 +160,40 @@ void Physics::update() {
 
         // Apply movement
         if (physics_props.touching_ground_) {
-            x += constants_.ground_acceleration * x_movement_direction;
+            x += constants_->ground_acceleration * x_movement_direction;
         } else {
-            x += constants_.air_acceleration * x_movement_direction;
+            x += constants_->air_acceleration * x_movement_direction;
         }
 
         if (physics_props.dashing_) {
-            x *= constants_.dash_friction;
+            x *= constants_->dash_friction;
         } else if (physics_props.touching_ground_) {
-            x *= constants_.ground_friction;
+            x *= constants_->ground_friction;
         } else {
-            x *= constants_.air_friction;
+            x *= constants_->air_friction;
         }
 
-        auto fall_mult = constants_.fall_multiplier;
+        auto fall_mult = constants_->fall_multiplier;
         if (physics_props.air_diving_) {
-            fall_mult *= constants_.air_dive_multiplier;
+            fall_mult *= constants_->air_dive_multiplier;
         }
 
         if (!physics_props.movement_locked_y_) {
             // Gravity
             if (y > 0.0 && !physics_props.touching_wall_) {
-                y += constants_.gravity * fall_mult;
+                y += constants_->gravity * fall_mult;
             } else if (y < 0.0
                        && !(act->getActionState(Actions::Action::JUMP))
                        && !physics_props.touching_wall_) {
-                y += constants_.gravity * constants_.low_jump_multiplier;
+                y += constants_->gravity * constants_->low_jump_multiplier;
             } else {
-                y += constants_.gravity;
+                y += constants_->gravity;
             }
         }
 
         // Only slide when falling
         if (y > 0.0 && physics_props.touching_wall_) {
-            y *= constants_.wall_slide_friction;
+            y *= constants_->wall_slide_friction;
         }
 
         if (act->getActionState(Actions::Action::DASH, true)) {
@@ -198,13 +201,13 @@ void Physics::update() {
                 // If holding a direction dash in that direction
                 // else dash forward
                 if (act->getActionState(Actions::Action::MOVE_RIGHT)) {
-                    x = constants_.dash_speed;
+                    x = constants_->dash_speed;
                     facing_right.setDirection(true);
                 } else if (act->getActionState(Actions::Action::MOVE_LEFT)) {
-                    x = -constants_.dash_speed;
+                    x = -constants_->dash_speed;
                     facing_right.setDirection(false);
                 } else {
-                    x = constants_.dash_speed * (facing_right ? 1.0 : -1.0);
+                    x = constants_->dash_speed * (facing_right ? 1.0 : -1.0);
                 }
                 y = 0.0;
                 state->incomingEvent(state_utils::Event::DASHING);
@@ -213,7 +216,7 @@ void Physics::update() {
 
         if (act->getActionState(Actions::Action::JUMP, true)) {
             if (physics_props.can_jump_ && physics_props.touching_ground_ && !physics_props.touching_wall_) {
-                y = constants_.jump_impulse;
+                y = constants_->jump_impulse;
                 state->incomingEvent(state_utils::Event::JUMPING);
             }
         }
@@ -223,7 +226,7 @@ void Physics::update() {
                 !physics_props.touching_ground_ &&
                 !physics_props.touching_wall_ &&
                 variables_.popJumps()) {
-                    y = constants_.jump_impulse;
+                    y = constants_->jump_impulse;
                     state->incomingEvent(state_utils::Event::JUMPING);
             }
         }
@@ -235,8 +238,8 @@ void Physics::update() {
 
                 facing_right.setDirection(!facing_right);
                 int dir = facing_right ? -1.0 : 1.0;
-                x = constants_.wall_jump_horizontal_impulse * dir;
-                y = constants_.wall_jump_vertical_impulse;
+                x = constants_->wall_jump_horizontal_impulse * dir;
+                y = constants_->wall_jump_vertical_impulse;
 
                 // Return aerial jumps on wall jump
                 variables_.resetJumps();
@@ -247,14 +250,14 @@ void Physics::update() {
         if (act->getActionState(Actions::Action::AIR_DIVE, true) && physics_props.can_air_dive_) {
             state->incomingEvent(state_utils::Event::AIR_DIVING);
             x = 0.0;
-            y = constants_.air_dive_impulse;
+            y = constants_->air_dive_impulse;
         }
 
         if (physics_props.air_diving_) {
             // Air dive only falls
-            y = std::min(y, constants_.max_air_dive_speed);
+            y = std::min(y, constants_->max_air_dive_speed);
         } else {
-            y = std::max(std::min(y, constants_.max_vertical_speed), constants_.min_vertical_speed);
+            y = std::max(std::min(y, constants_->max_vertical_speed), constants_->min_vertical_speed);
         }
 
         if (act->getActionState(Actions::Action::AIR_DIVE_BOUNCE, true)) {
@@ -279,8 +282,12 @@ void Physics::update() {
     }
 }
 
-void Physics::setPhysicsConstants(PhysicsConstants constants) {
-    constants_ = constants;
+void Physics::setPhysicsConstants(std::shared_ptr<PhysicsConstants> constants) {
+    if (constants) {
+        constants_ = constants;
+    } else {
+        constants_ = original_constants_;
+    }
 }
 
 void Physics::setPhysicsVariables() {
@@ -296,7 +303,7 @@ std::shared_ptr<Physics> Physics::createFromJson(nlohmann::json j, std::weak_ptr
     return ret_ptr;
 }
 
-void Physics::reloadFromJson(nlohmann::json j, File /* file_instance */) {
+PhysicsConstants Physics::loadConstantsFromJson(nlohmann::json j) {
     PhysicsConstants constants;
 
     if (j.contains("ground_acceleration")) {
@@ -354,7 +361,12 @@ void Physics::reloadFromJson(nlohmann::json j, File /* file_instance */) {
         constants.air_dive_impulse = j["air_dive_impulse"].get<double>();
     }
 
-    setPhysicsConstants(constants);
+    return constants;
+}
+
+void Physics::reloadFromJson(nlohmann::json j, File /* file_instance */) {
+    original_constants_ = std::make_shared<PhysicsConstants>(loadConstantsFromJson(j));
+    setPhysicsConstants(original_constants_);
     // TODO Read from json
     setPhysicsVariables();
 }
@@ -364,25 +376,25 @@ std::optional<nlohmann::json> Physics::outputToJson() {
     const PhysicsConstants default_constants;
 
     // Only save changed constants
-    saveConstantToJson(j, "ground_acceleration", constants_.ground_acceleration, default_constants.ground_acceleration);
-    saveConstantToJson(j, "ground_friction", constants_.ground_friction, default_constants.ground_friction);
+    saveConstantToJson(j, "ground_acceleration", original_constants_->ground_acceleration, default_constants.ground_acceleration);
+    saveConstantToJson(j, "ground_friction", original_constants_->ground_friction, default_constants.ground_friction);
 
-    saveConstantToJson(j, "air_acceleration", constants_.air_acceleration, default_constants.air_acceleration);
-    saveConstantToJson(j, "air_friction", constants_.air_friction, default_constants.air_friction);
-    saveConstantToJson(j, "gravity", constants_.gravity, default_constants.gravity);
-    saveConstantToJson(j, "fall_multiplier", constants_.fall_multiplier, default_constants.fall_multiplier);
-    saveConstantToJson(j, "low_jump_multiplier", constants_.low_jump_multiplier, default_constants.low_jump_multiplier);
-    saveConstantToJson(j, "min_vertical_speed", constants_.min_vertical_speed, default_constants.min_vertical_speed);
-    saveConstantToJson(j, "max_vertical_speed", constants_.max_vertical_speed, default_constants.max_vertical_speed);
-    saveConstantToJson(j, "max_air_dive_speed", constants_.max_air_dive_speed, default_constants.max_air_dive_speed);
-    saveConstantToJson(j, "air_dive_multiplier", constants_.air_dive_multiplier, default_constants.air_dive_multiplier);
+    saveConstantToJson(j, "air_acceleration", original_constants_->air_acceleration, default_constants.air_acceleration);
+    saveConstantToJson(j, "air_friction", original_constants_->air_friction, default_constants.air_friction);
+    saveConstantToJson(j, "gravity", original_constants_->gravity, default_constants.gravity);
+    saveConstantToJson(j, "fall_multiplier", original_constants_->fall_multiplier, default_constants.fall_multiplier);
+    saveConstantToJson(j, "low_jump_multiplier", original_constants_->low_jump_multiplier, default_constants.low_jump_multiplier);
+    saveConstantToJson(j, "min_vertical_speed", original_constants_->min_vertical_speed, default_constants.min_vertical_speed);
+    saveConstantToJson(j, "max_vertical_speed", original_constants_->max_vertical_speed, default_constants.max_vertical_speed);
+    saveConstantToJson(j, "max_air_dive_speed", original_constants_->max_air_dive_speed, default_constants.max_air_dive_speed);
+    saveConstantToJson(j, "air_dive_multiplier", original_constants_->air_dive_multiplier, default_constants.air_dive_multiplier);
 
-    saveConstantToJson(j, "jump_impulse", constants_.jump_impulse, default_constants.jump_impulse);
-    saveConstantToJson(j, "wall_slide_friction", constants_.wall_slide_friction, default_constants.wall_slide_friction);
-    saveConstantToJson(j, "wall_jump_horizontal_impulse", constants_.wall_jump_horizontal_impulse, default_constants.wall_jump_horizontal_impulse);
-    saveConstantToJson(j, "wall_jump_vertical_impulse", constants_.wall_jump_vertical_impulse, default_constants.wall_jump_vertical_impulse);
-    saveConstantToJson(j, "dash_speed", constants_.dash_speed, default_constants.dash_speed);
-    saveConstantToJson(j, "dash_friction", constants_.dash_friction, default_constants.dash_friction);
-    saveConstantToJson(j, "air_dive_impulse", constants_.air_dive_impulse, default_constants.air_dive_impulse);
+    saveConstantToJson(j, "jump_impulse", original_constants_->jump_impulse, default_constants.jump_impulse);
+    saveConstantToJson(j, "wall_slide_friction", original_constants_->wall_slide_friction, default_constants.wall_slide_friction);
+    saveConstantToJson(j, "wall_jump_horizontal_impulse", original_constants_->wall_jump_horizontal_impulse, default_constants.wall_jump_horizontal_impulse);
+    saveConstantToJson(j, "wall_jump_vertical_impulse", original_constants_->wall_jump_vertical_impulse, default_constants.wall_jump_vertical_impulse);
+    saveConstantToJson(j, "dash_speed", original_constants_->dash_speed, default_constants.dash_speed);
+    saveConstantToJson(j, "dash_friction", original_constants_->dash_friction, default_constants.dash_friction);
+    saveConstantToJson(j, "air_dive_impulse", original_constants_->air_dive_impulse, default_constants.air_dive_impulse);
     return j;
 }

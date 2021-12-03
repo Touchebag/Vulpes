@@ -5,6 +5,7 @@
 #include "nlohmann/json.hpp"
 
 #include "ai/program.h"
+#include "components/physics/constants.h"
 
 namespace state_utils {
 
@@ -90,6 +91,7 @@ struct EntityContent {
     StateProperties state_props;
     nlohmann::json entity;
     std::vector<Program> ai;
+    std::shared_ptr<PhysicsConstants> physics_constants;
 };
 
 } // state_utils

@@ -3,6 +3,7 @@
 #include "log.h"
 
 #include "components/actions/actions.h"
+#include "components/physics/physics.h"
 
 #include "ai/program.h"
 
@@ -50,6 +51,7 @@ State<state_utils::EntityContent> State<state_utils::EntityContent>::loadStateFr
     state_utils::StateProperties state_props;
     nlohmann::json entity;
     std::vector<Program> ai;
+    std::shared_ptr<PhysicsConstants> physics_consts = nullptr;
 
     nlohmann::json props_json = j["properties"];
 
@@ -115,7 +117,17 @@ State<state_utils::EntityContent> State<state_utils::EntityContent>::loadStateFr
         }
     }
 
-    state_utils::EntityContent entity_content = {physics_props, state_props, entity, ai};
+    if (j.contains("physics_constants")) {
+        auto phys_const = Physics::loadConstantsFromJson(j["physics_constants"]);
+        physics_consts = std::make_shared<PhysicsConstants>(phys_const);
+    }
+
+    state_utils::EntityContent entity_content;
+    entity_content.physics_props     = physics_props;
+    entity_content.state_props       = state_props;
+    entity_content.entity            = entity;
+    entity_content.ai                = ai;
+    entity_content.physics_constants = physics_consts;
 
     auto new_state = State(entity_content);
 
