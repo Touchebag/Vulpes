@@ -41,7 +41,9 @@
             "animation": "idle"
         },
         "idle": {
-            "template": "grounded",
+            "templates": [
+                "grounded"
+            ],
             "next_states": [
                 {"event": "moving", "state": "running"},
                 {"event": "jumping", "state": "jump_start"},
@@ -54,7 +56,9 @@
             "animation": "idle"
         },
         "running": {
-            "template": "grounded",
+            "templates": [
+                "grounded"
+            ],
             "next_states": [
                 {"event": "no_movement", "state": "idle"},
                 {"event": "jumping", "state": "jump_start"},
@@ -98,7 +102,9 @@
                 {"event": "damaged", "state": "taking_damage"}
             ],
             "animation": "jumping",
-            "template": "ledge_climb_sensors"
+            "templates": [
+                "ledge_climb_sensors"
+            ]
         },
         "falling": {
             "properties": {
@@ -115,7 +121,9 @@
                 {"event": "damaged", "state": "taking_damage"}
             ],
             "animation": "falling",
-            "template": "ledge_climb_sensors"
+            "templates": [
+                "ledge_climb_sensors"
+            ]
         },
         "wall_slide_rising": {
             "properties": {
@@ -133,7 +141,9 @@
                 {"event": "damaged", "state": "taking_damage"}
             ],
             "animation": "jumping",
-            "template": "ledge_climb_sensors"
+            "templates": [
+                "ledge_climb_sensors"
+            ]
         },
         "wall_slide": {
             "properties": {
@@ -150,7 +160,9 @@
                 {"event": "damaged", "state": "taking_damage"}
             ],
             "animation": "wall_slide",
-            "template": "ledge_climb_sensors"
+            "templates": [
+                "ledge_climb_sensors"
+            ]
         },
         "wall_jump_grace_period": {
             "properties": {
