@@ -143,7 +143,9 @@ TEST_F(StateTestFixture, TemplateLoad) {
     },
     "states": {
         "main": {
-            "template": "test_templ",
+            "templates": [
+                "test_templ"
+            ],
             "next_states": [
                 {"event": "start", "state": "main2"},
                 {"event": "touching_floor", "state": "main4"}

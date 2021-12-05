@@ -5,6 +5,22 @@
                 "can_interact": true
             }
         },
+        "airborne": {
+            "properties": {
+                "touching_ground": false
+            },
+            "physics_constants": {
+                "x_acceleration": 1.5,
+                "x_friction": 0.93,
+                "gravity": 1.0,
+                "jump_impulse": -30.0,
+                "fall_multiplier": 3.5,
+                "low_jump_multiplier": 2.5,
+                "max_vertical_speed": 20.0,
+                "min_vertical_speed": -80.0,
+                "dash_speed": 100.0
+            }
+        },
         "ledge_climb_sensors": {
             "next_states": [
                 {"event": "ledge_climb", "state": "ledge_climb"}
@@ -71,8 +87,10 @@
             "animation": "running"
         },
         "jump_start": {
+            "templates": [
+                "airborne"
+            ],
             "properties": {
-                "touching_ground": false,
                 "can_jump": false,
                 "can_air_dive": false
             },
@@ -88,7 +106,6 @@
         },
         "jumping": {
             "properties": {
-                "touching_ground": false,
                 "can_jump": true,
                 "can_air_dive": true
             },
@@ -103,12 +120,12 @@
             ],
             "animation": "jumping",
             "templates": [
+                "airborne",
                 "ledge_climb_sensors"
             ]
         },
         "falling": {
             "properties": {
-                "touching_ground": false,
                 "can_jump": true,
                 "can_air_dive": true
             },
@@ -122,7 +139,8 @@
             ],
             "animation": "falling",
             "templates": [
-                "ledge_climb_sensors"
+                "ledge_climb_sensors",
+                "airborne"
             ]
         },
         "wall_slide_rising": {

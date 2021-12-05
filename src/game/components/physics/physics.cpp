@@ -159,18 +159,12 @@ void Physics::update() {
         }
 
         // Apply movement
-        if (physics_props.touching_ground_) {
-            x += constants_->ground_acceleration * x_movement_direction;
-        } else {
-            x += constants_->air_acceleration * x_movement_direction;
-        }
+        x += constants_->x_acceleration * x_movement_direction;
 
         if (physics_props.dashing_) {
             x *= constants_->dash_friction;
-        } else if (physics_props.touching_ground_) {
-            x *= constants_->ground_friction;
         } else {
-            x *= constants_->air_friction;
+            x *= constants_->x_friction;
         }
 
         auto fall_mult = constants_->fall_multiplier;
@@ -306,17 +300,11 @@ std::shared_ptr<Physics> Physics::createFromJson(nlohmann::json j, std::weak_ptr
 PhysicsConstants Physics::loadConstantsFromJson(nlohmann::json j) {
     PhysicsConstants constants;
 
-    if (j.contains("ground_acceleration")) {
-        constants.ground_acceleration = j["ground_acceleration"].get<double>();
+    if (j.contains("x_acceleration")) {
+        constants.x_acceleration = j["x_acceleration"].get<double>();
     }
-    if (j.contains("ground_friction")) {
-        constants.ground_friction = j["ground_friction"].get<double>();
-    }
-    if (j.contains("air_acceleration")) {
-        constants.air_acceleration = j["air_acceleration"].get<double>();
-    }
-    if (j.contains("air_friction")) {
-        constants.air_friction = j["air_friction"].get<double>();
+    if (j.contains("x_friction")) {
+        constants.x_friction = j["x_friction"].get<double>();
     }
     if (j.contains("gravity")) {
         constants.gravity = j["gravity"].get<double>();
@@ -376,11 +364,9 @@ std::optional<nlohmann::json> Physics::outputToJson() {
     const PhysicsConstants default_constants;
 
     // Only save changed constants
-    saveConstantToJson(j, "ground_acceleration", original_constants_->ground_acceleration, default_constants.ground_acceleration);
-    saveConstantToJson(j, "ground_friction", original_constants_->ground_friction, default_constants.ground_friction);
+    saveConstantToJson(j, "x_acceleration", original_constants_->x_acceleration, default_constants.x_acceleration);
+    saveConstantToJson(j, "x_friction", original_constants_->x_friction, default_constants.x_friction);
 
-    saveConstantToJson(j, "air_acceleration", original_constants_->air_acceleration, default_constants.air_acceleration);
-    saveConstantToJson(j, "air_friction", original_constants_->air_friction, default_constants.air_friction);
     saveConstantToJson(j, "gravity", original_constants_->gravity, default_constants.gravity);
     saveConstantToJson(j, "fall_multiplier", original_constants_->fall_multiplier, default_constants.fall_multiplier);
     saveConstantToJson(j, "low_jump_multiplier", original_constants_->low_jump_multiplier, default_constants.low_jump_multiplier);

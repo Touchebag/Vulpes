@@ -42,8 +42,8 @@
     },
     "Movement": null,
     "Physics": {
-        "ground_acceleration": 3.0,
-        "ground_friction": 0.7,
+        "x_acceleration": 3.0,
+        "x_friction": 0.7,
         "gravity": 1.0,
         "max_vertical_speed": 20.0,
         "min_vertical_speed": -80.0

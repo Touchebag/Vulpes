@@ -48,10 +48,8 @@ const nlohmann::json entity_json = nlohmann::json::parse(R"--(
     },
     "Movement": null,
     "Physics": {
-        "ground_acceleration": 7.0,
-        "ground_friction": 0.7,
-        "air_acceleration": 2.0,
-        "air_friction": 0.93,
+        "x_acceleration": 7.0,
+        "x_friction": 0.7,
         "gravity": 1.0,
         "fall_multiplier": 3.5,
         "low_jump_multiplier": 2.5,
