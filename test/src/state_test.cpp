@@ -124,6 +124,7 @@ TEST_F(StateTestFixture, TemplateLoad) {
             ],
             "properties": {
                 "movement_locked_x": false,
+                "touching_ground": false,
                 "can_jump": false
             },
             "animation": "template",
@@ -139,12 +140,19 @@ TEST_F(StateTestFixture, TemplateLoad) {
                     }
                 }
             ]
+        },
+        "test_templ2": {
+            "properties": {
+                "touching_ground": true,
+                "movement_locked_x": false
+            }
         }
     },
     "states": {
         "main": {
             "templates": [
-                "test_templ"
+                "test_templ",
+                "test_templ2"
             ],
             "next_states": [
                 {"event": "start", "state": "main2"},
@@ -190,6 +198,7 @@ TEST_F(StateTestFixture, TemplateLoad) {
     // Should merge but override duplicates
     EXPECT_EQ(physics_props.movement_locked_x_, true);
     EXPECT_EQ(physics_props.movement_locked_y_, true);
+    EXPECT_EQ(physics_props.touching_ground_, true);
     EXPECT_EQ(physics_props.can_dash_, false);
     EXPECT_EQ(physics_props.can_jump_, false);
 }

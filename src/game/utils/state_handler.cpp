@@ -4,6 +4,26 @@
 
 #include "utils/log.h"
 
+namespace {
+
+// Merges source into destination, prioritising source if conflict
+inline void mergeJson(nlohmann::json& source, nlohmann::json& destination) {
+    for (auto entry = source.begin(); entry != source.end(); ++entry) {
+        if (entry->type() == nlohmann::json::value_t::array) {
+            // Merge lists
+            for (auto it : entry.value()) {
+                destination[entry.key()] += it;
+            }
+        } else if (entry->type() == nlohmann::json::value_t::object) {
+            destination[entry.key()].update(entry.value());
+        } else {
+            destination[entry.key()] = entry.value();
+        }
+    }
+}
+
+}
+
 template <class T>
 void StateHandler<T>::resetState() {
     // TODO Error handling
@@ -28,27 +48,15 @@ void StateHandler<T>::reloadFromJson(const nlohmann::json& j) {
     }
 
     for (auto state = j["states"].begin(); state != j["states"].end(); ++state) {
+        nlohmann::json output;
         auto st = state.value();
 
         if (st.contains("templates")) {
-            auto temp_list = st["templates"];
-            for (auto template_string : temp_list) {
+            auto template_list = st["templates"];
+            for (auto template_string : template_list) {
                 try {
-                    auto temp_state = template_map.at(template_string.get<std::string>());
-
-                    for (auto entry = st.begin(); entry != st.end(); ++entry) {
-                        if (entry->type() == nlohmann::json::value_t::array) {
-                            // Merge lists
-                            for (auto it : entry.value()) {
-                                temp_state[entry.key()] += it;
-                            }
-                        } else if (entry->type() == nlohmann::json::value_t::object) {
-                            temp_state[entry.key()].update(entry.value());
-                        } else {
-                            temp_state[entry.key()] = entry.value();
-                        }
-                    }
-                    st = temp_state;
+                    auto template_state = template_map.at(template_string.get<std::string>());
+                    mergeJson(template_state, output);
                 } catch (std::out_of_range& e) {
                     LOGE("State template %s not found", st["template"].get<std::string>().c_str());
                     throw e;
@@ -56,9 +64,11 @@ void StateHandler<T>::reloadFromJson(const nlohmann::json& j) {
             }
         }
 
+        mergeJson(st, output);
+
         state_list_.insert(std::make_pair(state.key(),
                     std::make_shared<State<T>>(
-                        State<T>::loadStateFromJson(st))));
+                        State<T>::loadStateFromJson(output))));
     }
 
     resetState();
