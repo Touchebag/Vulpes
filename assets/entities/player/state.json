@@ -21,6 +21,14 @@
                 "dash_speed": 100.0
             }
         },
+        "dashing": {
+            "properties": {
+                "touching_ground": false,
+                "movement_locked_x": true,
+                "movement_locked_y": true,
+                "can_dash": false
+            }
+        },
         "ledge_climb_sensors": {
             "next_states": [
                 {"event": "ledge_climb", "state": "ledge_climb"}
@@ -216,11 +224,7 @@
         },
         "dash_startup": {
             "properties": {
-                "touching_ground": false,
-                "movement_locked_x": true,
-                "movement_locked_y": true,
-                "dashing": false,
-                "can_dash": false
+                "dashing": false
             },
             "frame_timer": 1,
             "next_states": [
@@ -229,15 +233,14 @@
             "spawn_entity": {
                 "Entity": "shaders/shockwave"
             },
+            "templates": [
+                "dashing"
+            ],
             "animation": "dashing"
         },
         "dashing": {
             "properties": {
-                "touching_ground": false,
-                "movement_locked_x": true,
-                "movement_locked_y": true,
-                "dashing": true,
-                "can_dash": false
+                "dashing": true
             },
             "frame_timer": 10,
             "next_states": [
@@ -246,6 +249,9 @@
                 {"event": "jumping", "state": "jump_start"},
                 {"event": "frame_timeout", "state": "falling"},
                 {"event": "damaged", "state": "taking_damage"}
+            ],
+            "templates": [
+                "dashing"
             ],
             "animation": "dashing"
         },
