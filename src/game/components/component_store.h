@@ -4,7 +4,7 @@
 #include "components/movement.h"
 #include "components/rendering/rendering.h"
 #include "components/animation.h"
-#include "components/stateful.h"
+#include "components/state/stateful.h"
 #include "components/actions/actions.h"
 #include "components/collision/collision.h"
 #include "components/physics/physics.h"

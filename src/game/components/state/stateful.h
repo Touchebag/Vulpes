@@ -1,7 +1,7 @@
 #pragma once
 
-#include "utils/state.h"
-#include "utils/state_handler.h"
+#include "state.h"
+#include "state_handler.h"
 
 #include "components/actions/actions.h"
 #include "components/animation.h"

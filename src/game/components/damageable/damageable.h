@@ -2,10 +2,7 @@
 
 #include <memory>
 
-#include "components/collision/collision.h"
-#include "components/death.h"
-#include "components/stateful.h"
-#include "components/movement.h"
+#include "components/component.h"
 
 class Damageable : public Component {
   public:

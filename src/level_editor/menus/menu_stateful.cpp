@@ -1,6 +1,6 @@
 #include "menu_stateful.h"
 
-#include "components/stateful.h"
+#include "components/state/stateful.h"
 
 #include "utils/log.h"
 

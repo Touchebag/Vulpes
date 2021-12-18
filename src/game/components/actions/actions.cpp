@@ -3,7 +3,7 @@
 #include "common.h"
 #include "system/system.h"
 #include "utils/bimap.h"
-#include "utils/state_utils.h"
+#include "components/state/state_utils.h"
 #include "utils/log.h"
 
 #include "components/component_store.h"

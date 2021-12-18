@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "utils/state_handler.h"
+#include "components/state/state_handler.h"
 
 class StateTestFixture : public ::testing::Test {
   public:

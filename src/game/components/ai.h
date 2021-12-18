@@ -6,9 +6,6 @@
 
 #include "ai/program.h"
 
-#include "utils/state_handler.h"
-#include "utils/state.h"
-
 class AI : public Component {
   public:
     AI(std::weak_ptr<ComponentStore> components);

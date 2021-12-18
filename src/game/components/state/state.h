@@ -6,7 +6,7 @@
 #include <climits>
 #include <vector>
 
-#include "utils/state_utils.h"
+#include "state_utils.h"
 #include "nlohmann/json.hpp"
 
 template <class T>
