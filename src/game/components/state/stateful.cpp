@@ -39,7 +39,7 @@ void Stateful::loadStates(File file_instance) {
 
     // TODO Error handling
     if (states) {
-        state_handler_.reloadFromJson(states.value());
+        state_handler_.reloadFromJson(states.value(), component_store_.lock());
     }
 }
 
@@ -83,7 +83,11 @@ void Stateful::incomingEvent(state_utils::Event event) {
         }
 
         if (auto phys = getComponent<Physics>()) {
-            phys->setPhysicsConstants(physics_constants);
+            if (physics_constants) {
+                phys->setPhysicsConstants(physics_constants.value());
+            } else {
+                phys->setPhysicsConstants();
+            }
         }
     }
 }

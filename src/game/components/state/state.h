@@ -9,12 +9,14 @@
 #include "state_utils.h"
 #include "nlohmann/json.hpp"
 
+class ComponentStore;
+
 template <class T>
 class State {
   public:
     State(T data);
 
-    static State<T> loadStateFromJson(nlohmann::json j);
+    static State<T> loadStateFromJson(nlohmann::json j, std::shared_ptr<ComponentStore> components);
 
     std::optional<std::string> incomingEvent(state_utils::Event event);
 

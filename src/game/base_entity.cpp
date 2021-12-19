@@ -96,17 +96,17 @@ void BaseEntity::reloadFromJson(const nlohmann::json& j) {
 
     createComponentFromJson(Subentity, file_instance);
 
-    createComponentFromJson(Stateful, file_instance);
-
-    if (getComponent<Stateful>()) {
-        getComponent<Stateful>()->incomingEvent(state_utils::Event::START);
-    }
-
     createComponentFromJson(Physics, file_instance);
 
     createComponentFromJson(AI, file_instance);
 
     createComponentFromJson(Damageable, file_instance);
+
+    // State reads physics constants, needs to be initialised after
+    createComponentFromJson(Stateful, file_instance);
+    if (getComponent<Stateful>()) {
+        getComponent<Stateful>()->incomingEvent(state_utils::Event::START);
+    }
 }
 
 std::optional<nlohmann::json> BaseEntity::outputToJson() {

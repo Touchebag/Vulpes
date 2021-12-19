@@ -1,11 +1,12 @@
 #include <gtest/gtest.h>
 
 #include "components/state/state_handler.h"
+#include "components/component_store.h"
 
 class StateTestFixture : public ::testing::Test {
   public:
     void SetUp() override {
-        state_handler_.reloadFromJson(nlohmann::json::parse(state_json_));
+        state_handler_.reloadFromJson(nlohmann::json::parse(state_json_), std::make_shared<ComponentStore>());
     }
 
     std::string state_json_ = R"--(
@@ -104,7 +105,7 @@ TEST_F(StateTestFixture, ParseError) {
     )--";
 
     try {
-        state_handler_.reloadFromJson(nlohmann::json::parse(state_json_invalid));
+        state_handler_.reloadFromJson(nlohmann::json::parse(state_json_invalid), std::make_shared<ComponentStore>());
     } catch (std::invalid_argument& e) {
         // Should throw invalid_argument
         return;
@@ -181,7 +182,7 @@ TEST_F(StateTestFixture, TemplateLoad) {
 }
     )--";
 
-    state_handler_.reloadFromJson(nlohmann::json::parse(template_json));
+    state_handler_.reloadFromJson(nlohmann::json::parse(template_json), std::make_shared<ComponentStore>());
 
     auto state_props = state_handler_.getStateData().state_props;
 

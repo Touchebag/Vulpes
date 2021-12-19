@@ -4,6 +4,7 @@
 
 #include "components/actions/actions.h"
 #include "components/physics/physics.h"
+#include "components/component_store.h"
 
 #include "ai/program.h"
 
@@ -46,12 +47,12 @@ void State<T>::loadNextStateListFromJson(nlohmann::json j) {
 }
 
 template <>
-State<state_utils::EntityContent> State<state_utils::EntityContent>::loadStateFromJson(nlohmann::json j) {
+State<state_utils::EntityContent> State<state_utils::EntityContent>::loadStateFromJson(nlohmann::json j, std::shared_ptr<ComponentStore> components) {
     state_utils::PhysicsProperties physics_props;
     state_utils::StateProperties state_props;
     nlohmann::json entity;
     std::vector<Program> ai;
-    std::shared_ptr<PhysicsConstants> physics_consts = nullptr;
+    std::optional<PhysicsConstants> physics_consts = std::nullopt;
 
     nlohmann::json props_json = j["properties"];
 
@@ -118,8 +119,12 @@ State<state_utils::EntityContent> State<state_utils::EntityContent>::loadStateFr
     }
 
     if (j.contains("physics_constants")) {
-        auto phys_const = Physics::loadConstantsFromJson(j["physics_constants"]);
-        physics_consts = std::make_shared<PhysicsConstants>(phys_const);
+        PhysicsConstants phys_const;
+        if (auto physics_component = components->getComponent<Physics>()) {
+            phys_const = physics_component->getPhysicsConstants();
+        }
+
+        physics_consts = {Physics::loadConstantsFromJson(j["physics_constants"], phys_const)};
     }
 
     state_utils::EntityContent entity_content;

@@ -31,7 +31,7 @@ void StateHandler<T>::resetState() {
 }
 
 template <class T>
-void StateHandler<T>::reloadFromJson(const nlohmann::json& j) {
+void StateHandler<T>::reloadFromJson(const nlohmann::json& j, std::shared_ptr<ComponentStore> components) {
     state_list_.clear();
 
     if (!j.contains("states")) {
@@ -68,7 +68,7 @@ void StateHandler<T>::reloadFromJson(const nlohmann::json& j) {
 
         state_list_.insert(std::make_pair(state.key(),
                     std::make_shared<State<T>>(
-                        State<T>::loadStateFromJson(output))));
+                        State<T>::loadStateFromJson(output, components))));
     }
 
     resetState();

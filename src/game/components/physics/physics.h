@@ -17,17 +17,19 @@ class Physics : public Component {
 
     void update() override;
 
-    void setPhysicsConstants(std::shared_ptr<PhysicsConstants> constants);
+    void setPhysicsConstants(PhysicsConstants constants);
+    void setPhysicsConstants();
+    PhysicsConstants getPhysicsConstants();
     void setPhysicsVariables();
 
     static std::shared_ptr<Physics> createFromJson(nlohmann::json, std::weak_ptr<ComponentStore>, File file_instance = File());
 
-    static PhysicsConstants loadConstantsFromJson(nlohmann::json j);
+    static PhysicsConstants loadConstantsFromJson(nlohmann::json j, PhysicsConstants default_constants);
     void reloadFromJson(nlohmann::json j, File file = File()) override;
     std::optional<nlohmann::json> outputToJson() override;
 
   private:
-    std::shared_ptr<PhysicsConstants> constants_;
-    std::shared_ptr<PhysicsConstants> original_constants_;
+    PhysicsConstants constants_;
+    PhysicsConstants original_constants_;
     PhysicsVariables variables_;
 };
