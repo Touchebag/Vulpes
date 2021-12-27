@@ -32,7 +32,7 @@ void RenderingText::setText(const std::string& text) {
     text_.setString(text);
 }
 
-void RenderingText::render(sf::RenderTarget& target, float /* frame_fraction */) {
+void RenderingText::render(sf::RenderTarget& target, double /* frame_fraction */) {
     if (auto trans = getComponent<Transform>()) {
         text_.setPosition(static_cast<float>(trans->getX()), static_cast<float>(trans->getY()));
         target.draw(text_);

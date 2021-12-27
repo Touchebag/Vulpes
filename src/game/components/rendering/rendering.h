@@ -28,16 +28,16 @@ class Rendering : public Component {
 
     void setSize(int width, int height);
     std::pair<int, int> getSize();
-    std::pair<float, float> getScaledSize();
+    std::pair<double, double> getScaledSize();
 
-    void setScale(float x_scale, float y_scale);
+    void setScale(double x_scale, double y_scale);
 
     void setOffset(int x_offset, int y_offset);
 
     virtual void setColor(sf::Color color);
     virtual void clearColor();
 
-    virtual void render(sf::RenderTarget& target, float frame_fraction = 0.0f);
+    virtual void render(sf::RenderTarget& target, double frame_fraction = 0.0f);
 
     void update() override;
 
@@ -60,8 +60,8 @@ class Rendering : public Component {
 
     int layer_ = 0;
 
-    float x_scale_ = 1.0;
-    float y_scale_ = 1.0;
+    double x_scale_ = 1.0;
+    double y_scale_ = 1.0;
 
     int x_offset_ = 0;
     int y_offset_ = 0;

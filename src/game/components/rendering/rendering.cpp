@@ -181,7 +181,7 @@ std::pair<int, int> Rendering::getSize() {
     return {width_, height_};
 }
 
-std::pair<float, float> Rendering::getScaledSize() {
+std::pair<double, double> Rendering::getScaledSize() {
     auto size_rect = sprite_.getGlobalBounds();
     return {size_rect.width, size_rect.height};
 }
@@ -194,7 +194,7 @@ void Rendering::clearColor() {
     sprite_.setColor({255, 255, 255, 255});
 }
 
-void Rendering::render(sf::RenderTarget& target, float frame_fraction) {
+void Rendering::render(sf::RenderTarget& target, double frame_fraction) {
     // Always update shader uniforms
     for (auto shader_handle : shaders_) {
         if (shader_handle) {
@@ -273,7 +273,7 @@ std::vector<std::shared_ptr<ShaderHandle>> Rendering::getShaders() {
     return shaders_;
 }
 
-void Rendering::setScale(float x_scale, float y_scale) {
+void Rendering::setScale(double x_scale, double y_scale) {
     x_scale_ = x_scale;
     y_scale_ = y_scale;
 }

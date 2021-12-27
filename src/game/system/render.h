@@ -11,7 +11,7 @@ class Render : public IRender {
   public:
     Render();
 
-    void render(sf::RenderTarget& window, float frame_fraction) override;
+    void render(sf::RenderTarget& window, double frame_fraction) override;
 
     void addEntity(std::weak_ptr<Rendering> entity) override;
     void setPlayer(std::weak_ptr<Rendering> entity) override;
@@ -27,15 +27,15 @@ class Render : public IRender {
   private:
     void drawHud(sf::RenderTarget& window);
     void drawBackground(sf::RenderTarget& window);
-    void drawPlayer(sf::RenderTarget& window, float frame_fraction);
+    void drawPlayer(sf::RenderTarget& window, double frame_fraction);
 
-    void renderLayerWithPostProcessing(sf::RenderTarget& window, int layer, float frame_fraction);
+    void renderLayerWithPostProcessing(sf::RenderTarget& window, int layer, double frame_fraction);
 
     // Layers
     struct RenderLayer {
         std::vector<std::weak_ptr<Rendering>> renderables;
         std::vector<std::weak_ptr<ShaderHandle>> shaders;
-        float parallax_multiplier;
+        double parallax_multiplier;
     };
 
     sf::Texture background_;
@@ -52,8 +52,8 @@ class Render : public IRender {
     std::vector<std::weak_ptr<Rendering>>& getLayerRenderables(int layer);
     RenderLayer& getLayer(int layer);
 
-    void renderLayer(sf::RenderTarget& target, float frame_fraction, int layer);
-    sf::RenderTexture renderToTexture(std::pair<int, int> size, float frame_fraction, int layer);
+    void renderLayer(sf::RenderTarget& target, double frame_fraction, int layer);
+    sf::RenderTexture renderToTexture(std::pair<int, int> size, double frame_fraction, int layer);
 
     bool parallax_enabled_ = true;
 

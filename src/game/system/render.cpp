@@ -7,7 +7,7 @@
 
 namespace {
 
-const std::map<int, float> parallax_map = {
+const std::map<int, double> parallax_map = {
     {-5, 0.85},
     {-4, 0.9},
     {-3, 0.95},
@@ -23,7 +23,7 @@ const std::map<int, float> parallax_map = {
 
 void renderAllEntitesInVector(std::vector<std::weak_ptr<Rendering>>& layer,
                               sf::RenderTarget& target,
-                              float frame_fraction = 0.0f) {
+                              double frame_fraction = 0.0) {
     for (auto it = layer.begin(); it != layer.end(); ) {
         if (auto ptr = it->lock()) {
             ptr->render(target, frame_fraction);
@@ -71,7 +71,7 @@ Render::Render() :
     render_texture_      = std::make_shared<sf::RenderTexture>();
 }
 
-void Render::renderLayerWithPostProcessing(sf::RenderTarget& window, int layer, float frame_fraction) {
+void Render::renderLayerWithPostProcessing(sf::RenderTarget& window, int layer, double frame_fraction) {
     // First render layer without shaders
     front_render_buffer_->clear(sf::Color(0, 0, 0, 0));
     renderLayer(*front_render_buffer_, frame_fraction, layer);
@@ -81,8 +81,8 @@ void Render::renderLayerWithPostProcessing(sf::RenderTarget& window, int layer, 
     renderShadersWithDoubleBuffer(window, front_render_buffer_, back_render_buffer_, layer_shaders);
 }
 
-void Render::renderLayer(sf::RenderTarget& target, float frame_fraction, int layer) {
-    float parallax_multiplier = 1;
+void Render::renderLayer(sf::RenderTarget& target, double frame_fraction, int layer) {
+    double parallax_multiplier = 1;
 
     if (parallax_enabled_) {
         parallax_multiplier = getLayer(layer).parallax_multiplier;
@@ -93,16 +93,16 @@ void Render::renderLayer(sf::RenderTarget& target, float frame_fraction, int lay
 
     // Note: interpolating size causes warping/bouncing issues
     sf::View viewport(
-            {(view.x_pos + (change_speed.x_pos * frame_fraction)) * parallax_multiplier,
-             (view.y_pos + (change_speed.y_pos * frame_fraction)) * parallax_multiplier},
-            {view.width ,
-             view.height});
+            {static_cast<float>((view.x_pos + (change_speed.x_pos * frame_fraction)) * parallax_multiplier),
+             static_cast<float>((view.y_pos + (change_speed.y_pos * frame_fraction)) * parallax_multiplier)},
+            {static_cast<float>(view.width),
+             static_cast<float>(view.height)});
     target.setView(viewport);
 
     renderAllEntitesInVector(getLayerRenderables(layer), target, frame_fraction);
 }
 
-void Render::drawPlayer(sf::RenderTarget& window, float frame_fraction) {
+void Render::drawPlayer(sf::RenderTarget& window, double frame_fraction) {
     if (auto player = player_.lock()) {
         auto camera = System::getCamera();
 
@@ -113,10 +113,10 @@ void Render::drawPlayer(sf::RenderTarget& window, float frame_fraction) {
 
         // Note: interpolating size causes warping/bouncing issues
         sf::View viewport(
-                {(view.x_pos + (change_speed.x_pos * frame_fraction)),
-                 (view.y_pos + (change_speed.y_pos * frame_fraction))},
-                {view.width ,
-                 view.height});
+                {static_cast<float>(view.x_pos + (change_speed.x_pos * frame_fraction)),
+                 static_cast<float>(view.y_pos + (change_speed.y_pos * frame_fraction))},
+                {static_cast<float>(view.width),
+                 static_cast<float>(view.height)});
         front_render_buffer_->setView(viewport);
 
         player->render(*front_render_buffer_, frame_fraction);
@@ -148,7 +148,7 @@ void Render::drawHud(sf::RenderTarget& window) {
     window.setView(current_view);
 }
 
-void Render::render(sf::RenderTarget& window, float frame_fraction) {
+void Render::render(sf::RenderTarget& window, double frame_fraction) {
     window.clear(sf::Color(0, 0, 0));
     render_texture_->clear(sf::Color(0, 0, 0));
 

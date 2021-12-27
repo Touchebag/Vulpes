@@ -28,8 +28,8 @@ class Animation : public Component {
     struct AnimationFrameData {
         std::string texture;
         util::Rectangle sprite_rectangle;
-        float x_scale = 1.0;
-        float y_scale = 1.0;
+        double x_scale = 1.0;
+        double y_scale = 1.0;
         int x_offset = 0;
         int y_offset = 0;
     };

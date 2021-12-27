@@ -59,10 +59,10 @@ void renderEntrances(sf::RenderTarget& target, const std::vector<util::Vec2i>& e
     }
 }
 
-void drawLine(float x1, float y1, float x2, float y2, sf::RenderTarget& target) {
+void drawLine(double x1, double y1, double x2, double y2, sf::RenderTarget& target) {
     sf::Vertex lines[] = {
-        sf::Vertex(sf::Vector2f(x1, y1)),
-        sf::Vertex(sf::Vector2f(x2, y2))
+        sf::Vertex(sf::Vector2f(static_cast<float>(x1), static_cast<float>(y1))),
+        sf::Vertex(sf::Vector2f(static_cast<float>(x2), static_cast<float>(y2)))
     };
 
     for (auto& it : lines) {
@@ -74,13 +74,16 @@ void drawLine(float x1, float y1, float x2, float y2, sf::RenderTarget& target) 
 
 } // namespace
 
-void EditorRender::render(sf::RenderTarget& window, float frame_fraction) {
+void EditorRender::render(sf::RenderTarget& window, double frame_fraction) {
     render_.render(window, frame_fraction);
 
     auto camera = System::getCamera();
 
     auto viewport = camera->getRawView();
-    sf::View view = {{viewport.x_pos, viewport.y_pos}, {viewport.width, viewport.height}};
+    sf::View view = {{static_cast<float>(viewport.x_pos),
+                      static_cast<float>(viewport.y_pos)},
+                     {static_cast<float>(viewport.width),
+                      static_cast<float>(viewport.height)}};
 
     auto window_size = camera->getWindowSize();
     sf::RenderTexture texture;
@@ -94,9 +97,9 @@ void EditorRender::render(sf::RenderTarget& window, float frame_fraction) {
             auto trans = ent->getComponent<Transform>();
 
             if (rend && trans) {
-                std::pair<float, float> size = ent->getComponent<Rendering>()->getScaledSize();
-                sf::RectangleShape rectangle(sf::Vector2f(size.first, size.second));
-                rectangle.setPosition(static_cast<float>(trans->getX()) - (size.first / 2.0f), static_cast<float>(trans->getY()) - (size.second / 2.0f));
+                std::pair<double, double> size = ent->getComponent<Rendering>()->getScaledSize();
+                sf::RectangleShape rectangle(sf::Vector2f(static_cast<float>(size.first), static_cast<float>(size.second)));
+                rectangle.setPosition(static_cast<float>(trans->getX()) - static_cast<float>(size.first / 2.0), static_cast<float>(trans->getY()) - static_cast<float>(size.second / 2.0));
                 rectangle.setFillColor(sf::Color(255, 255, 255, 64));
                 texture.draw(rectangle);
             }
@@ -133,7 +136,10 @@ void EditorRender::render(sf::RenderTarget& window, float frame_fraction) {
 
 void EditorRender::drawCameraBoundaries(sf::RenderTarget& target) {
     auto viewport = System::getCamera()->getView();
-    sf::View view = {{viewport.x_pos, viewport.y_pos}, {viewport.width, viewport.height}};
+    sf::View view = {{static_cast<float>(viewport.x_pos),
+                      static_cast<float>(viewport.y_pos)},
+                     {static_cast<float>(viewport.width),
+                      static_cast<float>(viewport.height)}};
 
     auto view_center = view.getCenter();
     auto view_size = view.getSize();

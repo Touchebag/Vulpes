@@ -9,7 +9,7 @@ class IRender {
   public:
     virtual ~IRender() = default;
 
-    virtual void render(sf::RenderTarget& window, float frame_fraction) = 0;
+    virtual void render(sf::RenderTarget& window, double frame_fraction) = 0;
 
     virtual void addEntity(std::weak_ptr<Rendering> entity) = 0;
     virtual void setPlayer(std::weak_ptr<Rendering> entity) = 0;

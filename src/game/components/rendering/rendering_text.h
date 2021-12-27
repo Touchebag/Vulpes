@@ -12,7 +12,7 @@ class RenderingText : public Rendering {
     void setFont(sf::Font font);
     void setColor(sf::Color color) override;
 
-    void render(sf::RenderTarget& target, float frame_fraction = 0.0f) override;
+    void render(sf::RenderTarget& target, double frame_fraction = 0.0) override;
 
   private:
     sf::Font font_;
