@@ -2,9 +2,14 @@
 
 #include "collision/collideables/movement/i_collideable_movement.h"
 #include "system/system.h"
+#include "utils/common.h"
 #include "utils/log.h"
 
 namespace {
+
+int roundAwayFromZero(double d) {
+    return d > 0.0 ? static_cast<int>(ceil(d)) : static_cast<int>(floor(d));
+}
 
 void recalculateTempCollision(std::shared_ptr<Transform> new_trans,
                               std::shared_ptr<Hitbox> new_hbox,
@@ -12,10 +17,10 @@ void recalculateTempCollision(std::shared_ptr<Transform> new_trans,
                               std::shared_ptr<const Hitbox> old_hbox,
                               double velX,
                               double velY) {
-    new_hbox->width_ = old_hbox->width_ + abs(static_cast<int>(lround(velX))),
-    new_hbox->height_ = old_hbox->height_ + abs(static_cast<int>(lround(velY))),
-    new_trans->setPosition(old_trans->getX() + static_cast<int>(lround(velX / 2.0)),
-                           old_trans->getY() + static_cast<int>(lround(velY / 2.0)));
+    new_hbox->width_ = old_hbox->width_ + abs(roundAwayFromZero(velX));
+    new_hbox->height_ = old_hbox->height_ + abs(roundAwayFromZero(velY));
+    util::Vec2d raw_pos = old_trans->getRawPosition();
+    new_trans->setRawPosition({raw_pos.x + roundAwayFromZero(velX / 2.0), raw_pos.y + roundAwayFromZero(velY / 2.0)});
 }
 
 std::pair<double, double> checkMovement(double velX, double velY,
@@ -32,10 +37,10 @@ std::pair<double, double> checkMovement(double velX, double velY,
         return {x, y};
     }
 
-    auto temp_trans = std::make_shared<Transform>(std::weak_ptr<ComponentStore>({}));
-    auto temp_hitbox = std::make_shared<Hitbox>(0, 0);
+    auto broad_sweep_trans = std::make_shared<Transform>(std::weak_ptr<ComponentStore>({}));
+    auto broad_sweep_hitbox = std::make_shared<Hitbox>(0, 0);
 
-    recalculateTempCollision(temp_trans, temp_hitbox, this_trans, this_hbox, x, y);
+    recalculateTempCollision(broad_sweep_trans, broad_sweep_hitbox, this_trans, this_hbox, x, y);
 
     auto world_colls = System::IWorldRead::getCollideables(type);
     for (auto it = world_colls.begin(); it != world_colls.end(); ++it) {
@@ -43,14 +48,14 @@ std::pair<double, double> checkMovement(double velX, double velY,
 
         if (other_coll) {
             // Broad sweep
-            if (other_coll->collides(temp_trans, temp_hitbox)) {
+            if (other_coll->collides(broad_sweep_trans, broad_sweep_hitbox)) {
                 if (auto movement_coll = std::dynamic_pointer_cast<const ICollideableMovement>(other_coll)) {
                     std::pair<double, double> newMoveValues = movement_coll->getMaximumMovement(x, y, this_coll->getCollideable());
                     x = newMoveValues.first;
                     y = newMoveValues.second;
 
                     // Recalculate with new movement values
-                    recalculateTempCollision(temp_trans, temp_hitbox, this_trans, this_hbox, x, y);
+                    recalculateTempCollision(broad_sweep_trans, broad_sweep_hitbox, this_trans, this_hbox, x, y);
                 }
             }
         }
@@ -59,25 +64,12 @@ std::pair<double, double> checkMovement(double velX, double velY,
     return {x, y};
 }
 
-std::pair<int, int> checkCameraMargins(int x, int y) {
+std::pair<double, double> checkCameraMargins(double x, double y) {
     if (auto camera = System::getCamera()) {
         auto camera_box = camera->getCameraBox();
 
-        if (x < static_cast<int>(camera_box.left_margin)) {
-            x = static_cast<int>(camera_box.left_margin);
-        }
-
-        if (x > static_cast<int>(camera_box.right_margin)) {
-            x = static_cast<int>(camera_box.right_margin);
-        }
-
-        if (y < static_cast<int>(camera_box.top_margin)) {
-            y = static_cast<int>(camera_box.top_margin);
-        }
-
-        if (y > static_cast<int>(camera_box.bottom_margin)) {
-            y = static_cast<int>(camera_box.bottom_margin);
-        }
+        x = std::max(std::min(x, camera_box.right_margin), camera_box.left_margin);
+        y = std::max(std::min(y, camera_box.bottom_margin), camera_box.top_margin);
     }
 
     return {x, y};
@@ -100,12 +92,11 @@ void Movement::move(double velX, double velY) {
         velx_ = max_move.first;
         vely_ = max_move.second;
 
-        int x = trans->getX();
-        int y = trans->getY();
+        auto raw_pos = trans->getRawPosition();
 
-        auto adjusted_pos = checkCameraMargins(x + static_cast<int>(velx_), y + static_cast<int>(vely_));
+        auto adjusted_pos = checkCameraMargins(raw_pos.x + velx_, raw_pos.y + vely_);
 
-        trans->setPosition(adjusted_pos.first, adjusted_pos.second);
+        trans->setRawPosition({adjusted_pos.first, adjusted_pos.second});
 
         if (getMovementAttributes().on_slope) {
             // Reset y velocity if adjusted by slope to avoid overshooting next frame

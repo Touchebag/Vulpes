@@ -5,24 +5,24 @@
 #include "utils/log.h"
 #include "utils/common.h"
 
-#define FRACTION_OF_DISTANCE 0.15f
-#define RESIZE_FRACTION 0.02f
+#define FRACTION_OF_DISTANCE 0.15
+#define RESIZE_FRACTION 0.02
 
-#define X_RATIO_MULTIPLIER 600.0f
-#define Y_RATIO_MULTIPLIER 600.0f
+#define X_RATIO_MULTIPLIER 600.0
+#define Y_RATIO_MULTIPLIER 600.0
 
-#define MAX_X_ACCELERATION 5.0f
-#define MAX_Y_ACCELERATION 5.0f
-#define MAX_WIDTH_ACCELERATION 0.5f
-#define MAX_HEIGHT_ACCELERATION 0.5f
+#define MAX_X_ACCELERATION 5.0
+#define MAX_Y_ACCELERATION 5.0
+#define MAX_WIDTH_ACCELERATION 0.5
+#define MAX_HEIGHT_ACCELERATION 0.5
 
-#define SHAKE_CONSTANT_X 20.0f
-#define SHAKE_CONSTANT_Y 100.0f
+#define SHAKE_CONSTANT_X 20.0
+#define SHAKE_CONSTANT_Y 100.0
 
 namespace {
 
-inline float floatRandom() {
-    return static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+inline double doubleRandom() {
+    return static_cast<double>(rand()) / static_cast<double>(RAND_MAX);
 }
 
 } // namespace
@@ -35,7 +35,7 @@ Camera::CameraBoundingBox Camera::getCameraBox() {
     return camera_box_;
 }
 
-void Camera::setView(float x, float y, float width, float height) {
+void Camera::setView(double x, double y, double width, double height) {
     CameraView view;
 
     view.x_pos = x;
@@ -66,11 +66,11 @@ Camera::CameraView Camera::getChangeVelocity() {
 }
 
 void Camera::setWindowSize(int width, int height) {
-    aspect_ratio_ = static_cast<float>(width) / static_cast<float>(height);
+    aspect_ratio_ = static_cast<double>(width) / static_cast<double>(height);
 
     auto view = getRawView();
-    view.width = static_cast<float>(width);
-    view.height = static_cast<float>(height);
+    view.width = static_cast<double>(width);
+    view.height = static_cast<double>(height);
 
     window_size_ = {width, height};
 
@@ -81,9 +81,9 @@ std::pair<int, int> Camera::getWindowSize() {
     return window_size_;
 }
 
-void Camera::moveView(float x, float y) {
-    auto width_offset = view_.width / 2.0f;
-    auto height_offset = view_.height / 2.0f;
+void Camera::moveView(double x, double y) {
+    auto width_offset = view_.width / 2.0;
+    auto height_offset = view_.height / 2.0;
 
     if (x - width_offset < camera_box_.left_margin) {
         x = camera_box_.left_margin + width_offset;
@@ -101,7 +101,7 @@ void Camera::moveView(float x, float y) {
     view_.y_pos = y;
 }
 
-void Camera::resizeView(float width, float height) {
+void Camera::resizeView(double width, double height) {
     auto camera_box_width = camera_box_.right_margin - camera_box_.left_margin;
     auto camera_box_height = camera_box_.bottom_margin - camera_box_.top_margin;
 
@@ -125,16 +125,16 @@ void Camera::resizeView(float width, float height) {
 
 void Camera::applyCameraShake() {
     adjusted_camera_view_ = view_;
-    adjusted_camera_view_.x_pos += SHAKE_CONSTANT_X * floatRandom() * trauma_ * trauma_;
-    adjusted_camera_view_.y_pos += SHAKE_CONSTANT_Y * floatRandom() * trauma_ * trauma_;
+    adjusted_camera_view_.x_pos += SHAKE_CONSTANT_X * doubleRandom() * trauma_ * trauma_;
+    adjusted_camera_view_.y_pos += SHAKE_CONSTANT_Y * doubleRandom() * trauma_ * trauma_;
 
-    addTrauma(-0.01f);
+    addTrauma(-0.01);
 }
 
-void Camera::addTrauma(float trauma) {
+void Camera::addTrauma(double trauma) {
     trauma_ += trauma;
 
-    trauma_ = std::max(std::min(trauma_, 1.0f), 0.0f);
+    trauma_ = std::max(std::min(trauma_, 1.0), 0.0);
 }
 
 void Camera::update() {
@@ -178,8 +178,8 @@ void Camera::updateTargetView() {
             auto ratio = getRelativePosition(p_trans->getX(), p_trans->getY());
 
             // Adjust to have 0 in center
-            target_view_.x_pos = view_.x_pos + (static_cast<float>(ratio.first) - 0.5f) * X_RATIO_MULTIPLIER;
-            target_view_.y_pos = view_.y_pos + (static_cast<float>(ratio.second) - 0.5f) * Y_RATIO_MULTIPLIER;
+            target_view_.x_pos = view_.x_pos + (static_cast<double>(ratio.first) - 0.5) * X_RATIO_MULTIPLIER;
+            target_view_.y_pos = view_.y_pos + (static_cast<double>(ratio.second) - 0.5) * Y_RATIO_MULTIPLIER;
 
             // Check if player is moving
             if (!(util::closeToZero(p_move->getVelX(), 0.01) && util::closeToZero(p_move->getVelY(), 0.01))) {
@@ -193,14 +193,14 @@ void Camera::updateTargetView() {
     // Zoom in when standing still
     if (idle_frame_counter_ <= 0) {
         // Using height as base for nicer view
-        target_view_.height = 1000.0f;
+        target_view_.height = 1000.0;
     } else {
         // Using height as base for nicer view
-        target_view_.height = 2000.0f;
+        target_view_.height = 2000.0;
     }
 
-    auto half_width = view_.width / 2.0f;
-    auto half_height = view_.height / 2.0f;
+    auto half_width = view_.width / 2.0;
+    auto half_height = view_.height / 2.0;
 
     if (target_view_.x_pos < camera_box_.left_margin + half_width) {
         target_view_.x_pos = camera_box_.left_margin + half_width;

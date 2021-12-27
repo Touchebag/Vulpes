@@ -48,7 +48,7 @@ void renderHitboxes(sf::RenderTarget& target, Collideable::CollisionType coll_ty
     }
 }
 
-void renderEntrances(sf::RenderTarget& target, const std::vector<util::Point>& entrances) {
+void renderEntrances(sf::RenderTarget& target, const std::vector<util::Vec2i>& entrances) {
     constexpr int width = 50.0f;
     constexpr int height = 200.0f;
     for (auto it : entrances) {

@@ -7,22 +7,22 @@
 class Camera {
   public:
     struct CameraBoundingBox {
-        float left_margin;
-        float right_margin;
-        float top_margin;
-        float bottom_margin;
+        double left_margin;
+        double right_margin;
+        double top_margin;
+        double bottom_margin;
     };
 
     struct CameraView {
-        float x_pos;
-        float y_pos;
-        float width;
-        float height;
+        double x_pos;
+        double y_pos;
+        double width;
+        double height;
     };
 
     void update();
 
-    void setView(float x, float y, float width, float height);
+    void setView(double x, double y, double width, double height);
     void setView(CameraView view);
     CameraView getView();
     CameraView getRawView();
@@ -34,7 +34,7 @@ class Camera {
 
     void setCameraBox(CameraBoundingBox camera_box);
 
-    void addTrauma(float trauma);
+    void addTrauma(double trauma);
 
     CameraBoundingBox getCameraBox();
 
@@ -43,12 +43,12 @@ class Camera {
     std::pair<double, double> getRelativePosition(double x, double y);
 
   private:
-    void moveView(float x, float y);
-    void resizeView(float width, float height);
+    void moveView(double x, double y);
+    void resizeView(double width, double height);
 
     void updateTargetView();
 
-    float aspect_ratio_ = 1.0f;
+    double aspect_ratio_ = 1.0;
 
     void applyCameraShake();
 
@@ -72,5 +72,5 @@ class Camera {
     // Used to delay view shrinking when idle
     int idle_frame_counter_ = 0;
 
-    float trauma_ = 0.0f;
+    double trauma_ = 0.0;
 };

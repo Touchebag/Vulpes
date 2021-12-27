@@ -29,13 +29,13 @@ class System {
       public:
         static const std::vector<std::weak_ptr<const Collideable>>& getCollideables(Collideable::CollisionType coll_type);
 
-        static util::Point getPlayerPosition();
+        static util::Vec2i getPlayerPosition();
 
         static std::weak_ptr<const Player> getPlayer();
 
         static std::string getCurrentRoomName();
 
-        static std::vector<util::Point> getEntrances();
+        static std::vector<util::Vec2i> getEntrances();
     };
 
     class IWorldModify {

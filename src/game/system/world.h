@@ -50,7 +50,7 @@ class World {
 
     std::vector<std::shared_ptr<BaseEntity>>::iterator deleteEntity(std::vector<std::shared_ptr<BaseEntity>>::iterator it);
 
-    util::Point getPlayerPosition();
+    util::Vec2i getPlayerPosition();
 
     std::vector<std::shared_ptr<BaseEntity>>& getWorldObjects();
 
@@ -65,7 +65,7 @@ class World {
 
     std::array<std::vector<std::weak_ptr<const Collideable>>, static_cast<int>(Collideable::CollisionType::MAX_NUM)> collideables_;
 
-    std::vector<util::Point> entrances_;
+    std::vector<util::Vec2i> entrances_;
 
     std::optional<std::pair<std::string, int>> new_room_;
 

@@ -9,8 +9,11 @@ public:
     Transform(std::weak_ptr<ComponentStore> components);
 
     void setPosition(const int x, const int y);
-    void setPosition(util::Point point);
-    util::Point getPosition();
+    void setPosition(util::Vec2i point);
+    util::Vec2i getPosition() const;
+
+    void setRawPosition(util::Vec2d point);
+    util::Vec2d getRawPosition() const;
 
     void update() override;
 
@@ -22,6 +25,6 @@ public:
     int getY() const;
 
 private:
-    int pos_x_ = 0;
-    int pos_y_ = 0;
+    double pos_x_ = 0.0;
+    double pos_y_ = 0.0;
 };

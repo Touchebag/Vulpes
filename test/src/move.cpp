@@ -49,12 +49,19 @@ TEST_F(MovableTestFixture, MoveArbitrary) {
 TEST_F(MovableTestFixture, MoveFloat) {
     components_->getComponent<Movement>()->move(6.7, 4.2);
 
-    EXPECT_EQ(6, components_->getComponent<Transform>()->getX());
+    EXPECT_EQ(7, components_->getComponent<Transform>()->getX());
     EXPECT_EQ(4, components_->getComponent<Transform>()->getY());
 
     components_->getComponent<Transform>()->setPosition(0, 0);
     components_->getComponent<Movement>()->move(-2.7, -3.5);
 
-    EXPECT_EQ(-2, components_->getComponent<Transform>()->getX());
-    EXPECT_EQ(-3, components_->getComponent<Transform>()->getY());
+    EXPECT_EQ(-3, components_->getComponent<Transform>()->getX());
+    EXPECT_EQ(-4, components_->getComponent<Transform>()->getY());
+}
+
+TEST_F(MovableTestFixture, MoveSmall) {
+    components_->getComponent<Movement>()->move(0.6, 0.2);
+
+    EXPECT_EQ(1, components_->getComponent<Transform>()->getX());
+    EXPECT_EQ(0, components_->getComponent<Transform>()->getY());
 }

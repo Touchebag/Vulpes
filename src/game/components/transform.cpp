@@ -12,13 +12,22 @@ void Transform::setPosition(const int x, const int y) {
     pos_y_ = y;
 }
 
-void Transform::setPosition(util::Point point) {
+void Transform::setPosition(util::Vec2i point) {
+    pos_x_ = static_cast<double>(point.x);
+    pos_y_ = static_cast<double>(point.y);
+}
+
+void Transform::setRawPosition(util::Vec2d point) {
     pos_x_ = point.x;
     pos_y_ = point.y;
 }
 
-util::Point Transform::getPosition() {
+util::Vec2i Transform::getPosition() const {
     return {getX(), getY()};
+}
+
+util::Vec2d Transform::getRawPosition() const {
+    return {pos_x_, pos_y_};
 }
 
 std::shared_ptr<Transform> Transform::createFromJson(nlohmann::json j, std::weak_ptr<ComponentStore> components, File file_instance) {
@@ -44,9 +53,9 @@ std::optional<nlohmann::json> Transform::outputToJson() {
 }
 
 int Transform::getX() const {
-    return pos_x_;
+    return static_cast<int>(lround(pos_x_));
 }
 
 int Transform::getY() const {
-    return pos_y_;
+    return static_cast<int>(lround(pos_y_));
 }

@@ -11,9 +11,7 @@ RelativePosition::RelativePosition(std::string uniform_name) :
 void RelativePosition::applyUniform(std::shared_ptr<sf::Shader> shader, std::shared_ptr<ComponentStore> components) {
     if (components) {
         if (auto trans = components->getComponent<Transform>()) {
-            auto pos = trans->getPosition();
-
-            auto rel_pos = System::getCamera()->getRelativePosition(pos.x, pos.y);
+            auto rel_pos = System::getCamera()->getRelativePosition(trans->getX(), trans->getY());
 
             position_ = {static_cast<float>(rel_pos.first), static_cast<float>(rel_pos.second)};
         }

@@ -4,7 +4,7 @@ const std::vector<std::weak_ptr<const Collideable>>& System::IWorldRead::getColl
     return System::getInstance().world_->collideables_[static_cast<int>(coll_type)];
 }
 
-util::Point System::IWorldRead::getPlayerPosition() {
+util::Vec2i System::IWorldRead::getPlayerPosition() {
     return System::getInstance().world_->getPlayerPosition();
 }
 
@@ -16,6 +16,6 @@ std::string System::IWorldRead::getCurrentRoomName() {
     return System::getInstance().world_->current_room_name_;
 }
 
-std::vector<util::Point> System::IWorldRead::getEntrances() {
+std::vector<util::Vec2i> System::IWorldRead::getEntrances() {
     return System::getInstance().world_->entrances_;
 }

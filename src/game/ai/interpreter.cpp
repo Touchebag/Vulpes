@@ -98,7 +98,7 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                 GET_TARGET;
                 if (target) {
                     if (auto trans = target->getComponent<Transform>()) {
-                        PUSH(trans->getPosition().x);
+                        PUSH(trans->getX());
                         break;
                     }
                 }

@@ -4,17 +4,20 @@
 
 namespace util {
 
-struct Point {
-    Point(int x_pos, int y_pos) : x(x_pos), y(y_pos) {}
+struct Vec2i {
+    Vec2i(int x_pos, int y_pos) : x(x_pos), y(y_pos) {}
+    Vec2i() = default;
 
-    Point() = default;
-    Point(const Point&) = default;
-    Point& operator=(const Point&) = default;
-    Point(Point&&) = default;
-    Point& operator=(Point&&) = default;
+    int x = 0;
+    int y = 0;
+};
 
-    int x;
-    int y;
+struct Vec2d {
+    Vec2d(double x_pos, double y_pos) : x(x_pos), y(y_pos) {}
+    Vec2d() = default;
+
+    double x = 0.0;
+    double y = 0.0;
 };
 
 struct Rectangle {

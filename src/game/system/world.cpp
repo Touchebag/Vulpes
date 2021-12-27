@@ -79,7 +79,7 @@ void World::update() {
     System::getEnvironment()->triggerConditionalEvents();
 }
 
-util::Point World::getPlayerPosition() {
+util::Vec2i World::getPlayerPosition() {
     return player_->getComponent<Transform>()->getPosition();
 }
 
@@ -110,7 +110,7 @@ void World::addEntriesToWorld(nlohmann::json j, bool is_template) {
 
             long long unsigned int id = it["id"].get<int>();
             if (id < entrances_.size()) {
-                entrances_[id] = util::Point(it["pos_x"].get<int>(), it["pos_y"].get<int>());
+                entrances_[id] = util::Vec2i(it["pos_x"].get<int>(), it["pos_y"].get<int>());
             }
         }
     }
