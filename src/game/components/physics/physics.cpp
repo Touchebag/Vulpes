@@ -173,22 +173,11 @@ void Physics::update() {
             x *= constants_.x_friction;
         }
 
-        auto fall_mult = constants_.fall_multiplier;
-        if (physics_props.air_diving_) {
-            fall_mult *= constants_.air_dive_multiplier;
-        }
-
         if (!physics_props.movement_locked_y_) {
-            // Gravity
-            if (y > 0.0 && !physics_props.touching_wall_) {
-                y += constants_.gravity * fall_mult;
-            } else if (y < 0.0
-                       && !(act->getActionState(Actions::Action::JUMP))
-                       && !physics_props.touching_wall_) {
-                y += constants_.gravity * constants_.low_jump_multiplier;
-            } else {
-                y += constants_.gravity;
-            }
+            // Only apply jump multiplier if holding jump and moving upwards
+            auto multiplier = (act->getActionState(Actions::Action::JUMP)
+                               && y < 0.0) ? constants_.jump_multiplier : 1.0;
+            y += constants_.gravity * multiplier;
         }
 
         // Only slide when falling
@@ -253,12 +242,7 @@ void Physics::update() {
             y = constants_.air_dive_impulse;
         }
 
-        if (physics_props.air_diving_) {
-            // Air dive only falls
-            y = std::min(y, constants_.max_air_dive_speed);
-        } else {
-            y = std::max(std::min(y, constants_.max_vertical_speed), constants_.min_vertical_speed);
-        }
+        y *= constants_.y_friction;
 
         if (act->getActionState(Actions::Action::AIR_DIVE_BOUNCE, true)) {
             y = -30;
@@ -311,13 +295,10 @@ PhysicsConstants Physics::loadConstantsFromJson(nlohmann::json j, PhysicsConstan
     loadConstant(x_acceleration);
     loadConstant(x_friction);
 
+    loadConstant(y_acceleration);
+    loadConstant(y_friction);
     loadConstant(gravity);
-    loadConstant(fall_multiplier);
-    loadConstant(low_jump_multiplier);
-    loadConstant(max_vertical_speed);
-    loadConstant(min_vertical_speed);
-    loadConstant(max_air_dive_speed);
-    loadConstant(air_dive_multiplier);
+    loadConstant(jump_multiplier);
 
     loadConstant(jump_impulse);
     loadConstant(wall_slide_friction);
@@ -346,12 +327,9 @@ std::optional<nlohmann::json> Physics::outputToJson() {
     saveConstantToJson(j, "x_friction", original_constants_.x_friction, default_constants.x_friction);
 
     saveConstantToJson(j, "gravity", original_constants_.gravity, default_constants.gravity);
-    saveConstantToJson(j, "fall_multiplier", original_constants_.fall_multiplier, default_constants.fall_multiplier);
-    saveConstantToJson(j, "low_jump_multiplier", original_constants_.low_jump_multiplier, default_constants.low_jump_multiplier);
-    saveConstantToJson(j, "min_vertical_speed", original_constants_.min_vertical_speed, default_constants.min_vertical_speed);
-    saveConstantToJson(j, "max_vertical_speed", original_constants_.max_vertical_speed, default_constants.max_vertical_speed);
-    saveConstantToJson(j, "max_air_dive_speed", original_constants_.max_air_dive_speed, default_constants.max_air_dive_speed);
-    saveConstantToJson(j, "air_dive_multiplier", original_constants_.air_dive_multiplier, default_constants.air_dive_multiplier);
+    saveConstantToJson(j, "jump_multiplier", original_constants_.jump_multiplier, default_constants.jump_multiplier);
+    saveConstantToJson(j, "y_acceleration", original_constants_.y_acceleration, default_constants.y_acceleration);
+    saveConstantToJson(j, "y_friction", original_constants_.y_friction, default_constants.y_friction);
 
     saveConstantToJson(j, "jump_impulse", original_constants_.jump_impulse, default_constants.jump_impulse);
     saveConstantToJson(j, "wall_slide_friction", original_constants_.wall_slide_friction, default_constants.wall_slide_friction);
@@ -360,5 +338,6 @@ std::optional<nlohmann::json> Physics::outputToJson() {
     saveConstantToJson(j, "dash_speed", original_constants_.dash_speed, default_constants.dash_speed);
     saveConstantToJson(j, "dash_friction", original_constants_.dash_friction, default_constants.dash_friction);
     saveConstantToJson(j, "air_dive_impulse", original_constants_.air_dive_impulse, default_constants.air_dive_impulse);
+
     return j;
 }

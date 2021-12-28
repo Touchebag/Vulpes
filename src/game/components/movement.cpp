@@ -86,9 +86,9 @@ void Movement::update() {
 }
 
 void Movement::move(double velX, double velY) {
-    auto max_move = getMaximumMovement(velX, velY);
-
     if (auto trans = getComponent<Transform>()) {
+        auto max_move = getMaximumMovement(velX, velY);
+
         velx_ = max_move.first;
         vely_ = max_move.second;
 
