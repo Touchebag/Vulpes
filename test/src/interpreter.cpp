@@ -54,6 +54,12 @@ TEST_F(InterpreterTestFixture, StringLiteral) {
     EXPECT_EQ(program.getString(0), "string_literal");
 }
 
+TEST_F(InterpreterTestFixture, FloatLiteral) {
+    auto program = Program::loadProgram("4.3");
+
+    EXPECT_EQ(program.getFloat(0), 4.3);
+}
+
 TEST_F(InterpreterTestFixture, FrameTimer) {
     auto output = parseAndRun("frame_timer 2");
 

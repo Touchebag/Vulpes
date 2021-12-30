@@ -42,11 +42,22 @@ ai::InstructionData parseInstruction(std::string instruction) {
 
     // Should be able to parse literal int without keyword
     try {
-        std::stoi(instruction);
+        std::unique_ptr<size_t> n = std::make_unique<size_t>();
 
-        instruction_data = {ai::Instruction::INT, ai::Type::INT, {}};
+        // Try read int
+        std::stoi(instruction, n.get());
+        // Check if entire string could be parsed as int
+        if (*n == instruction.length()) {
+            instruction_data = {ai::Instruction::INT, ai::Type::INT, {}};
+            return instruction_data;
+        }
 
-        return instruction_data;
+        // Try read double
+        std::stod(instruction, n.get());
+        if (*n == instruction.length()) {
+            instruction_data = {ai::Instruction::FLOAT, ai::Type::FLOAT, {}};
+            return instruction_data;
+        }
     } catch (std::invalid_argument&) {
         // If not int, just continue parsing as normal
     }
@@ -175,6 +186,13 @@ ai::Type Program::translateAndStore(std::vector<std::string> lexed_input) {
             program_.push_back(string_id_counter_);
             string_id_counter_++;
             break;
+        case ai::Instruction::FLOAT:
+            program_.push_back(static_cast<int>(ai::Instruction::FLOAT));
+
+            floats_.insert({float_id_counter_, std::stod(lexed_input[0])});
+            program_.push_back(float_id_counter_);
+            float_id_counter_++;
+            break;
         case ai::Instruction::ACTION:
             program_.push_back(static_cast<int>(ai::Instruction::ACTION));
             program_.push_back(static_cast<int>(string_action_map.at(lexed_input[0].substr(7))));
@@ -230,4 +248,8 @@ const std::vector<int> Program::getProgram() {
 
 const std::string& Program::getString(int id) {
     return strings_.at(id);
+}
+
+double Program::getFloat(int id) {
+    return floats_.at(id);
 }

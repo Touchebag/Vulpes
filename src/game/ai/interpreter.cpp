@@ -73,11 +73,20 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                 PUSH(*pc);
                 break;
             case ai::Instruction::BOOL:
+                LOGV("BOOL");
                 pc++;
                 PUSH(*pc);
                 break;
             case ai::Instruction::STRING:
                 LOGV("STRING");
+                pc++;
+
+                LOGV("%i", *pc);
+
+                PUSH(*pc);
+                break;
+            case ai::Instruction::FLOAT:
+                LOGV("FLOAT");
                 pc++;
 
                 LOGV("%i", *pc);

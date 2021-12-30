@@ -9,6 +9,7 @@ enum class Instruction {
     INT,
     BOOL,
     STRING,
+    FLOAT,
 
     // Dynamic values
     FRAME_TIMER,
@@ -39,6 +40,7 @@ enum class Instruction {
 
     // This is used to restrict access as needed
     READ_ONLY,
+    ////////////////////////////////////////////
 
     // Actions
     ACTION,
@@ -52,6 +54,7 @@ enum class Type {
 
     INT,
     BOOL,
+    FLOAT,
 
     // To avoid mixups with normal ints
     TARGET,
