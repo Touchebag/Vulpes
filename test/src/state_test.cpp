@@ -70,7 +70,7 @@ TEST_F(StateTestFixture, NoFollowingMatch) {
 
     ASSERT_EQ(state_handler_.getStateData().state_props.frame_timer_, 1);
 
-    state_handler_.incomingEvent(state_utils::Event::MOVING);
+    state_handler_.incomingEvent(state_utils::Event::MOVING_X);
     state_handler_.incomingEvent(state_utils::Event::FRAME_TIMEOUT);
 
     ASSERT_EQ(state_handler_.getStateData().state_props.frame_timer_, 1);
@@ -83,7 +83,7 @@ TEST_F(StateTestFixture, NoFollowingStates) {
 
     ASSERT_EQ(state_handler_.getStateData().state_props.frame_timer_, 4);
 
-    state_handler_.incomingEvent(state_utils::Event::MOVING);
+    state_handler_.incomingEvent(state_utils::Event::MOVING_X);
     state_handler_.incomingEvent(state_utils::Event::TOUCHING_FLOOR);
     state_handler_.incomingEvent(state_utils::Event::START);
 

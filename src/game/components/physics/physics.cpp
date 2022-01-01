@@ -146,13 +146,13 @@ void Physics::update() {
         if (!physics_props.movement_locked_x_) {
             if (act->getActionState(Actions::Action::MOVE_LEFT)) {
                 x_movement_direction = -1.0;
-                state->incomingEvent(state_utils::Event::MOVING);
+                state->incomingEvent(state_utils::Event::MOVING_X);
 
                 // When moving left facing_right should be false even when speed is zero
                 facing_right.setDirection(x > 0.0);
             } else if (act->getActionState(Actions::Action::MOVE_RIGHT)) {
                 x_movement_direction = 1.0;
-                state->incomingEvent(state_utils::Event::MOVING);
+                state->incomingEvent(state_utils::Event::MOVING_X);
 
                 // When moving right facing_right should be true even when speed is zero
                 facing_right.setDirection(x >= 0.0);
@@ -160,12 +160,26 @@ void Physics::update() {
                 // This is separate to give priority to explicit movement
                 x_movement_direction = facing_right ? 1.0 : -1.0;
             } else {
-                state->incomingEvent(state_utils::Event::NO_MOVEMENT);
+                state->incomingEvent(state_utils::Event::NO_MOVEMENT_X);
+            }
+        }
+
+        double y_movement_direction = 0.0;
+        if (!physics_props.movement_locked_y_) {
+            if (act->getActionState(Actions::Action::MOVE_UP)) {
+                y_movement_direction = -1.0;
+                state->incomingEvent(state_utils::Event::MOVING_Y);
+            } else if (act->getActionState(Actions::Action::MOVE_DOWN)) {
+                y_movement_direction = 1.0;
+                state->incomingEvent(state_utils::Event::MOVING_Y);
+            } else {
+                state->incomingEvent(state_utils::Event::NO_MOVEMENT_Y);
             }
         }
 
         // Apply movement
         x += constants_.x_acceleration * x_movement_direction;
+        y += constants_.y_acceleration * y_movement_direction;
 
         if (physics_props.dashing_) {
             x *= constants_.dash_friction;

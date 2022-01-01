@@ -62,7 +62,7 @@
                 "grounded"
             ],
             "next_states": [
-                {"event": "moving", "state": "running"},
+                {"event": "moving_x", "state": "running"},
                 {"event": "jumping", "state": "jump_start"},
                 {"event": "airborne", "state": "falling"},
                 {"event": "dashing", "state": "dash_startup"},
@@ -77,7 +77,7 @@
                 "grounded"
             ],
             "next_states": [
-                {"event": "no_movement", "state": "idle"},
+                {"event": "no_movement_x", "state": "idle"},
                 {"event": "jumping", "state": "jump_start"},
                 {"event": "airborne", "state": "falling"},
                 {"event": "dashing", "state": "dash_startup"},

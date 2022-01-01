@@ -19,8 +19,10 @@ enum class Event {
     AIRBORNE,
 
     // Movement
-    NO_MOVEMENT,
-    MOVING,
+    NO_MOVEMENT_X,
+    NO_MOVEMENT_Y,
+    MOVING_X,
+    MOVING_Y,
     JUMPING,
     FALLING,
     DASHING,
@@ -46,8 +48,10 @@ const std::map<std::string, Event> string_event_map {
     {"touching_wall", Event::TOUCHING_WALL},
     {"airborne", Event::AIRBORNE},
 
-    {"no_movement", Event::NO_MOVEMENT},
-    {"moving", Event::MOVING},
+    {"no_movement_x", Event::NO_MOVEMENT_X},
+    {"no_movement_y", Event::NO_MOVEMENT_Y},
+    {"moving_x", Event::MOVING_X},
+    {"moving_y", Event::MOVING_Y},
     {"jumping", Event::JUMPING},
     {"falling", Event::FALLING},
     {"dashing", Event::DASHING},

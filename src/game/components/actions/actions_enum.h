@@ -6,6 +6,8 @@
 
 GENERATE_ENUM(MOVE_LEFT, "move_left")
 GENERATE_ENUM(MOVE_RIGHT, "move_right")
+GENERATE_ENUM(MOVE_UP, "move_up")
+GENERATE_ENUM(MOVE_DOWN, "move_down")
 GENERATE_ENUM(MOVE_FORWARD, "move_forward")
 
 GENERATE_ENUM(JUMP, "jump")

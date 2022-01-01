@@ -13,7 +13,7 @@
                 "can_interact": true
             },
             "next_states": [
-                {"event": "moving", "state": "running"},
+                {"event": "moving_x", "state": "running"},
                 {"event": "jumping", "state": "jumping"},
                 {"event": "airborne", "state": "falling"},
                 {"event": "dashing", "state": "dashing"},
@@ -58,7 +58,7 @@
                 "can_interact": true
             },
             "next_states": [
-                {"event": "no_movement", "state": "idle"},
+                {"event": "no_movement_x", "state": "idle"},
                 {"event": "jumping", "state": "jumping"},
                 {"event": "airborne", "state": "falling"},
                 {"event": "dashing", "state": "dashing"},
