@@ -247,3 +247,32 @@ TEST_F(InterpreterTestFixture, AddShadersToLayer) {
     // TODO Figure out how to verify
     parseAndRun("add_shader_to_layer 0 3");
 }
+
+TEST_F(InterpreterTestFixture, Move) {
+    extra_data_.this_components->setComponent<Movement>(std::make_shared<Movement>(extra_data_.this_components));
+
+    // Ensure speed is relative
+    extra_data_.this_components->getComponent<Movement>()->setVelocity(0.0, 1.0);
+
+    auto output = parseAndRun("move this 1.2 5.5");
+    EXPECT_EQ(output, 0);
+
+    auto vel_x = extra_data_.this_components->getComponent<Movement>()->getVelX();
+    auto vel_y = extra_data_.this_components->getComponent<Movement>()->getVelY();
+
+    EXPECT_EQ(vel_x, 1.2);
+    EXPECT_EQ(vel_y, 6.5);
+
+    // Test facing left
+    extra_data_.this_components->getComponent<Movement>()->setVelocity(0.0, 0.0);
+    extra_data_.this_components->getComponent<Movement>()->setFacingRight(false);
+
+    output = parseAndRun("move this 3.1 0.0");
+    EXPECT_EQ(output, 0);
+
+    vel_x = extra_data_.this_components->getComponent<Movement>()->getVelX();
+    vel_y = extra_data_.this_components->getComponent<Movement>()->getVelY();
+
+    EXPECT_EQ(vel_x, -3.1);
+    EXPECT_EQ(vel_y, 0.0);
+}

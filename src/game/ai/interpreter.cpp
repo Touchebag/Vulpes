@@ -232,6 +232,27 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                 }
 
                 break;
+            case ai::Instruction::MOVE:
+            {
+                LOGV("MOVE");
+
+                if (auto move = extra_input.this_components->getComponent<Movement>()) {
+                    // Extract args
+                    auto y_index = POP();
+                    auto x_index = POP();
+
+                    GET_TARGET;
+
+                    auto vel_x = program.getFloat(x_index) * (move->isFacingRight() ? 1.0 : -1.0);
+                    auto vel_y = program.getFloat(y_index);
+
+                    move->setVelocity(move->getVelX() + vel_x, move->getVelY() + vel_y);
+                } else {
+                    LOGW("AI ACTION: Missing Movement component");
+                }
+
+                break;
+            }
             case ai::Instruction::ADD_SHADER_TO_LAYER:
                 LOGV("ADD_SHADER_TO_LAYER");
 
