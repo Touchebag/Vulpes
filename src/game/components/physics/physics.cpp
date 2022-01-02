@@ -194,11 +194,6 @@ void Physics::update() {
             y += constants_.gravity * multiplier;
         }
 
-        // Only slide when falling
-        if (y > 0.0 && physics_props.touching_wall_) {
-            y *= constants_.wall_slide_friction;
-        }
-
         if (act->getActionState(Actions::Action::DASH, true)) {
             if (physics_props.can_dash_ && variables_.popDashes()) {
                 // If holding a direction dash in that direction
@@ -315,7 +310,6 @@ PhysicsConstants Physics::loadConstantsFromJson(nlohmann::json j, PhysicsConstan
     loadConstant(jump_multiplier);
 
     loadConstant(jump_impulse);
-    loadConstant(wall_slide_friction);
     loadConstant(wall_jump_horizontal_impulse);
     loadConstant(wall_jump_vertical_impulse);
     loadConstant(dash_speed);
@@ -346,7 +340,6 @@ std::optional<nlohmann::json> Physics::outputToJson() {
     saveConstantToJson(j, "y_friction", original_constants_.y_friction, default_constants.y_friction);
 
     saveConstantToJson(j, "jump_impulse", original_constants_.jump_impulse, default_constants.jump_impulse);
-    saveConstantToJson(j, "wall_slide_friction", original_constants_.wall_slide_friction, default_constants.wall_slide_friction);
     saveConstantToJson(j, "wall_jump_horizontal_impulse", original_constants_.wall_jump_horizontal_impulse, default_constants.wall_jump_horizontal_impulse);
     saveConstantToJson(j, "wall_jump_vertical_impulse", original_constants_.wall_jump_vertical_impulse, default_constants.wall_jump_vertical_impulse);
     saveConstantToJson(j, "dash_speed", original_constants_.dash_speed, default_constants.dash_speed);

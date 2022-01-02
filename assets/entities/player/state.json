@@ -22,6 +22,28 @@
                 "can_dash": false
             }
         },
+        "wall_stick": {
+            "ai": [
+                "move this 0.01 0.0"
+            ],
+            "collideables": [
+                {
+                    "type": "sensor",
+                    "name": "wall_check",
+                    "width": 2,
+                    "height": 50,
+                    "offset": {
+                        "x": 25,
+                        "y": 0
+                    }
+                }
+            ],
+            "physics_constants": {
+                "gravity": 0.0,
+                "y_acceleration": 1.5,
+                "y_friction": 0.93
+            }
+        },
         "ledge_climb_sensors": {
             "next_states": [
                 {"event": "ledge_climb", "state": "ledge_climb"}
@@ -161,6 +183,7 @@
             ],
             "animation": "jumping",
             "templates": [
+                "wall_stick",
                 "ledge_climb_sensors"
             ]
         },
@@ -180,6 +203,7 @@
             ],
             "animation": "wall_slide",
             "templates": [
+                "wall_stick",
                 "ledge_climb_sensors"
             ]
         },

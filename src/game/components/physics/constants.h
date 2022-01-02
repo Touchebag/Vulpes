@@ -15,7 +15,6 @@ struct PhysicsConstants {
 
     // Other
     double jump_impulse = 0.0;
-    double wall_slide_friction = 0.0;
     double wall_jump_horizontal_impulse = 0.0;
     double wall_jump_vertical_impulse = 0.0;
     double dash_speed = 0.0;
