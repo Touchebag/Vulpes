@@ -54,9 +54,8 @@ const nlohmann::json entity_json = nlohmann::json::parse(R"--(
         "jump_multiplier": 2.5,
         "y_acceleration": 2.0,
         "y_friction": 0.5,
-        "jump_impulse": -30.0,
-        "wall_jump_horizontal_impulse": 30.0,
-        "wall_jump_vertical_impulse": -25.0,
+        "jump_impulse_x": -32.0,
+        "jump_impulse_y": 37.0,
         "dash_speed": 100.0,
         "dash_friction": 0.8,
         "air_dive_impulse": -30.0

@@ -24,9 +24,7 @@
         "gravity": 2.5,
         "jump_multiplier": 0.2,
         "y_friction": 0.97,
-        "jump_impulse": -35.0,
-        "wall_jump_horizontal_impulse": 10.0,
-        "wall_jump_vertical_impulse": -25.0,
+        "jump_impulse_y": -35.0,
         "dash_speed": 100.0,
         "dash_friction": 0.8,
         "air_dive_impulse": -30.0

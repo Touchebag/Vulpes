@@ -214,7 +214,12 @@ void Physics::update() {
 
         if (act->getActionState(Actions::Action::JUMP, true)) {
             if (physics_props.can_jump_ && physics_props.touching_ground_ && !physics_props.touching_wall_) {
-                y = constants_.jump_impulse;
+                if (!std::isnan(constants_.jump_impulse_x)) {
+                    x = constants_.jump_impulse_x * (facing_right ? 1.0 : -1.0);
+                }
+                if (!std::isnan(constants_.jump_impulse_y)) {
+                    y = constants_.jump_impulse_y;
+                }
                 state->incomingEvent(state_utils::Event::JUMPING);
             }
         }
@@ -224,7 +229,12 @@ void Physics::update() {
                 !physics_props.touching_ground_ &&
                 !physics_props.touching_wall_ &&
                 variables_.popJumps()) {
-                    y = constants_.jump_impulse;
+                    if (!std::isnan(constants_.jump_impulse_x)) {
+                        x = constants_.jump_impulse_x * (facing_right ? 1.0 : -1.0);
+                    }
+                    if (!std::isnan(constants_.jump_impulse_y)) {
+                        y = constants_.jump_impulse_y;
+                    }
                     state->incomingEvent(state_utils::Event::JUMPING);
             }
         }
@@ -232,12 +242,15 @@ void Physics::update() {
         if (act->getActionState(Actions::Action::WALL_JUMP, true)) {
             if (physics_props.touching_wall_) {
                 state->incomingEvent(state_utils::Event::JUMPING);
-                facing_right.lockDirection(physics_props.direction_locked_);
 
                 facing_right.setDirection(!facing_right);
                 int dir = facing_right ? -1.0 : 1.0;
-                x = constants_.wall_jump_horizontal_impulse * dir;
-                y = constants_.wall_jump_vertical_impulse;
+                if (!std::isnan(constants_.jump_impulse_x)) {
+                    x = constants_.jump_impulse_x * dir;
+                }
+                if (!std::isnan(constants_.jump_impulse_y)) {
+                    y = constants_.jump_impulse_y;
+                }
 
                 // Return aerial jumps on wall jump
                 variables_.resetJumps();
@@ -309,9 +322,8 @@ PhysicsConstants Physics::loadConstantsFromJson(nlohmann::json j, PhysicsConstan
     loadConstant(gravity);
     loadConstant(jump_multiplier);
 
-    loadConstant(jump_impulse);
-    loadConstant(wall_jump_horizontal_impulse);
-    loadConstant(wall_jump_vertical_impulse);
+    loadConstant(jump_impulse_x);
+    loadConstant(jump_impulse_y);
     loadConstant(dash_speed);
     loadConstant(dash_friction);
     loadConstant(air_dive_impulse);
@@ -339,9 +351,8 @@ std::optional<nlohmann::json> Physics::outputToJson() {
     saveConstantToJson(j, "y_acceleration", original_constants_.y_acceleration, default_constants.y_acceleration);
     saveConstantToJson(j, "y_friction", original_constants_.y_friction, default_constants.y_friction);
 
-    saveConstantToJson(j, "jump_impulse", original_constants_.jump_impulse, default_constants.jump_impulse);
-    saveConstantToJson(j, "wall_jump_horizontal_impulse", original_constants_.wall_jump_horizontal_impulse, default_constants.wall_jump_horizontal_impulse);
-    saveConstantToJson(j, "wall_jump_vertical_impulse", original_constants_.wall_jump_vertical_impulse, default_constants.wall_jump_vertical_impulse);
+    saveConstantToJson(j, "jump_impulse_x", original_constants_.jump_impulse_x, default_constants.jump_impulse_x);
+    saveConstantToJson(j, "jump_impulse_y", original_constants_.jump_impulse_y, default_constants.jump_impulse_y);
     saveConstantToJson(j, "dash_speed", original_constants_.dash_speed, default_constants.dash_speed);
     saveConstantToJson(j, "dash_friction", original_constants_.dash_friction, default_constants.dash_friction);
     saveConstantToJson(j, "air_dive_impulse", original_constants_.air_dive_impulse, default_constants.air_dive_impulse);

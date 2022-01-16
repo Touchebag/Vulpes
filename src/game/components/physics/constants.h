@@ -14,9 +14,8 @@ struct PhysicsConstants {
     double jump_multiplier = 1.0;
 
     // Other
-    double jump_impulse = 0.0;
-    double wall_jump_horizontal_impulse = 0.0;
-    double wall_jump_vertical_impulse = 0.0;
+    double jump_impulse_x = std::numeric_limits<double>::signaling_NaN();
+    double jump_impulse_y = std::numeric_limits<double>::signaling_NaN();
     double dash_speed = 0.0;
     double dash_friction = 0.0;
     double air_dive_impulse = 0.0;

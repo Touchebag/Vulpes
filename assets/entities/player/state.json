@@ -26,18 +26,6 @@
             "ai": [
                 "move this 0.01 0.0"
             ],
-            "collideables": [
-                {
-                    "type": "sensor",
-                    "name": "wall_check",
-                    "width": 2,
-                    "height": 50,
-                    "offset": {
-                        "x": 25,
-                        "y": 0
-                    }
-                }
-            ],
             "physics_constants": {
                 "gravity": 0.0,
                 "y_acceleration": 1.5,
@@ -170,7 +158,6 @@
             "properties": {
                 "touching_ground": false,
                 "touching_wall": true,
-                "direction_locked": true,
                 "can_dash": false
             },
             "frame_timer": 10,
@@ -191,7 +178,6 @@
             "properties": {
                 "touching_ground": false,
                 "touching_wall": true,
-                "direction_locked": true,
                 "can_dash": false
             },
             "frame_timer": 10,
@@ -237,7 +223,14 @@
                 {"event": "air_diving", "state": "air_dive_start"},
                 {"event": "damaged", "state": "taking_damage"}
             ],
-            "animation": "jumping"
+            "animation": "jumping",
+            "physics_constants": {
+                "jump_impulse_x": -50.0,
+                "jump_impulse_y": -45.0
+            },
+            "templates": [
+                "airborne"
+            ]
         },
         "dash_startup": {
             "properties": {
