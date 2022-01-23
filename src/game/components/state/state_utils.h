@@ -95,6 +95,8 @@ struct EntityContent {
     StateProperties state_props;
     nlohmann::json entity;
     std::vector<Program> ai;
+    std::vector<Program> ai_on_enter;
+    std::vector<Program> ai_on_exit;
     std::optional<PhysicsConstants> physics_constants;
 };
 

@@ -6,6 +6,20 @@
 
 #include "utils/log.h"
 
+namespace {
+
+void executeProgramsInVector(std::vector<Program> programs, std::shared_ptr<AI> ai) {
+    if (ai) {
+        for (auto& prog : programs) {
+            ai->executeProgram(prog);
+        }
+    } else {
+        LOGW("Stateful: no AI");
+    }
+}
+
+} // namespace
+
 Stateful::Stateful(std::weak_ptr<ComponentStore> components) :
     Component(components) {
 }
@@ -50,9 +64,17 @@ void Stateful::resetState() {
 }
 
 void Stateful::incomingEvent(state_utils::Event event) {
+    auto progs = state_handler_.getStateData().ai_on_exit;
     auto new_state = state_handler_.incomingEvent(event);
 
     if (auto ns = new_state.lock()) {
+        // AI actions on state switch
+        auto ai = getComponent<AI>();
+        executeProgramsInVector(progs, ai);
+
+        progs = ns->getData().ai_on_enter;
+        executeProgramsInVector(progs, ai);
+
         auto state_props = ns->getData().state_props;
         auto physics_constants = ns->getData().physics_constants;
 

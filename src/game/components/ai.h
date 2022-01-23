@@ -16,6 +16,8 @@ class AI : public Component {
     void reloadFromJson(nlohmann::json j, File file_instance = File()) override;
     std::optional<nlohmann::json> outputToJson() override;
 
+    void executeProgram(const Program& program);
+
   private:
     unsigned int frame_timer_ = 0;
 };

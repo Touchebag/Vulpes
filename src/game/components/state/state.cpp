@@ -52,6 +52,8 @@ State<state_utils::EntityContent> State<state_utils::EntityContent>::loadStateFr
     state_utils::StateProperties state_props;
     nlohmann::json entity;
     std::vector<Program> ai;
+    std::vector<Program> ai_on_enter;
+    std::vector<Program> ai_on_exit;
     std::optional<PhysicsConstants> physics_consts = std::nullopt;
 
     nlohmann::json props_json = j["properties"];
@@ -114,7 +116,15 @@ State<state_utils::EntityContent> State<state_utils::EntityContent>::loadStateFr
         for (auto it : j["ai"]) {
             auto program = Program::loadProgram(it.get<std::string>());
             // TODO Check correct type
-            ai.push_back(program);
+
+            auto meta = program.getMetaData();
+            if (meta == Program::MetaData::ON_ENTER) {
+                ai_on_enter.push_back(program);
+            } else if (meta == Program::MetaData::ON_EXIT) {
+                ai_on_exit.push_back(program);
+            } else {
+                ai.push_back(program);
+            }
         }
     }
 
@@ -132,6 +142,8 @@ State<state_utils::EntityContent> State<state_utils::EntityContent>::loadStateFr
     entity_content.state_props       = state_props;
     entity_content.entity            = entity;
     entity_content.ai                = ai;
+    entity_content.ai_on_enter       = ai_on_enter;
+    entity_content.ai_on_exit        = ai_on_exit;
     entity_content.physics_constants = physics_consts;
 
     auto new_state = State(entity_content);

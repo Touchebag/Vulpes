@@ -276,3 +276,34 @@ TEST_F(InterpreterTestFixture, Move) {
     EXPECT_EQ(vel_x, -3.1);
     EXPECT_EQ(vel_y, 0.0);
 }
+
+TEST_F(InterpreterTestFixture, OnEnterExit) {
+    nlohmann::json j;
+    j["Entity"] = "on_enter_exit";
+    auto entitiy = BaseEntity::createFromJson(j);
+
+    auto ai = entitiy->getComponent<AI>();
+    auto move = entitiy->getComponent<Movement>();
+    auto state = entitiy->getComponent<Stateful>();
+
+    ASSERT_EQ(move->getVelX(), 0.0);
+    ASSERT_EQ(move->getVelY(), 0.0);
+
+    // On exit, should change speed
+    state->incomingEvent(state_utils::Event::ACTION_AI1);
+
+    EXPECT_EQ(move->getVelX(), 100.0);
+    EXPECT_EQ(move->getVelY(), 30.0);
+
+    // No en enter/exit, speed should not change
+    state->incomingEvent(state_utils::Event::ACTION_AI2);
+
+    EXPECT_EQ(move->getVelX(), 100.0);
+    EXPECT_EQ(move->getVelY(), 30.0);
+
+    // On enter, should change speed
+    state->incomingEvent(state_utils::Event::ACTION_AI1);
+
+    EXPECT_EQ(move->getVelX(), 120.0);
+    EXPECT_EQ(move->getVelY(), -20.0);
+}

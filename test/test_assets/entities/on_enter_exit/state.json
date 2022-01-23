@@ -1,0 +1,27 @@
+{
+    "states": {
+        "main": {
+            "next_states": [
+                { "event": "action_ai1", "state": "state2" }
+            ],
+            "ai": [
+                "on_exit move this 100.0 30.0"
+            ]
+        },
+        "state2": {
+            "next_states": [
+                { "event": "action_ai2", "state": "state3" }
+            ]
+        },
+        "state3": {
+            "next_states": [
+                { "event": "action_ai1", "state": "state4" }
+            ]
+        },
+        "state4": {
+            "ai": [
+                "on_enter move this 20.0 -50.0"
+            ]
+        }
+    }
+}

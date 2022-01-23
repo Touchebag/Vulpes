@@ -140,9 +140,18 @@ std::vector<std::vector<std::string>> extractArguments(std::vector<std::string> 
 } // namespace
 
 Program Program::loadProgram(std::string program_string) {
+    Program program_out;
+
     auto lexed_program = tokenizeString(program_string);
 
-    Program program_out;
+    if (lexed_program[0] == "on_enter") {
+        program_out.meta_data_ = MetaData::ON_ENTER;
+        lexed_program.erase(lexed_program.begin());
+    } else if (lexed_program[0] == "on_exit") {
+        program_out.meta_data_ = MetaData::ON_EXIT;
+        lexed_program.erase(lexed_program.begin());
+    }
+
     program_out.translateAndStore(lexed_program);
 
     return program_out;
@@ -252,4 +261,8 @@ const std::string& Program::getString(int id) {
 
 double Program::getFloat(int id) {
     return floats_.at(id);
+}
+
+Program::MetaData Program::getMetaData() {
+    return meta_data_;
 }
