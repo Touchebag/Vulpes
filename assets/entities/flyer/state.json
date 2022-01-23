@@ -2,7 +2,7 @@
     "states": {
         "main": {
             "ai": [
-                "if (flag 'Collectible.attack1') then action_die"
+                "if (flag 'Collectible.attack1') then (action die)"
             ]
         }
     }

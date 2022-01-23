@@ -6,12 +6,12 @@
             ],
             "ai": [
                 "add_global_shader 0",
-                "action_ai1"
+                "action ai1"
             ]
         },
         "idle": {
             "ai": [
-                "if (frame_timer 90) then action_die"
+                "if (frame_timer 90) then (action die)"
             ]
         }
     }

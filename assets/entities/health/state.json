@@ -2,7 +2,7 @@
     "states": {
         "main": {
             "ai": [
-                "if (collides player) then action_die"
+                "if (collides player) then (action die)"
             ]
         }
     }

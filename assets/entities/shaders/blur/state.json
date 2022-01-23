@@ -8,7 +8,7 @@
                 "add_shader_to_layer 0 3",
                 "add_shader_to_layer 0 4",
                 "add_shader_to_layer 0 5",
-                "action_ai1"
+                "action ai1"
             ]
         },
         "idle": {

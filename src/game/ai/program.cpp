@@ -10,10 +10,6 @@
 
 namespace {
 
-bool stringStartsWith(const std::string &full_string, const std::string& prefix) {
-    return full_string.rfind(prefix, 0) == 0;
-}
-
 void checkType(ai::Type expected, ai::Type actual) {
     // Void can return whatever
     if (expected != ai::Type::VOID && expected != actual) {
@@ -68,12 +64,6 @@ ai::InstructionData parseInstruction(std::string instruction) {
         }
 
         instruction_data = {ai::Instruction::STRING, ai::Type::STRING, {}};
-
-        return instruction_data;
-    }
-
-    if (stringStartsWith(instruction, "action_")) {
-        instruction_data = {ai::Instruction::ACTION, ai::Type::VOID, {}};
 
         return instruction_data;
     }
@@ -135,6 +125,15 @@ std::vector<std::vector<std::string>> extractArguments(std::vector<std::string> 
     }
 
     return ret_vec;
+}
+
+int parseAction(const std::string& action_string) {
+    try {
+        return static_cast<int>(string_action_map.at(action_string));
+    } catch (std::out_of_range& e) {
+        LOGE("Program, invalid action %s", action_string.c_str());
+        throw e;
+    }
 }
 
 } // namespace
@@ -204,7 +203,7 @@ ai::Type Program::translateAndStore(std::vector<std::string> lexed_input) {
             break;
         case ai::Instruction::ACTION:
             program_.push_back(static_cast<int>(ai::Instruction::ACTION));
-            program_.push_back(static_cast<int>(string_action_map.at(lexed_input[0].substr(7))));
+            program_.push_back(parseAction(lexed_input[1]));
             break;
         case ai::Instruction::IF:
         {

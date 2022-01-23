@@ -58,10 +58,13 @@ enum class Type {
     BOOL,
     FLOAT,
 
-    // To avoid mixups with normal ints
+    STRING,
+
+    // Typed target
     TARGET,
 
-    STRING,
+    // Typed action
+    ACTION,
 
     // To help with parsing
     THEN,

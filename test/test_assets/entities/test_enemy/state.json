@@ -6,8 +6,8 @@
                 { "event": "action_ai2", "state": "move_left_turnaround" }
             ],
             "ai": [
-                "if (grt (position_x player) (position_x this)) then action_ai1",
-                "if (lss (position_x player) (position_x this)) then action_ai2"
+                "if (grt (position_x player) (position_x this)) then (action ai1)",
+                "if (lss (position_x player) (position_x this)) then (action ai2)"
             ]
         },
         "move_right_turnaround": {
@@ -15,8 +15,8 @@
                 { "event": "action_ai1", "state": "move_right" }
             ],
             "ai": [
-                "action_move_right",
-                "if (frame_timer 30) then action_ai1"
+                "action move_right",
+                "if (frame_timer 30) then (action ai1)"
             ]
         },
         "move_right": {
@@ -24,8 +24,8 @@
                 { "event": "action_ai1", "state": "move_left_turnaround" }
             ],
             "ai": [
-                "if (grt (position_x player) (position_x this)) then action_move_right",
-                "if (lss (position_x player) (position_x this)) then action_ai1"
+                "if (grt (position_x player) (position_x this)) then (action move_right)",
+                "if (lss (position_x player) (position_x this)) then (action ai1)"
             ]
         },
         "move_left_turnaround": {
@@ -33,8 +33,8 @@
                 { "event": "action_ai1", "state": "move_left" }
             ],
             "ai": [
-                "action_move_left",
-                "if (frame_timer 30) then action_ai1"
+                "action move_left",
+                "if (frame_timer 30) then (action ai1)"
             ]
         },
         "move_left": {
@@ -42,8 +42,8 @@
                 { "event": "action_ai1", "state": "move_right_turnaround" }
             ],
             "ai": [
-                "if (grt (position_x player) (position_x this)) then action_ai1",
-                "if (lss (position_x player) (position_x this)) then action_move_left"
+                "if (grt (position_x player) (position_x this)) then (action ai1)",
+                "if (lss (position_x player) (position_x this)) then (action move_left)"
             ]
         }
     }

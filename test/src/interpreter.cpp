@@ -214,7 +214,7 @@ TEST_F(InterpreterTestFixture, Action) {
 
     EXPECT_FALSE(extra_data_.this_components->getComponent<Actions>()->getActionState(Actions::Action::AI1));
 
-    parseAndRun("action_ai1");
+    parseAndRun("action ai1");
 
     EXPECT_TRUE(extra_data_.this_components->getComponent<Actions>()->getActionState(Actions::Action::AI1));
 }
