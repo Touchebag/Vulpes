@@ -277,6 +277,27 @@ TEST_F(InterpreterTestFixture, Move) {
     EXPECT_EQ(vel_y, 0.0);
 }
 
+TEST_F(InterpreterTestFixture, EnableDisableAction) {
+    extra_data_.this_components->setComponent<Actions>(std::make_shared<Actions>(extra_data_.this_components));
+
+    extra_data_.this_components->getComponent<Actions>()->addAction(Actions::Action::MOVE_LEFT);
+
+    auto isEnabled = extra_data_.this_components->getComponent<Actions>()->getActionState(Actions::Action::MOVE_LEFT);
+    EXPECT_TRUE(isEnabled);
+
+    auto output = parseAndRun("disable_action move_left");
+    EXPECT_EQ(output, 0);
+
+    isEnabled = extra_data_.this_components->getComponent<Actions>()->getActionState(Actions::Action::MOVE_LEFT);
+    EXPECT_FALSE(isEnabled);
+
+    output = parseAndRun("enable_action move_left");
+    EXPECT_EQ(output, 0);
+
+    isEnabled = extra_data_.this_components->getComponent<Actions>()->getActionState(Actions::Action::MOVE_LEFT);
+    EXPECT_TRUE(isEnabled);
+}
+
 TEST_F(InterpreterTestFixture, OnEnterExit) {
     nlohmann::json j;
     j["Entity"] = "on_enter_exit";

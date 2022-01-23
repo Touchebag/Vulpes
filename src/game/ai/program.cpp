@@ -205,6 +205,14 @@ ai::Type Program::translateAndStore(std::vector<std::string> lexed_input) {
             program_.push_back(static_cast<int>(ai::Instruction::ACTION));
             program_.push_back(parseAction(lexed_input[1]));
             break;
+        case ai::Instruction::ENABLE_ACTION:
+            program_.push_back(static_cast<int>(ai::Instruction::ENABLE_ACTION));
+            program_.push_back(parseAction(lexed_input[1]));
+            break;
+        case ai::Instruction::DISABLE_ACTION:
+            program_.push_back(static_cast<int>(ai::Instruction::DISABLE_ACTION));
+            program_.push_back(parseAction(lexed_input[1]));
+            break;
         case ai::Instruction::IF:
         {
             // Push condition

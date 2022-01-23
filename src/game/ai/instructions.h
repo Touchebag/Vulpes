@@ -45,7 +45,11 @@ enum class Instruction {
     // Actions
     ACTION,
 
+    // Component modifications
     MOVE,
+
+    ENABLE_ACTION,
+    DISABLE_ACTION,
 
     ADD_SHADER_TO_LAYER,
     ADD_GLOBAL_SHADER,
@@ -110,6 +114,9 @@ static const std::unordered_map<std::string, InstructionData> string_instruction
     {"action", {Instruction::ACTION, Type::VOID, {Type::STRING}}},
 
     {"move", {Instruction::MOVE, Type::VOID, {Type::TARGET, Type::FLOAT, Type::FLOAT}}},
+
+    {"enable_action", {Instruction::ENABLE_ACTION, Type::VOID, {Type::STRING}}},
+    {"disable_action", {Instruction::DISABLE_ACTION, Type::VOID, {Type::STRING}}},
 
     {"add_shader_to_layer", {Instruction::ADD_SHADER_TO_LAYER, Type::VOID, {Type::INT, Type::INT}}},
     {"add_global_shader", {Instruction::ADD_GLOBAL_SHADER, Type::VOID, {Type::INT}}},

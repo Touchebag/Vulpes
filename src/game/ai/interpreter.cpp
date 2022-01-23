@@ -253,6 +253,32 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
 
                 break;
             }
+            case ai::Instruction::ENABLE_ACTION:
+                LOGV("ENABLE_ACTION");
+
+                if (auto action = extra_input.this_components->getComponent<Actions>()) {
+                    pc++;
+                    auto act = *pc;
+
+                    action->enableAction(static_cast<Actions::Action>(act), true);
+                } else {
+                    LOGW("AI ENABLE_ACTION: Missing Actions component");
+                }
+
+                break;
+            case ai::Instruction::DISABLE_ACTION:
+                LOGV("DISABLE_ACTION");
+
+                if (auto action = extra_input.this_components->getComponent<Actions>()) {
+                    pc++;
+                    auto act = *pc;
+
+                    action->enableAction(static_cast<Actions::Action>(act), false);
+                } else {
+                    LOGW("AI DISABLE_ACTION: Missing Actions component");
+                }
+
+                break;
             case ai::Instruction::ADD_SHADER_TO_LAYER:
                 LOGV("ADD_SHADER_TO_LAYER");
 
