@@ -43,9 +43,12 @@ void Actions::update() {
 }
 
 bool Actions::getActionState(Action action, bool first_frame) {
+    const int BUFFER_SIZE = 1;
+
     auto it = current_actions_.find(action);
     return (it != current_actions_.end() &&
-           (!first_frame || it->second.frame_count <= 1)); // This allows for a one frame buffer
+            isActionEnabled(action) &&
+           (!first_frame || it->second.frame_count <= BUFFER_SIZE)); // This allows for a one frame buffer
 }
 
 void Actions::addAction(Action action) {
@@ -58,14 +61,8 @@ void Actions::addAction(Action action) {
         }
     }
 
-    int action_number = static_cast<int>(action);
-    if (action_number < static_cast<int>(Action::NUM_ACTIONS) && !isActionEnabled(action)) {
-        try {
-            LOGD("Action disabled: %s", string_action_map.at(action).c_str());
-        } catch (std::out_of_range& e) {
-            LOGE("Invalid action %i", action_number);
-            throw e;
-        }
+    if (action >= Action::NUM_ACTIONS) {
+        LOGE("Invalid action %i", static_cast<int>(action));
         return;
     }
 
@@ -80,6 +77,10 @@ void Actions::addAction(Action action) {
         action_state.active = ActionState::ActiveState::ACTIVE;
         action_state.frame_count = 0;
         current_actions_.insert_or_assign(action, action_state);
+
+        if (!isActionEnabled(action)) {
+            LOGD("Action disabled: %s", string_action_map.at(action).c_str());
+        }
     }
 
     // Trigger corresponding event
