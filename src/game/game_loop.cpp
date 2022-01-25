@@ -24,13 +24,13 @@ int game_main(sf::RenderWindow& window) {
                                         Actions::Action::DOUBLE_JUMP}},
             {sf::Keyboard::Key::Left, {Actions::Action::MOVE_LEFT}},
             {sf::Keyboard::Key::Right, {Actions::Action::MOVE_RIGHT}},
-            {sf::Keyboard::Key::Up, {Actions::Action::MOVE_UP}},
+            {sf::Keyboard::Key::Up, {Actions::Action::MOVE_UP,
+                                     Actions::Action::INTERACT}},
             {sf::Keyboard::Key::Down, {Actions::Action::MOVE_DOWN,
                                        Actions::Action::AIR_DIVE}},
             {sf::Keyboard::Key::LShift, {Actions::Action::DASH}},
             {sf::Keyboard::Key::Z, {Actions::Action::ATTACK1}},
-            {sf::Keyboard::Key::C, {Actions::Action::ATTACK2}},
-            {sf::Keyboard::Key::Up, {Actions::Action::INTERACT}}
+            {sf::Keyboard::Key::C, {Actions::Action::ATTACK2}}
             });
 
     System::getInput()->setButtonMap({
