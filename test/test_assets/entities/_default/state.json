@@ -153,8 +153,7 @@
             "properties": {
                 "touching_ground": false,
                 "touching_wall": true,
-                "direction_locked": true,
-                "can_dash": false
+                "direction_locked": true
             },
             "frame_timer": 10,
             "next_states": [
@@ -172,8 +171,7 @@
             "properties": {
                 "touching_ground": false,
                 "touching_wall": true,
-                "direction_locked": true,
-                "can_dash": false
+                "direction_locked": true
             },
             "frame_timer": 10,
             "next_states": [
@@ -225,8 +223,7 @@
                 "touching_ground": false,
                 "movement_locked_x": true,
                 "movement_locked_y": true,
-                "dashing": true,
-                "can_dash": false
+                "dashing": true
             },
             "frame_timer": 10,
             "next_states": [
@@ -242,8 +239,7 @@
         "attack": {
             "properties": {
                 "movement_locked_x": true,
-                "movement_locked_y": true,
-                "can_dash": false
+                "movement_locked_y": true
             },
             "frame_timer": 0,
             "spawn_entity": {
@@ -261,8 +257,7 @@
         "attack_end_lag": {
             "properties": {
                 "movement_locked_x": true,
-                "movement_locked_y": true,
-                "can_dash": false
+                "movement_locked_y": true
             },
             "frame_timer": 30,
             "next_states": [
@@ -277,7 +272,6 @@
         "taking_damage": {
             "properties": {
                 "movement_locked_x": true,
-                "can_dash": false,
                 "can_jump": false
             },
             "frame_timer": 15,

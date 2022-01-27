@@ -77,7 +77,6 @@ struct PhysicsProperties {
     bool dashing_ = false;
     bool air_diving_ = false;
     bool can_jump_ = true;
-    bool can_dash_ = true;
     bool can_air_dive_ = false;
 };
 

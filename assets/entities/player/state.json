@@ -18,9 +18,20 @@
             "properties": {
                 "touching_ground": false,
                 "movement_locked_x": true,
-                "movement_locked_y": true,
-                "can_dash": false
+                "movement_locked_y": true
             }
+        },
+        "can_dash": {
+            "ai": [
+                "on_enter if (flag 'Action.dash') then (enable_action dash)",
+                "on_exit disable_action dash"
+            ]
+        },
+        "can_attack": {
+            "ai": [
+                "on_enter if (flag 'Action.attack1') then (enable_action attack1)",
+                "on_exit disable_action attack1"
+            ]
         },
         "wall_stick": {
             "ai": [
@@ -65,12 +76,13 @@
             "next_states": [
                 {"event": "start", "state": "idle"}
             ],
+            "ai": [
+                "on_exit disable_action dash",
+                "on_exit disable_action attack1"
+            ],
             "animation": "idle"
         },
         "idle": {
-            "templates": [
-                "grounded"
-            ],
             "next_states": [
                 {"event": "moving_x", "state": "running"},
                 {"event": "jumping", "state": "jump_start"},
@@ -79,6 +91,11 @@
                 {"event": "action_attack1", "state": "attack"},
                 {"event": "action_attack2", "state": "shoot"},
                 {"event": "damaged", "state": "taking_damage"}
+            ],
+            "templates": [
+                "grounded",
+                "can_dash",
+                "can_attack"
             ],
             "animation": "idle"
         },
@@ -94,6 +111,10 @@
                 {"event": "action_attack1", "state": "attack"},
                 {"event": "action_attack2", "state": "shoot"},
                 {"event": "damaged", "state": "taking_damage"}
+            ],
+            "templates": [
+                "can_dash",
+                "can_attack"
             ],
             "animation": "running"
         },
@@ -132,6 +153,7 @@
             "animation": "jumping",
             "templates": [
                 "airborne",
+                "can_dash",
                 "ledge_climb_sensors"
             ]
         },
@@ -151,14 +173,14 @@
             "animation": "falling",
             "templates": [
                 "ledge_climb_sensors",
+                "can_dash",
                 "airborne"
             ]
         },
         "wall_slide_rising": {
             "properties": {
                 "touching_ground": false,
-                "touching_wall": true,
-                "can_dash": false
+                "touching_wall": true
             },
             "frame_timer": 10,
             "next_states": [
@@ -177,8 +199,7 @@
         "wall_slide": {
             "properties": {
                 "touching_ground": false,
-                "touching_wall": true,
-                "can_dash": false
+                "touching_wall": true
             },
             "frame_timer": 10,
             "next_states": [
@@ -207,6 +228,9 @@
                 {"event": "frame_timeout", "state": "falling"},
                 {"event": "damaged", "state": "taking_damage"}
             ],
+            "templates": [
+                "can_dash"
+            ],
             "animation": "falling"
         },
         "wall_jump": {
@@ -229,6 +253,7 @@
                 "jump_impulse_y": -45.0
             },
             "templates": [
+                "can_dash",
                 "airborne"
             ]
         },
@@ -268,8 +293,7 @@
         "attack": {
             "properties": {
                 "movement_locked_x": true,
-                "movement_locked_y": true,
-                "can_dash": false
+                "movement_locked_y": true
             },
             "frame_timer": 0,
             "spawn_entity": {
@@ -285,8 +309,7 @@
         "attack_end_lag": {
             "properties": {
                 "movement_locked_x": true,
-                "movement_locked_y": true,
-                "can_dash": false
+                "movement_locked_y": true
             },
             "frame_timer": 30,
             "next_states": [
@@ -299,8 +322,7 @@
         "shoot": {
             "properties": {
                 "movement_locked_x": true,
-                "movement_locked_y": true,
-                "can_dash": false
+                "movement_locked_y": true
             },
             "frame_timer": 0,
             "spawn_entity": {
@@ -319,8 +341,7 @@
         "shoot_end_lag": {
             "properties": {
                 "movement_locked_x": true,
-                "movement_locked_y": true,
-                "can_dash": false
+                "movement_locked_y": true
             },
             "frame_timer": 30,
             "next_states": [
@@ -334,7 +355,6 @@
             "properties": {
                 "touching_ground": false,
                 "movement_locked_x": true,
-                "can_dash": false,
                 "can_jump": false
             },
             "frame_timer": 15,
@@ -347,7 +367,6 @@
             "properties": {
                 "touching_ground": false,
                 "movement_locked_x": true,
-                "can_dash": false,
                 "can_jump": false,
                 "air_diving": true
             },
@@ -375,7 +394,6 @@
             "properties": {
                 "touching_ground": false,
                 "movement_locked_x": true,
-                "can_dash": false,
                 "can_jump": false,
                 "air_diving": true
             },
@@ -400,8 +418,7 @@
         "hard_landing": {
             "properties": {
                 "movement_locked_x": true,
-                "movement_locked_y": true,
-                "can_dash": false
+                "movement_locked_y": true
             },
             "frame_timer": 20,
             "next_states": [
@@ -415,7 +432,6 @@
             "properties": {
                 "movement_locked_x": true,
                 "movement_locked_y": true,
-                "can_dash": false,
                 "can_jump": false
             },
             "frame_timer": 5,

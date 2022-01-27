@@ -1,11 +1,6 @@
 {
     "AI": null,
-    "Actions": {
-        "disabled_actions": [
-            "dash",
-            "attack1"
-        ]
-    },
+    "Actions": null,
     "Animation": null,
     "Collision": {
         "type": "player_hurtbox",

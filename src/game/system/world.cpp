@@ -5,16 +5,6 @@
 #include "system/system.h"
 
 #include "event_triggers/add_entity.h"
-#include "event_triggers/enable_action.h"
-
-namespace {
-
-void addConditionalActions(std::shared_ptr<Player> player, Actions::Action action, std::string name) {
-    auto evt_trigger = std::make_shared<event_triggers::EnableAction>(player->getComponent<Actions>(), action);
-    System::getEnvironment()->addConditionalEvent(name, evt_trigger);
-}
-
-} // namespace
 
 std::vector<std::shared_ptr<BaseEntity>>& World::getWorldObjects() {
     return world_objects_;
@@ -360,10 +350,6 @@ void World::addPlayer(std::shared_ptr<Player> player) {
     }
 
     System::getRender()->setPlayer(player_->getComponent<Rendering>());
-
-    #define GENERATE_ENUM(action, name) addConditionalActions(player, Actions::Action::action, "Action." name);
-    #include "components/actions/actions_enum.h"
-    #undef GENERATE_ENUM
 }
 
 void World::loadRoom(std::string room_name, int entrance_id) {

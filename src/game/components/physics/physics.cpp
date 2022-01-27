@@ -195,7 +195,7 @@ void Physics::update() {
         }
 
         if (act->getActionState(Actions::Action::DASH, true)) {
-            if (physics_props.can_dash_ && variables_.popDashes()) {
+            if (variables_.popDashes()) {
                 // If holding a direction dash in that direction
                 // else dash forward
                 if (act->getActionState(Actions::Action::MOVE_RIGHT)) {

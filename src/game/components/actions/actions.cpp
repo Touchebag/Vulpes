@@ -79,8 +79,12 @@ void Actions::addAction(Action action) {
         current_actions_.insert_or_assign(action, action_state);
 
         if (!isActionEnabled(action)) {
-            LOGD("Action disabled: %s", string_action_map.at(action).c_str());
+            LOGV("Action disabled: %s", string_action_map.at(action).c_str());
         }
+    }
+
+    if (!isActionEnabled(action)) {
+        return;
     }
 
     // Trigger corresponding event
