@@ -114,39 +114,13 @@ std::shared_ptr<Actions> Actions::createFromJson(nlohmann::json j, std::weak_ptr
     return actions;
 }
 
-void Actions::reloadFromJson(nlohmann::json j, File /* file_instance */) {
+void Actions::reloadFromJson(nlohmann::json /* j */, File /* file_instance */) {
     // Enable everything by default
     setAllEnabled(true);
-
-    if (j.contains("disabled_actions")) {
-        auto j_actions = j["disabled_actions"];
-
-        for (auto it : j_actions) {
-            if (string_action_map.contains(it.get<std::string>())) {
-                enableAction(string_action_map.at(it.get<std::string>()), false);
-            }
-        }
-    }
 }
 
 std::optional<nlohmann::json> Actions::outputToJson() {
     nlohmann::json j;
-
-    // Everything is enabled by default. If any action is not enabled then we store the whitelist.
-    if (std::any_of(enabled_actions_.begin(), enabled_actions_.end(), [](bool b) { return !b; })) {
-        std::vector<std::string> disabled_actions;
-
-        for (auto i = 0; i < static_cast<int>(Action::NUM_ACTIONS); i++) {
-            if (!enabled_actions_.at(i)) {
-                disabled_actions.push_back(string_action_map.at(static_cast<Action>(i)));
-            }
-        }
-
-        // Force lexiographical order to align with rest of json structure
-        std::sort(disabled_actions.begin(), disabled_actions.end());
-
-        j["disabled_actions"] = disabled_actions;
-    }
 
     return j;
 }
