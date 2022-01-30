@@ -74,7 +74,7 @@ std::optional<nlohmann::json> File::loadJson(std::string filepath) {
     filepath = appendSuffix(filepath, ".json");
 
     try {
-        return nlohmann::json::parse(openFileForInput(filepath));
+        return {nlohmann::json::parse(openFileForInput(filepath))};
     } catch (nlohmann::json::parse_error& e) {
         LOGE("Unable to load file %s: %s", filepath.c_str(), e.what());
         return std::nullopt;

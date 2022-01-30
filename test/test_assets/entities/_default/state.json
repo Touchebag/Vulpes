@@ -9,9 +9,6 @@
             ]
         },
         "idle": {
-            "properties": {
-                "can_interact": true
-            },
             "next_states": [
                 {"event": "moving_x", "state": "running"},
                 {"event": "jumping", "state": "jumping"},
@@ -54,9 +51,6 @@
             ]
         },
         "running": {
-            "properties": {
-                "can_interact": true
-            },
             "next_states": [
                 {"event": "no_movement_x", "state": "idle"},
                 {"event": "jumping", "state": "jumping"},

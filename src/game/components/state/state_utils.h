@@ -85,8 +85,6 @@ struct StateProperties {
     std::string animation_name;
 
     nlohmann::json collideables;
-
-    bool can_interact = false;
 };
 
 struct EntityContent {

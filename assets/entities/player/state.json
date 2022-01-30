@@ -1,10 +1,5 @@
 {
     "templates": {
-        "grounded": {
-            "properties": {
-                "can_interact": true
-            }
-        },
         "airborne": {
             "properties": {
                 "touching_ground": false
@@ -31,6 +26,12 @@
             "ai": [
                 "on_enter if (flag 'Action.attack1') then (enable_action attack1)",
                 "on_exit disable_action attack1"
+            ]
+        },
+        "can_interact": {
+            "ai": [
+                "on_enter enable_action interact",
+                "on_exit disable_action interact"
             ]
         },
         "wall_stick": {
@@ -93,7 +94,7 @@
                 {"event": "damaged", "state": "taking_damage"}
             ],
             "templates": [
-                "grounded",
+                "can_interact",
                 "can_dash",
                 "can_attack"
             ],
@@ -101,7 +102,7 @@
         },
         "running": {
             "templates": [
-                "grounded"
+                "can_interact"
             ],
             "next_states": [
                 {"event": "no_movement_x", "state": "idle"},

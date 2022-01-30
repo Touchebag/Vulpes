@@ -92,10 +92,6 @@ void Stateful::incomingEvent(state_utils::Event event) {
             }
         }
 
-        if (auto actions = getComponent<Actions>()) {
-            actions->enableAction(Actions::Action::INTERACT, state_props.can_interact);
-        }
-
         if (auto coll = getComponent<Collision>()) {
             if (!state_props.collideables.empty()) {
                 coll->addTemporaryCollideable(state_props.collideables);

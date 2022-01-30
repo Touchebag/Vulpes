@@ -101,10 +101,6 @@ State<state_utils::EntityContent> State<state_utils::EntityContent>::loadStateFr
         state_props.collideables = j["collideables"];
     }
 
-    if (props_json.contains("can_interact")) {
-        state_props.can_interact = props_json["can_interact"].get<bool>();
-    }
-
     if (j.contains("spawn_entity")) {
         entity = j["spawn_entity"];
     }
