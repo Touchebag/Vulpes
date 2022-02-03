@@ -90,8 +90,8 @@ std::pair<double, double> CollideableSlope::getMaximumMovement(double stepX, dou
         new_pos->setPosition(other_trans->getX() + static_cast<int>(stepX), other_trans->getY() + static_cast<int>(stepY));
 
         // Current position needed to calculate relative movement for snapping
-        int entity_current_ground_pos = other_trans->getY() + (other_hbox->height_ / 2);
-        int entity_new_ground_pos = new_pos->getY() + (other_hbox->height_ / 2);
+        int entity_current_ground_pos = other_trans->getY() + static_cast<int>(other_hbox->height_ / 2);
+        int entity_new_ground_pos = new_pos->getY() + static_cast<int>(other_hbox->height_ / 2);
         int current_height = 0;
 
         // Clamp height at edges

@@ -45,12 +45,12 @@ std::weak_ptr<Player> System::IWorldModify::getPlayer() {
     return System::getInstance().world_->getPlayer();
 }
 
-void System::IWorldModify::loadRoom(std::string room_name, int entrance_id) {
+void System::IWorldModify::loadRoom(std::string room_name, unsigned int entrance_id) {
     // Enqueue new room load at frame end
     System::getInstance().world_->new_room_ = {room_name, entrance_id};
 }
 
-void System::IWorldModify::setEntrance(int entrance_id) {
+void System::IWorldModify::setEntrance(unsigned int entrance_id) {
     System::getInstance().world_->setEntrance(entrance_id);
 }
 

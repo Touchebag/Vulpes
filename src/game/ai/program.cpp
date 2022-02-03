@@ -240,7 +240,7 @@ ai::Type Program::translateAndStore(std::vector<std::string> lexed_input) {
         }
         default:
             // Push arguments
-            for (int i = 0; i < static_cast<int>(arguments.size()); i++) {
+            for (unsigned long long i = 0; i < arguments.size(); i++) {
                 auto arg = arguments[i];
                 auto parsed_arg = parseInstruction(arg);
 

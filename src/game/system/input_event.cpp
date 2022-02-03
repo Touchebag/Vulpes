@@ -43,6 +43,6 @@ void Input::setKeyboardMap(std::unordered_map<sf::Keyboard::Key, std::unordered_
     key_map_ = key_map;
 }
 
-void Input::setButtonMap(std::unordered_map<int, std::unordered_set<Actions::Action>> button_map) {
+void Input::setButtonMap(std::unordered_map<unsigned int, std::unordered_set<Actions::Action>> button_map) {
     button_map_ = button_map;
 }

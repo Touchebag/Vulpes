@@ -61,8 +61,8 @@ void setShiftedLedgeClimbPosition(std::shared_ptr<Transform> trans, std::shared_
             auto other_hbox = other_coll->getHitbox();
             auto other_trans = other_coll->getTransform().lock();
 
-            auto new_y_pos = other_trans->getY() - (other_hbox->height_ / 2) -
-                coll->getCollideable()->getHitbox()->height_ / 2;
+            auto new_y_pos = other_trans->getY() - static_cast<int>(other_hbox->height_ / 2) -
+                static_cast<int>(coll->getCollideable()->getHitbox()->height_ / 2);
 
             trans->setPosition(trans->getX(), new_y_pos);
         }
@@ -122,7 +122,7 @@ void Physics::update() {
 
                 // Force a position inside wall
                 auto coll_width = coll->getCollideable()->getHitbox()->width_;
-                trans->setPosition(trans->getX() + static_cast<int>(max_move.first) + (facing_right ? coll_width : -coll_width),
+                trans->setPosition(trans->getX() + static_cast<int>(max_move.first) + static_cast<int>(facing_right ? coll_width : -coll_width),
                                    trans->getY());
 
                 // Force move to on top of current collision

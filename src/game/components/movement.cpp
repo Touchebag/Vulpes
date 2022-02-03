@@ -17,8 +17,8 @@ void recalculateTempCollision(std::shared_ptr<Transform> new_trans,
                               std::shared_ptr<const Hitbox> old_hbox,
                               double velX,
                               double velY) {
-    new_hbox->width_ = old_hbox->width_ + abs(roundAwayFromZero(velX));
-    new_hbox->height_ = old_hbox->height_ + abs(roundAwayFromZero(velY));
+    new_hbox->width_ = old_hbox->width_ + static_cast<unsigned int>(abs(roundAwayFromZero(velX)));
+    new_hbox->height_ = old_hbox->height_ + static_cast<unsigned int>(abs(roundAwayFromZero(velY)));
     util::Vec2d raw_pos = old_trans->getRawPosition();
     new_trans->setRawPosition({raw_pos.x + roundAwayFromZero(velX / 2.0), raw_pos.y + roundAwayFromZero(velY / 2.0)});
 }

@@ -60,9 +60,9 @@ class System {
         static std::vector<std::shared_ptr<BaseEntity>>& getWorldObjects();
         static std::weak_ptr<Player> getPlayer();
 
-        static void loadRoom(std::string room_name, int entrance_id);
+        static void loadRoom(std::string room_name, unsigned int entrance_id);
 
-        static void setEntrance(int entrance_id);
+        static void setEntrance(unsigned int entrance_id);
 
         static void loadCameraData(Camera::CameraBoundingBox camera_box);
     };

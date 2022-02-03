@@ -112,7 +112,7 @@ void EditorRender::render(sf::RenderTarget& window, double frame_fraction) {
         }
     } else if (collideable_render_) {
         renderSingleHitbox(texture, collideable_render_,
-                type_color_map.at(static_cast<int>(collideable_render_->getType())).second);
+                type_color_map.at(static_cast<unsigned int>(collideable_render_->getType())).second);
         collideable_render_.reset();
     }
 
@@ -187,7 +187,7 @@ bool EditorRender::getParallaxEnabled() {
     return render_.parallax_enabled_;
 }
 
-void EditorRender::setWindowSize(sf::RenderWindow& window, int width, int height) {
+void EditorRender::setWindowSize(sf::RenderWindow& window, unsigned int width, unsigned int height) {
     render_.setWindowSize(window, width, height);
 }
 

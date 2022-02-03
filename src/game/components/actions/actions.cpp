@@ -126,11 +126,11 @@ std::optional<nlohmann::json> Actions::outputToJson() {
 }
 
 void Actions::enableAction(Action action, bool enable) {
-    enabled_actions_[static_cast<int>(action)] = enable;
+    enabled_actions_[static_cast<unsigned long long>(action)] = enable;
 }
 
 bool Actions::isActionEnabled(Action action) {
-    return enabled_actions_[static_cast<int>(action)];
+    return enabled_actions_[static_cast<unsigned long long>(action)];
 }
 
 void Actions::setAllEnabled(bool enabled) {

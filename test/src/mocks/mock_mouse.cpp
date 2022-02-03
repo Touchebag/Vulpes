@@ -23,6 +23,7 @@ std::pair<float, float> MockMouse::getMouseWorldPosition() {
 
 Mouse::Mouse(sf::RenderWindow& window) :
     window_(window) {
+    (void)window_;
 }
 
 // Class

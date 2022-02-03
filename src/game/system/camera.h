@@ -29,8 +29,8 @@ class Camera {
 
     CameraView getChangeVelocity();
 
-    void setWindowSize(int width, int height);
-    std::pair<int, int> getWindowSize();
+    void setWindowSize(unsigned int width, unsigned int height);
+    std::pair<unsigned int, unsigned int> getWindowSize();
 
     void setCameraBox(CameraBoundingBox camera_box);
 

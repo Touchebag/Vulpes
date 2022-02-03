@@ -41,9 +41,9 @@ class World {
 
     void addEntriesToWorld(nlohmann::json j, bool is_template = false);
 
-    void loadRoom(std::string room_name, int entrance_id);
+    void loadRoom(std::string room_name, unsigned int entrance_id);
 
-    void setEntrance(int entrance_id);
+    void setEntrance(unsigned int entrance_id);
     void setShiftedPlayerPosition(Collideable::CollisionType c_type);
 
     void clearDeletedEntities();
@@ -67,7 +67,7 @@ class World {
 
     std::vector<util::Vec2i> entrances_;
 
-    std::optional<std::pair<std::string, int>> new_room_;
+    std::optional<std::pair<std::string, unsigned int>> new_room_;
 
     // Loaded template stuff
     std::vector<std::string> template_file_names_;

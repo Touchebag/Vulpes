@@ -29,7 +29,7 @@ void CollideableTransition::reloadFromJson(nlohmann::json j) {
     }
 
     room_ = dest["room"].get<std::string>();
-    entrance_id_ = dest["entrance_id"].get<int>();
+    entrance_id_ = dest["entrance_id"].get<unsigned int>();
 }
 
 std::optional<nlohmann::json> CollideableTransition::outputToJson() {

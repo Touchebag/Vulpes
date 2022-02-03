@@ -132,7 +132,7 @@ void Animation::setFrameList(std::string animation_name) {
 Animation::AnimationFrameData Animation::getFrameData() {
     try {
         if (current_frame_list_) {
-            return current_frame_list_->at(current_frame_);
+            return current_frame_list_->at(static_cast<unsigned long long>(current_frame_));
         } else {
             throw std::runtime_error("Current frame list empty");
         }

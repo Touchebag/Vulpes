@@ -57,6 +57,6 @@ std::shared_ptr<Cutscene::EntityInformation> Cutscene::getEntity(int entity_id) 
         return player_;
     } else {
         // TODO Error handling
-        return entities_.at(entity_id);
+        return entities_.at(static_cast<unsigned long long>(entity_id));
     }
 }

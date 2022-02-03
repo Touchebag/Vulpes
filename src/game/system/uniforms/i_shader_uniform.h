@@ -4,7 +4,7 @@
 
 #include <memory>
 
-struct ComponentStore;
+class ComponentStore;
 
 class IShaderUniform {
   public:

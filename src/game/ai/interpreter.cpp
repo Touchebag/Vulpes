@@ -111,7 +111,7 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
             }
             case ai::Instruction::FRAME_TIMER:
                 LOGV("FRAME_TIMER");
-                if (extra_input.frame_timer >= POP()) {
+                if (static_cast<int>(extra_input.frame_timer) >= POP()) {
                     PUSH(Bool::TRUE);
                 } else {
                     PUSH(Bool::FALSE);
@@ -284,8 +284,9 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                             System::getRender()->addShader(shader, layer);
                         }
                     } else {
-                        if (shaders.size() > static_cast<unsigned long long>(shader_id)) {
-                            System::getRender()->addShader(shaders.at(shader_id), layer);
+                        auto shader_index = static_cast<unsigned long long>(shader_id);
+                        if (shaders.size() > shader_index) {
+                            System::getRender()->addShader(shaders.at(shader_index), layer);
                         } else {
                             LOGW("AI ADD_SHADER_TO_LAYER: Unknown shader id %i", shader_id);
                         }
@@ -310,8 +311,9 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                             System::getRender()->addGlobalShader(shader);
                         }
                     } else {
-                        if (shaders.size() > static_cast<unsigned long long>(shader_id)) {
-                            System::getRender()->addGlobalShader(shaders.at(shader_id));
+                        auto shader_index = static_cast<unsigned long long>(shader_id);
+                        if (shaders.size() > shader_index) {
+                            System::getRender()->addGlobalShader(shaders.at(shader_index));
                         } else {
                             LOGW("AI ADD_GLOBAL_SHADER: Unknown shader id %i", shader_id);
                         }

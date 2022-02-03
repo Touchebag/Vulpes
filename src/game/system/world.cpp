@@ -98,7 +98,7 @@ void World::addEntriesToWorld(nlohmann::json j, bool is_template) {
                 throw std::invalid_argument("entrances must contain id, pos_x and pos_y");
             }
 
-            long long unsigned int id = it["id"].get<int>();
+            long long unsigned id = it["id"].get<long long unsigned>();
             if (id < entrances_.size()) {
                 entrances_[id] = util::Vec2i(it["pos_x"].get<int>(), it["pos_y"].get<int>());
             }
@@ -279,7 +279,7 @@ nlohmann::json World::saveWorldToJson() {
 
         for (int i = 0; i < static_cast<int>(entrances_.size()); i++) {
             nlohmann::json j_entrance;
-            auto pos = entrances_.at(i);
+            auto pos = entrances_.at(static_cast<unsigned long>(i));
 
             j_entrance["id"] = i;
             j_entrance["pos_x"] = pos.x;
@@ -332,7 +332,7 @@ void World::addEntity(std::shared_ptr<BaseEntity> entity, std::optional<std::str
 }
 
 void World::addCollideable(std::shared_ptr<Collideable> collideable) {
-    collideables_[static_cast<int>(collideable->getType())].push_back(collideable);
+    collideables_[static_cast<unsigned long>(collideable->getType())].push_back(collideable);
 }
 
 void World::removeEntity(std::shared_ptr<BaseEntity> entity) {
@@ -352,7 +352,7 @@ void World::addPlayer(std::shared_ptr<Player> player) {
     System::getRender()->setPlayer(player_->getComponent<Rendering>());
 }
 
-void World::loadRoom(std::string room_name, int entrance_id) {
+void World::loadRoom(std::string room_name, unsigned int entrance_id) {
     loadWorldFromFile(room_name);
 
     setEntrance(entrance_id);
@@ -370,16 +370,16 @@ void World::setShiftedPlayerPosition(Collideable::CollisionType ctype) {
             auto other_hbox = other_coll->getHitbox();
             auto other_trans = other_coll->getTransform().lock();
 
-            auto new_y_pos = other_trans->getY() - (other_hbox->height_ / 2) -
-                player_->getComponent<Collision>()->getCollideable()->getHitbox()->height_ / 2;
+            int new_y_pos = other_trans->getY() - static_cast<int>(other_hbox->height_ / 2) -
+                static_cast<int>(player_->getComponent<Collision>()->getCollideable()->getHitbox()->height_ / 2);
 
             p_trans->setPosition(p_trans->getX(), new_y_pos);
         }
     }
 }
 
-void World::setEntrance(int entrance_id) {
-    if (entrance_id < static_cast<int>(entrances_.size())) {
+void World::setEntrance(unsigned int entrance_id) {
+    if (entrance_id < static_cast<unsigned int>(entrances_.size())) {
         auto p_trans = player_->getComponent<Transform>();
         p_trans->setPosition(entrances_.at(entrance_id));
 

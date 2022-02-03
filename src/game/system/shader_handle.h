@@ -4,7 +4,7 @@
 
 #include "uniforms/i_shader_uniform.h"
 
-struct ComponentStore;
+class ComponentStore;
 
 class ShaderHandle {
   public:

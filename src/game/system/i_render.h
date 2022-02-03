@@ -15,7 +15,7 @@ class IRender {
     virtual void setPlayer(std::weak_ptr<Rendering> entity) = 0;
     virtual void setBackground(std::string background) = 0;
 
-    virtual void setWindowSize(sf::RenderWindow& window, int width, int height) = 0;
+    virtual void setWindowSize(sf::RenderWindow& window, unsigned int width, unsigned int height) = 0;
 
     virtual void clearShaders() = 0;
     virtual void addShader(std::shared_ptr<ShaderHandle> shader, int layer) = 0;

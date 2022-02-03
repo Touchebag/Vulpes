@@ -14,6 +14,6 @@ class CollideableInteractable : public Collideable {
     Collideable::CollisionType getType() const override;
 
   private:
-    std::optional<std::pair<std::string, int>> transition_;
+    std::optional<std::pair<std::string, unsigned int>> transition_;
     std::optional<std::string> cutscene_;
 };

@@ -65,7 +65,7 @@ Camera::CameraView Camera::getChangeVelocity() {
     return current_speed_;
 }
 
-void Camera::setWindowSize(int width, int height) {
+void Camera::setWindowSize(unsigned int width, unsigned int height) {
     aspect_ratio_ = static_cast<double>(width) / static_cast<double>(height);
 
     auto view = getRawView();
@@ -77,7 +77,7 @@ void Camera::setWindowSize(int width, int height) {
     setView(view);
 }
 
-std::pair<int, int> Camera::getWindowSize() {
+std::pair<unsigned int, unsigned int> Camera::getWindowSize() {
     return window_size_;
 }
 

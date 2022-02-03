@@ -15,7 +15,7 @@ class EditorRender : public IRender {
     void setBackground(std::string background) override;
     void setPlayer(std::weak_ptr<Rendering> entity) override;
 
-    void setWindowSize(sf::RenderWindow& window, int width, int height) override;
+    void setWindowSize(sf::RenderWindow& window, unsigned int width, unsigned int height) override;
 
     void clearShaders() override;
 

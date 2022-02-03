@@ -188,7 +188,7 @@ void Render::setBackground(std::string background) {
     }
 }
 
-void Render::setWindowSize(sf::RenderWindow& window, int width, int height) {
+void Render::setWindowSize(sf::RenderWindow& window, unsigned int width, unsigned int height) {
     auto view = window.getView();
     view.setSize({static_cast<float>(width), static_cast<float>(height)});
     view.setCenter({static_cast<float>(width) / 2.0f, static_cast<float>(height) / 2.0f});
@@ -210,14 +210,14 @@ void Render::setWindowSize(sf::RenderWindow& window, int width, int height) {
 Render::RenderLayer& Render::getLayer(int layer) {
     if (layer < 0) {
         try {
-            return background_layers_.at(abs(layer) - 1);
+            return background_layers_.at(static_cast<unsigned int>(abs(layer) - 1));
         } catch (std::out_of_range& e) {
             LOGE("Render background, layer out of range");
             throw e;
         }
     } else if (layer > 0) {
         try {
-            return foreground_layers_.at(layer - 1);
+            return foreground_layers_.at(static_cast<unsigned int>(layer - 1));
         } catch (std::out_of_range& e) {
             LOGE("Render foreground, layer out of range");
             throw e;
