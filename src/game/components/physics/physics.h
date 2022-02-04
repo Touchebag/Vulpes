@@ -9,7 +9,6 @@
 #include "components/collision/collision.h"
 
 #include "components/physics/constants.h"
-#include "components/physics/variables.h"
 
 class Physics : public Component {
   public:
@@ -20,7 +19,9 @@ class Physics : public Component {
     void setPhysicsConstants(PhysicsConstants constants);
     void setPhysicsConstants();
     PhysicsConstants getPhysicsConstants();
-    void setPhysicsVariables();
+
+    void resetJumps(int max_jumps);
+    void resetDashes(int max_dashes);
 
     static std::shared_ptr<Physics> createFromJson(nlohmann::json, std::weak_ptr<ComponentStore>, File file_instance = File());
 
@@ -31,5 +32,7 @@ class Physics : public Component {
   private:
     PhysicsConstants constants_;
     PhysicsConstants original_constants_;
-    PhysicsVariables variables_;
+
+    int jumps_left_ = 0;
+    int dashes_left_ = 0;
 };

@@ -136,11 +136,6 @@ void Physics::update() {
 
         facing_right.lockDirection(physics_props.direction_locked_);
 
-        if (physics_props.touching_ground_) {
-            variables_.resetJumps();
-            variables_.resetDashes();
-        }
-
         // Used to set movement direction
         double x_movement_direction = 0.0;
         if (!physics_props.movement_locked_x_) {
@@ -195,7 +190,7 @@ void Physics::update() {
         }
 
         if (act->getActionState(Actions::Action::DASH, true)) {
-            if (variables_.popDashes()) {
+            if (--dashes_left_ >= 0) {
                 // If holding a direction dash in that direction
                 // else dash forward
                 if (act->getActionState(Actions::Action::MOVE_RIGHT)) {
@@ -212,50 +207,16 @@ void Physics::update() {
             }
         }
 
-        if (act->getActionState(Actions::Action::JUMP, true)) {
-            if (physics_props.can_jump_ && physics_props.touching_ground_ && !physics_props.touching_wall_) {
-                if (!std::isnan(constants_.jump_impulse_x)) {
-                    x = constants_.jump_impulse_x * (facing_right ? 1.0 : -1.0);
-                }
-                if (!std::isnan(constants_.jump_impulse_y)) {
-                    y = constants_.jump_impulse_y;
-                }
-                state->incomingEvent(state_utils::Event::JUMPING);
+        if (act->getActionState(Actions::Action::JUMP, true) && jumps_left_ > 0) {
+            jumps_left_--;
+            if (!std::isnan(constants_.jump_impulse_x)) {
+                int dir = facing_right ? 1.0 : -1.0;
+                x = constants_.jump_impulse_x * dir;
             }
-        }
-
-        if (act->getActionState(Actions::Action::DOUBLE_JUMP, true)) {
-            if (physics_props.can_jump_ &&
-                !physics_props.touching_ground_ &&
-                !physics_props.touching_wall_ &&
-                variables_.popJumps()) {
-                    if (!std::isnan(constants_.jump_impulse_x)) {
-                        x = constants_.jump_impulse_x * (facing_right ? 1.0 : -1.0);
-                    }
-                    if (!std::isnan(constants_.jump_impulse_y)) {
-                        y = constants_.jump_impulse_y;
-                    }
-                    state->incomingEvent(state_utils::Event::JUMPING);
+            if (!std::isnan(constants_.jump_impulse_y)) {
+                y = constants_.jump_impulse_y;
             }
-        }
-
-        if (act->getActionState(Actions::Action::WALL_JUMP, true)) {
-            if (physics_props.touching_wall_) {
-                state->incomingEvent(state_utils::Event::JUMPING);
-
-                facing_right.setDirection(!facing_right);
-                int dir = facing_right ? -1.0 : 1.0;
-                if (!std::isnan(constants_.jump_impulse_x)) {
-                    x = constants_.jump_impulse_x * dir;
-                }
-                if (!std::isnan(constants_.jump_impulse_y)) {
-                    y = constants_.jump_impulse_y;
-                }
-
-                // Return aerial jumps on wall jump
-                variables_.resetJumps();
-                variables_.resetDashes();
-            }
+            state->incomingEvent(state_utils::Event::JUMPING);
         }
 
         if (act->getActionState(Actions::Action::AIR_DIVE, true) && physics_props.can_air_dive_) {
@@ -269,8 +230,9 @@ void Physics::update() {
         if (act->getActionState(Actions::Action::AIR_DIVE_BOUNCE, true)) {
             y = -30;
             state->incomingEvent(state_utils::Event::DIVE_BOUNCE);
-            variables_.resetJumps();
-            variables_.resetDashes();
+            // TODO Reset with AI
+            resetJumps(1);
+            resetDashes(1);
         }
 
         move->setFacingRight(facing_right);
@@ -298,11 +260,6 @@ void Physics::setPhysicsConstants() {
 
 PhysicsConstants Physics::getPhysicsConstants() {
     return original_constants_;
-}
-
-void Physics::setPhysicsVariables() {
-    variables_.setMaxJumps(1);
-    variables_.setMaxDashes(1);
 }
 
 std::shared_ptr<Physics> Physics::createFromJson(nlohmann::json j, std::weak_ptr<ComponentStore> components, File file_instance) {
@@ -334,8 +291,6 @@ PhysicsConstants Physics::loadConstantsFromJson(nlohmann::json j, PhysicsConstan
 void Physics::reloadFromJson(nlohmann::json j, File /* file_instance */) {
     original_constants_ = loadConstantsFromJson(j, {});
     setPhysicsConstants(original_constants_);
-    // TODO Read from json
-    setPhysicsVariables();
 }
 
 std::optional<nlohmann::json> Physics::outputToJson() {
@@ -358,4 +313,12 @@ std::optional<nlohmann::json> Physics::outputToJson() {
     saveConstantToJson(j, "air_dive_impulse", original_constants_.air_dive_impulse, default_constants.air_dive_impulse);
 
     return j;
+}
+
+void Physics::resetJumps(int max_jumps) {
+    jumps_left_ = max_jumps;
+}
+
+void Physics::resetDashes(int max_dashes) {
+    dashes_left_ = max_dashes;
 }

@@ -16,6 +16,28 @@
                 "movement_locked_y": true
             }
         },
+        "can_jump": {
+            "ai": [
+                "on_enter enable_action jump",
+                "on_exit disable_action jump"
+            ]
+        },
+        "can_double_jump": {
+            "ai": [
+                "on_enter if (true) then (enable_action jump)",
+                "on_exit disable_action jump"
+            ]
+        },
+        "can_wall_jump": {
+            "physics_constants": {
+                "jump_impulse_x": -50.0,
+                "jump_impulse_y": -45.0
+            },
+            "ai": [
+                "on_enter if (true) then (enable_action jump)",
+                "on_exit disable_action jump"
+            ]
+        },
         "can_dash": {
             "ai": [
                 "on_enter if (flag 'Action.dash') then (enable_action dash)",
@@ -32,6 +54,11 @@
             "ai": [
                 "on_enter enable_action interact",
                 "on_exit disable_action interact"
+            ]
+        },
+        "reset_jumps_and_dashes": {
+            "ai": [
+                "on_enter reset_jumps 2"
             ]
         },
         "wall_stick": {
@@ -78,6 +105,7 @@
                 {"event": "start", "state": "idle"}
             ],
             "ai": [
+                "on_exit disable_action jump",
                 "on_exit disable_action dash",
                 "on_exit disable_action attack1"
             ],
@@ -94,6 +122,8 @@
                 {"event": "damaged", "state": "taking_damage"}
             ],
             "templates": [
+                "reset_jumps_and_dashes",
+                "can_jump",
                 "can_interact",
                 "can_dash",
                 "can_attack"
@@ -101,9 +131,6 @@
             "animation": "idle"
         },
         "running": {
-            "templates": [
-                "can_interact"
-            ],
             "next_states": [
                 {"event": "no_movement_x", "state": "idle"},
                 {"event": "jumping", "state": "jump_start"},
@@ -114,8 +141,11 @@
                 {"event": "damaged", "state": "taking_damage"}
             ],
             "templates": [
+                "reset_jumps_and_dashes",
+                "can_jump",
                 "can_dash",
-                "can_attack"
+                "can_attack",
+                "can_interact"
             ],
             "animation": "running"
         },
@@ -124,7 +154,6 @@
                 "airborne"
             ],
             "properties": {
-                "can_jump": false,
                 "can_air_dive": false
             },
             "frame_timer": 3,
@@ -139,7 +168,6 @@
         },
         "jumping": {
             "properties": {
-                "can_jump": true,
                 "can_air_dive": true
             },
             "next_states": [
@@ -154,13 +182,13 @@
             "animation": "jumping",
             "templates": [
                 "airborne",
+                "can_double_jump",
                 "can_dash",
                 "ledge_climb_sensors"
             ]
         },
         "falling": {
             "properties": {
-                "can_jump": true,
                 "can_air_dive": true
             },
             "next_states": [
@@ -174,6 +202,7 @@
             "animation": "falling",
             "templates": [
                 "ledge_climb_sensors",
+                "can_double_jump",
                 "can_dash",
                 "airborne"
             ]
@@ -188,12 +217,13 @@
                 {"event": "touching_floor", "state": "idle"},
                 {"event": "jumping", "state": "wall_jump"},
                 {"event": "falling", "state": "wall_slide"},
-                {"event": "airborne", "state": "wall_jump_grace_period"},
                 {"event": "damaged", "state": "taking_damage"}
             ],
             "animation": "jumping",
             "templates": [
                 "wall_stick",
+                "reset_jumps_and_dashes",
+                "can_wall_jump",
                 "ledge_climb_sensors"
             ]
         },
@@ -206,38 +236,19 @@
             "next_states": [
                 {"event": "touching_floor", "state": "idle"},
                 {"event": "jumping", "state": "wall_jump"},
-                {"event": "airborne", "state": "wall_jump_grace_period"},
                 {"event": "damaged", "state": "taking_damage"}
             ],
             "animation": "wall_slide",
             "templates": [
                 "wall_stick",
+                "reset_jumps_and_dashes",
+                "can_wall_jump",
                 "ledge_climb_sensors"
             ]
-        },
-        "wall_jump_grace_period": {
-            "properties": {
-                "touching_ground": false,
-                "touching_wall": true
-            },
-            "frame_timer": 10,
-            "next_states": [
-                {"event": "touching_floor", "state": "idle"},
-                {"event": "touching_wall", "state": "wall_slide"},
-                {"event": "jumping", "state": "wall_jump"},
-                {"event": "dashing", "state": "dash_startup"},
-                {"event": "frame_timeout", "state": "falling"},
-                {"event": "damaged", "state": "taking_damage"}
-            ],
-            "templates": [
-                "can_dash"
-            ],
-            "animation": "falling"
         },
         "wall_jump": {
             "properties": {
                 "touching_ground": false,
-                "can_jump": false,
                 "can_air_dive": true
             },
             "frame_timer": 10,
@@ -249,10 +260,6 @@
                 {"event": "damaged", "state": "taking_damage"}
             ],
             "animation": "jumping",
-            "physics_constants": {
-                "jump_impulse_x": -50.0,
-                "jump_impulse_y": -45.0
-            },
             "templates": [
                 "can_dash",
                 "airborne"
@@ -287,6 +294,7 @@
                 {"event": "damaged", "state": "taking_damage"}
             ],
             "templates": [
+                "can_double_jump",
                 "dashing"
             ],
             "animation": "dashing"
@@ -355,8 +363,7 @@
         "taking_damage": {
             "properties": {
                 "touching_ground": false,
-                "movement_locked_x": true,
-                "can_jump": false
+                "movement_locked_x": true
             },
             "frame_timer": 15,
             "next_states": [
@@ -368,7 +375,6 @@
             "properties": {
                 "touching_ground": false,
                 "movement_locked_x": true,
-                "can_jump": false,
                 "air_diving": true
             },
             "next_states": [
@@ -395,7 +401,6 @@
             "properties": {
                 "touching_ground": false,
                 "movement_locked_x": true,
-                "can_jump": false,
                 "air_diving": true
             },
             "next_states": [
@@ -427,13 +432,15 @@
                 {"event": "frame_timeout", "state": "idle"},
                 {"event": "damaged", "state": "taking_damage"}
             ],
-            "animation": "hard_landing"
+            "animation": "hard_landing",
+            "templates": [
+                "can_jump"
+            ]
         },
         "ledge_climb": {
             "properties": {
                 "movement_locked_x": true,
-                "movement_locked_y": true,
-                "can_jump": false
+                "movement_locked_y": true
             },
             "frame_timer": 5,
             "next_states": [

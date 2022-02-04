@@ -112,8 +112,7 @@
         },
         "jumping": {
             "properties": {
-                "touching_ground": false,
-                "can_jump": true
+                "touching_ground": false
             },
             "next_states": [
                 {"event": "touching_floor", "state": "idle"},
@@ -129,8 +128,7 @@
         },
         "falling": {
             "properties": {
-                "touching_ground": false,
-                "can_jump": true
+                "touching_ground": false
             },
             "next_states": [
                 {"event": "touching_floor", "state": "idle"},
@@ -198,8 +196,7 @@
         },
         "wall_jump": {
             "properties": {
-                "touching_ground": false,
-                "can_jump": false
+                "touching_ground": false
             },
             "frame_timer": 10,
             "next_states": [
@@ -265,8 +262,7 @@
         },
         "taking_damage": {
             "properties": {
-                "movement_locked_x": true,
-                "can_jump": false
+                "movement_locked_x": true
             },
             "frame_timer": 15,
             "next_states": [

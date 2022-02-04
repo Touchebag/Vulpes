@@ -125,8 +125,7 @@ TEST_F(StateTestFixture, TemplateLoad) {
             ],
             "properties": {
                 "movement_locked_x": false,
-                "touching_ground": false,
-                "can_jump": false
+                "touching_ground": false
             },
             "animation": "template",
             "collideables": [
@@ -199,5 +198,4 @@ TEST_F(StateTestFixture, TemplateLoad) {
     EXPECT_EQ(physics_props.movement_locked_x_, true);
     EXPECT_EQ(physics_props.movement_locked_y_, true);
     EXPECT_EQ(physics_props.touching_ground_, true);
-    EXPECT_EQ(physics_props.can_jump_, false);
 }
