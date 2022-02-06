@@ -58,7 +58,8 @@
         },
         "reset_jumps_and_dashes": {
             "ai": [
-                "on_enter reset_jumps 2"
+                "on_enter reset_jumps 2",
+                "on_enter reset_dashes 1"
             ]
         },
         "wall_stick": {

@@ -273,6 +273,12 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                     physics->resetJumps(POP());
                 }
                 break;
+            case ai::Instruction::RESET_DASHES:
+                LOGV("RESET_DASHES");
+                if (auto physics = extra_input.this_components->getComponent<Physics>()) {
+                    physics->resetDashes(POP());
+                }
+                break;
             case ai::Instruction::ADD_SHADER_TO_LAYER:
                 LOGV("ADD_SHADER_TO_LAYER");
 

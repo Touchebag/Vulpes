@@ -52,6 +52,7 @@ enum class Instruction {
     DISABLE_ACTION,
 
     RESET_JUMPS,
+    RESET_DASHES,
 
     ADD_SHADER_TO_LAYER,
     ADD_GLOBAL_SHADER,
@@ -121,6 +122,7 @@ static const std::unordered_map<std::string, InstructionData> string_instruction
     {"disable_action", {Instruction::DISABLE_ACTION, Type::VOID, {Type::STRING}}},
 
     {"reset_jumps", {Instruction::RESET_JUMPS, Type::VOID, {Type::INT}}},
+    {"reset_dashes", {Instruction::RESET_DASHES, Type::VOID, {Type::INT}}},
 
     {"add_shader_to_layer", {Instruction::ADD_SHADER_TO_LAYER, Type::VOID, {Type::INT, Type::INT}}},
     {"add_global_shader", {Instruction::ADD_GLOBAL_SHADER, Type::VOID, {Type::INT}}},
