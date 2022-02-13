@@ -25,7 +25,8 @@ std::unordered_map<std::string, Animation::AnimationFrameData> Animation::loadSp
     std::vector<std::string> map_str(std::istream_iterator<std::string>{fs},
                                      std::istream_iterator<std::string>());
 
-    for (auto it = map_str.begin(); it != map_str.end(); ++it) {
+    // TODO Range check
+    for (auto it = map_str.begin(); it < map_str.end(); ++it) {
         AnimationFrameData frame_data;
 
         // Texture name should be same as sprite map file

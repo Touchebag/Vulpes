@@ -13,5 +13,5 @@ class ConstantInt : public IShaderUniform {
     static std::shared_ptr<ConstantInt> createFromJson(nlohmann::json j);
 
   private:
-    int value_;
+    int value_ = 0;
 };

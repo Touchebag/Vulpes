@@ -14,7 +14,7 @@ class CollideableTransition : public Collideable {
     CollisionType getType() const override;
 
   private:
-    unsigned int entrance_id_;
+    unsigned int entrance_id_ = 0;
     std::string room_;
 };
 

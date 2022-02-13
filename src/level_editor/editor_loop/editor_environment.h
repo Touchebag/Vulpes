@@ -58,9 +58,9 @@ class EditorEnvironment {
 
     std::shared_ptr<BaseEntity> current_entity;
 
-    float view_pos_x;
-    float view_pos_y;
-    float view_size;
+    float view_pos_x = 0.0;
+    float view_pos_y = 0.0;
+    float view_size = 0.0;
 
     nlohmann::json entity_clipboard;
 

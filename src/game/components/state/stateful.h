@@ -32,7 +32,7 @@ class Stateful : public Component {
   private:
     void loadStates(File file_instance);
 
-    unsigned int frame_counter_;
+    unsigned int frame_counter_ = UINT_MAX;
 
     StateHandler<state_utils::EntityContent> state_handler_;
 };

@@ -13,5 +13,5 @@ class ConstantFloat : public IShaderUniform {
     static std::shared_ptr<ConstantFloat> createFromJson(nlohmann::json j);
 
   private:
-    float value_;
+    float value_ = 0.0;
 };

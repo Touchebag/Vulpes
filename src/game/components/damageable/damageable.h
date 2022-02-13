@@ -27,5 +27,5 @@ class Damageable : public Component {
     int invincibility_frame_counter_ = 0;
 
     // For output to json
-    int initial_health_;
+    int initial_health_ = 0;
 };

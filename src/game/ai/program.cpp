@@ -41,7 +41,7 @@ ai::InstructionData parseInstruction(std::string instruction) {
         std::unique_ptr<size_t> n = std::make_unique<size_t>();
 
         // Try read int
-        std::stoi(instruction, n.get());
+        (void)std::stoi(instruction, n.get());
         // Check if entire string could be parsed as int
         if (*n == instruction.length()) {
             instruction_data = {ai::Instruction::INT, ai::Type::INT, {}};
@@ -49,7 +49,7 @@ ai::InstructionData parseInstruction(std::string instruction) {
         }
 
         // Try read double
-        std::stod(instruction, n.get());
+        (void)std::stod(instruction, n.get());
         if (*n == instruction.length()) {
             instruction_data = {ai::Instruction::FLOAT, ai::Type::FLOAT, {}};
             return instruction_data;
@@ -93,14 +93,14 @@ ai::InstructionData parseInstruction(std::vector<std::string> instructions) {
 }
 
 std::vector<std::vector<std::string>> extractArguments(std::vector<std::string> str) {
+    if (str.empty()) {
+        return {};
+    }
+
     std::vector<std::vector<std::string>> ret_vec;
     // Skip initial instruction
     auto start_it = str.begin() + 1;
     int paren_count = 0;
-
-    if (str.empty()) {
-        return {};
-    }
 
     for (auto it = start_it; it != str.end(); it++) {
         if (*it == "(") {
