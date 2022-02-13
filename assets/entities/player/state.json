@@ -213,12 +213,14 @@
                 "touching_ground": false,
                 "touching_wall": true
             },
-            "frame_timer": 10,
+            "frame_timer": 1,
             "next_states": [
                 {"event": "touching_floor", "state": "idle"},
+                {"event": "touching_wall", "state": "wall_slide_rising"},
                 {"event": "jumping", "state": "wall_jump"},
                 {"event": "falling", "state": "wall_slide"},
-                {"event": "damaged", "state": "taking_damage"}
+                {"event": "damaged", "state": "taking_damage"},
+                {"event": "frame_timeout", "state": "falling"}
             ],
             "animation": "jumping",
             "templates": [
@@ -233,11 +235,13 @@
                 "touching_ground": false,
                 "touching_wall": true
             },
-            "frame_timer": 10,
+            "frame_timer": 1,
             "next_states": [
                 {"event": "touching_floor", "state": "idle"},
+                {"event": "touching_wall", "state": "wall_slide"},
                 {"event": "jumping", "state": "wall_jump"},
-                {"event": "damaged", "state": "taking_damage"}
+                {"event": "damaged", "state": "taking_damage"},
+                {"event": "frame_timeout", "state": "falling"}
             ],
             "animation": "wall_slide",
             "templates": [
