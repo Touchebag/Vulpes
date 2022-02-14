@@ -15,7 +15,7 @@ class MenuRendering : public MenuComponent {
     void drawTextureName(std::shared_ptr<Rendering> render, nlohmann::json j);
 
     static constexpr int BUFFER_SIZE = 1024;
-    char texture_name_buf[BUFFER_SIZE];
+    char texture_name_buf[BUFFER_SIZE] = {};
 
     bool match_collision_size_ = false;
 };

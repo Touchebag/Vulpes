@@ -24,7 +24,7 @@ class Program {
   private:
     ai::Type translateAndStore(std::vector<std::string> lexed_input);
 
-    MetaData meta_data_;
+    MetaData meta_data_ = MetaData::NONE;
 
     std::vector<int> program_;
 

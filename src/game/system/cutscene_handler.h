@@ -17,6 +17,6 @@ class CutsceneHandler {
 
     std::shared_ptr<Cutscene> current_cutscene_;
 
-    unsigned int frame_counter_;
-    unsigned int next_event_frame;
+    unsigned int frame_counter_ = 0;
+    unsigned int next_event_frame = 0;
 };

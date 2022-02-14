@@ -56,18 +56,18 @@ class Camera {
 
     CameraView calculateMovementToTarget();
 
-    CameraView view_;
-    CameraBoundingBox camera_box_;
+    CameraView view_ = {};
+    CameraBoundingBox camera_box_ = {};
 
     // This is the final view with applied effects such as shake
     // Saved as a different variable to allow updating at a different interval
     // than rendering
-    CameraView adjusted_camera_view_;
+    CameraView adjusted_camera_view_ = {};
 
-    CameraView target_view_;
+    CameraView target_view_ = {};
 
     // Used for acceleration smoothing
-    CameraView current_speed_;
+    CameraView current_speed_ = {};
 
     // Used to delay view shrinking when idle
     int idle_frame_counter_ = 0;
