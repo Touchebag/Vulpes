@@ -29,7 +29,7 @@ class Command {
         RENDERABLE_TILING_XY,
     };
 
-    Command(std::weak_ptr<EditorEnvironment> editor_env);
+    explicit Command(std::weak_ptr<EditorEnvironment> editor_env);
 
     void update();
 

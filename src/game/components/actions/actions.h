@@ -23,7 +23,7 @@ class Actions : public Component {
         DIE,
     };
 
-    Actions(std::weak_ptr<ComponentStore> components);
+    explicit Actions(std::weak_ptr<ComponentStore> components);
 
     void update() override;
 

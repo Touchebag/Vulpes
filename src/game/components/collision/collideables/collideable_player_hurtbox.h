@@ -4,7 +4,7 @@
 
 class CollideablePlayerHurtbox : public Collideable {
   public:
-    CollideablePlayerHurtbox(std::weak_ptr<ComponentStore> components);
+    explicit CollideablePlayerHurtbox(std::weak_ptr<ComponentStore> components);
 
     CollisionType getType() const override;
 };

@@ -67,5 +67,5 @@ class EditorEnvironment {
     MenuList menus;
 
   private:
-    EditorEnvironment(sf::RenderWindow& window);
+    explicit EditorEnvironment(sf::RenderWindow& window);
 };

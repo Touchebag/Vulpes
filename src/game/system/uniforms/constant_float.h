@@ -6,7 +6,7 @@
 
 class ConstantFloat : public IShaderUniform {
   public:
-    ConstantFloat(std::string uniform_name);
+    explicit ConstantFloat(std::string uniform_name);
 
     void applyUniform(std::shared_ptr<sf::Shader> shader, std::shared_ptr<ComponentStore> components) override;
 

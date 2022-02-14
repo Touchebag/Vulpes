@@ -6,7 +6,7 @@
 
 class CollideablePlayerDive : public CollideableDamage {
   public:
-    CollideablePlayerDive(std::weak_ptr<ComponentStore> components);
+    explicit CollideablePlayerDive(std::weak_ptr<ComponentStore> components);
 
     void update() override;
 

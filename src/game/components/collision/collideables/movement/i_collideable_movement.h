@@ -9,7 +9,7 @@ class ICollideableMovement : public Collideable {
         double collision_time;
     };
 
-    ICollideableMovement(std::weak_ptr<ComponentStore> components);
+    explicit ICollideableMovement(std::weak_ptr<ComponentStore> components);
 
     // Return how far other_coll could move with regards to this collision
     virtual std::pair<double, double> getMaximumMovement(double stepX, double stepY, std::shared_ptr<const Collideable> other_coll) const = 0;

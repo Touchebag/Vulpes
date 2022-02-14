@@ -6,7 +6,7 @@
 
 class Damageable : public Component {
   public:
-    Damageable(std::weak_ptr<ComponentStore> components);
+    explicit Damageable(std::weak_ptr<ComponentStore> components);
 
     // Component interface
     void reloadFromJson(nlohmann::json j, File file_instance = File()) override;

@@ -9,7 +9,7 @@
 // This class keeps the sprite sheet coordinates of the currently loaded texture
 class Animation : public Component {
   public:
-    Animation(std::weak_ptr<ComponentStore> components);
+    explicit Animation(std::weak_ptr<ComponentStore> components);
 
     void setFrameList(std::string animation_name);
 

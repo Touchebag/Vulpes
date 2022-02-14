@@ -5,7 +5,7 @@
 
 class CollideableDamage : public Collideable {
   public:
-    CollideableDamage(std::weak_ptr<ComponentStore> components);
+    explicit CollideableDamage(std::weak_ptr<ComponentStore> components);
 
     const collision::AttackAttributes getAttributes() const;
 

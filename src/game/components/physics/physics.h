@@ -12,7 +12,7 @@
 
 class Physics : public Component {
   public:
-    Physics(std::weak_ptr<ComponentStore> components);
+    explicit Physics(std::weak_ptr<ComponentStore> components);
 
     void update() override;
 

@@ -8,7 +8,7 @@
 
 class AI : public Component {
   public:
-    AI(std::weak_ptr<ComponentStore> components);
+    explicit AI(std::weak_ptr<ComponentStore> components);
 
     void update() override;
 

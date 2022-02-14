@@ -5,7 +5,7 @@
 
 class CollideablePlayerHitbox : public CollideableDamage {
   public:
-    CollideablePlayerHitbox(std::weak_ptr<ComponentStore> components);
+    explicit CollideablePlayerHitbox(std::weak_ptr<ComponentStore> components);
 
     void reloadFromJson(nlohmann::json j) override;
     std::optional<nlohmann::json> outputToJson() override;

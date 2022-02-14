@@ -13,7 +13,7 @@ class CollideableSensor;
 
 class Collision : public Component {
   public:
-    Collision(std::weak_ptr<ComponentStore> components);
+    explicit Collision(std::weak_ptr<ComponentStore> components);
 
     // Component interface
     void update() override;

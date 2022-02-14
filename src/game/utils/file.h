@@ -10,7 +10,7 @@
 class File {
   public:
     File() = default;
-    File(std::string ns);
+    explicit File(std::string ns);
 
     File(const File&) = default;
     File(File&&) = default;

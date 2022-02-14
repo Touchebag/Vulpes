@@ -4,7 +4,7 @@
 
 class Mouse {
   public:
-    Mouse(sf::RenderWindow& window);
+    explicit Mouse(sf::RenderWindow& window);
 
     void saveMousePosition();
 

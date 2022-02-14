@@ -8,7 +8,7 @@ class BaseEntity;
 
 class Subentity : public Component {
   public:
-    Subentity(std::weak_ptr<ComponentStore> components);
+    explicit Subentity(std::weak_ptr<ComponentStore> components);
 
     void update() override;
 

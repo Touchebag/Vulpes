@@ -4,7 +4,7 @@
 
 class CollideableSensor : public Collideable {
   public:
-    CollideableSensor(std::weak_ptr<ComponentStore> components);
+    explicit CollideableSensor(std::weak_ptr<ComponentStore> components);
 
     void update() override;
 

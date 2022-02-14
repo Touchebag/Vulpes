@@ -9,7 +9,7 @@
 
 class Rendering : public Component {
   public:
-    Rendering(std::weak_ptr<ComponentStore> components);
+    explicit Rendering(std::weak_ptr<ComponentStore> components);
     virtual ~Rendering() = default;
 
     bool loadTexture(std::string file_path, File file_instance);

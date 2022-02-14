@@ -4,7 +4,7 @@
 
 class Death : public Component {
   public:
-    Death(std::weak_ptr<ComponentStore> components);
+    explicit Death(std::weak_ptr<ComponentStore> components);
 
     void update() override;
 

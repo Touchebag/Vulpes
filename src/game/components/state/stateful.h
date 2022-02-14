@@ -12,7 +12,7 @@
 
 class Stateful : public Component {
   public:
-    Stateful(std::weak_ptr<ComponentStore> components);
+    explicit Stateful(std::weak_ptr<ComponentStore> components);
 
     void update() override;
 

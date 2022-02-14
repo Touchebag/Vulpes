@@ -8,7 +8,7 @@ namespace event_triggers {
 
 class AddEntity : public IEventTrigger {
   public:
-    AddEntity(std::shared_ptr<BaseEntity> entity);
+    explicit AddEntity(std::shared_ptr<BaseEntity> entity);
 
     void onEvent() override;
 

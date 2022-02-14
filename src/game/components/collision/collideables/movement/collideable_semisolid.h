@@ -4,7 +4,7 @@
 
 class CollideableSemiSolid : public ICollideableMovement {
   public:
-    CollideableSemiSolid(std::weak_ptr<ComponentStore> components);
+    explicit CollideableSemiSolid(std::weak_ptr<ComponentStore> components);
 
     CollisionType getType() const override;
 

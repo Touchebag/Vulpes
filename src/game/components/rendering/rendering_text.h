@@ -6,7 +6,7 @@
 
 class RenderingText : public Rendering {
   public:
-    RenderingText(std::weak_ptr<ComponentStore> components);
+    explicit RenderingText(std::weak_ptr<ComponentStore> components);
 
     void setText(const std::string& text);
     void setFont(sf::Font font);

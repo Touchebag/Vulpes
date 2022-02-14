@@ -6,7 +6,7 @@
 
 class Transform : public Component {
 public:
-    Transform(std::weak_ptr<ComponentStore> components);
+    explicit Transform(std::weak_ptr<ComponentStore> components);
 
     void setPosition(const int x, const int y);
     void setPosition(util::Vec2i point);

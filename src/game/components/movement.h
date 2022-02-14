@@ -16,7 +16,7 @@ class Movement : public Component {
         bool on_slope = false;
     };
 
-    Movement(std::weak_ptr<ComponentStore> components);
+    explicit Movement(std::weak_ptr<ComponentStore> components);
 
     void move(double velX, double velY);
 
