@@ -19,9 +19,8 @@
 #include "system/system.h"
 
 Collision::Collision(std::weak_ptr<ComponentStore> components) :
-    Component(components) {
-
-    collideable_ = std::make_shared<CollideableStatic>(component_store_);
+    Component(components),
+    collideable_(std::make_shared<CollideableStatic>(component_store_)) {
 }
 
 void Collision::update() {

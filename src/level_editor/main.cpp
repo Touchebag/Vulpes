@@ -4,7 +4,7 @@
 #include "system/world.h"
 #include "editor_render.h"
 
-int main(int argc, char** argv) {
+int main(int argc, const char** argv) {
     sf::RenderWindow window(sf::VideoMode(1000,1000), "Level Editor");
 
     System::setRender(std::make_shared<EditorRender>());

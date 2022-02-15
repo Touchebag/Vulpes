@@ -59,7 +59,7 @@ void StateHandler<T>::reloadFromJson(const nlohmann::json& j, std::shared_ptr<Co
                     mergeJson(template_state, output);
                 } catch (std::out_of_range& e) {
                     LOGE("State template %s not found", st["template"].get<std::string>().c_str());
-                    throw e;
+                    throw;
                 }
             }
         }

@@ -102,7 +102,7 @@ Actions::Action Actions::fromString(const std::string& action) {
     try {
         return string_action_map.at(action);
     } catch (std::out_of_range& e) {
-        throw std::invalid_argument(std::string("Unknown action ") + action.c_str());
+        LOGW("Unknown action %s", action.c_str());
         return Action::UNKNOWN;
     }
 }

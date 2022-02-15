@@ -132,7 +132,7 @@ int parseAction(const std::string& action_string) {
         return static_cast<int>(string_action_map.at(action_string));
     } catch (std::out_of_range& e) {
         LOGE("Program, invalid action %s", action_string.c_str());
-        throw e;
+        throw;
     }
 }
 

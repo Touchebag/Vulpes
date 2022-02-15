@@ -139,7 +139,7 @@ Animation::AnimationFrameData Animation::getFrameData() {
         }
     } catch (std::out_of_range& e) {
         LOGE("Could not find sprite map entry");
-        throw e;
+        throw;
     }
 }
 

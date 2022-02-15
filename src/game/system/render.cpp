@@ -213,14 +213,14 @@ Render::RenderLayer& Render::getLayer(int layer) {
             return background_layers_.at(static_cast<unsigned int>(abs(layer) - 1));
         } catch (std::out_of_range& e) {
             LOGE("Render background, layer out of range");
-            throw e;
+            throw;
         }
     } else if (layer > 0) {
         try {
             return foreground_layers_.at(static_cast<unsigned int>(layer - 1));
         } catch (std::out_of_range& e) {
             LOGE("Render foreground, layer out of range");
-            throw e;
+            throw;
         }
     } else {
         return main_layer_;
