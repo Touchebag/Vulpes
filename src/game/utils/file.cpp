@@ -27,7 +27,7 @@ bool stringEndsWith(const std::string &full_string, const std::string& suffix) {
 
 } // namespace
 
-File::File(std::string ns) :
+File::File(const std::string& ns) :
     current_namespace_(ns) ,
     default_constructed_(false) {
 }
@@ -66,7 +66,7 @@ std::ofstream File::openFileForOutput(std::string filepath) {
     return fs;
 }
 
-std::filesystem::directory_iterator File::getDirContents(std::string path) {
+std::filesystem::directory_iterator File::getDirContents(const std::string& path) {
     return std::filesystem::directory_iterator("./" + ASSET_DIR + "/" + ENTITY_DIR + "/" + current_namespace_ + "/" + path);
 }
 
@@ -85,7 +85,7 @@ std::optional<nlohmann::json> File::loadEntityFromFile() {
     return loadJson(ENTITY_DIR + "/" + current_namespace_ + "/" + ENTITY_FILE);
 }
 
-std::ifstream File::openSpriteMapFile(std::string file) {
+std::ifstream File::openSpriteMapFile(const std::string& file) {
     return openFileForInput(ENTITY_DIR + "/" + current_namespace_ + "/" + TEXTURE_DIR + "/" + file + ".txt");
 }
 
@@ -99,11 +99,11 @@ bool File::writeJsonToFile(std::string filepath, nlohmann::json j) {
     }
 }
 
-std::optional<nlohmann::json> File::loadRoomTemplate(std::string filepath) {
+std::optional<nlohmann::json> File::loadRoomTemplate(const std::string& filepath) {
     return loadRoom(ROOM_TEMPLATE_DIR + "/" + filepath);
 }
 
-std::optional<nlohmann::json> File::loadRoom(std::string filepath) {
+std::optional<nlohmann::json> File::loadRoom(const std::string& filepath) {
     return loadJson(ROOM_DIR + "/" + filepath);
 }
 
@@ -112,7 +112,7 @@ std::optional<nlohmann::json> File::loadAnimations() {
     return loadJson(ENTITY_DIR + "/" + current_namespace_ + "/" + file);
 }
 
-std::optional<sf::Texture> File::loadTexture(std::string file) {
+std::optional<sf::Texture> File::loadTexture(const std::string& file) {
     std::string filepath;
     // If default constructed (i.e. no entity specified) use outer texture dir
     if (default_constructed_) {
@@ -131,7 +131,7 @@ std::optional<sf::Texture> File::loadTexture(std::string file) {
     }
 }
 
-std::optional<sf::Font> File::loadFont(std::string filepath) {
+std::optional<sf::Font> File::loadFont(const std::string& filepath) {
     sf::Font font;
     if (!font.loadFromFile(ASSET_DIR + "/" + FONT_DIR + "/" + filepath)) {
         return std::nullopt;

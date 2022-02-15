@@ -64,7 +64,7 @@ class System {
 
         static void setEntrance(unsigned int entrance_id);
 
-        static void loadCameraData(Camera::CameraBoundingBox camera_box);
+        static void loadCameraData(const Camera::CameraBoundingBox& camera_box);
     };
 
   private:

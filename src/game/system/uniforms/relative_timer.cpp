@@ -2,7 +2,7 @@
 
 #include "system/system.h"
 
-RelativeTimer::RelativeTimer(std::string uniform_name) :
+RelativeTimer::RelativeTimer(const std::string& uniform_name) :
     IShaderUniform(uniform_name) {
     start_time_.restart();
 }

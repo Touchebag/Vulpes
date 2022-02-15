@@ -54,6 +54,6 @@ void System::IWorldModify::setEntrance(unsigned int entrance_id) {
     System::getInstance().world_->setEntrance(entrance_id);
 }
 
-void System::IWorldModify::loadCameraData(Camera::CameraBoundingBox camera_box) {
+void System::IWorldModify::loadCameraData(const Camera::CameraBoundingBox& camera_box) {
     System::getInstance().world_->camera_box_ = camera_box;
 }

@@ -6,7 +6,7 @@
 
 class ConstantInt : public IShaderUniform {
   public:
-    explicit ConstantInt(std::string uniform_name);
+    explicit ConstantInt(const std::string& uniform_name);
 
     void applyUniform(std::shared_ptr<sf::Shader> shader, std::shared_ptr<ComponentStore> components) override;
 

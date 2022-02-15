@@ -2,7 +2,7 @@
 
 #include "utils/log.h"
 
-ConstantInt::ConstantInt(std::string uniform_name) :
+ConstantInt::ConstantInt(const std::string& uniform_name) :
     IShaderUniform(uniform_name) {
 }
 

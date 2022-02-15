@@ -8,7 +8,7 @@ class ComponentStore;
 
 class IShaderUniform {
   public:
-    inline IShaderUniform(std::string uniform_name) : uniform_name_(uniform_name) {};
+    inline IShaderUniform(const std::string& uniform_name) : uniform_name_(uniform_name) {};
 
     virtual ~IShaderUniform() = default;
 

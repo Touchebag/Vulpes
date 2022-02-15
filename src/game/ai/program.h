@@ -13,7 +13,7 @@ class Program {
         ON_EXIT,
     };
 
-    static Program loadProgram(std::string str);
+    static Program loadProgram(const std::string& str);
     const std::vector<int> getProgram();
 
     const std::string& getString(int id);

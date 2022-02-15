@@ -1,6 +1,6 @@
 #include "constant_vec2.h"
 
-ConstantVec2::ConstantVec2(std::string uniform_name) :
+ConstantVec2::ConstantVec2(const std::string& uniform_name) :
     IShaderUniform(uniform_name) {
 }
 

@@ -41,7 +41,7 @@ class World {
 
     void addEntriesToWorld(nlohmann::json j, bool is_template = false);
 
-    void loadRoom(std::string room_name, unsigned int entrance_id);
+    void loadRoom(const std::string& room_name, unsigned int entrance_id);
 
     void setEntrance(unsigned int entrance_id);
     void setShiftedPlayerPosition(Collideable::CollisionType c_type);

@@ -6,7 +6,7 @@
 
 class ConstantVec2 : public IShaderUniform {
   public:
-    explicit ConstantVec2(std::string uniform_name);
+    explicit ConstantVec2(const std::string& uniform_name);
 
     void applyUniform(std::shared_ptr<sf::Shader> shader, std::shared_ptr<ComponentStore> components) override;
 

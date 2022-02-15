@@ -1,6 +1,6 @@
 #include "constant_float.h"
 
-ConstantFloat::ConstantFloat(std::string uniform_name) :
+ConstantFloat::ConstantFloat(const std::string& uniform_name) :
     IShaderUniform(uniform_name) {
 }
 

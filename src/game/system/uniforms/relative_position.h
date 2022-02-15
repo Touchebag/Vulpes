@@ -6,7 +6,7 @@
 
 class RelativePosition : public IShaderUniform {
   public:
-    explicit RelativePosition(std::string uniform_name);
+    explicit RelativePosition(const std::string& uniform_name);
 
     void applyUniform(std::shared_ptr<sf::Shader> shader, std::shared_ptr<ComponentStore> components) override;
 

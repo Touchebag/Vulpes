@@ -6,7 +6,7 @@
 
 class WindowSize : public IShaderUniform {
   public:
-    explicit WindowSize(std::string uniform_name);
+    explicit WindowSize(const std::string& uniform_name);
 
     void applyUniform(std::shared_ptr<sf::Shader> shader, std::shared_ptr<ComponentStore> components) override;
 

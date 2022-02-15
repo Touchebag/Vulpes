@@ -10,28 +10,28 @@
 class File {
   public:
     File() = default;
-    explicit File(std::string ns);
+    explicit File(const std::string& ns);
 
     File(const File&) = default;
     File(File&&) = default;
     File& operator=(const File&) = default;
     File& operator=(File&&) = default;
 
-    std::filesystem::directory_iterator getDirContents(std::string path);
+    std::filesystem::directory_iterator getDirContents(const std::string& path);
 
     std::optional<nlohmann::json> loadEntityFromFile();
     std::optional<nlohmann::json> loadAiBehavior();
     std::optional<nlohmann::json> loadStates();
     std::optional<nlohmann::json> loadAnimations();
-    std::optional<sf::Texture> loadTexture(std::string file);
-    std::optional<sf::Font> loadFont(std::string filepath);
-    std::optional<nlohmann::json> loadRoom(std::string filepath);
-    std::optional<nlohmann::json> loadRoomTemplate(std::string filepath);
+    std::optional<sf::Texture> loadTexture(const std::string& file);
+    std::optional<sf::Font> loadFont(const std::string& filepath);
+    std::optional<nlohmann::json> loadRoom(const std::string& filepath);
+    std::optional<nlohmann::json> loadRoomTemplate(const std::string& filepath);
 
     nlohmann::json loadSaveFile();
     void writeSaveFile(nlohmann::json j);
 
-    std::ifstream openSpriteMapFile(std::string file);
+    std::ifstream openSpriteMapFile(const std::string& file);
 
     std::shared_ptr<sf::Shader> loadShader(std::string filepath);
 

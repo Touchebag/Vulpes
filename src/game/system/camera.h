@@ -23,7 +23,7 @@ class Camera {
     void update();
 
     void setView(double x, double y, double width, double height);
-    void setView(CameraView view);
+    void setView(const CameraView& view);
     CameraView getView();
     CameraView getRawView();
 
@@ -32,7 +32,7 @@ class Camera {
     void setWindowSize(unsigned int width, unsigned int height);
     std::pair<unsigned int, unsigned int> getWindowSize();
 
-    void setCameraBox(CameraBoundingBox camera_box);
+    void setCameraBox(const CameraBoundingBox& camera_box);
 
     void addTrauma(double trauma);
 

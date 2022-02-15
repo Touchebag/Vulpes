@@ -2,7 +2,7 @@
 
 #include "system/system.h"
 
-WindowSize::WindowSize(std::string uniform_name) :
+WindowSize::WindowSize(const std::string& uniform_name) :
     IShaderUniform(uniform_name) {
 }
 

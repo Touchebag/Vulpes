@@ -352,7 +352,7 @@ void World::addPlayer(std::shared_ptr<Player> player) {
     System::getRender()->setPlayer(player_->getComponent<Rendering>());
 }
 
-void World::loadRoom(std::string room_name, unsigned int entrance_id) {
+void World::loadRoom(const std::string& room_name, unsigned int entrance_id) {
     loadWorldFromFile(room_name);
 
     setEntrance(entrance_id);

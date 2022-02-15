@@ -14,7 +14,7 @@ class ComponentStore;
 template <class T>
 class State {
   public:
-    explicit State(T data);
+    explicit State(const T& data);
 
     static State<T> loadStateFromJson(nlohmann::json j, std::shared_ptr<ComponentStore> components);
 

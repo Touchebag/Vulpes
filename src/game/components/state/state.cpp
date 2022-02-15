@@ -9,7 +9,7 @@
 #include "ai/program.h"
 
 template <class T>
-State<T>::State(T data) :
+State<T>::State(const T& data) :
     data_(data) {
 }
 

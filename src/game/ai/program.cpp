@@ -138,7 +138,7 @@ int parseAction(const std::string& action_string) {
 
 } // namespace
 
-Program Program::loadProgram(std::string program_string) {
+Program Program::loadProgram(const std::string& program_string) {
     Program program_out;
 
     auto lexed_program = tokenizeString(program_string);

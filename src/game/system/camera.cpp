@@ -27,7 +27,7 @@ inline double doubleRandom() {
 
 } // namespace
 
-void Camera::setCameraBox(Camera::CameraBoundingBox camera_box) {
+void Camera::setCameraBox(const Camera::CameraBoundingBox& camera_box) {
     camera_box_ = camera_box;
 }
 
@@ -46,7 +46,7 @@ void Camera::setView(double x, double y, double width, double height) {
     setView(view);
 }
 
-void Camera::setView(CameraView view) {
+void Camera::setView(const CameraView& view) {
     view_ = view;
 
     // Reset shaking camera

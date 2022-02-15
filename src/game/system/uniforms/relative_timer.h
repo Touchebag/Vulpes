@@ -7,7 +7,7 @@
 
 class RelativeTimer : public IShaderUniform {
   public:
-    explicit RelativeTimer(std::string uniform_name);
+    explicit RelativeTimer(const std::string& uniform_name);
 
     void applyUniform(std::shared_ptr<sf::Shader> shader, std::shared_ptr<ComponentStore> components) override;
 

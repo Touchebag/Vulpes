@@ -4,7 +4,7 @@
 
 #include "utils/log.h"
 
-RelativePosition::RelativePosition(std::string uniform_name) :
+RelativePosition::RelativePosition(const std::string& uniform_name) :
     IShaderUniform(uniform_name) {
 }
 
