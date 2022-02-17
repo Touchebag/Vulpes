@@ -163,9 +163,6 @@ void Animation::reloadFromJson(nlohmann::json j, File file_instance) {
         }
     }
 
-    // Load the animation names as lists of frame names
-    std::unordered_map<std::string, std::vector<std::string>> name_frames_map;
-
     // If there is a frame list directly, do not load from file
     if (j.contains("frame_list")) {
         auto frame_data_list = loadAnimationFromJson(j, sprite_map);

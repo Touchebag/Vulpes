@@ -86,7 +86,7 @@ void Command::paste() {
     auto editor_env = editor_env_.lock();
 
     // Only copy if no entity is currently selected
-    if (auto entity = editor_env->current_entity) {
+    if (editor_env->current_entity) {
         return;
     }
 

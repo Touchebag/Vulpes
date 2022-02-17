@@ -98,15 +98,6 @@ void Actions::removeAction(Action action) {
     current_actions_.erase(action);
 }
 
-Actions::Action Actions::fromString(const std::string& action) {
-    try {
-        return string_action_map.at(action);
-    } catch (std::out_of_range& e) {
-        LOGW("Unknown action %s", action.c_str());
-        return Action::UNKNOWN;
-    }
-}
-
 std::shared_ptr<Actions> Actions::createFromJson(nlohmann::json j, std::weak_ptr<ComponentStore> components, File /* file_instance */) {
     std::shared_ptr<Actions> actions = std::make_shared<Actions>(components);
 

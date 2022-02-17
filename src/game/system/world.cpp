@@ -312,8 +312,6 @@ nlohmann::json World::saveWorldToJson() {
 
 void World::addEntity(std::shared_ptr<BaseEntity> entity, std::optional<std::string> condition) {
     if (!condition || System::getEnvironment()->getFlag(condition.value())) {
-        auto env = System::getEnvironment();
-
         world_objects_.push_back(entity);
 
         auto coll = entity->getComponent<Collision>();

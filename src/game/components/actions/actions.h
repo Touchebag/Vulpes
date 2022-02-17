@@ -34,8 +34,6 @@ class Actions : public Component {
 
     void enableAction(Action action, bool enable);
 
-    static Action fromString(const std::string& action);
-
     static std::shared_ptr<Actions> createFromJson(nlohmann::json, std::weak_ptr<ComponentStore>, File file_instance = File());
     void reloadFromJson(nlohmann::json j, File file = File()) override;
     virtual std::optional<nlohmann::json> outputToJson() override;
