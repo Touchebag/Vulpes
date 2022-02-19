@@ -14,6 +14,7 @@ set(TEST_TARGET tests)
 set(CC_OPTIONS -std=c++17 -Wall -Wextra -Wpedantic -Wconversion -Wold-style-cast -Wshadow -Werror=non-virtual-dtor -Werror=suggest-override -DLOG_LEVEL=3)
 
 set(ASSETS_DIR assets)
+set(TOOLS_DIR tools)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -47,6 +48,11 @@ add_custom_command(TARGET COPY_TEST_ASSETS PRE_BUILD
                      COMMAND ${CMAKE_COMMAND} -E
                      copy_directory ${CMAKE_SOURCE_DIR}/test/test_assets ${ASSETS_DIR})
 add_dependencies(COPY_TEST_ASSETS COPY_ASSETS)
+
+add_custom_target(COPY_TOOLS ALL)
+add_custom_command(TARGET COPY_TOOLS POST_BUILD
+                     COMMAND ${CMAKE_COMMAND} -E
+                     copy ${CMAKE_SOURCE_DIR}/${TOOLS_DIR}/commit_check.sh ./commit_check.sh)
 
 # Game library
 file(GLOB_RECURSE GAME_LIB_SOURCES src/game/*.cpp)
