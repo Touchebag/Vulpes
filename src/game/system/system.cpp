@@ -25,10 +25,6 @@ std::shared_ptr<Camera> System::getCamera() {
     return System::getInstance().camera_instance_;
 }
 
-std::shared_ptr<CutsceneHandler> System::getCutscene() {
-    return System::getInstance().cutscene_handler_;
-}
-
 void System::setEnvironment(std::shared_ptr<Environment> environment) {
     System::getInstance().environment_ = environment;
 }

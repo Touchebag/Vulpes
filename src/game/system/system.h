@@ -4,7 +4,6 @@
 
 #include "render.h"
 #include "camera.h"
-#include "cutscene_handler.h"
 #include "world.h"
 #include "input_event.h"
 #include "environment.h"
@@ -16,8 +15,6 @@ class System {
 
     static void setCamera(std::shared_ptr<Camera> camera);
     static std::shared_ptr<Camera> getCamera();
-
-    static std::shared_ptr<CutsceneHandler> getCutscene();
 
     static std::shared_ptr<Input> getInput();
 
@@ -57,6 +54,8 @@ class System {
 
         static void clearWorld();
 
+        static void loadCutscene(const std::string& name);
+
         static std::vector<std::shared_ptr<BaseEntity>>& getWorldObjects();
         static std::weak_ptr<Player> getPlayer();
 
@@ -72,7 +71,6 @@ class System {
 
     std::shared_ptr<IRender> render_instance_ = std::make_shared<Render>();
     std::shared_ptr<Camera> camera_instance_ = std::make_shared<Camera>();
-    std::shared_ptr<CutsceneHandler> cutscene_handler_ = std::make_shared<CutsceneHandler>();
     std::shared_ptr<World> world_ = std::make_shared<World>();
     std::shared_ptr<Input> input_ = std::make_shared<Input>();
     std::shared_ptr<Environment> environment_ = std::make_shared<Environment>();

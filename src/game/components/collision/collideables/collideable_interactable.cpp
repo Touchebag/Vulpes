@@ -63,7 +63,7 @@ void CollideableInteractable::update() {
                     System::IWorldModify::loadRoom(transition_.value().first, transition_.value().second);
                 }
                 if (cutscene_) {
-                    System::getCutscene()->startCutscene(cutscene_.value());
+                    System::IWorldModify::loadCutscene(cutscene_.value());
                 }
             }
         }

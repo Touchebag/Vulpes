@@ -7,6 +7,7 @@
 #include "player.h"
 #include "nlohmann/json.hpp"
 #include "components/rendering/rendering_text.h"
+#include "cutscene.h"
 #include "camera.h"
 
 class System;
@@ -82,4 +83,6 @@ class World {
     std::string current_room_name_;
 
     std::optional<Camera::CameraBoundingBox> camera_box_;
+
+    std::shared_ptr<Cutscene> cutscene_;
 };
