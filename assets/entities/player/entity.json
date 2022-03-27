@@ -33,6 +33,7 @@
     },
     "Stateful": null,
     "Subentity": null,
+    "tag": "player",
     "Transform": {
         "pos_x": 0,
         "pos_y": 0

@@ -59,6 +59,8 @@ class System {
         static std::vector<std::shared_ptr<BaseEntity>>& getWorldObjects();
         static std::weak_ptr<Player> getPlayer();
 
+        static std::map<std::string, std::shared_ptr<BaseEntity>> getEntitesByTags(std::set<std::string> tags);
+
         static void loadRoom(std::string room_name, unsigned int entrance_id);
 
         static void setEntrance(unsigned int entrance_id);

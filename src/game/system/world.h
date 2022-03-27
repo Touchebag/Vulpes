@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <memory>
+#include <set>
 
 #include "base_entity.h"
 #include "player.h"
@@ -76,6 +77,8 @@ class World {
 
     // Conditional entities used for saving world
     std::vector<std::weak_ptr<BaseEntity>> conditional_entities_;
+
+    std::map<std::string, std::shared_ptr<BaseEntity>> getEntitesByTags(std::set<std::string> tags);
 
     // Meta data
     // Needed for saving world to file

@@ -49,6 +49,10 @@ std::weak_ptr<Player> System::IWorldModify::getPlayer() {
     return System::getInstance().world_->getPlayer();
 }
 
+std::map<std::string, std::shared_ptr<BaseEntity>> System::IWorldModify::getEntitesByTags(std::set<std::string> tags) {
+    return System::getInstance().world_->getEntitesByTags(tags);
+}
+
 void System::IWorldModify::loadRoom(std::string room_name, unsigned int entrance_id) {
     // Enqueue new room load at frame end
     System::getInstance().world_->new_room_ = {room_name, entrance_id};

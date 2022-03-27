@@ -427,6 +427,29 @@ void World::clearDeletedEntities() {
     }
 }
 
+std::map<std::string, std::shared_ptr<BaseEntity>> World::getEntitesByTags(std::set<std::string> tags) {
+    std::map<std::string, std::shared_ptr<BaseEntity>> ret_map;
+
+    if (player_) {
+        auto tag = player_->getTag();
+
+        if (!tag.empty() && tags.count(tag) > 0) {
+            ret_map.insert_or_assign(tag, player_);
+        }
+    }
+
+    for (auto it : world_objects_) {
+        auto tag = it->getTag();
+
+        // If current tag is in requested list, add to return map
+        if (!tag.empty() && tags.count(tag) > 0) {
+            ret_map.insert_or_assign(tag, it);
+        }
+    }
+
+    return ret_map;
+}
+
 std::weak_ptr<Player> World::getPlayer() {
     return player_;
 }

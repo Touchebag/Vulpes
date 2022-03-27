@@ -45,6 +45,8 @@ void BaseEntity::reloadFromJson(const nlohmann::json& j) {
 
     nlohmann::json entity_json;
 
+    //----- Fetching -----
+
     if (j.contains("Entity")) {
         auto entity_name = j["Entity"].get<std::string>();
         file_instance = File(entity_name);
@@ -74,8 +76,16 @@ void BaseEntity::reloadFromJson(const nlohmann::json& j) {
         entity_json[it.key()] = it.value();
     }
 
-    if (j.contains("condition")) {
-        condition_ = j["condition"].get<std::string>();
+    //----- Parsing -----
+
+    if (entity_json.contains("tag")) {
+        tag_ = entity_json["tag"].get<std::string>();
+    } else {
+        tag_.clear();
+    }
+
+    if (entity_json.contains("condition")) {
+        condition_ = entity_json["condition"].get<std::string>();
     } else {
         condition_.clear();
     }

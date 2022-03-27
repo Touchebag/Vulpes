@@ -12,6 +12,7 @@ class BaseEntity {
     virtual void update();
 
     void setHitbox(int width, int height);
+    const std::string& getTag() { return tag_; };
 
     static std::shared_ptr<BaseEntity> createFromJson(const nlohmann::json& j);
 
@@ -33,5 +34,6 @@ class BaseEntity {
     std::string entity_file_name_;
     nlohmann::json entity_file_exclusives_;
 
+    std::string tag_;
     std::string condition_;
 };
