@@ -16,63 +16,63 @@ void World::update() {
 
         // If cutscene is over, clear from system
         if (!cutscene_->isActive()) {
-            cutscene_->stop();
             cutscene_.reset();
         }
-    }
+    } else {
+        // TODO Check for death
+        player_->update();
 
-    // TODO Check for death
-    player_->update();
+        for (auto it = world_objects_.begin();
+                  it != world_objects_.end();
+                  ) {
+            (*it)->update();
 
-    for (auto it = world_objects_.begin();
-              it != world_objects_.end();
-              ) {
-        (*it)->update();
+            if ((*it)->getComponent<Death>() && (*it)->getComponent<Death>()->isDead()) {
+                // Spawn any death entities
+                if (auto death_entity_json = (*it)->getComponent<Death>()->getDeathEntityJson()) {
+                    auto death_entity = BaseEntity::createFromJson(death_entity_json.value());
 
-        if ((*it)->getComponent<Death>() && (*it)->getComponent<Death>()->isDead()) {
-            // Spawn any death entities
-            if (auto death_entity_json = (*it)->getComponent<Death>()->getDeathEntityJson()) {
-                auto death_entity = BaseEntity::createFromJson(death_entity_json.value());
+                    if ((*it)->getComponent<Transform>() && death_entity->getComponent<Transform>()) {
+                        auto new_position = (*it)->getComponent<Transform>()->getPosition();
+                        death_entity->getComponent<Transform>()->setPosition(new_position);
+                    }
 
-                if ((*it)->getComponent<Transform>() && death_entity->getComponent<Transform>()) {
-                    auto new_position = (*it)->getComponent<Transform>()->getPosition();
-                    death_entity->getComponent<Transform>()->setPosition(new_position);
+                    addEntity(death_entity);
                 }
 
-                addEntity(death_entity);
+                // Set any death flags
+                auto env = System::getEnvironment();
+                for (auto flag : (*it)->getComponent<Death>()->getFlags()) {
+                    env->setFlag(flag);
+                }
+
+                it = deleteEntity(it);
+            } else {
+                ++it;
             }
+        }
 
-            // Set any death flags
-            auto env = System::getEnvironment();
-            for (auto flag : (*it)->getComponent<Death>()->getFlags()) {
-                env->setFlag(flag);
+        if (player_->getComponent<Damageable>()) {
+            if (auto health_text = std::dynamic_pointer_cast<RenderingText>(player_health_->getComponent<Rendering>())) {
+                health_text->setText(std::to_string(player_->getComponent<Damageable>()->getHealth()));
+            } else {
+                LOGW("Unable to cast health text HUD");
             }
-
-            it = deleteEntity(it);
-        } else {
-            ++it;
         }
-    }
 
-    if (player_->getComponent<Damageable>()) {
-        if (auto health_text = std::dynamic_pointer_cast<RenderingText>(player_health_->getComponent<Rendering>())) {
-            health_text->setText(std::to_string(player_->getComponent<Damageable>()->getHealth()));
-        } else {
-            LOGW("Unable to cast health text HUD");
+        // Do not load a new room if cutscene is playing
+        // This extra check is needed for room transition cutscenes
+        if (new_room_ && !cutscene_) {
+            loadRoom(new_room_->first, new_room_->second);
+            new_room_.reset();
         }
-    }
 
-    // Do not load a new room if cutscene is playing
-    if (new_room_ && !cutscene_) {
-        loadRoom(new_room_->first, new_room_->second);
-        new_room_.reset();
+        // TODO Move to in between world_objects update and deferred objects update
+        System::getEnvironment()->triggerConditionalEvents();
     }
 
     // Delete all expired entities at end of frame
     clearDeletedEntities();
-
-    // TODO Move to in between world_objects update and deferred objects update
-    System::getEnvironment()->triggerConditionalEvents();
 }
 
 util::Vec2i World::getPlayerPosition() {
