@@ -152,6 +152,11 @@ void World::addEntriesToWorld(nlohmann::json j, bool is_template) {
     }
 }
 
+void World::setCutscene(const std::string& name) {
+    cutscene_ = Cutscene::createFromJson(File().loadCutscene(name).value());
+    cutscene_->start();
+}
+
 void World::loadWorldTemplate(std::string file) {
     auto j_opt = File().loadRoomTemplate(file);
 

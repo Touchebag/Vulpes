@@ -1,0 +1,16 @@
+{
+    "events": [
+        {
+            "event": "animation",
+            "entity": "player",
+            "frame": 0,
+            "animation_name": "door_transition"
+        },
+        {
+            "event": "animation",
+            "entity": "player",
+            "frame": 60,
+            "animation_name": "idle"
+        }
+    ]
+}

@@ -24,8 +24,6 @@ class Cutscene {
         std::variant<std::string> extra_data;
     };
 
-    Cutscene();
-
     static std::shared_ptr<Cutscene> createFromJson(nlohmann::json);
 
     void update();
@@ -33,6 +31,8 @@ class Cutscene {
     bool isActive();
 
   private:
+
+    static Cutscene::CutsceneEvent loadEventFromJson(nlohmann::json j);
     void addEvent(int start_frame, CutsceneEvent event);
     void execute_event(const CutsceneEvent& event);
 

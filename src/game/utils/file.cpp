@@ -8,6 +8,7 @@ const std::string ROOM_TEMPLATE_DIR = "_templates";
 const std::string TEXTURE_DIR = "textures";
 const std::string FONT_DIR = "fonts";
 const std::string SHADER_DIR = "shaders";
+const std::string CUTSCENE_DIR = "cutscenes";
 
 const std::string ENTITY_FILE = "entity";
 const std::string STATE_FILE = "state";
@@ -138,6 +139,10 @@ std::optional<sf::Font> File::loadFont(const std::string& filepath) {
     } else {
         return {font};
     }
+}
+
+std::optional<nlohmann::json> File::loadCutscene(const std::string& filepath) {
+    return loadJson(CUTSCENE_DIR + "/" + filepath);
 }
 
 std::optional<nlohmann::json> File::loadStates() {

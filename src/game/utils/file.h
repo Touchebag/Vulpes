@@ -27,6 +27,7 @@ class File {
     std::optional<sf::Font> loadFont(const std::string& filepath);
     std::optional<nlohmann::json> loadRoom(const std::string& filepath);
     std::optional<nlohmann::json> loadRoomTemplate(const std::string& filepath);
+    std::optional<nlohmann::json> loadCutscene(const std::string& filepath);
 
     nlohmann::json loadSaveFile();
     void writeSaveFile(nlohmann::json j);

@@ -1,10 +1,15 @@
 #include "cutscene.h"
 
 #include "system.h"
+#include "utils/bimap.h"
 
 #include "utils/log.h"
 
 namespace {
+
+const Bimap<std::string, Cutscene::CutsceneEventType> string_event_map = {
+    {"animation", Cutscene::CutsceneEventType::ANIMATION}
+};
 
 void updateEntitiy(std::shared_ptr<BaseEntity> entity) {
     if (auto anim = entity->getComponent<Animation>()) {
@@ -18,23 +23,20 @@ void updateEntitiy(std::shared_ptr<BaseEntity> entity) {
 
 } // namespace
 
-Cutscene::Cutscene() {
-    Cutscene::CutsceneEvent event;
+std::shared_ptr<Cutscene> Cutscene::createFromJson(nlohmann::json j) {
+    auto cutscene = std::make_shared<Cutscene>();
 
-    event.type = Cutscene::CutsceneEventType::ANIMATION;
-    event.extra_data = "door_transition";
-    event.entity_tag = "player";
-    addEvent(0, event);
+    if (j.contains("events")) {
+        for (auto it : j["events"]) {
+            if (!it.contains("frame")) {
+                throw std::invalid_argument("Cutscene: frame not found");
+            }
 
-    event.type = Cutscene::CutsceneEventType::ANIMATION;
-    event.extra_data = "idle";
-    event.entity_tag = "player";
-    addEvent(60, event);
+            cutscene->addEvent(it["frame"], Cutscene::loadEventFromJson(it));
+        }
+    }
 
-}
-
-std::shared_ptr<Cutscene> Cutscene::createFromJson(nlohmann::json /* j */) {
-    return std::make_shared<Cutscene>();
+    return cutscene;
 }
 
 bool Cutscene::isActive() {
@@ -47,6 +49,34 @@ void Cutscene::start() {
 
 void Cutscene::addEvent(int start_frame, CutsceneEvent event) {
     events_.push({start_frame, event});
+}
+
+Cutscene::CutsceneEvent Cutscene::loadEventFromJson(nlohmann::json j) {
+    CutsceneEvent event;
+
+    try {
+        auto type = string_event_map.at(j["event"].get<std::string>());
+
+        event.type = type;
+        event.entity_tag = j["entity"].get<std::string>();
+
+        switch (type) {
+            case CutsceneEventType::ANIMATION:
+                event.extra_data = j["animation_name"].get<std::string>();
+                break;
+            default:
+                LOGE("This should never happen");
+                exit(EXIT_FAILURE);
+        }
+    } catch (std::out_of_range& e) {
+        // TODO Error handling
+        throw;
+    } catch (nlohmann::json::parse_error& e) {
+        // TODO Error handling
+        throw;
+    }
+
+    return event;
 }
 
 void Cutscene::update() {
