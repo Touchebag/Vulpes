@@ -2,6 +2,8 @@
 
 #include "components/collision/collision.h"
 
+#include "system/cutscene.h"
+
 class CollideableInteractable : public Collideable {
   public:
     explicit CollideableInteractable(std::weak_ptr<ComponentStore> components);
@@ -15,5 +17,6 @@ class CollideableInteractable : public Collideable {
 
   private:
     std::optional<std::pair<std::string, unsigned int>> transition_;
-    std::optional<std::string> cutscene_;
+    std::shared_ptr<Cutscene> cutscene_;
+    std::optional<std::string> cutscene_name_;
 };

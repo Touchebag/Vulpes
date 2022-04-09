@@ -15,7 +15,7 @@ class Cutscene {
     };
 
     struct CutsceneEvent {
-        int frames_remaining = 1;
+        int active_frames = 1;
 
         CutsceneEventType type = CutsceneEventType::UNKNOWN;
 
@@ -31,10 +31,9 @@ class Cutscene {
     bool isActive();
 
   private:
-
     static Cutscene::CutsceneEvent loadEventFromJson(nlohmann::json j);
-    void addEvent(int start_frame, CutsceneEvent event);
-    void execute_event(const CutsceneEvent& event);
+    void addEvents(const std::vector<std::pair<unsigned int, CutsceneEvent>>& events);
+    void execute_event(CutsceneEvent& event);
 
     unsigned int getNextEventFrame();
     CutsceneEvent popEvent();
@@ -44,8 +43,9 @@ class Cutscene {
     unsigned int frame_counter_ = 0;
 
     // Pair is starting frame
-    std::queue<std::pair<unsigned int, CutsceneEvent>> events_;
-    std::vector<CutsceneEvent> active_events_;
+    std::vector<std::pair<unsigned int, CutsceneEvent>> events_ = {};
+    std::vector<std::pair<unsigned int, CutsceneEvent>>::iterator next_event_ = events_.begin();
+    std::vector<std::pair<int, CutsceneEvent>> active_events_;
 
     std::map<std::string, std::shared_ptr<BaseEntity>> entities_;
 };

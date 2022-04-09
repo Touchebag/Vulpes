@@ -24,31 +24,38 @@ void updateEntitiy(std::shared_ptr<BaseEntity> entity) {
 } // namespace
 
 std::shared_ptr<Cutscene> Cutscene::createFromJson(nlohmann::json j) {
-    auto cutscene = std::make_shared<Cutscene>();
+    std::vector<std::pair<unsigned int, CutsceneEvent>> events;
 
     if (j.contains("events")) {
-        for (auto it : j["events"]) {
-            if (!it.contains("frame")) {
-                throw std::invalid_argument("Cutscene: frame not found");
+        for (auto it = j["events"].begin(); it != j["events"].end(); it++) {
+            for (auto event : it.value()) {
+                events.push_back({stoi(it.key()), loadEventFromJson(event)});
             }
-
-            cutscene->addEvent(it["frame"], Cutscene::loadEventFromJson(it));
         }
     }
+
+    std::sort(events.begin(), events.end(), [] (const auto& left, const auto& right) { return left.first < right.first; });
+
+    auto cutscene = std::make_shared<Cutscene>();
+    cutscene->addEvents(events);
 
     return cutscene;
 }
 
 bool Cutscene::isActive() {
-    return !(events_.empty() && active_events_.empty());
+    return !(next_event_ == events_.end() && active_events_.empty());
 }
 
 void Cutscene::start() {
+    frame_counter_ = 0;
+    next_event_ = events_.begin();
+    active_events_.clear();
     entities_ = System::IWorldModify::getEntitesByTags({"player"});
 }
 
-void Cutscene::addEvent(int start_frame, CutsceneEvent event) {
-    events_.push({start_frame, event});
+void Cutscene::addEvents(const std::vector<std::pair<unsigned int, CutsceneEvent>>& events) {
+    events_ = events;
+    next_event_ = events_.begin();
 }
 
 Cutscene::CutsceneEvent Cutscene::loadEventFromJson(nlohmann::json j) {
@@ -59,6 +66,9 @@ Cutscene::CutsceneEvent Cutscene::loadEventFromJson(nlohmann::json j) {
 
         event.type = type;
         event.entity_tag = j["entity"].get<std::string>();
+        if (j.contains("active_frames")) {
+            event.active_frames = j["active_frames"];
+        }
 
         switch (type) {
             case CutsceneEventType::ANIMATION:
@@ -80,20 +90,21 @@ Cutscene::CutsceneEvent Cutscene::loadEventFromJson(nlohmann::json j) {
 }
 
 void Cutscene::update() {
-    if (events_.empty() && active_events_.empty()) {
+    if (!isActive()) {
         return;
     }
 
     while (frame_counter_ >= getNextEventFrame()) {
-        active_events_.push_back(popEvent());
+        auto event = popEvent();
+        active_events_.push_back({event.active_frames, event});
     }
 
     for (auto it = active_events_.begin(); it != active_events_.end();) {
-        if (it->frames_remaining == 0) {
+        if (it->first == 0) {
             it = active_events_.erase(it);
         } else {
-            execute_event(*it);
-            it->frames_remaining--;
+            execute_event(it->second);
+            it->first--;
             it++;
         }
     }
@@ -106,22 +117,19 @@ void Cutscene::update() {
 }
 
 unsigned int Cutscene::getNextEventFrame() {
-    if (events_.empty()) {
+    if (next_event_ >= events_.end()) {
         return INT_MAX;
     } else {
-        return events_.front().first;
+        return next_event_->first;
     }
 }
 
 Cutscene::CutsceneEvent Cutscene::popEvent() {
-    if (events_.empty()) {
+    if (next_event_ >= events_.end()) {
         LOGW("Cutscene queue empty");
-
         return {};
     } else {
-        auto event = events_.front();
-        events_.pop();
-        return event.second;
+        return (next_event_++)->second;
     }
 }
 
@@ -134,7 +142,7 @@ std::shared_ptr<BaseEntity> Cutscene::getEntity(std::string tag) {
     }
 }
 
-void Cutscene::execute_event(const Cutscene::CutsceneEvent& event) {
+void Cutscene::execute_event(Cutscene::CutsceneEvent& event) {
     switch (event.type) {
         case Cutscene::CutsceneEventType::ANIMATION:
             {

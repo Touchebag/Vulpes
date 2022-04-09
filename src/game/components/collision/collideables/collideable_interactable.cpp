@@ -23,7 +23,12 @@ void CollideableInteractable::reloadFromJson(nlohmann::json j) {
     }
 
     if (j.contains("cutscene")) {
-        cutscene_ = j["cutscene"];
+        cutscene_name_ = j["cutscene"];
+        if (auto c_json = File().loadCutscene(cutscene_name_.value())) {
+            cutscene_ = Cutscene::createFromJson(c_json.value());
+        } else {
+            LOGW("Failed to load cutscene %s", cutscene_name_.value().c_str());
+        }
     }
 }
 
@@ -41,7 +46,7 @@ std::optional<nlohmann::json> CollideableInteractable::outputToJson() {
     }
 
     if (cutscene_) {
-        j["cutscene"] = cutscene_.value();
+        j["cutscene"] = cutscene_name_.value();
     }
 
     return j;
@@ -63,7 +68,7 @@ void CollideableInteractable::update() {
                     System::IWorldModify::loadRoom(transition_.value().first, transition_.value().second);
                 }
                 if (cutscene_) {
-                    System::IWorldModify::loadCutscene(cutscene_.value());
+                    System::IWorldModify::setCutscene(cutscene_);
                 }
             }
         }

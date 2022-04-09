@@ -54,7 +54,7 @@ class System {
 
         static void clearWorld();
 
-        static void loadCutscene(const std::string& name);
+        static void setCutscene(std::shared_ptr<Cutscene> cutscene);
 
         static std::vector<std::shared_ptr<BaseEntity>>& getWorldObjects();
         static std::weak_ptr<Player> getPlayer();

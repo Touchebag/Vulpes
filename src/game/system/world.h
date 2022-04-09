@@ -43,7 +43,7 @@ class World {
 
     void addEntriesToWorld(nlohmann::json j, bool is_template = false);
 
-    void setCutscene(const std::string& name);
+    void setCutscene(std::shared_ptr<Cutscene> cutscene);
 
     void loadRoom(const std::string& room_name, unsigned int entrance_id);
 

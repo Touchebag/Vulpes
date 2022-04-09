@@ -152,8 +152,8 @@ void World::addEntriesToWorld(nlohmann::json j, bool is_template) {
     }
 }
 
-void World::setCutscene(const std::string& name) {
-    cutscene_ = Cutscene::createFromJson(File().loadCutscene(name).value());
+void World::setCutscene(std::shared_ptr<Cutscene> cutscene) {
+    cutscene_ = cutscene;
     cutscene_->start();
 }
 
