@@ -11,9 +11,9 @@
 
 // If the original json contains a value it should override what is
 // loaded from the entity file
-#define createComponentFromJson(component, file)\
+#define createComponentFromJson(component)\
     if (entity_json.contains(QUOTE(component))) {\
-        setComponent<component>(component::createFromJson(entity_json[QUOTE(component)], components_, file));\
+        setComponent<component>(component::createFromJson(entity_json[QUOTE(component)], components_));\
     } else {\
         setComponent<component>({});\
     }
@@ -41,17 +41,17 @@ std::shared_ptr<BaseEntity> BaseEntity::createFromJson(const nlohmann::json& j) 
 }
 
 void BaseEntity::reloadFromJson(const nlohmann::json& j) {
-    File file_instance;
-
     nlohmann::json entity_json;
 
     //----- Fetching -----
 
     if (j.contains("Entity")) {
         auto entity_name = j["Entity"].get<std::string>();
-        file_instance = File(entity_name);
 
-        if (auto j_entity = file_instance.loadEntityFromFile()) {
+        auto entity_path = File::getEntityDir() / entity_name;
+        File::pushDirectory(entity_path);
+
+        if (auto j_entity = File::loadEntityFromFile()) {
             entity_json = j_entity.value();
         } else {
             throw std::invalid_argument("File not found");
@@ -90,32 +90,36 @@ void BaseEntity::reloadFromJson(const nlohmann::json& j) {
         condition_.clear();
     }
 
-    createComponentFromJson(Transform, file_instance);
+    createComponentFromJson(Transform);
 
-    createComponentFromJson(Death, file_instance);
+    createComponentFromJson(Death);
 
-    createComponentFromJson(Actions, file_instance);
+    createComponentFromJson(Actions);
 
-    createComponentFromJson(Collision, file_instance);
+    createComponentFromJson(Collision);
 
-    createComponentFromJson(Movement, file_instance);
+    createComponentFromJson(Movement);
 
-    createComponentFromJson(Rendering, file_instance);
+    createComponentFromJson(Rendering);
 
-    createComponentFromJson(Animation, file_instance);
+    createComponentFromJson(Animation);
 
-    createComponentFromJson(Subentity, file_instance);
+    createComponentFromJson(Subentity);
 
-    createComponentFromJson(Physics, file_instance);
+    createComponentFromJson(Physics);
 
-    createComponentFromJson(AI, file_instance);
+    createComponentFromJson(AI);
 
-    createComponentFromJson(Damageable, file_instance);
+    createComponentFromJson(Damageable);
 
     // State reads physics constants, needs to be initialised after
-    createComponentFromJson(Stateful, file_instance);
+    createComponentFromJson(Stateful);
     if (getComponent<Stateful>()) {
         getComponent<Stateful>()->incomingEvent(state_utils::Event::START);
+    }
+
+    if (!entity_file_name_.empty()) {
+        File::popDirectory();
     }
 }
 

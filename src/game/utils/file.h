@@ -3,48 +3,47 @@
 #include <optional>
 #include <fstream>
 #include <filesystem>
+#include <stack>
+
 #include <SFML/Graphics.hpp>
 
 #include "nlohmann/json.hpp"
 
 class File {
   public:
-    File() = default;
-    explicit File(const std::string& ns);
+    static std::filesystem::directory_iterator getDirContents(const std::filesystem::path path);
 
-    File(const File&) = default;
-    File(File&&) = default;
-    File& operator=(const File&) = default;
-    File& operator=(File&&) = default;
+    static std::optional<nlohmann::json> loadEntityFromFile();
+    static std::optional<nlohmann::json> loadAiBehavior();
+    static std::optional<nlohmann::json> loadStates();
+    static std::optional<nlohmann::json> loadAnimations();
+    static std::optional<sf::Texture> loadTexture(std::filesystem::path file);
+    static std::optional<sf::Font> loadFont(std::filesystem::path filepath);
+    static std::optional<nlohmann::json> loadRoom(std::filesystem::path filepath);
+    static std::optional<nlohmann::json> loadRoomTemplate(std::filesystem::path filepath);
+    static std::optional<nlohmann::json> loadCutscene(std::filesystem::path filepath);
 
-    std::filesystem::directory_iterator getDirContents(const std::filesystem::path path);
+    static std::filesystem::path getEntityDir();
 
-    std::optional<nlohmann::json> loadEntityFromFile();
-    std::optional<nlohmann::json> loadAiBehavior();
-    std::optional<nlohmann::json> loadStates();
-    std::optional<nlohmann::json> loadAnimations();
-    std::optional<sf::Texture> loadTexture(std::filesystem::path file);
-    std::optional<sf::Font> loadFont(std::filesystem::path filepath);
-    std::optional<nlohmann::json> loadRoom(std::filesystem::path filepath);
-    std::optional<nlohmann::json> loadRoomTemplate(std::filesystem::path filepath);
-    std::optional<nlohmann::json> loadCutscene(std::filesystem::path filepath);
+    static nlohmann::json loadSaveFile();
+    static void writeSaveFile(nlohmann::json j);
 
-    nlohmann::json loadSaveFile();
-    void writeSaveFile(nlohmann::json j);
+    static std::ifstream openSpriteMapFile(const std::filesystem::path file);
 
-    std::ifstream openSpriteMapFile(const std::filesystem::path file);
+    static std::shared_ptr<sf::Shader> loadShader(std::filesystem::path filepath);
 
-    std::shared_ptr<sf::Shader> loadShader(std::filesystem::path filepath);
+    static bool writeJsonToFile(std::filesystem::path filepath, nlohmann::json world);
 
-    bool writeJsonToFile(std::filesystem::path filepath, nlohmann::json world);
+    static void pushDirectory(std::filesystem::path dir);
+    static void popDirectory();
 
   private:
+    static std::stack<std::filesystem::path> current_directory_;
 
-    std::optional<nlohmann::json> loadJson(std::filesystem::path filepath);
+    static std::filesystem::path getEntityPrefixPath();
 
-    std::ifstream openFileForInput(std::filesystem::path filepath);
-    std::ofstream openFileForOutput(std::filesystem::path filepath);
+    static std::optional<nlohmann::json> loadJson(std::filesystem::path filepath);
 
-    std::string current_namespace_ = "_default";
-    bool default_constructed_ = true;
+    static std::ifstream openFileForInput(std::filesystem::path filepath);
+    static std::ofstream openFileForOutput(std::filesystem::path filepath);
 };
