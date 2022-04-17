@@ -246,8 +246,6 @@ void World::loadWorldFromJson(nlohmann::json j) {
 void World::saveWorldToFile(std::string file) {
     nlohmann::json j = saveWorldToJson();
 
-    file = File::appendSuffix(file, ".json");
-
     if (File().writeJsonToFile(file, j)) {
         LOGD("World saved successfully");
     } else {
