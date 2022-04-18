@@ -1,0 +1,23 @@
+[
+    {
+        "name": "idle",
+		"frame_list": [
+			"Open",
+            "Open",
+            "Open",
+            "Open",
+            "Open",
+            "Open",
+            "Open",
+            "Open",
+            "Closed",
+            "Closed",
+            "Closed",
+            "Closed",
+            "Closed",
+            "Closed",
+            "Closed",
+            "Closed"
+		]
+    }
+]

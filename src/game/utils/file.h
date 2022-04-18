@@ -21,9 +21,10 @@ class File {
     static std::optional<sf::Font> loadFont(std::filesystem::path filepath);
     static std::optional<nlohmann::json> loadRoom(std::filesystem::path filepath);
     static std::optional<nlohmann::json> loadRoomTemplate(std::filesystem::path filepath);
-    static std::optional<nlohmann::json> loadCutscene(std::filesystem::path filepath);
+    static std::optional<nlohmann::json> loadCutscene();
 
     static std::filesystem::path getEntityDir();
+    static std::filesystem::path getCutsceneDir();
 
     static nlohmann::json loadSaveFile();
     static void writeSaveFile(nlohmann::json j);
@@ -36,6 +37,7 @@ class File {
 
     static void pushDirectory(std::filesystem::path dir);
     static void popDirectory();
+    static std::filesystem::path getCurrentDirectory();
 
   private:
     static std::stack<std::filesystem::path> current_directory_;

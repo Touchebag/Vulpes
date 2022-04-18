@@ -7,6 +7,13 @@
                 "animation_name": "door_transition"
             }
         ],
+		"1": [
+            {
+                "event": "animation",
+                "entity": "test_cutscene_enemy",
+                "animation_name": "idle"
+            }
+        ],
         "60": [
             {
                 "event": "animation",

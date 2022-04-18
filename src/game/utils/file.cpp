@@ -13,6 +13,7 @@ const std::filesystem::path CUTSCENE_DIR = "cutscenes";
 const std::filesystem::path ENTITY_FILE = "entity";
 const std::filesystem::path STATE_FILE = "state";
 const std::filesystem::path ANIMATIONS_FILE = "animations";
+const std::filesystem::path CUTSCENE_FILE = "cutscene";
 
 const std::filesystem::path SAVE_FILE = "data.sav";
 
@@ -28,6 +29,14 @@ void File::popDirectory() {
     current_directory_.pop();
 }
 
+std::filesystem::path File::getCurrentDirectory() {
+    if (current_directory_.empty()) {
+        return "";
+    } else {
+        return current_directory_.top();
+    }
+}
+
 std::filesystem::path File::getEntityPrefixPath() {
     if (current_directory_.empty()) {
         return ENTITY_DIR / DEFAULT_ENTITY;
@@ -38,6 +47,10 @@ std::filesystem::path File::getEntityPrefixPath() {
 
 std::filesystem::path File::getEntityDir() {
     return ENTITY_DIR;
+}
+
+std::filesystem::path File::getCutsceneDir() {
+    return CUTSCENE_DIR;
 }
 
 std::ifstream File::openFileForInput(std::filesystem::path filepath) {
@@ -147,8 +160,8 @@ std::optional<sf::Font> File::loadFont(std::filesystem::path filepath) {
     }
 }
 
-std::optional<nlohmann::json> File::loadCutscene(std::filesystem::path filepath) {
-    return loadJson(CUTSCENE_DIR / filepath);
+std::optional<nlohmann::json> File::loadCutscene() {
+    return loadJson(getEntityPrefixPath() / CUTSCENE_FILE);
 }
 
 std::optional<nlohmann::json> File::loadStates() {

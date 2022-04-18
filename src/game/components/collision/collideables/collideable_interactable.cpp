@@ -23,12 +23,8 @@ void CollideableInteractable::reloadFromJson(nlohmann::json j) {
     }
 
     if (j.contains("cutscene")) {
+        cutscene_ = Cutscene::loadCutscene(j["cutscene"]);
         cutscene_name_ = j["cutscene"];
-        if (auto c_json = File().loadCutscene(cutscene_name_.value())) {
-            cutscene_ = Cutscene::createFromJson(c_json.value());
-        } else {
-            LOGW("Failed to load cutscene %s", cutscene_name_.value().c_str());
-        }
     }
 }
 

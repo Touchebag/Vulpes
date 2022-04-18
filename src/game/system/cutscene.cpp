@@ -23,21 +23,47 @@ void updateEntitiy(std::shared_ptr<BaseEntity> entity) {
 
 } // namespace
 
-std::shared_ptr<Cutscene> Cutscene::createFromJson(nlohmann::json j) {
-    std::vector<std::pair<unsigned int, CutsceneEvent>> events;
+std::shared_ptr<Cutscene> Cutscene::loadCutscene(const std::string& cutscene_name) {
+    auto cutscene = std::make_shared<Cutscene>();
 
-    if (j.contains("events")) {
-        for (auto it = j["events"].begin(); it != j["events"].end(); it++) {
-            for (auto event : it.value()) {
-                events.push_back({stoi(it.key()), loadEventFromJson(event)});
+    std::vector<std::pair<unsigned int, CutsceneEvent>> events;
+    auto cutscene_dir_path = File::getCutsceneDir();
+
+    File::pushDirectory(cutscene_dir_path / cutscene_name);
+
+    // Load events
+    if (auto j_opt = File::loadCutscene()) {
+        auto j = j_opt.value();
+
+        if (j.contains("events")) {
+            for (auto it = j["events"].begin(); it != j["events"].end(); it++) {
+                for (auto event : it.value()) {
+                    events.push_back({stoi(it.key()), loadEventFromJson(event)});
+                }
             }
+        }
+
+        std::sort(events.begin(), events.end(), [] (const auto& left, const auto& right) { return left.first < right.first; });
+    } else {
+        LOGE("Failed to load cutscene %s", cutscene_name.c_str());
+        throw std::invalid_argument("");
+    }
+
+    // Load all cutscene specific entites
+    if (std::filesystem::is_directory(File::getEntityDir())) {
+        for (auto ent : File::getDirContents(File::getEntityDir())) {
+            auto entity_name = ent.path().filename().string();
+
+            nlohmann::json j;
+            j["Entity"] = entity_name;
+
+            cutscene->cutscene_entities_.insert_or_assign(entity_name, BaseEntity::createFromJson(j));
         }
     }
 
-    std::sort(events.begin(), events.end(), [] (const auto& left, const auto& right) { return left.first < right.first; });
-
-    auto cutscene = std::make_shared<Cutscene>();
     cutscene->addEvents(events);
+
+    File::popDirectory();
 
     return cutscene;
 }
@@ -50,7 +76,7 @@ void Cutscene::start() {
     frame_counter_ = 0;
     next_event_ = events_.begin();
     active_events_.clear();
-    entities_ = System::IWorldModify::getEntitesByTags({"player"});
+    world_entities_ = System::IWorldModify::getEntitesByTags({"player"});
 }
 
 void Cutscene::addEvents(const std::vector<std::pair<unsigned int, CutsceneEvent>>& events) {
@@ -103,13 +129,17 @@ void Cutscene::update() {
         if (it->first == 0) {
             it = active_events_.erase(it);
         } else {
-            execute_event(it->second);
+            executeEvent(it->second);
             it->first--;
             it++;
         }
     }
 
-    for (auto entity : entities_) {
+    for (auto entity : cutscene_entities_) {
+        updateEntitiy(entity.second);
+    }
+
+    for (auto entity : world_entities_) {
         updateEntitiy(entity.second);
     }
 
@@ -135,14 +165,18 @@ Cutscene::CutsceneEvent Cutscene::popEvent() {
 
 std::shared_ptr<BaseEntity> Cutscene::getEntity(std::string tag) {
     try {
-        return entities_.at(tag);
+        if (cutscene_entities_.count(tag) != 0) {
+            return cutscene_entities_.at(tag);
+        } else {
+            return world_entities_.at(tag);
+        }
     } catch (std::out_of_range& e) {
         LOGE("Cutscene: invalid tag %s", tag.c_str());
         throw;
     }
 }
 
-void Cutscene::execute_event(Cutscene::CutsceneEvent& event) {
+void Cutscene::executeEvent(Cutscene::CutsceneEvent& event) {
     switch (event.type) {
         case Cutscene::CutsceneEventType::ANIMATION:
             {

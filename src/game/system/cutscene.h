@@ -24,7 +24,7 @@ class Cutscene {
         std::variant<std::string> extra_data;
     };
 
-    static std::shared_ptr<Cutscene> createFromJson(nlohmann::json);
+    static std::shared_ptr<Cutscene> loadCutscene(const std::string& cutscene_name);
 
     void update();
     void start();
@@ -33,7 +33,7 @@ class Cutscene {
   private:
     static Cutscene::CutsceneEvent loadEventFromJson(nlohmann::json j);
     void addEvents(const std::vector<std::pair<unsigned int, CutsceneEvent>>& events);
-    void execute_event(CutsceneEvent& event);
+    void executeEvent(CutsceneEvent& event);
 
     unsigned int getNextEventFrame();
     CutsceneEvent popEvent();
@@ -47,5 +47,6 @@ class Cutscene {
     std::vector<std::pair<unsigned int, CutsceneEvent>>::iterator next_event_ = events_.begin();
     std::vector<std::pair<int, CutsceneEvent>> active_events_;
 
-    std::map<std::string, std::shared_ptr<BaseEntity>> entities_;
+    std::map<std::string, std::shared_ptr<BaseEntity>> world_entities_;
+    std::map<std::string, std::shared_ptr<BaseEntity>> cutscene_entities_;
 };

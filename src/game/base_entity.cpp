@@ -48,7 +48,7 @@ void BaseEntity::reloadFromJson(const nlohmann::json& j) {
     if (j.contains("Entity")) {
         auto entity_name = j["Entity"].get<std::string>();
 
-        auto entity_path = File::getEntityDir() / entity_name;
+        auto entity_path = File::getCurrentDirectory() / File::getEntityDir() / entity_name;
         File::pushDirectory(entity_path);
 
         if (auto j_entity = File::loadEntityFromFile()) {
