@@ -43,6 +43,12 @@ std::shared_ptr<Cutscene> Cutscene::loadCutscene(const std::string& cutscene_nam
             }
         }
 
+        if (j.contains("teardown")) {
+            for (auto it = j["teardown"].begin(); it != j["teardown"].end(); it++) {
+                cutscene->teardown_events_.push_back(loadEventFromJson(*it));
+            }
+        }
+
         std::sort(events.begin(), events.end(), [] (const auto& left, const auto& right) { return left.first < right.first; });
     } else {
         LOGE("Failed to load cutscene %s", cutscene_name.c_str());
@@ -144,6 +150,14 @@ void Cutscene::update() {
     }
 
     frame_counter_++;
+
+    // If the cutscene became inactive after this frame we should run the
+    // exit events
+    if (!isActive()) {
+        for (auto it = teardown_events_.begin(); it != teardown_events_.end(); it++) {
+            executeEvent(*it);
+        }
+    }
 }
 
 unsigned int Cutscene::getNextEventFrame() {

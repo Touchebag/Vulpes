@@ -44,6 +44,8 @@ class Cutscene {
 
     // Pair is starting frame
     std::vector<std::pair<unsigned int, CutsceneEvent>> events_ = {};
+    std::vector<CutsceneEvent> teardown_events_ = {};
+
     std::vector<std::pair<unsigned int, CutsceneEvent>>::iterator next_event_ = events_.begin();
     std::vector<std::pair<int, CutsceneEvent>> active_events_;
 
