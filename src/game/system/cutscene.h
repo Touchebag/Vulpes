@@ -2,6 +2,7 @@
 
 #include <queue>
 #include <variant>
+#include <set>
 
 #include "base_entity.h"
 #include "player.h"
@@ -27,6 +28,7 @@ class Cutscene {
     };
 
     static std::shared_ptr<Cutscene> loadCutscene(const std::string& cutscene_name);
+    void reloadFromJson(nlohmann::json j);
 
     void update();
     void start();
@@ -50,6 +52,8 @@ class Cutscene {
 
     std::vector<std::pair<unsigned int, CutsceneEvent>>::iterator next_event_ = events_.begin();
     std::vector<std::pair<int, CutsceneEvent>> active_events_;
+
+    std::set<std::string> tags_;
 
     std::map<std::string, std::shared_ptr<BaseEntity>> world_entities_;
     std::map<std::string, std::shared_ptr<BaseEntity>> cutscene_entities_;

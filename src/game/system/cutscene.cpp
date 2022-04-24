@@ -27,8 +27,6 @@ void updateEntitiy(std::shared_ptr<BaseEntity> entity) {
 
 std::shared_ptr<Cutscene> Cutscene::loadCutscene(const std::string& cutscene_name) {
     auto cutscene = std::make_shared<Cutscene>();
-
-    std::vector<std::pair<unsigned int, CutsceneEvent>> events;
     auto cutscene_dir_path = File::getCutsceneDir();
 
     File::pushDirectory(cutscene_dir_path / cutscene_name);
@@ -37,21 +35,7 @@ std::shared_ptr<Cutscene> Cutscene::loadCutscene(const std::string& cutscene_nam
     if (auto j_opt = File::loadCutscene()) {
         auto j = j_opt.value();
 
-        if (j.contains("events")) {
-            for (auto it = j["events"].begin(); it != j["events"].end(); it++) {
-                for (auto event : it.value()) {
-                    events.push_back({stoi(it.key()), loadEventFromJson(event)});
-                }
-            }
-        }
-
-        if (j.contains("teardown")) {
-            for (auto it = j["teardown"].begin(); it != j["teardown"].end(); it++) {
-                cutscene->teardown_events_.push_back(loadEventFromJson(*it));
-            }
-        }
-
-        std::sort(events.begin(), events.end(), [] (const auto& left, const auto& right) { return left.first < right.first; });
+        cutscene->reloadFromJson(j);
     } else {
         LOGE("Failed to load cutscene %s", cutscene_name.c_str());
         throw std::invalid_argument("");
@@ -69,11 +53,33 @@ std::shared_ptr<Cutscene> Cutscene::loadCutscene(const std::string& cutscene_nam
         }
     }
 
-    cutscene->addEvents(events);
-
     File::popDirectory();
 
     return cutscene;
+}
+
+void Cutscene::reloadFromJson(nlohmann::json j) {
+    std::vector<std::pair<unsigned int, CutsceneEvent>> events;
+
+    if (j.contains("events")) {
+        for (auto it = j["events"].begin(); it != j["events"].end(); it++) {
+            for (auto j_event : it.value()) {
+                auto event = loadEventFromJson(j_event);
+                events.push_back({stoi(it.key()), event});
+                tags_.insert(event.entity_tag);
+            }
+        }
+    }
+
+    if (j.contains("teardown")) {
+        for (auto it = j["teardown"].begin(); it != j["teardown"].end(); it++) {
+            teardown_events_.push_back(loadEventFromJson(*it));
+        }
+    }
+
+    std::sort(events.begin(), events.end(), [] (const auto& left, const auto& right) { return left.first < right.first; });
+
+    addEvents(events);
 }
 
 bool Cutscene::isActive() {
@@ -84,7 +90,7 @@ void Cutscene::start() {
     frame_counter_ = 0;
     next_event_ = events_.begin();
     active_events_.clear();
-    world_entities_ = System::IWorldModify::getEntitesByTags({"player"});
+    world_entities_ = System::IWorldModify::getEntitesByTags(tags_);
 }
 
 void Cutscene::addEvents(const std::vector<std::pair<unsigned int, CutsceneEvent>>& events) {
@@ -100,6 +106,7 @@ Cutscene::CutsceneEvent Cutscene::loadEventFromJson(nlohmann::json j) {
 
         event.type = type;
         event.entity_tag = j["entity"].get<std::string>();
+
         if (j.contains("active_frames")) {
             event.active_frames = j["active_frames"];
         }

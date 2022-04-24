@@ -1,0 +1,36 @@
+{
+    "Animation": {
+        "frame_list": [
+            "Open",
+            "Open",
+            "Open",
+            "Open",
+            "Open",
+            "Open",
+            "Open",
+            "Open",
+            "Closed",
+            "Closed",
+            "Closed",
+            "Closed",
+            "Closed",
+            "Closed",
+            "Closed",
+            "Closed"
+        ]
+    },
+    "Death": null,
+    "Movement": null,
+    "Rendering": {
+        "height": 90,
+        "texture": "Enemy",
+        "tile_x": 0,
+        "tile_y": 0,
+        "layer": 0
+    },
+    "Transform": {
+        "pos_x": 0,
+        "pos_y": 0
+    },
+    "tag": "cutscene_test"
+}
