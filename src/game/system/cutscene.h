@@ -12,6 +12,8 @@ class Cutscene {
     enum class CutsceneEventType {
         UNKNOWN,
         ANIMATION,
+        FADE_OUT,
+        FADE_IN,
     };
 
     struct CutsceneEvent {
@@ -21,7 +23,7 @@ class Cutscene {
 
         std::string entity_tag;
 
-        std::variant<std::string> extra_data;
+        std::variant<int, std::string> extra_data;
     };
 
     static std::shared_ptr<Cutscene> loadCutscene(const std::string& cutscene_name);

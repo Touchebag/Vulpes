@@ -186,6 +186,10 @@ std::pair<double, double> Rendering::getScaledSize() {
     return {size_rect.width, size_rect.height};
 }
 
+sf::Color Rendering::getColor() {
+    return sprite_.getColor();
+}
+
 void Rendering::setColor(sf::Color color) {
     sprite_.setColor(color);
 }

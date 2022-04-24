@@ -34,6 +34,7 @@ class Rendering : public Component {
 
     void setOffset(int x_offset, int y_offset);
 
+    virtual sf::Color getColor();
     virtual void setColor(sf::Color color);
     virtual void clearColor();
 

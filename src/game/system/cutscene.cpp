@@ -8,7 +8,9 @@
 namespace {
 
 const Bimap<std::string, Cutscene::CutsceneEventType> string_event_map = {
-    {"animation", Cutscene::CutsceneEventType::ANIMATION}
+    {"animation", Cutscene::CutsceneEventType::ANIMATION},
+    {"fade_out", Cutscene::CutsceneEventType::FADE_OUT},
+    {"fade_in", Cutscene::CutsceneEventType::FADE_IN},
 };
 
 void updateEntitiy(std::shared_ptr<BaseEntity> entity) {
@@ -106,6 +108,11 @@ Cutscene::CutsceneEvent Cutscene::loadEventFromJson(nlohmann::json j) {
             case CutsceneEventType::ANIMATION:
                 event.extra_data = j["animation_name"].get<std::string>();
                 break;
+            case CutsceneEventType::FADE_OUT:
+            case CutsceneEventType::FADE_IN:
+                // Ceiling division magic
+                event.extra_data = (255 + event.active_frames - 1) / event.active_frames;
+                break;
             default:
                 LOGE("This should never happen");
                 exit(EXIT_FAILURE);
@@ -191,14 +198,50 @@ std::shared_ptr<BaseEntity> Cutscene::getEntity(std::string tag) {
 }
 
 void Cutscene::executeEvent(Cutscene::CutsceneEvent& event) {
+    // TODO Check variant type
     switch (event.type) {
         case Cutscene::CutsceneEventType::ANIMATION:
             {
                 auto entity = getEntity(event.entity_tag);
-                // TODO Check variant type
                 auto animation_name = std::get<std::string>(event.extra_data);
 
                 entity->getComponent<Animation>()->setFrameList(animation_name);
+                break;
+            }
+        case Cutscene::CutsceneEventType::FADE_OUT:
+            {
+                auto entity = getEntity(event.entity_tag);
+                auto fade_strength = static_cast<sf::Uint8>(std::get<int>(event.extra_data));
+
+                auto render = entity->getComponent<Rendering>();
+                auto current_color = render->getColor();
+
+                // Avoid underflow
+                fade_strength = std::min(fade_strength, current_color.a);
+
+                current_color -= {0, 0, 0, fade_strength};
+
+                render->setColor(current_color);
+
+                break;
+            }
+        case Cutscene::CutsceneEventType::FADE_IN:
+            {
+                auto entity = getEntity(event.entity_tag);
+                auto fade_strength = static_cast<sf::Uint8>(std::get<int>(event.extra_data));
+
+                auto render = entity->getComponent<Rendering>();
+                auto current_color = render->getColor();
+
+                if (255 - current_color.a) {
+                    // Clamp if overflow
+                    fade_strength = 255 - current_color.a;
+                }
+
+                current_color += {0, 0, 0, fade_strength};
+
+                render->setColor(current_color);
+
                 break;
             }
         default:

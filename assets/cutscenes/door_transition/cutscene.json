@@ -7,12 +7,23 @@
                 "animation_name": "door_transition"
             }
         ],
-        "60": [
+        "1": [
             {
-                "event": "animation",
+                "event": "fade_out",
                 "entity": "player",
-                "animation_name": "idle"
+                "active_frames": 60
             }
         ]
-    }
+    },
+    "teardown": [
+        {
+            "event": "fade_in",
+            "entity": "player"
+        },
+        {
+            "event": "animation",
+            "entity": "player",
+            "animation_name": "idle"
+        }
+    ]
 }
