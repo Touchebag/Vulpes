@@ -38,3 +38,11 @@ System& System::getInstance() {
 
     return system;
 }
+
+void System::setWorld(std::shared_ptr<World> world) {
+    System::getInstance().world_ = world;
+}
+
+std::shared_ptr<World> System::getWorld() {
+    return System::getInstance().world_;
+}

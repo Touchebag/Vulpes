@@ -48,8 +48,10 @@ std::shared_ptr<Cutscene> Cutscene::loadCutscene(const std::string& cutscene_nam
 
             nlohmann::json j;
             j["Entity"] = entity_name;
+            auto entity = BaseEntity::createFromJson(j);
 
-            cutscene->cutscene_entities_.insert_or_assign(entity_name, BaseEntity::createFromJson(j));
+            cutscene->cutscene_entities_.insert_or_assign(entity_name, entity);
+            System::IWorldModify::addEntity(entity);
         }
     }
 
@@ -200,24 +202,24 @@ std::shared_ptr<BaseEntity> Cutscene::getEntity(std::string tag) {
         }
     } catch (std::out_of_range& e) {
         LOGE("Cutscene: invalid tag %s", tag.c_str());
-        throw;
     }
+
+    return {};
 }
 
 void Cutscene::executeEvent(Cutscene::CutsceneEvent& event) {
     // TODO Check variant type
     switch (event.type) {
         case Cutscene::CutsceneEventType::ANIMATION:
-            {
-                auto entity = getEntity(event.entity_tag);
+            if (auto entity = getEntity(event.entity_tag)) {
                 auto animation_name = std::get<std::string>(event.extra_data);
 
                 entity->getComponent<Animation>()->setFrameList(animation_name);
-                break;
             }
+
+            break;
         case Cutscene::CutsceneEventType::FADE_OUT:
-            {
-                auto entity = getEntity(event.entity_tag);
+            if (auto entity = getEntity(event.entity_tag)) {
                 auto fade_strength = static_cast<sf::Uint8>(std::get<int>(event.extra_data));
 
                 auto render = entity->getComponent<Rendering>();
@@ -229,12 +231,11 @@ void Cutscene::executeEvent(Cutscene::CutsceneEvent& event) {
                 current_color -= {0, 0, 0, fade_strength};
 
                 render->setColor(current_color);
-
-                break;
             }
+
+            break;
         case Cutscene::CutsceneEventType::FADE_IN:
-            {
-                auto entity = getEntity(event.entity_tag);
+            if (auto entity = getEntity(event.entity_tag)) {
                 auto fade_strength = static_cast<sf::Uint8>(std::get<int>(event.extra_data));
 
                 auto render = entity->getComponent<Rendering>();
@@ -248,9 +249,9 @@ void Cutscene::executeEvent(Cutscene::CutsceneEvent& event) {
                 current_color += {0, 0, 0, fade_strength};
 
                 render->setColor(current_color);
-
-                break;
             }
+
+            break;
         default:
             LOGD("Unknown event type");
             break;

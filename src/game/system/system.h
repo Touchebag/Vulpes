@@ -21,6 +21,9 @@ class System {
     static void setEnvironment(std::shared_ptr<Environment> environment);
     static std::shared_ptr<Environment> getEnvironment();
 
+    static void setWorld(std::shared_ptr<World> world);
+    static std::shared_ptr<World> getWorld();
+
     // World Interfaces
     class IWorldRead {
       public:

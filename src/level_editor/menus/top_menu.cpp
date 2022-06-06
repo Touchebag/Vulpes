@@ -1,6 +1,7 @@
 #include "top_menu.h"
 
 #include "editor_render.h"
+#include "cutscene_editor.h"
 
 namespace menu {
 
@@ -20,6 +21,15 @@ void topMenu(sf::RenderWindow& window, std::shared_ptr<EditorEnvironment> /* edi
     if (ImGui::BeginMenuBar()) {
 
         if (ImGui::BeginMenu("File")) {
+            ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu("Editor")) {
+            bool open_cutscene_editor = false;
+            ImGui::Selectable("Cutscene", &open_cutscene_editor);
+
+            if (open_cutscene_editor) {
+                cutsceneEditorMain(window);
+            }
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("Rendering")) {

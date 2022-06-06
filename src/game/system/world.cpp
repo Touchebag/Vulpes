@@ -27,7 +27,9 @@ void World::update() {
             new_room_.reset();
         } else {
             // TODO Check for death
-            player_->update();
+            if (player_) {
+                player_->update();
+            }
 
             for (auto it = world_objects_.begin();
                       it != world_objects_.end();
@@ -59,7 +61,7 @@ void World::update() {
                 }
             }
 
-            if (player_->getComponent<Damageable>()) {
+            if (player_ && player_->getComponent<Damageable>()) {
                 if (auto health_text = std::dynamic_pointer_cast<RenderingText>(player_health_->getComponent<Rendering>())) {
                     health_text->setText(std::to_string(player_->getComponent<Damageable>()->getHealth()));
                 } else {
