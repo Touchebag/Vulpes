@@ -33,10 +33,10 @@ struct Rectangle {
     Rectangle(Rectangle&&) = default;
     Rectangle& operator=(Rectangle&&) = default;
 
-    int x;
-    int y;
-    int width;
-    int height;
+    int x = 0;
+    int y = 0;
+    int width = 0;
+    int height = 0;
 };
 
 inline bool closeToZero(double value, double threshold) {

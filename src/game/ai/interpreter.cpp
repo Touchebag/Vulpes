@@ -98,6 +98,7 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
             case ai::Instruction::POSITION_X:
             {
                 LOGV("POSITION_X");
+
                 GET_TARGET;
                 if (target) {
                     if (auto trans = target->getComponent<Transform>()) {
@@ -224,19 +225,21 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
             {
                 LOGV("MOVE");
 
-                if (auto move = extra_input.this_components->getComponent<Movement>()) {
-                    // Extract args
-                    auto y_index = POP();
-                    auto x_index = POP();
+                auto y_index = POP();
+                auto x_index = POP();
 
-                    GET_TARGET;
+                GET_TARGET;
+                if (target) {
+                    if (auto move = target->getComponent<Movement>()) {
+                        // Extract args
 
-                    auto vel_x = program.getFloat(x_index) * (move->isFacingRight() ? 1.0 : -1.0);
-                    auto vel_y = program.getFloat(y_index);
+                        auto vel_x = program.getFloat(x_index) * (move->isFacingRight() ? 1.0 : -1.0);
+                        auto vel_y = program.getFloat(y_index);
 
-                    move->setVelocity(move->getVelX() + vel_x, move->getVelY() + vel_y);
-                } else {
-                    LOGW("AI ACTION: Missing Movement component");
+                        move->setVelocity(move->getVelX() + vel_x, move->getVelY() + vel_y);
+                    } else {
+                        LOGW("AI ACTION: Missing Movement component");
+                    }
                 }
 
                 break;
