@@ -184,8 +184,7 @@
             "templates": [
                 "airborne",
                 "can_double_jump",
-                "can_dash",
-                "ledge_climb_sensors"
+                "can_dash"
             ]
         },
         "falling": {

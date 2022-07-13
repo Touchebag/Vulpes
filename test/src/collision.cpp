@@ -82,7 +82,7 @@ TEST_F(DynamicCollisionTestFixture, MoveMultipleDirectionCollisionInOne) {
     EXPECT_EQ(120, pos_y);
 }
 
-TEST_F(DynamicCollisionTestFixture, CollisionSemiSolidAllDirections) {
+TEST_F(DynamicCollisionTestFixture, CollisionSemiSolidClosedTop) {
     System::IWorldModify::addEntity(entity_);
 
     // From below, should not be stopped
@@ -121,6 +121,267 @@ TEST_F(DynamicCollisionTestFixture, CollisionSemiSolidAllDirections) {
 
     EXPECT_EQ(400, pos_x);
     EXPECT_EQ(100, pos_y);
+}
+
+TEST_F(DynamicCollisionTestFixture, CollisionSemiSolidOpenTop) {
+    System::IWorldModify().clearWorld();
+
+    std::string coll_json = R"--(
+{
+    "Transform": {
+        "pos_x": 0,
+        "pos_y": 0
+    },
+    "Collision": {
+        "type": "static",
+        "open_sides": [
+            "top"
+        ],
+        "height": 50,
+        "width": 50
+    }
+}
+        )--";
+
+    System::IWorldModify::addEntity(BaseEntity::createFromJson(nlohmann::json::parse(coll_json)));
+
+    System::IWorldModify::addEntity(entity_);
+
+    // From above, should not be stopped
+    entity_->getComponent<Transform>()->setPosition(0, -100);
+
+    entity_->getComponent<Movement>()->move(0, 100);
+    auto pos_x = entity_->getComponent<Transform>()->getX();
+    auto pos_y = entity_->getComponent<Transform>()->getY();
+
+    EXPECT_EQ(0, pos_x);
+    EXPECT_EQ(0, pos_y);
+
+    // From below, should be stopped
+    entity_->getComponent<Transform>()->setPosition(0, 100);
+
+    entity_->getComponent<Movement>()->move(0, -100);
+    pos_x = entity_->getComponent<Transform>()->getX();
+    pos_y = entity_->getComponent<Transform>()->getY();
+
+    EXPECT_EQ(0, pos_x);
+    EXPECT_EQ(50, pos_y);
+
+    // From left, should be stopped
+    entity_->getComponent<Transform>()->setPosition(-100, 0);
+
+    entity_->getComponent<Movement>()->move(100, 0);
+    pos_x = entity_->getComponent<Transform>()->getX();
+    pos_y = entity_->getComponent<Transform>()->getY();
+
+    EXPECT_EQ(-50, pos_x);
+    EXPECT_EQ(0, pos_y);
+
+    // From right, should be stopped
+    entity_->getComponent<Transform>()->setPosition(100, 0);
+
+    entity_->getComponent<Movement>()->move(-100, 0);
+    pos_x = entity_->getComponent<Transform>()->getX();
+    pos_y = entity_->getComponent<Transform>()->getY();
+
+    EXPECT_EQ(50, pos_x);
+    EXPECT_EQ(0, pos_y);
+}
+
+TEST_F(DynamicCollisionTestFixture, CollisionSemiSolidOpenBottom) {
+    System::IWorldModify().clearWorld();
+
+    std::string coll_json = R"--(
+{
+    "Transform": {
+        "pos_x": 0,
+        "pos_y": 0
+    },
+    "Collision": {
+        "type": "static",
+        "open_sides": [
+            "bottom"
+        ],
+        "height": 50,
+        "width": 50
+    }
+}
+        )--";
+
+    System::IWorldModify::addEntity(BaseEntity::createFromJson(nlohmann::json::parse(coll_json)));
+
+    System::IWorldModify::addEntity(entity_);
+
+    // From above, should be stopped
+    entity_->getComponent<Transform>()->setPosition(0, -100);
+
+    entity_->getComponent<Movement>()->move(0, 100);
+    auto pos_x = entity_->getComponent<Transform>()->getX();
+    auto pos_y = entity_->getComponent<Transform>()->getY();
+
+    EXPECT_EQ(0, pos_x);
+    EXPECT_EQ(-50, pos_y);
+
+    // From below, should not be stopped
+    entity_->getComponent<Transform>()->setPosition(0, 100);
+
+    entity_->getComponent<Movement>()->move(0, -100);
+    pos_x = entity_->getComponent<Transform>()->getX();
+    pos_y = entity_->getComponent<Transform>()->getY();
+
+    EXPECT_EQ(0, pos_x);
+    EXPECT_EQ(0, pos_y);
+
+    // From left, should be stopped
+    entity_->getComponent<Transform>()->setPosition(-100, 0);
+
+    entity_->getComponent<Movement>()->move(100, 0);
+    pos_x = entity_->getComponent<Transform>()->getX();
+    pos_y = entity_->getComponent<Transform>()->getY();
+
+    EXPECT_EQ(-50, pos_x);
+    EXPECT_EQ(0, pos_y);
+
+    // From right, should be stopped
+    entity_->getComponent<Transform>()->setPosition(100, 0);
+
+    entity_->getComponent<Movement>()->move(-100, 0);
+    pos_x = entity_->getComponent<Transform>()->getX();
+    pos_y = entity_->getComponent<Transform>()->getY();
+
+    EXPECT_EQ(50, pos_x);
+    EXPECT_EQ(0, pos_y);
+}
+
+TEST_F(DynamicCollisionTestFixture, CollisionSemiSolidOpenLeft) {
+    System::IWorldModify().clearWorld();
+
+    std::string coll_json = R"--(
+{
+    "Transform": {
+        "pos_x": 0,
+        "pos_y": 0
+    },
+    "Collision": {
+        "type": "static",
+        "open_sides": [
+            "left"
+        ],
+        "height": 50,
+        "width": 50
+    }
+}
+        )--";
+
+    System::IWorldModify::addEntity(BaseEntity::createFromJson(nlohmann::json::parse(coll_json)));
+
+    System::IWorldModify::addEntity(entity_);
+
+    // From above, should be stopped
+    entity_->getComponent<Transform>()->setPosition(0, -100);
+
+    entity_->getComponent<Movement>()->move(0, 100);
+    auto pos_x = entity_->getComponent<Transform>()->getX();
+    auto pos_y = entity_->getComponent<Transform>()->getY();
+
+    EXPECT_EQ(0, pos_x);
+    EXPECT_EQ(-50, pos_y);
+
+    // From below, should be stopped
+    entity_->getComponent<Transform>()->setPosition(0, 100);
+
+    entity_->getComponent<Movement>()->move(0, -100);
+    pos_x = entity_->getComponent<Transform>()->getX();
+    pos_y = entity_->getComponent<Transform>()->getY();
+
+    EXPECT_EQ(0, pos_x);
+    EXPECT_EQ(50, pos_y);
+
+    // From left, should not be stopped
+    entity_->getComponent<Transform>()->setPosition(-100, 0);
+
+    entity_->getComponent<Movement>()->move(100, 0);
+    pos_x = entity_->getComponent<Transform>()->getX();
+    pos_y = entity_->getComponent<Transform>()->getY();
+
+    EXPECT_EQ(0, pos_x);
+    EXPECT_EQ(0, pos_y);
+
+    // From right, should be stopped
+    entity_->getComponent<Transform>()->setPosition(100, 0);
+
+    entity_->getComponent<Movement>()->move(.02, 0);
+    entity_->getComponent<Movement>()->move(-100.02, 0);
+    pos_x = entity_->getComponent<Transform>()->getX();
+    pos_y = entity_->getComponent<Transform>()->getY();
+
+    EXPECT_EQ(50, pos_x);
+    EXPECT_EQ(0, pos_y);
+}
+
+TEST_F(DynamicCollisionTestFixture, CollisionSemiSolidOpenRight) {
+    System::IWorldModify().clearWorld();
+
+    std::string coll_json = R"--(
+{
+    "Transform": {
+        "pos_x": 0,
+        "pos_y": 0
+    },
+    "Collision": {
+        "type": "static",
+        "open_sides": [
+            "right"
+        ],
+        "height": 50,
+        "width": 50
+    }
+}
+        )--";
+
+    System::IWorldModify::addEntity(BaseEntity::createFromJson(nlohmann::json::parse(coll_json)));
+
+    System::IWorldModify::addEntity(entity_);
+
+    // From above, should be stopped
+    entity_->getComponent<Transform>()->setPosition(0, -100);
+
+    entity_->getComponent<Movement>()->move(0, 100);
+    auto pos_x = entity_->getComponent<Transform>()->getX();
+    auto pos_y = entity_->getComponent<Transform>()->getY();
+
+    EXPECT_EQ(0, pos_x);
+    EXPECT_EQ(-50, pos_y);
+
+    // From below, should be stopped
+    entity_->getComponent<Transform>()->setPosition(0, 100);
+
+    entity_->getComponent<Movement>()->move(0, -100);
+    pos_x = entity_->getComponent<Transform>()->getX();
+    pos_y = entity_->getComponent<Transform>()->getY();
+
+    EXPECT_EQ(0, pos_x);
+    EXPECT_EQ(50, pos_y);
+
+    // From left, should be stopped
+    entity_->getComponent<Transform>()->setPosition(-100, 0);
+
+    entity_->getComponent<Movement>()->move(100, 0);
+    pos_x = entity_->getComponent<Transform>()->getX();
+    pos_y = entity_->getComponent<Transform>()->getY();
+
+    EXPECT_EQ(-50, pos_x);
+    EXPECT_EQ(0, pos_y);
+
+    // From right, should not be stopped
+    entity_->getComponent<Transform>()->setPosition(100, 0);
+
+    entity_->getComponent<Movement>()->move(-100, 0);
+    pos_x = entity_->getComponent<Transform>()->getX();
+    pos_y = entity_->getComponent<Transform>()->getY();
+
+    EXPECT_EQ(0, pos_x);
+    EXPECT_EQ(0, pos_y);
 }
 
 TEST_F(DynamicCollisionTestFixture, MoveDiagonalStuckOnCorner) {

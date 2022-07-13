@@ -8,7 +8,6 @@
 #include "components/collision/collideables/collideable_interactable.h"
 
 #include "components/collision/collideables/movement/collideable_static.h"
-#include "components/collision/collideables/movement/collideable_semisolid.h"
 #include "components/collision/collideables/movement/collideable_slope.h"
 
 #include "components/collision/collideables/damage/collideable_player_hitbox.h"
@@ -244,10 +243,11 @@ TEST(TestComponents, TestSaveLoadCollisionCollectible) {
 TEST(TestComponents, TestSaveLoadCollisionSemiSolid) {
     nlohmann::json j1 = nlohmann::json::parse("{ \"width\": 46, \"height\": 52 }");
 
-    j1["type"] = "semi_solid";
+    j1["type"] = "static";
+    j1["open_sides"] = {"bottom", "right", "left"};
 
-    std::shared_ptr<CollideableSemiSolid> coll =
-        std::dynamic_pointer_cast<CollideableSemiSolid>(Collideable::createFromJson(j1, {}));
+    std::shared_ptr<CollideableStatic> coll =
+        std::dynamic_pointer_cast<CollideableStatic>(Collideable::createFromJson(j1, {}));
     // Ensure dynamic cast valid
     ASSERT_TRUE(coll);
 

@@ -142,7 +142,6 @@ std::pair<double, double> Movement::getMaximumMovement(double velX, double velY)
         move_attr_.on_slope = vel.second != velY;
 
         vel = checkMovement(vel.first, vel.second, coll, Collideable::CollisionType::STATIC);
-        vel = checkMovement(vel.first, vel.second, coll, Collideable::CollisionType::SEMI_SOLID);
 
         // If already on ground from slope, don't change
         move_attr_.on_ground = move_attr_.on_slope || vel.second < velY;

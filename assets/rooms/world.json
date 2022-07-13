@@ -55,7 +55,12 @@
         {
             "Collision": {
                 "height": 57,
-                "type": "semi_solid",
+                "type": "static",
+                "open_sides": [
+                    "bottom",
+                    "left",
+                    "right"
+                ],
                 "width": 867
             },
             "Rendering": {
@@ -441,7 +446,12 @@
         {
             "Collision": {
                 "height": 137,
-                "type": "semi_solid",
+                "type": "static",
+                "open_sides": [
+                    "bottom",
+                    "left",
+                    "right"
+                ],
                 "width": 1080
             },
             "Rendering": {

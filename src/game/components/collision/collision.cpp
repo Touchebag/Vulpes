@@ -8,7 +8,6 @@
 #include "collideables/collideable_interactable.h"
 
 #include "collideables/movement/collideable_static.h"
-#include "collideables/movement/collideable_semisolid.h"
 #include "collideables/movement/collideable_slope.h"
 
 #include "collideables/damage/collideable_player_hitbox.h"

@@ -11,7 +11,6 @@ class Collideable {
   public:
     enum class CollisionType {
         STATIC,
-        SEMI_SOLID,
         SLOPE,
 
         PLAYER_HURTBOX,

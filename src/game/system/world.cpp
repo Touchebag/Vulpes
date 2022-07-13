@@ -395,7 +395,6 @@ void World::setEntrance(unsigned int entrance_id) {
 
         // This is to avoid spawning inside objects
         setShiftedPlayerPosition(Collideable::CollisionType::STATIC);
-        setShiftedPlayerPosition(Collideable::CollisionType::SEMI_SOLID);
 
         if (System::getCamera()) {
             auto view = System::getCamera()->getView();

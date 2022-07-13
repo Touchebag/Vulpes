@@ -78,7 +78,12 @@
         },
         {
             "Collision": {
-                "type": "semi_solid",
+                "type": "static",
+                "open_sides": [
+                    "bottom",
+                    "left",
+                    "right"
+                ],
                 "height": 50,
                 "width": 200
             },

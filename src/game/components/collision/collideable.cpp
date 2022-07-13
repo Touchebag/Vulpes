@@ -8,7 +8,6 @@
 #include "components/collision/collideables/collideable_interactable.h"
 
 #include "components/collision/collideables/movement/collideable_static.h"
-#include "components/collision/collideables/movement/collideable_semisolid.h"
 #include "components/collision/collideables/movement/collideable_slope.h"
 
 #include "components/collision/collideables/damage/collideable_player_hitbox.h"
@@ -25,7 +24,6 @@ namespace {
 
 const std::map<std::string, Collideable::CollisionType> string_type_map {
     {"static", Collideable::CollisionType::STATIC},
-    {"semi_solid", Collideable::CollisionType::SEMI_SOLID},
     {"slope", Collideable::CollisionType::SLOPE},
 
     {"player_hurtbox", Collideable::CollisionType::PLAYER_HURTBOX},
@@ -75,12 +73,6 @@ std::shared_ptr<Collideable> Collideable::createFromJson(nlohmann::json j, std::
         case CollisionType::STATIC:
             {
                 auto coll = std::make_shared<CollideableStatic>(components);
-                coll->reloadFromJson(j);
-                return coll;
-            }
-        case CollisionType::SEMI_SOLID:
-            {
-                auto coll = std::make_shared<CollideableSemiSolid>(components);
                 coll->reloadFromJson(j);
                 return coll;
             }
