@@ -221,7 +221,7 @@
                 {"event": "damaged", "state": "taking_damage"},
                 {"event": "frame_timeout", "state": "falling"}
             ],
-            "animation": "jumping",
+            "animation": "climbing",
             "templates": [
                 "wall_stick",
                 "reset_jumps_and_dashes",
@@ -317,7 +317,7 @@
                 {"event": "frame_timeout", "state": "attack_end_lag"},
                 {"event": "damaged", "state": "taking_damage"}
             ],
-            "animation": "idle"
+            "animation": "attacking"
         },
         "attack_end_lag": {
             "properties": {
@@ -330,7 +330,7 @@
                 {"event": "frame_timeout", "state": "idle"},
                 {"event": "damaged", "state": "taking_damage"}
             ],
-            "animation": "idle"
+            "animation": "attacking"
         },
         "shoot": {
             "properties": {
@@ -349,7 +349,7 @@
                 {"event": "frame_timeout", "state": "shoot_end_lag"},
                 {"event": "damaged", "state": "taking_damage"}
             ],
-            "animation": "idle"
+            "animation": "attacking"
         },
         "shoot_end_lag": {
             "properties": {
@@ -362,7 +362,7 @@
                 {"event": "frame_timeout", "state": "idle"},
                 {"event": "damaged", "state": "taking_damage"}
             ],
-            "animation": "idle"
+            "animation": "attacking"
         },
         "taking_damage": {
             "properties": {

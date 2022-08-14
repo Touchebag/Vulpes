@@ -247,64 +247,36 @@
         ]
     },
     {
-        "name": "hard_landing",
+        "name": "climbing",
         "frame_list": [
-            "Idle0",
-            "Idle0",
-            "Idle0",
-            "Idle1",
-            "Idle1",
-            "Idle1",
-            "Idle2",
-            "Idle2",
-            "Idle2",
-            "Idle3",
-            "Idle3",
-            "Idle3",
-            "Idle4",
-            "Idle4",
-            "Idle4",
-            "Idle5",
-            "Idle5",
-            "Idle5",
-            "Idle6",
-            "Idle6",
-            "Idle6",
-            "Idle7",
-            "Idle7",
-            "Idle7",
-            "Idle8",
-            "Idle8",
-            "Idle8",
-            "Idle9",
-            "Idle9",
-            "Idle9"
+            "Climbing"
+        ]
+    },
+    {
+        "name": "attacking",
+        "frame_list": [
+            "Attacking"
         ],
         "meta_data": [
             {
                 "frame": 0,
-                "x_scale": 1.1,
-                "y_scale": 0.9
-            },
+                "x_scale": 1.5,
+                "y_scale": 1.5,
+                "y_offset": 10
+            }
+        ]
+    },
+    {
+        "name": "hard_landing",
+        "frame_list": [
+            "Crouching"
+        ],
+        "meta_data": [
             {
-                "frame": 1,
-                "x_scale": 1.25,
-                "y_scale": 0.8
-            },
-            {
-                "frame": 2,
-                "x_scale": 1.4,
-                "y_scale": 0.7
-            },
-            {
-                "frame": 3,
-                "x_scale": 1.25,
-                "y_scale": 0.8
-            },
-            {
-                "frame": 4,
-                "x_scale": 1.1,
-                "y_scale": 0.9
+                "frame": 0,
+                "x_scale": 1.3,
+                "y_scale": 1.3,
+                "y_offset": 10
             }
         ]
     },
