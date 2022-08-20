@@ -17,7 +17,7 @@ void System::IWorldModify::loadWorldFromJson(nlohmann::json j) {
     System::getInstance().world_->loadWorldFromJson(j);
 }
 
-void System::IWorldModify::loadWorldFromFile(std::string file) {
+void System::IWorldModify::loadWorldFromFile(const std::string& file) {
     System::getInstance().world_->loadWorldFromFile(file);
 }
 
@@ -25,7 +25,7 @@ nlohmann::json System::IWorldModify::saveWorldToJson() {
     return System::getInstance().world_->saveWorldToJson();
 }
 
-void System::IWorldModify::saveWorldToFile(std::string file) {
+void System::IWorldModify::saveWorldToFile(const std::string& file) {
     System::getInstance().world_->saveWorldToFile(file);
 }
 
@@ -49,7 +49,7 @@ std::weak_ptr<Player> System::IWorldModify::getPlayer() {
     return System::getInstance().world_->getPlayer();
 }
 
-std::map<std::string, std::shared_ptr<BaseEntity>> System::IWorldModify::getEntitesByTags(std::set<std::string> tags) {
+std::map<std::string, std::shared_ptr<BaseEntity>> System::IWorldModify::getEntitesByTags(const std::set<std::string>& tags) {
     return System::getInstance().world_->getEntitesByTags(tags);
 }
 

@@ -25,7 +25,7 @@ class World {
     std::weak_ptr<Player> getPlayer();
 
     nlohmann::json saveWorldToJson();
-    void saveWorldToFile(std::string file);
+    void saveWorldToFile(const std::string& file);
 
     void update();
 
@@ -38,8 +38,8 @@ class World {
     void addCollideable(std::shared_ptr<Collideable> collideable);
 
     void loadWorldFromJson(nlohmann::json j);
-    void loadWorldFromFile(std::string file);
-    void loadWorldTemplate(std::string file);
+    void loadWorldFromFile(const std::string& file);
+    void loadWorldFromJsonInternal(nlohmann::json j, std::unordered_set<std::string>& templates, bool is_template);
 
     void addEntriesToWorld(nlohmann::json j, bool is_template = false);
 
@@ -80,7 +80,7 @@ class World {
     // Conditional entities used for saving world
     std::vector<std::weak_ptr<BaseEntity>> conditional_entities_;
 
-    std::map<std::string, std::shared_ptr<BaseEntity>> getEntitesByTags(std::set<std::string> tags);
+    std::map<std::string, std::shared_ptr<BaseEntity>> getEntitesByTags(const std::set<std::string>& tags);
 
     // Meta data
     // Needed for saving world to file

@@ -160,38 +160,7 @@ void World::setCutscene(std::shared_ptr<Cutscene> cutscene) {
     cutscene_->start();
 }
 
-void World::loadWorldTemplate(std::string file) {
-    auto j_opt = File().loadRoomTemplate(file);
-
-    if (!j_opt) {
-        LOGE("Unable to load template from file");
-        exit(EXIT_FAILURE);
-    }
-
-    template_file_names_.push_back(file);
-
-    auto j = j_opt.value();
-
-    // Conditionally load template
-    if (j.contains("condition") && !System::getEnvironment()->getFlag(j["condition"])) {
-        return;
-    }
-
-    if (j.contains("background")) {
-        System::getRender()->setBackground(j["background"]);
-    }
-
-    // Recursively load templates
-    if (j.contains("templates")) {
-        for (auto temp : j["templates"]) {
-            loadWorldTemplate(temp);
-        }
-    }
-
-    addEntriesToWorld(j, true);
-}
-
-void World::loadWorldFromFile(std::string path) {
+void World::loadWorldFromFile(const std::string& path) {
     std::optional<nlohmann::json> j = File().loadRoom(path);
 
     if (!j) {
@@ -204,18 +173,23 @@ void World::loadWorldFromFile(std::string path) {
     loadWorldFromJson(j.value());
 }
 
-void World::loadWorldFromJson(nlohmann::json j) {
-    if (!j.contains("entities")) {
-        LOGE("entities not found, exiting");
-        exit(EXIT_FAILURE);
+void World::loadWorldFromJsonInternal(nlohmann::json j, std::unordered_set<std::string>& templates, bool is_template) {
+    // Conditionally load template
+    if (j.contains("condition") && !System::getEnvironment()->getFlag(j["condition"])) {
+        return;
     }
-
-    clearWorld();
-    System::getRender()->clearShaders();
 
     if (j.contains("templates")) {
         for (auto temp : j["templates"]) {
-            loadWorldTemplate(temp);
+            if (auto j_opt = File().loadRoomTemplate(temp)) {
+                auto file_name = temp.get<std::string>();
+                templates.insert(file_name);
+                loadWorldFromJsonInternal(j_opt.value(), templates, true);
+                template_file_names_.push_back(file_name);
+            } else {
+                LOGE("Unable to load template from file");
+                exit(EXIT_FAILURE);
+            }
         }
     }
 
@@ -223,7 +197,16 @@ void World::loadWorldFromJson(nlohmann::json j) {
         System::getRender()->setBackground(j["background"]);
     }
 
-    addEntriesToWorld(j);
+    addEntriesToWorld(j, is_template);
+}
+
+void World::loadWorldFromJson(nlohmann::json j) {
+    clearWorld();
+    System::getRender()->clearShaders();
+
+    std::unordered_set<std::string> templates;
+    // First json instance is not considered a template
+    loadWorldFromJsonInternal(j, templates, false);
 
     // Don't reload player between rooms
     if (!player_) {
@@ -246,7 +229,7 @@ void World::loadWorldFromJson(nlohmann::json j) {
     System::getRender()->addEntity(player_health_->getComponent<Rendering>());
 }
 
-void World::saveWorldToFile(std::string file) {
+void World::saveWorldToFile(const std::string& file) {
     nlohmann::json j = saveWorldToJson();
 
     if (File().writeJsonToFile(file, j)) {
@@ -432,7 +415,7 @@ void World::clearDeletedEntities() {
     }
 }
 
-std::map<std::string, std::shared_ptr<BaseEntity>> World::getEntitesByTags(std::set<std::string> tags) {
+std::map<std::string, std::shared_ptr<BaseEntity>> World::getEntitesByTags(const std::set<std::string>& tags) {
     std::map<std::string, std::shared_ptr<BaseEntity>> ret_map;
 
     if (player_) {

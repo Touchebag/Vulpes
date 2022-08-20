@@ -48,10 +48,10 @@ class System {
         static void addCollideable(std::shared_ptr<Collideable> collideable);
 
         static void loadWorldFromJson(nlohmann::json j);
-        static void loadWorldFromFile(std::string file);
+        static void loadWorldFromFile(const std::string& file);
 
         static nlohmann::json saveWorldToJson();
-        static void saveWorldToFile(std::string file);
+        static void saveWorldToFile(const std::string& file);
 
         static void update();
 
@@ -62,7 +62,7 @@ class System {
         static std::vector<std::shared_ptr<BaseEntity>>& getWorldObjects();
         static std::weak_ptr<Player> getPlayer();
 
-        static std::map<std::string, std::shared_ptr<BaseEntity>> getEntitesByTags(std::set<std::string> tags);
+        static std::map<std::string, std::shared_ptr<BaseEntity>> getEntitesByTags(const std::set<std::string>& tags);
 
         static void loadRoom(std::string room_name, unsigned int entrance_id);
 
