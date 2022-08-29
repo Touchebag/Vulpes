@@ -34,8 +34,13 @@ void topMenu(sf::RenderWindow& window, std::shared_ptr<EditorEnvironment> /* edi
         }
         if (ImGui::BeginMenu("Rendering")) {
             if (auto render = std::dynamic_pointer_cast<EditorRender>(System::getRender())) {
+                bool parallax_enabled = render->getParallaxEnabled();
+
                 ImGui::Checkbox("Render Hitboxes", &(render->render_hitboxes_));
                 ImGui::Checkbox("Render Entrances", &(render->render_entrances_));
+                ImGui::Checkbox("Parallax enabled", &(parallax_enabled));
+
+                render->setParallaxEnabled(parallax_enabled);
             } else {
                 ImGui::Text("ERROR: Failed to cast render instance");
             }
