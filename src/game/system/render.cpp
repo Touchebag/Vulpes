@@ -7,20 +7,6 @@
 
 namespace {
 
-const std::map<int, double> parallax_map = {
-    {-5, 0.85},
-    {-4, 0.9},
-    {-3, 0.95},
-    {-2, 1.0},
-    {-1, 1.0},
-    {0, 1.0},
-    {1, 1.0},
-    {2, 1.0},
-    {3, 1.05},
-    {4, 1.1},
-    {5, 1.15},
-};
-
 void renderAllEntitesInVector(std::vector<std::weak_ptr<Rendering>>& layer,
                               sf::RenderTarget& target,
                               double frame_fraction = 0.0) {
@@ -59,16 +45,43 @@ void renderShadersWithDoubleBuffer(sf::RenderTarget& target,
 
 } // namespace
 
-Render::Render() :
-        background_layers_(5),
-        foreground_layers_(5) {
-    for (int i = -5; i <= 5; i++) {
-        getLayer(i).parallax_multiplier = parallax_map.at(i);
-    }
+Render::Render() {
+    main_layer_.parallax_multiplier = 1.0;
 
     front_render_buffer_ = std::make_shared<sf::RenderTexture>();
     back_render_buffer_  = std::make_shared<sf::RenderTexture>();
     render_texture_      = std::make_shared<sf::RenderTexture>();
+}
+
+void Render::setBackgroundLayers(std::vector<double> layers) {
+    if (layers.size() > background_layers_.size()) {
+        background_layers_.resize(layers.size());
+    }
+
+    for (unsigned long long i = 0; i < layers.size(); i++) {
+        RenderLayer render_layer;
+        render_layer.parallax_multiplier = layers.at(i);
+
+        background_layers_.at(i) = render_layer;
+    }
+}
+
+void Render::setForegroundLayers(std::vector<double> layers) {
+    if (layers.size() > foreground_layers_.size()) {
+        foreground_layers_.resize(layers.size());
+    }
+
+    for (unsigned long long i = 0; i < layers.size(); i++) {
+        RenderLayer render_layer;
+        render_layer.parallax_multiplier = layers.at(i);
+
+        foreground_layers_.at(i) = render_layer;
+    }
+}
+
+void Render::clearLayers() {
+    foreground_layers_.clear();
+    background_layers_.clear();
 }
 
 void Render::renderLayerWithPostProcessing(sf::RenderTarget& window, int layer, double frame_fraction) {
@@ -208,20 +221,11 @@ void Render::setWindowSize(sf::RenderWindow& window, unsigned int width, unsigne
 }
 
 Render::RenderLayer& Render::getLayer(int layer) {
+    // If layer out of rage, let propagate
     if (layer < 0) {
-        try {
-            return background_layers_.at(static_cast<unsigned int>(abs(layer) - 1));
-        } catch (std::out_of_range& e) {
-            LOGE("Render background, layer out of range");
-            throw;
-        }
+        return background_layers_.at(static_cast<unsigned int>(abs(layer) - 1));
     } else if (layer > 0) {
-        try {
-            return foreground_layers_.at(static_cast<unsigned int>(layer - 1));
-        } catch (std::out_of_range& e) {
-            LOGE("Render foreground, layer out of range");
-            throw;
-        }
+        return foreground_layers_.at(static_cast<unsigned int>(layer - 1));
     } else {
         return main_layer_;
     }
@@ -240,23 +244,23 @@ void Render::addEntity(std::weak_ptr<Rendering> entity) {
             return;
         }
 
-        getLayerRenderables(layer).push_back(entity);
+        try {
+            auto& layer_vec = getLayerRenderables(layer);
+            layer_vec.push_back(entity);
+        } catch (std::out_of_range& e) {
+            LOGW("Layer %i doesn't exist, ignoring", layer);
+        }
     }
 }
 
 void Render::addShader(std::shared_ptr<ShaderHandle> shader, int layer) {
-    getLayer(layer).shaders.push_back(shader);
+    try {
+        getLayer(layer).shaders.push_back(shader);
+    } catch (std::out_of_range& e) {
+        LOGW("Layer %i doesn't exist, ignoring", layer);
+    }
 }
 
 void Render::addGlobalShader(std::shared_ptr<ShaderHandle> shader) {
     global_shaders_.push_back(shader);
-}
-
-void Render::clearShaders() {
-    for (auto& layer : background_layers_) {
-        layer.shaders.clear();
-    }
-    for (auto& layer : foreground_layers_) {
-        layer.shaders.clear();
-    }
 }

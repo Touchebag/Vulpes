@@ -86,6 +86,7 @@ void World::clearWorld() {
     world_objects_.clear();
 
     System::getEnvironment()->clearConditionalEvents();
+    System::getRender()->clearLayers();
 
     for (auto& it : collideables_) {
         it.clear();
@@ -179,6 +180,7 @@ void World::loadWorldFromJsonInternal(nlohmann::json j, std::unordered_set<std::
         return;
     }
 
+    // Load templates first to allow override
     if (j.contains("templates")) {
         for (auto temp : j["templates"]) {
             if (auto j_opt = File().loadRoomTemplate(temp)) {
@@ -193,6 +195,28 @@ void World::loadWorldFromJsonInternal(nlohmann::json j, std::unordered_set<std::
         }
     }
 
+    if (j.contains("layers")) {
+        auto j_layers = j["layers"];
+        std::vector<double> layers;
+
+        if (j_layers.contains("bg")) {
+            for (auto it : j_layers["bg"]) {
+                layers.push_back(it.get<double>());
+            }
+
+            System::getRender()->setBackgroundLayers(layers);
+            layers.clear();
+        }
+
+        if (j_layers.contains("fg")) {
+            for (auto it : j_layers["fg"]) {
+                layers.push_back(it.get<double>());
+            }
+
+            System::getRender()->setForegroundLayers(layers);
+        }
+    }
+
     if (j.contains("background")) {
         System::getRender()->setBackground(j["background"]);
     }
@@ -202,7 +226,6 @@ void World::loadWorldFromJsonInternal(nlohmann::json j, std::unordered_set<std::
 
 void World::loadWorldFromJson(nlohmann::json j) {
     clearWorld();
-    System::getRender()->clearShaders();
 
     std::unordered_set<std::string> templates;
     // First json instance is not considered a template

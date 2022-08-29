@@ -152,5 +152,8 @@
             "pos_x": 1050,
             "pos_y": 1400
         }
+    ],
+    "templates": [
+        "forest"
     ]
 }

@@ -186,6 +186,14 @@ bool EditorRender::getParallaxEnabled() {
     return render_.parallax_enabled_;
 }
 
+void EditorRender::setBackgroundLayers(std::vector<double> layers) {
+    render_.setBackgroundLayers(layers);
+}
+
+void EditorRender::setForegroundLayers(std::vector<double> layers) {
+    render_.setForegroundLayers(layers);
+}
+
 void EditorRender::setWindowSize(sf::RenderWindow& window, unsigned int width, unsigned int height) {
     render_.setWindowSize(window, width, height);
 }
@@ -201,8 +209,8 @@ void EditorRender::setCameraBox(Camera::CameraBoundingBox camera_box) {
     System::getCamera()->setCameraBox(camera_box);
 }
 
-void EditorRender::clearShaders() {
-    render_.clearShaders();
+void EditorRender::clearLayers() {
+    render_.clearLayers();
 }
 
 void EditorRender::addShader(std::shared_ptr<ShaderHandle> shader, int layer) {

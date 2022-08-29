@@ -17,7 +17,11 @@ class IRender {
 
     virtual void setWindowSize(sf::RenderWindow& window, unsigned int width, unsigned int height) = 0;
 
-    virtual void clearShaders() = 0;
+    virtual void setBackgroundLayers(std::vector<double> layers) = 0;
+    virtual void setForegroundLayers(std::vector<double> layers) = 0;
+
+    virtual void clearLayers() = 0;
+
     virtual void addShader(std::shared_ptr<ShaderHandle> shader, int layer) = 0;
     virtual void addGlobalShader(std::shared_ptr<ShaderHandle> shader) = 0;
 };

@@ -19,7 +19,10 @@ class Render : public IRender {
 
     void setWindowSize(sf::RenderWindow& window, unsigned int width, unsigned int height) override;
 
-    void clearShaders() override;
+    void setBackgroundLayers(std::vector<double> layers) override;
+    void setForegroundLayers(std::vector<double> layers) override;
+
+    void clearLayers() override;
 
     void addShader(std::shared_ptr<ShaderHandle> shader, int layer) override;
     void addGlobalShader(std::shared_ptr<ShaderHandle> shader) override;
@@ -35,7 +38,7 @@ class Render : public IRender {
     struct RenderLayer {
         std::vector<std::weak_ptr<Rendering>> renderables;
         std::vector<std::weak_ptr<ShaderHandle>> shaders;
-        double parallax_multiplier;
+        double parallax_multiplier = 0.0;
     };
 
     sf::Texture background_;

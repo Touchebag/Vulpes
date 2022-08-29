@@ -17,7 +17,10 @@ class EditorRender : public IRender {
 
     void setWindowSize(sf::RenderWindow& window, unsigned int width, unsigned int height) override;
 
-    void clearShaders() override;
+    void setBackgroundLayers(std::vector<double> layers) override;
+    void setForegroundLayers(std::vector<double> layers) override;
+
+    void clearLayers() override;
 
     void addShader(std::shared_ptr<ShaderHandle> shader, int layer) override;
     void addGlobalShader(std::shared_ptr<ShaderHandle> shader) override;
