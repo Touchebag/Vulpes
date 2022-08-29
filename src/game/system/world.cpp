@@ -183,8 +183,14 @@ void World::loadWorldFromJsonInternal(nlohmann::json j, std::unordered_set<std::
     // Load templates first to allow override
     if (j.contains("templates")) {
         for (auto temp : j["templates"]) {
+            auto file_name = temp.get<std::string>();
+
+            // Only load each template once
+            if (templates.count(file_name) > 0) {
+                continue;
+            }
+
             if (auto j_opt = File().loadRoomTemplate(temp)) {
-                auto file_name = temp.get<std::string>();
                 templates.insert(file_name);
                 loadWorldFromJsonInternal(j_opt.value(), templates, true);
                 template_file_names_.push_back(file_name);
