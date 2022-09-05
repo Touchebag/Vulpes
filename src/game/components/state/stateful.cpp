@@ -93,10 +93,10 @@ void Stateful::incomingEvent(state_utils::Event event) {
         }
 
         if (auto coll = getComponent<Collision>()) {
+            coll->clearTemporaryCollideables();
+
             if (!state_props.collideables.empty()) {
                 coll->addTemporaryCollideable(state_props.collideables);
-            } else {
-                coll->clearTemporaryCollideables();
             }
         }
 
