@@ -25,7 +25,10 @@
         ]
     },
     "Collision": {
-        "type": "player_hitbox",
+        "type": "hitbox",
+        "teams": [
+            1
+        ],
         "width": 100,
         "height": 200,
         "attack": {

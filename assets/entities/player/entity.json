@@ -3,7 +3,10 @@
     "Actions": null,
     "Animation": null,
     "Collision": {
-        "type": "player_hurtbox",
+        "type": "hurtbox",
+        "teams": [
+            1
+        ],
         "height": 200,
         "width": 50
     },

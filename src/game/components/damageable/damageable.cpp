@@ -3,18 +3,13 @@
 #include "utils/log.h"
 #include "system/system.h"
 #include "damageable_player.h"
-#include "components/collision/collideables/damage/collideable_damage.h"
+
+#include "components/collision/collideables/collideable_hitbox.h"
+#include "components/collision/collideables/collideable_hurtbox.h"
 
 #include "components/component_store.h"
 
 namespace {
-
-typedef Collideable::CollisionType Ctype;
-
-std::map<Ctype, Ctype> type_mapping = {
-    {Ctype::PLAYER_HURTBOX, Ctype::ENEMY_HITBOX},
-    {Ctype::ENEMY_HITBOX, Ctype::PLAYER_HITBOX}
-};
 
 bool knockbackRight(std::shared_ptr<Collideable> this_coll, std::shared_ptr<const Collideable> other_coll) {
     if (auto this_trans = this_coll->getTransform().lock()) {
@@ -25,6 +20,17 @@ bool knockbackRight(std::shared_ptr<Collideable> this_coll, std::shared_ptr<cons
     }
 
     return true;
+}
+
+bool sharesElements(const std::set<int>& first, const std::set<int>& second) {
+    for (auto team : first) {
+        // If they share a team do not take damage
+        if (second.count(team) > 0) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 } // namespace
@@ -75,23 +81,36 @@ void Damageable::update() {
     }
     if (auto collision = getComponent<Collision>()) {
         if (auto coll = collision->getCollideable()) {
-            auto hurting_type = type_mapping.at(coll->getType());
+            std::set<int> this_teams;
 
-            for (auto& it : System::IWorldRead::getCollideables(hurting_type)) {
+            if (auto coll_damage = std::dynamic_pointer_cast<const CollideableHurtbox>(coll)) {
+                this_teams = coll_damage->getTeams();
+            } else {
+                LOGW("Could not cast collision type to get teams");
+                return;
+            }
+
+            for (auto& it : System::IWorldRead::getCollideables(Collideable::CollisionType::HITBOX)) {
                 if (auto other_coll = it.lock()) {
+                    collision::AttackAttributes other_attr;
+                    std::set<int> other_teams;
+
+                    if (auto other_coll_damage = std::dynamic_pointer_cast<const CollideableHitbox>(other_coll)) {
+                        other_attr = other_coll_damage->getAttributes();
+                        other_teams = other_coll_damage->getTeams();
+                    } else {
+                        LOGW("Could not cast collision type to get attributes");
+                        return;
+                    }
+
+                    // If they are on the same team do not take damage
+                    if (sharesElements(this_teams, other_teams)) {
+                        continue;
+                    }
 
                     if (coll->collides(other_coll)) {
-
-                        collision::AttackAttributes attributes;
-                        if (auto other_coll_damage = std::dynamic_pointer_cast<const CollideableDamage>(other_coll)) {
-                            attributes = other_coll_damage->getAttributes();
-                        } else {
-                            LOGW("Could not cast collision type to get attributes");
-                            return;
-                        }
-
-                        health_ -= attributes.damage;
-                        invincibility_frame_counter_ = attributes.invincibility_frames;
+                        health_ -= other_attr.damage;
+                        invincibility_frame_counter_ = other_attr.invincibility_frames;
 
                         if (auto state = getComponent<Stateful>()) {
                             state->incomingEvent(state_utils::Event::DAMAGED);
@@ -104,8 +123,8 @@ void Damageable::update() {
 
                             if (auto move = getComponent<Movement>()) {
                                 bool should_move_right = knockbackRight(coll, other_coll);
-                                move->move(attributes.knockback_x * (should_move_right ? 1.0 : -1.0),
-                                           attributes.knockback_y);
+                                move->move(other_attr.knockback_x * (should_move_right ? 1.0 : -1.0),
+                                           other_attr.knockback_y);
                                 // Face toward damage source, away from knockback direction
                                 move->setFacingRight(!should_move_right);
                             }

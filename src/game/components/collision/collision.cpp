@@ -2,16 +2,12 @@
 
 #include "utils/log.h"
 
-#include "collideables/collideable_player_hurtbox.h"
 #include "collideables/collideable_transition.h"
 #include "collideables/collideable_collectible.h"
 #include "collideables/collideable_interactable.h"
 
 #include "collideables/movement/collideable_static.h"
 #include "collideables/movement/collideable_slope.h"
-
-#include "collideables/damage/collideable_player_hitbox.h"
-#include "collideables/damage/collideable_enemy_hitbox.h"
 
 #include "collideables/collideable_sensor.h"
 

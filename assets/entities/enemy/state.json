@@ -1,4 +1,25 @@
 {
+    "templates": {
+        "hitbox": {
+            "collideables": [
+                {
+                    "type": "hitbox",
+                    "name": "hitbox",
+                    "width": 50,
+                    "height": 50,
+                    "teams": [
+                        2
+                    ],
+                    "attack": {
+                        "damage": 10,
+                        "knockback_x": 100,
+                        "knockback_y": -30,
+                        "invincibility": 80
+                    }
+                }
+            ]
+        }
+    },
     "states": {
         "main": {
             "next_states": [
@@ -8,6 +29,9 @@
             "ai": [
                 "if (grt (position_x player) (position_x this)) then (action move_right)",
                 "if (lss (position_x player) (position_x this)) then (action move_left)"
+            ],
+            "templates": [
+                "hitbox"
             ]
         },
         "turnaround": {
@@ -17,6 +41,9 @@
             "ai": [
                 "action move_forward",
                 "if (frame_timer 30) then (action ai1)"
+            ],
+            "templates": [
+                "hitbox"
             ]
         }
     }

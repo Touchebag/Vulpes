@@ -11,8 +11,8 @@ struct AttackAttributes {
     int invincibility_frames = 0;
 };
 
-AttackAttributes parseAttackAttributes(nlohmann::json j);
+AttackAttributes parseAttackAttributes(const nlohmann::json& j);
 
-nlohmann::json dumpAttackAttributes(AttackAttributes attack);
+nlohmann::json dumpAttackAttributes(const AttackAttributes& attack);
 
 } // collision

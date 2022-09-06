@@ -8,7 +8,7 @@
 bool already_added = false;
 
 CollideablePlayerDive::CollideablePlayerDive(std::weak_ptr<ComponentStore> components) :
-    CollideableDamage(components) {
+    CollideableHitbox(components) {
 }
 
 void CollideablePlayerDive::update() {

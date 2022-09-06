@@ -2,7 +2,7 @@
 
 namespace collision {
 
-AttackAttributes parseAttackAttributes(nlohmann::json j) {
+AttackAttributes parseAttackAttributes(const nlohmann::json& j) {
     AttackAttributes attack;
 
     if (j.contains("damage")) {
@@ -22,7 +22,7 @@ AttackAttributes parseAttackAttributes(nlohmann::json j) {
     return attack;
 }
 
-nlohmann::json dumpAttackAttributes(AttackAttributes attack) {
+nlohmann::json dumpAttackAttributes(const AttackAttributes& attack) {
     nlohmann::json j;
 
     if (attack.damage > 0) {

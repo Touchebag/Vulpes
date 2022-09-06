@@ -2,7 +2,6 @@
 
 #include "utils/log.h"
 
-#include "components/collision/collideables/collideable_player_hurtbox.h"
 #include "components/collision/collideables/collideable_transition.h"
 #include "components/collision/collideables/collideable_collectible.h"
 #include "components/collision/collideables/collideable_interactable.h"
@@ -10,9 +9,10 @@
 #include "components/collision/collideables/movement/collideable_static.h"
 #include "components/collision/collideables/movement/collideable_slope.h"
 
-#include "components/collision/collideables/damage/collideable_player_hitbox.h"
 #include "components/collision/collideables/damage/collideable_player_dive.h"
-#include "components/collision/collideables/damage/collideable_enemy_hitbox.h"
+
+#include "components/collision/collideables/collideable_hitbox.h"
+#include "components/collision/collideables/collideable_hurtbox.h"
 
 #include "components/collision/collideables/collideable_sensor.h"
 
@@ -26,11 +26,10 @@ const std::map<std::string, Collideable::CollisionType> string_type_map {
     {"static", Collideable::CollisionType::STATIC},
     {"slope", Collideable::CollisionType::SLOPE},
 
-    {"player_hurtbox", Collideable::CollisionType::PLAYER_HURTBOX},
-    {"player_hitbox", Collideable::CollisionType::PLAYER_HITBOX},
-    {"player_dive", Collideable::CollisionType::PLAYER_DIVE},
+    {"hurtbox", Collideable::CollisionType::HURTBOX},
+    {"hitbox", Collideable::CollisionType::HITBOX},
 
-    {"enemy_hitbox", Collideable::CollisionType::ENEMY_HITBOX},
+    {"player_dive", Collideable::CollisionType::PLAYER_DIVE},
 
     {"transition", Collideable::CollisionType::TRANSITION},
     {"collectible", Collideable::CollisionType::COLLECTIBLE},
@@ -82,27 +81,21 @@ std::shared_ptr<Collideable> Collideable::createFromJson(nlohmann::json j, std::
                 coll->reloadFromJson(j);
                 return coll;
             }
-        case CollisionType::PLAYER_HURTBOX:
+        case CollisionType::HURTBOX:
             {
-                auto coll = std::make_shared<CollideablePlayerHurtbox>(components);
+                auto coll = std::make_shared<CollideableHurtbox>(components);
                 coll->reloadFromJson(j);
                 return coll;
             }
-        case CollisionType::PLAYER_HITBOX:
+        case CollisionType::HITBOX:
             {
-                auto coll = std::make_shared<CollideablePlayerHitbox>(components);
+                auto coll = std::make_shared<CollideableHitbox>(components);
                 coll->reloadFromJson(j);
                 return coll;
             }
         case CollisionType::PLAYER_DIVE:
             {
                 auto coll = std::make_shared<CollideablePlayerDive>(components);
-                coll->reloadFromJson(j);
-                return coll;
-            }
-        case CollisionType::ENEMY_HITBOX:
-            {
-                auto coll = std::make_shared<CollideableEnemyHitbox>(components);
                 coll->reloadFromJson(j);
                 return coll;
             }

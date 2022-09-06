@@ -17,6 +17,9 @@ class Collideable {
         PLAYER_HITBOX,
         PLAYER_DIVE,
 
+        HITBOX,
+        HURTBOX,
+
         ENEMY_HITBOX,
 
         TRANSITION,

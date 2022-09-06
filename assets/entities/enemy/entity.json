@@ -22,15 +22,12 @@
         ]
     },
     "Collision": {
-        "type": "enemy_hitbox",
+        "type": "hurtbox",
+        "teams": [
+            2
+        ],
         "height": 50,
-        "width": 50,
-        "attack": {
-            "damage": 10,
-            "knockback_x": 100,
-            "knockback_y": -30,
-            "invincibility": 80
-        }
+        "width": 50
     },
     "Damageable": {
         "health": 10

@@ -1,10 +1,9 @@
 #pragma once
 
-#include "components/collision/collideable.h"
-#include "components/actions/actions.h"
-#include "collideable_damage.h"
+#include "components/collision/collideables/collideable_hitbox.h"
+#include "components/component_store.h"
 
-class CollideablePlayerDive : public CollideableDamage {
+class CollideablePlayerDive : public CollideableHitbox {
   public:
     explicit CollideablePlayerDive(std::weak_ptr<ComponentStore> components);
 
