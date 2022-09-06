@@ -175,6 +175,10 @@ void World::loadWorldFromFile(const std::string& path) {
 }
 
 void World::loadWorldFromJsonInternal(nlohmann::json j, std::unordered_set<std::string>& templates, bool is_template) {
+    if (!is_template) {
+        layer_data_ = std::nullopt;
+    }
+
     // Conditionally load template
     if (j.contains("condition") && !System::getEnvironment()->getFlag(j["condition"])) {
         return;
@@ -204,6 +208,11 @@ void World::loadWorldFromJsonInternal(nlohmann::json j, std::unordered_set<std::
     if (j.contains("layers")) {
         auto j_layers = j["layers"];
         std::vector<double> layers;
+
+        // Store layer data (for saving world) if base file
+        if (!is_template) {
+            layer_data_ = {j["layers"]};
+        }
 
         if (j_layers.contains("bg")) {
             for (auto it : j_layers["bg"]) {
@@ -329,6 +338,10 @@ nlohmann::json World::saveWorldToJson() {
 
     if (!template_file_names_.empty()) {
         j["templates"] = template_file_names_;
+    }
+
+    if (layer_data_) {
+        j["layers"] = layer_data_.value();
     }
 
     return j;

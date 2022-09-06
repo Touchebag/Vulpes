@@ -1,4 +1,9 @@
 {
+    "layers": {
+        "bg": [
+            1.0
+        ]
+    },
     "entities": [
         {
             "Rendering": {
@@ -10,15 +15,15 @@
                 "layer": -1
             },
             "Transform": {
-                "pos_x": 200,
-                "pos_y": 100
+                "pos_x": 200.0,
+                "pos_y": 100.0
             }
         },
         {
             "Entity": "test_enemy",
             "Transform": {
-                "pos_x": 740,
-                "pos_y": 2832
+                "pos_x": 740.0,
+                "pos_y": 2832.0
             }
         },
         {
@@ -32,24 +37,24 @@
                 "layer": 0
             },
             "Transform": {
-                "pos_x": 100,
-                "pos_y": 0
+                "pos_x": 100.0,
+                "pos_y": 0.0
             }
         },
         null,
         {
             "condition": "Collectible.attack1",
             "Transform": {
-                "pos_x": 745,
-                "pos_y": 2832
+                "pos_x": 745.0,
+                "pos_y": 2832.0
             }
         }
     ],
     "entrances": [
         {
             "id": 0,
-            "pos_x": 350,
-            "pos_y": 1300
+            "pos_x": 350.0,
+            "pos_y": 1300.0
         }
     ],
     "camera": {

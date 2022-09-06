@@ -15,6 +15,7 @@ class InterpreterTestFixture : public ::testing::Test {
 
         nlohmann::json j;
         j["entities"] = {};
+        j["layers"]["fg"] = {1.0, 0.95, 0.9};
         System::IWorldModify::loadWorldFromJson(j);
     }
 

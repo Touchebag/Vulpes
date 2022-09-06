@@ -1,4 +1,9 @@
 {
+    "layers": {
+        "bg": [
+            1.0
+        ]
+    },
     "entities": [
         {
             "Rendering": {

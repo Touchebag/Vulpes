@@ -13,7 +13,11 @@ class CommandTestFixture : public ::testing::Test {
     }
 
     void SetUp() override {
-        System::IWorldModify::loadWorldFromJson(nlohmann::json::parse("{\"entities\": null}"));
+        nlohmann::json j;
+        j["entities"] = {};
+        j["layers"]["fg"] = {1.0, 0.95, 0.9};
+        j["layers"]["bg"] = {1.0, 0.95, 0.9};
+        System::IWorldModify::loadWorldFromJson(j);
 
         MockMouse::setMouseWorldPosition({0, 0});
     }

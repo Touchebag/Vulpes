@@ -6,17 +6,6 @@
 
 class DeathTestFixture : public ::testing::Test {
   public:
-    DeathTestFixture() {
-        entity_ = BaseEntity::createFromJson(nlohmann::json::parse(entity_json_));
-        attack_ = BaseEntity::createFromJson(nlohmann::json::parse(attack_json_));
-
-        System::IWorldModify::addEntity(entity_);
-        System::IWorldModify::addEntity(attack_);
-    }
-
-    void SetUp() override {
-    }
-
     std::string entity_json_ = R"--(
 {
     "Death": null,
@@ -24,9 +13,12 @@ class DeathTestFixture : public ::testing::Test {
         "health": 6
     },
     "Collision": {
-        "type": "enemy_hitbox",
+        "type": "hurtbox",
         "height": 50,
-        "width": 50
+        "width": 50,
+        "teams": [
+            2
+        ]
     },
     "Transform": {
         "pos_x": 100,
@@ -38,12 +30,15 @@ class DeathTestFixture : public ::testing::Test {
     std::string attack_json_ = R"--(
 {
     "Collision": {
-        "type": "player_hitbox",
+        "type": "hitbox",
         "height": 50,
         "width": 50,
         "attack": {
             "damage": 3
-        }
+        },
+        "teams": [
+            1
+        ]
     },
     "Transform": {
         "pos_x": 0,
@@ -57,6 +52,12 @@ class DeathTestFixture : public ::testing::Test {
 };
 
 TEST_F(DeathTestFixture, TestHealthDeath) {
+    entity_ = BaseEntity::createFromJson(nlohmann::json::parse(entity_json_));
+    attack_ = BaseEntity::createFromJson(nlohmann::json::parse(attack_json_));
+
+    System::IWorldModify::addEntity(entity_);
+    System::IWorldModify::addEntity(attack_);
+
     // Attack is not overlapping
     entity_->update();
     entity_->update();
@@ -71,4 +72,33 @@ TEST_F(DeathTestFixture, TestHealthDeath) {
 
     // Now overlapping, should take 2 damage
     EXPECT_TRUE(entity_->getComponent<Death>()->isDead());
+}
+
+TEST_F(DeathTestFixture, TestHealthSameTeam) {
+    auto ent = nlohmann::json::parse(entity_json_);
+    auto atk = nlohmann::json::parse(attack_json_);
+
+    // Change hurtbox to same team
+    ent["Collision"]["teams"] = std::vector<int>{1};
+
+    entity_ = BaseEntity::createFromJson(ent);
+    attack_ = BaseEntity::createFromJson(atk);
+
+    System::IWorldModify::addEntity(entity_);
+    System::IWorldModify::addEntity(attack_);
+
+    // Attack is not overlapping
+    entity_->update();
+    entity_->update();
+
+    // Entity should not be dead
+    EXPECT_FALSE(entity_->getComponent<Death>()->isDead());
+
+    attack_->getComponent<Transform>()->setPosition(100, 100);
+
+    entity_->update();
+    entity_->update();
+
+    // Now overlapping, should not be dead due to same team
+    EXPECT_FALSE(entity_->getComponent<Death>()->isDead());
 }

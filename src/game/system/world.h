@@ -86,6 +86,7 @@ class World {
     // Needed for saving world to file
     // TODO Store all meta data directly as json?
     std::string current_room_name_;
+    std::optional<nlohmann::json> layer_data_;
 
     std::optional<Camera::CameraBoundingBox> camera_box_;
 
