@@ -211,7 +211,7 @@ void World::loadWorldFromJsonInternal(nlohmann::json j, std::unordered_set<std::
 
         // Store layer data (for saving world) if base file
         if (!is_template) {
-            layer_data_ = {j["layers"]};
+            layer_data_ = std::optional<nlohmann::json>(j["layers"]);
         }
 
         if (j_layers.contains("bg")) {

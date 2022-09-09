@@ -57,6 +57,7 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
     auto byte_code = program.getProgram();
 
     for (auto pc = byte_code.begin(); pc < byte_code.end(); pc++) {
+        LOGV("AI COMMAND START");
         switch (static_cast<ai::Instruction>(*pc)) {
             case ai::Instruction::INT:
                 LOGV("INT");
@@ -104,6 +105,8 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                     if (auto trans = target->getComponent<Transform>()) {
                         PUSH(trans->getX());
                         break;
+                    } else {
+                        LOGW("AI POSITION_X: Missing Transform component");
                     }
                 }
 
@@ -128,6 +131,7 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                             PUSH(Bool::FALSE);
                         }
                     } else {
+                        LOGW("AI COLLIDES: Missing Collision component");
                         PUSH(Bool::FALSE);
                     }
                 } else {

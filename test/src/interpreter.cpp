@@ -88,14 +88,10 @@ TEST_F(InterpreterTestFixture, PlayerPosition) {
 }
 
 TEST_F(InterpreterTestFixture, ThisPosition) {
-    auto output = parseAndRun("position_x this");
-
-    EXPECT_EQ(output, 0);
-
     extra_data_.this_components->setComponent<Transform>(std::make_shared<Transform>(extra_data_.this_components));
     extra_data_.this_components->getComponent<Transform>()->setPosition(3, 6);
 
-    output = parseAndRun("position_x this");
+    auto output = parseAndRun("position_x this");
 
     EXPECT_EQ(output, 3);
 }
@@ -130,10 +126,6 @@ TEST_F(InterpreterTestFixture, Flag) {
 }
 
 TEST_F(InterpreterTestFixture, AnimationLooped) {
-    auto output = parseAndRun("animation_looped");
-
-    EXPECT_EQ(output, Bool::FALSE);
-
     auto str = R"--({
         "Entity": "test_enemy"
     })--";
@@ -143,12 +135,12 @@ TEST_F(InterpreterTestFixture, AnimationLooped) {
     extra_data_.this_components = entity->components_;
 
     for (auto i = 0; i < 15; i++) {
-        output = parseAndRun("animation_looped");
+        auto output = parseAndRun("animation_looped");
         EXPECT_EQ(output, Bool::FALSE);
         extra_data_.this_components->getComponent<Animation>()->update();
     }
 
-    output = parseAndRun("animation_looped");
+    auto output = parseAndRun("animation_looped");
     EXPECT_EQ(output, Bool::TRUE);
 }
 

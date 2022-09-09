@@ -242,6 +242,7 @@
                 {"event": "touching_wall", "state": "wall_slide"},
                 {"event": "jumping", "state": "wall_jump"},
                 {"event": "damaged", "state": "taking_damage"},
+                {"event": "action_move_up", "state": "wall_slide_rising"},
                 {"event": "frame_timeout", "state": "falling"}
             ],
             "animation": "wall_slide",
