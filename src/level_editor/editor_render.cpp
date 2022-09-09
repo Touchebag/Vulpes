@@ -12,10 +12,9 @@ namespace {
 const std::array<std::pair<Collideable::CollisionType, sf::Color>, 11> type_color_map = {{
     {Collideable::CollisionType::STATIC, sf::Color(0, 128, 0, 200)},
     {Collideable::CollisionType::SLOPE, sf::Color(0, 0, 128, 200)},
-    {Collideable::CollisionType::PLAYER_HURTBOX, sf::Color(255, 255, 0, 200)},
-    {Collideable::CollisionType::PLAYER_HITBOX, sf::Color(255, 128, 0, 200)},
+    {Collideable::CollisionType::HURTBOX, sf::Color(255, 255, 0, 200)},
+    {Collideable::CollisionType::HITBOX, sf::Color(255, 0, 0, 200)},
     {Collideable::CollisionType::PLAYER_DIVE, sf::Color(200, 128, 0, 200)},
-    {Collideable::CollisionType::ENEMY_HITBOX, sf::Color(255, 0, 0, 200)},
     {Collideable::CollisionType::TRANSITION, sf::Color(128, 128, 128, 200)},
     {Collideable::CollisionType::COLLECTIBLE, sf::Color(255, 0, 255, 200)},
     {Collideable::CollisionType::INTERACTABLE, sf::Color(255, 128, 0, 200)},

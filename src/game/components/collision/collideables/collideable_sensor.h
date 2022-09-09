@@ -20,6 +20,8 @@ class CollideableSensor : public Collideable {
   private:
     bool triggered_ = false;
 
+    CollisionType target_type_;
+
     std::string name_;
 };
 

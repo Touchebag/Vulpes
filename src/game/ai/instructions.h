@@ -25,6 +25,7 @@ enum class Instruction {
     COLLIDES,
     FLAG,
     ANIMATION_LOOPED,
+    SENSOR,
 
     // Comparisons
     GRT,
@@ -104,6 +105,7 @@ static const std::unordered_map<std::string, InstructionData> string_instruction
     {"collides", {Instruction::COLLIDES, Type::BOOL, {Type::TARGET}}},
     {"flag", {Instruction::FLAG, Type::BOOL, {Type::STRING}}},
     {"animation_looped", {Instruction::ANIMATION_LOOPED, Type::BOOL, {}}},
+    {"sensor", {Instruction::SENSOR, Type::BOOL, {Type::STRING}}},
 
     {"grt", {Instruction::GRT, Type::BOOL, {Type::INT, Type::INT}}},
     {"lss", {Instruction::LSS, Type::BOOL, {Type::INT, Type::INT}}},

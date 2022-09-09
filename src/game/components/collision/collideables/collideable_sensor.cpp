@@ -11,7 +11,7 @@ CollideableSensor::CollideableSensor(std::weak_ptr<ComponentStore> components) :
 void CollideableSensor::update() {
     Collideable::update();
 
-    for (auto it : System::IWorldRead::getCollideables(CollisionType::STATIC)) {
+    for (auto it : System::IWorldRead::getCollideables(target_type_)) {
         if (auto coll = it.lock()) {
             if (collides(coll)) {
                 triggered_ = true;
@@ -34,7 +34,17 @@ std::string CollideableSensor::getName() {
 void CollideableSensor::reloadFromJson(nlohmann::json j) {
     Collideable::reloadFromJson(j);
 
-    name_ = j["name"];
+    if (j.contains("target")) {
+        target_type_ = string_type_map.at(j["target"]);
+    } else {
+        throw std::invalid_argument("Sensor, missing target");
+    }
+
+    if (j.contains("name")) {
+        name_ = j["name"];
+    } else {
+        throw std::invalid_argument("Sensor, missing name");
+    }
 }
 
 std::optional<nlohmann::json> CollideableSensor::outputToJson() {

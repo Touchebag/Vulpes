@@ -157,8 +157,29 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                     } else {
                         PUSH(Bool::FALSE);
                     }
+                } else {
+                    LOGW("AI ANIMATION_LOOPED: Missing Animation component");
+                    PUSH(Bool::FALSE);
                 }
                 break;
+            case ai::Instruction::SENSOR:
+            {
+                LOGV("SENSOR");
+                auto str = program.getString(POP());
+                LOGV("%s", str.c_str());
+
+                if (auto coll = extra_input.this_components->getComponent<Collision>()) {
+                    if (coll->isSensorTriggered(str)) {
+                        PUSH(Bool::TRUE);
+                    } else {
+                        PUSH(Bool::FALSE);
+                    }
+                } else {
+                    LOGW("AI SENSOR: Missing Collision component");
+                    PUSH(Bool::FALSE);
+                }
+                break;
+            }
             case ai::Instruction::GRT:
             {
                 LOGV("GRT");

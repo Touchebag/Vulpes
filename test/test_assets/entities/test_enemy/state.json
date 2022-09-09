@@ -8,6 +8,15 @@
             "ai": [
                 "if (grt (position_x player) (position_x this)) then (action ai1)",
                 "if (lss (position_x player) (position_x this)) then (action ai2)"
+            ],
+            "collideables": [
+                {
+                    "type": "sensor",
+                    "name": "test_sensor",
+                    "target": "static",
+                    "width": 100,
+                    "height": 100
+                }
             ]
         },
         "move_right_turnaround": {

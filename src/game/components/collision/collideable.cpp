@@ -20,26 +20,6 @@
 
 #include "components/component_store.h"
 
-namespace {
-
-const std::map<std::string, Collideable::CollisionType> string_type_map {
-    {"static", Collideable::CollisionType::STATIC},
-    {"slope", Collideable::CollisionType::SLOPE},
-
-    {"hurtbox", Collideable::CollisionType::HURTBOX},
-    {"hitbox", Collideable::CollisionType::HITBOX},
-
-    {"player_dive", Collideable::CollisionType::PLAYER_DIVE},
-
-    {"transition", Collideable::CollisionType::TRANSITION},
-    {"collectible", Collideable::CollisionType::COLLECTIBLE},
-    {"interactable", Collideable::CollisionType::INTERACTABLE},
-
-    {"sensor", Collideable::CollisionType::SENSOR},
-};
-
-} // namespace
-
 Collideable::Collideable(std::weak_ptr<ComponentStore> components) :
     components_(components) {
 

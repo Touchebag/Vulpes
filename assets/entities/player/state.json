@@ -80,6 +80,7 @@
                 {
                     "type": "sensor",
                     "name": "ledge_climb_top",
+                    "target": "static",
                     "width": 100,
                     "height": 200,
                     "offset": {
@@ -90,6 +91,7 @@
                 {
                     "type": "sensor",
                     "name": "ledge_climb_bottom",
+                    "target": "static",
                     "width": 30,
                     "height": 150,
                     "offset": {

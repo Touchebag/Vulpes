@@ -5,21 +5,21 @@
 #include "components/rendering/rendering.h"
 #include "system/system.h"
 
+#include "utils/log.h"
+
 using ai::Bool;
 using ai::Target;
 
 class InterpreterTestFixture : public ::testing::Test {
   public:
-    InterpreterTestFixture() {
+    void SetUp() override {
         System::IWorldModify::clearWorld();
 
         nlohmann::json j;
         j["entities"] = {};
         j["layers"]["fg"] = {1.0, 0.95, 0.9};
         System::IWorldModify::loadWorldFromJson(j);
-    }
 
-    void SetUp() override {
         extra_data_.this_components = std::make_shared<ComponentStore>();
         extra_data_.frame_timer = 0;
     }
@@ -149,6 +149,41 @@ TEST_F(InterpreterTestFixture, AnimationLooped) {
     }
 
     output = parseAndRun("animation_looped");
+    EXPECT_EQ(output, Bool::TRUE);
+}
+
+TEST_F(InterpreterTestFixture, Sensor) {
+
+    auto str = R"--({
+        "Collision": {
+            "height": 100,
+            "type": "static",
+            "width": 100
+        },
+        "Transform": {
+            "pos_x": 100,
+            "pos_y": 0
+        }
+    })--";
+
+    auto entity = BaseEntity::createFromJson(nlohmann::json::parse(str));
+    System::IWorldModify::addEntity(entity);
+
+    str = R"--({
+        "Entity": "test_enemy"
+    })--";
+
+    entity = BaseEntity::createFromJson(nlohmann::json::parse(str));
+
+    extra_data_.this_components = entity->components_;
+
+    auto output = parseAndRun("sensor 'test_sensor'");
+    EXPECT_EQ(output, Bool::FALSE);
+
+    extra_data_.this_components->getComponent<Transform>()->setPosition(100, 0);
+    extra_data_.this_components->getComponent<Collision>()->update();
+
+    output = parseAndRun("sensor 'test_sensor'");
     EXPECT_EQ(output, Bool::TRUE);
 }
 
