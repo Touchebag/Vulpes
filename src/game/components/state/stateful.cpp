@@ -40,6 +40,9 @@ std::shared_ptr<Stateful> Stateful::createFromJson(nlohmann::json j, std::weak_p
 
 void Stateful::reloadFromJson(nlohmann::json /* j */, File file_instance) {
     loadStates(file_instance);
+
+    // Load initial temporary collideables
+    checkTemporaryCollideables(state_handler_.getStateData().state_props);
 }
 
 std::optional<nlohmann::json> Stateful::outputToJson() {
@@ -54,6 +57,16 @@ void Stateful::loadStates(File file_instance) {
     // TODO Error handling
     if (states) {
         state_handler_.reloadFromJson(states.value(), component_store_.lock());
+    }
+}
+
+void Stateful::checkTemporaryCollideables(const state_utils::StateProperties& state_props) {
+    if (auto coll = getComponent<Collision>()) {
+        coll->clearTemporaryCollideables();
+
+        if (!state_props.collideables.empty()) {
+            coll->addTemporaryCollideable(state_props.collideables);
+        }
     }
 }
 
@@ -92,13 +105,7 @@ void Stateful::incomingEvent(state_utils::Event event) {
             }
         }
 
-        if (auto coll = getComponent<Collision>()) {
-            coll->clearTemporaryCollideables();
-
-            if (!state_props.collideables.empty()) {
-                coll->addTemporaryCollideable(state_props.collideables);
-            }
-        }
+        checkTemporaryCollideables(state_props);
 
         if (auto phys = getComponent<Physics>()) {
             if (physics_constants) {

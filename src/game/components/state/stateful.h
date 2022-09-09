@@ -32,6 +32,8 @@ class Stateful : public Component {
   private:
     void loadStates(File file_instance);
 
+    void checkTemporaryCollideables(const state_utils::StateProperties& state_props);
+
     unsigned int frame_counter_ = UINT_MAX;
 
     StateHandler<state_utils::EntityContent> state_handler_;
