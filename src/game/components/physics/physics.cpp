@@ -82,9 +82,6 @@ void Physics::update() {
     auto act = getComponent<Actions>();
 
     if (state && move && act) {
-        double x = move->getVelX();
-        double y = move->getVelY();
-
         auto physics_props = state->getPhysicsProperties();
 
         // Respond to previous frame's movement
@@ -144,13 +141,13 @@ void Physics::update() {
                 state->incomingEvent(state_utils::Event::MOVING_X);
 
                 // When moving left facing_right should be false even when speed is zero
-                facing_right.setDirection(x > 0.0);
+                facing_right.setDirection(move->getVelX() > 0.0);
             } else if (act->getActionState(Actions::Action::MOVE_RIGHT)) {
                 x_movement_direction = 1.0;
                 state->incomingEvent(state_utils::Event::MOVING_X);
 
                 // When moving right facing_right should be true even when speed is zero
-                facing_right.setDirection(x >= 0.0);
+                facing_right.setDirection(move->getVelX() >= 0.0);
             } else if (act->getActionState(Actions::Action::MOVE_FORWARD)) {
                 // This is separate to give priority to explicit movement
                 x_movement_direction = facing_right ? 1.0 : -1.0;
@@ -172,21 +169,27 @@ void Physics::update() {
             }
         }
 
+        // Velocity modifications
+        double x_additive = 0.0;
+        double x_multiplicative = 1.0;
+        double y_additive = 0.0;
+        double y_multiplicative = 1.0;
+
         // Apply movement
-        x += constants_.x_acceleration * x_movement_direction;
-        y += constants_.y_acceleration * y_movement_direction;
+        x_additive += constants_.x_acceleration * x_movement_direction;
+        y_additive += constants_.y_acceleration * y_movement_direction;
 
         if (physics_props.dashing_) {
-            x *= constants_.dash_friction;
+            x_multiplicative *= constants_.dash_friction;
         } else {
-            x *= constants_.x_friction;
+            x_multiplicative *= constants_.x_friction;
         }
 
         if (!physics_props.movement_locked_y_) {
             // Only apply jump multiplier if holding jump and moving upwards
             auto multiplier = (act->getActionState(Actions::Action::JUMP)
-                               && y < 0.0) ? constants_.jump_multiplier : 1.0;
-            y += constants_.gravity * multiplier;
+                               && move->getVelY() < 0.0) ? constants_.jump_multiplier : 1.0;
+            y_additive += constants_.gravity * multiplier;
         }
 
         if (act->getActionState(Actions::Action::DASH, true)) {
@@ -194,15 +197,14 @@ void Physics::update() {
                 // If holding a direction dash in that direction
                 // else dash forward
                 if (act->getActionState(Actions::Action::MOVE_RIGHT)) {
-                    x = constants_.dash_speed;
+                    move->setVelocity(constants_.dash_speed, 0.0);
                     facing_right.setDirection(true);
                 } else if (act->getActionState(Actions::Action::MOVE_LEFT)) {
-                    x = -constants_.dash_speed;
+                    move->setVelocity(-constants_.dash_speed, 0.0);
                     facing_right.setDirection(false);
                 } else {
-                    x = constants_.dash_speed * (facing_right ? 1.0 : -1.0);
+                    move->setVelocity(constants_.dash_speed * (facing_right ? 1.0 : -1.0), 0.0);
                 }
-                y = 0.0;
                 state->incomingEvent(state_utils::Event::DASHING);
             }
         }
@@ -211,32 +213,29 @@ void Physics::update() {
             jumps_left_--;
             if (!std::isnan(constants_.jump_impulse_x)) {
                 int dir = facing_right ? 1.0 : -1.0;
-                x = constants_.jump_impulse_x * dir;
+                move->setVelocity(constants_.jump_impulse_x * dir, move->getVelY());
             }
             if (!std::isnan(constants_.jump_impulse_y)) {
-                y = constants_.jump_impulse_y;
+                move->setVelocity(move->getVelX(), constants_.jump_impulse_y);
             }
             state->incomingEvent(state_utils::Event::JUMPING);
         }
 
-        if (act->getActionState(Actions::Action::AIR_DIVE, true) && physics_props.can_air_dive_) {
-            state->incomingEvent(state_utils::Event::AIR_DIVING);
-            x = 0.0;
-            y = constants_.air_dive_impulse;
-        }
-
-        y *= constants_.y_friction;
+        y_multiplicative *= constants_.y_friction;
 
         if (act->getActionState(Actions::Action::AIR_DIVE_BOUNCE, true)) {
-            y = -30;
+            move->setVelocity(move->getVelX(), -30);
             state->incomingEvent(state_utils::Event::DIVE_BOUNCE);
             // TODO Reset with AI
             resetJumps(1);
             resetDashes(1);
         }
 
-        move->setFacingRight(facing_right);
+        // Fetch movement after potentially modifying via state change
+        double x = (move->getVelX() + x_additive) * x_multiplicative;
+        double y = (move->getVelY() + y_additive) * y_multiplicative;
         move->setVelocity(x, y);
+        move->setFacingRight(facing_right);
     } else {
         if (!state) {
             LOGW("Physics: Missing state");
