@@ -6,8 +6,14 @@ status=$?
 if [[ ${status} -eq 0 ]];
 then
     echo Tests available, running
-    ./tests > /dev/null
+    output=$(./tests 2>&1 >/dev/null)
     test_status=$?
+
+    # Catch potential log messages
+    if [[ ! -z ${output} ]]
+    then
+        test_status=1
+    fi
 else
     echo Tests not found, skipping
 fi
