@@ -263,7 +263,30 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
 
                         move->setVelocity(move->getVelX() + vel_x, move->getVelY() + vel_y);
                     } else {
-                        LOGW("AI ACTION: Missing Movement component");
+                        LOGW("AI MOVE: Missing Movement component");
+                    }
+                }
+
+                break;
+            }
+            case ai::Instruction::SET_VELOCITY:
+            {
+                LOGV("SET_VELOCITY");
+
+                auto y_index = POP();
+                auto x_index = POP();
+
+                GET_TARGET;
+                if (target) {
+                    if (auto move = target->getComponent<Movement>()) {
+                        // Extract args
+
+                        auto vel_x = program.getFloat(x_index);
+                        auto vel_y = program.getFloat(y_index);
+
+                        move->setVelocity(vel_x, vel_y);
+                    } else {
+                        LOGW("AI SET_VELOCITY: Missing Movement component");
                     }
                 }
 
