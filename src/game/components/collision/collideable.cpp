@@ -124,6 +124,13 @@ void Collideable::reloadFromJson(nlohmann::json j) {
             LOGW("Collideable: offset requires x and y");
         }
     }
+
+    teams_.clear();
+    if (j.contains("teams")) {
+        for (int team : j["teams"]) {
+            teams_.insert(team);
+        }
+    }
 }
 
 std::optional<nlohmann::json> Collideable::outputToJson() {
@@ -131,6 +138,10 @@ std::optional<nlohmann::json> Collideable::outputToJson() {
 
     j["width"] = getHitbox()->width_;
     j["height"] = getHitbox()->height_;
+
+    if (!teams_.empty()) {
+        j["teams"] = teams_;
+    }
 
     for (auto it : string_type_map) {
         if (it.second == getType()) {
@@ -166,6 +177,10 @@ bool Collideable::collides(std::weak_ptr<const Collideable> other_entity) const 
 
 const std::shared_ptr<const Hitbox> Collideable::getHitbox() const {
     return hbox_;
+}
+
+const std::set<int> Collideable::getTeams() const {
+    return teams_;
 }
 
 std::weak_ptr<const Transform> Collideable::getTransform() const {

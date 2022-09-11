@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <set>
 
 #include "components/component.h"
 #include "components/actions/actions.h"
@@ -68,10 +69,14 @@ class Collideable {
     // Type-specific functions
     virtual CollisionType getType() const = 0;
 
+    const std::set<int> getTeams() const;
+
     void setDirectionMultiplier(int multiplier);
 
   protected:
     std::weak_ptr<ComponentStore> components_;
 
     std::shared_ptr<Hitbox> hbox_;
+
+    std::set<int> teams_;
 };

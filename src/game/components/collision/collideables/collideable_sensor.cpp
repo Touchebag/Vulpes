@@ -4,6 +4,21 @@
 
 #include "utils/log.h"
 
+namespace {
+
+bool sharesElements(const std::set<int>& first, const std::set<int>& second) {
+    for (auto team : first) {
+        // If they share a team do not take damage
+        if (second.count(team) > 0) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+} // namespace
+
 CollideableSensor::CollideableSensor(std::weak_ptr<ComponentStore> components) :
     Collideable(components) {
 }
@@ -14,7 +29,7 @@ void CollideableSensor::update() {
     for (auto it : System::IWorldRead::getCollideables(target_type_)) {
         if (auto coll = it.lock()) {
             if (collides(coll)) {
-                triggered_ = true;
+                triggered_ = !sharesElements(getTeams(), coll->getTeams());
                 return;
             }
         }
