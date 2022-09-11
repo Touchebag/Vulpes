@@ -137,6 +137,10 @@ void Camera::addTrauma(double trauma) {
     trauma_ = std::max(std::min(trauma_, 1.0), 0.0);
 }
 
+double Camera::getTrauma() const {
+    return trauma_;
+}
+
 void Camera::update() {
     updateTargetView();
 

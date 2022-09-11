@@ -276,6 +276,14 @@ TEST_F(InterpreterTestFixture, AddShadersToLayer) {
     parseAndRun("add_shader_to_layer 0 3");
 }
 
+TEST_F(InterpreterTestFixture, AddCameraTrauma) {
+    EXPECT_EQ(System::getCamera()->getTrauma(), 0.0);
+
+    parseAndRun("add_camera_trauma 0.6");
+
+    EXPECT_EQ(System::getCamera()->getTrauma(), 0.6);
+}
+
 TEST_F(InterpreterTestFixture, Move) {
     extra_data_.this_components->setComponent<Movement>(std::make_shared<Movement>(extra_data_.this_components));
 

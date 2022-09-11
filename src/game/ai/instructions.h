@@ -39,10 +39,6 @@ enum class Instruction {
     IF,
     THEN,
 
-    // This is used to restrict access as needed
-    READ_ONLY,
-    ////////////////////////////////////////////
-
     // Actions
     ACTION,
 
@@ -58,6 +54,8 @@ enum class Instruction {
 
     ADD_SHADER_TO_LAYER,
     ADD_GLOBAL_SHADER,
+
+    ADD_CAMERA_TRAUMA,
 };
 
 enum class Type {
@@ -130,6 +128,8 @@ static const std::unordered_map<std::string, InstructionData> string_instruction
 
     {"add_shader_to_layer", {Instruction::ADD_SHADER_TO_LAYER, Type::VOID, {Type::INT, Type::INT}}},
     {"add_global_shader", {Instruction::ADD_GLOBAL_SHADER, Type::VOID, {Type::INT}}},
+
+    {"add_camera_trauma", {Instruction::ADD_CAMERA_TRAUMA, Type::VOID, {Type::FLOAT}}},
 };
 
 } // ai

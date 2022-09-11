@@ -386,6 +386,15 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                 }
 
                 break;
+            case ai::Instruction::ADD_CAMERA_TRAUMA:
+            {
+                LOGV("ADD_CAMERA_TRAUMA");
+
+                auto trauma_index = POP();
+                System::getCamera()->addTrauma(program.getFloat(trauma_index));
+
+                break;
+            }
             case ai::Instruction::IF:
             {
                 LOGV("IF");

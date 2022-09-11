@@ -35,6 +35,7 @@ class Camera {
     void setCameraBox(const CameraBoundingBox& camera_box);
 
     void addTrauma(double trauma);
+    double getTrauma() const;
 
     CameraBoundingBox getCameraBox();
 
