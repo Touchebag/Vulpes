@@ -9,8 +9,6 @@
 #include "components/collision/collideables/movement/collideable_static.h"
 #include "components/collision/collideables/movement/collideable_slope.h"
 
-#include "components/collision/collideables/damage/collideable_player_dive.h"
-
 #include "components/collision/collideables/collideable_hitbox.h"
 #include "components/collision/collideables/collideable_hurtbox.h"
 
@@ -70,12 +68,6 @@ std::shared_ptr<Collideable> Collideable::createFromJson(nlohmann::json j, std::
         case CollisionType::HITBOX:
             {
                 auto coll = std::make_shared<CollideableHitbox>(components);
-                coll->reloadFromJson(j);
-                return coll;
-            }
-        case CollisionType::PLAYER_DIVE:
-            {
-                auto coll = std::make_shared<CollideablePlayerDive>(components);
                 coll->reloadFromJson(j);
                 return coll;
             }

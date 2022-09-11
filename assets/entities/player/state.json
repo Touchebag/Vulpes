@@ -56,6 +56,11 @@
                 "on_exit disable_action interact"
             ]
         },
+        "can_air_dive": {
+            "next_states": [
+                {"event": "action_air_dive", "state": "air_dive_start"}
+            ]
+        },
         "reset_jumps_and_dashes": {
             "ai": [
                 "on_enter reset_jumps 2",
@@ -73,9 +78,6 @@
             }
         },
         "ledge_climb_sensors": {
-            "next_states": [
-                {"event": "ledge_climb", "state": "ledge_climb"}
-            ],
             "collideables": [
                 {
                     "type": "sensor",
@@ -156,9 +158,6 @@
             "templates": [
                 "airborne"
             ],
-            "properties": {
-                "can_air_dive": false
-            },
             "frame_timer": 3,
             "next_states": [
                 {"event": "touching_floor", "state": "idle"},
@@ -170,35 +169,28 @@
             "animation": "jumping"
         },
         "jumping": {
-            "properties": {
-                "can_air_dive": true
-            },
             "next_states": [
                 {"event": "touching_floor", "state": "idle"},
                 {"event": "touching_wall", "state": "wall_slide_rising"},
                 {"event": "jumping", "state": "jump_start"},
                 {"event": "falling", "state": "falling"},
                 {"event": "dashing", "state": "dash_startup"},
-                {"event": "air_diving", "state": "air_dive_start"},
                 {"event": "damaged", "state": "taking_damage"}
             ],
             "animation": "jumping",
             "templates": [
                 "airborne",
                 "can_double_jump",
-                "can_dash"
+                "can_dash",
+                "can_air_dive"
             ]
         },
         "falling": {
-            "properties": {
-                "can_air_dive": true
-            },
             "next_states": [
                 {"event": "touching_floor", "state": "idle"},
                 {"event": "touching_wall", "state": "wall_slide"},
                 {"event": "jumping", "state": "jump_start"},
                 {"event": "dashing", "state": "dash_startup"},
-                {"event": "air_diving", "state": "air_dive_start"},
                 {"event": "damaged", "state": "taking_damage"}
             ],
             "animation": "falling",
@@ -206,7 +198,8 @@
                 "ledge_climb_sensors",
                 "can_double_jump",
                 "can_dash",
-                "airborne"
+                "airborne",
+                "can_air_dive"
             ]
         },
         "wall_slide_rising": {
@@ -255,21 +248,20 @@
         },
         "wall_jump": {
             "properties": {
-                "touching_ground": false,
-                "can_air_dive": true
+                "touching_ground": false
             },
             "frame_timer": 10,
             "next_states": [
                 {"event": "touching_wall", "state": "wall_slide"},
                 {"event": "dashing", "state": "dash_startup"},
                 {"event": "frame_timeout", "state": "jump_start"},
-                {"event": "air_diving", "state": "air_dive_start"},
                 {"event": "damaged", "state": "taking_damage"}
             ],
             "animation": "jumping",
             "templates": [
                 "can_dash",
-                "airborne"
+                "airborne",
+                "can_air_dive"
             ]
         },
         "dash_startup": {
@@ -381,44 +373,43 @@
         "air_dive_start": {
             "properties": {
                 "touching_ground": false,
-                "movement_locked_x": true,
-                "air_diving": true
+                "movement_locked_x": true
             },
             "next_states": [
-                {"event": "touching_floor", "state": "hard_landing"},
                 {"event": "frame_timeout", "state": "air_dive"},
-                {"event": "dive_bounce", "state": "falling"},
                 {"event": "damaged", "state": "taking_damage"}
             ],
+            "ai": [
+                "on_enter set_velocity this 0.0 -30.0"
+            ],
             "animation": "air_diving",
-            "frame_timer": 14,
-            "collideables": [
-                {
-                    "type": "player_dive",
-                    "width": 150,
-                    "height": 200,
-                    "offset": {
-                        "x": 0,
-                        "y": 200
-                    }
-                }
-            ]
+            "frame_timer": 14
         },
         "air_dive": {
             "properties": {
                 "touching_ground": false,
-                "movement_locked_x": true,
-                "air_diving": true
+                "movement_locked_x": true
             },
             "next_states": [
                 {"event": "touching_floor", "state": "hard_landing"},
-                {"event": "dive_bounce", "state": "falling"},
-                {"event": "damaged", "state": "taking_damage"}
+                {"event": "damaged", "state": "taking_damage"},
+                {"event": "action_ai1", "state": "air_dive_bounce"}
             ],
+            "physics_constants": {
+                "gravity": 5.0
+            },
             "animation": "falling",
+            "ai": [
+                "if (sensor 'player_dive') then (action ai1)"
+            ],
             "collideables": [
                 {
-                    "type": "player_dive",
+                    "type": "sensor",
+                    "target": "hurtbox",
+                    "teams": [
+                        1
+                    ],
+                    "name": "player_dive",
                     "width": 150,
                     "height": 200,
                     "offset": {
@@ -428,10 +419,25 @@
                 }
             ]
         },
+        "air_dive_bounce": {
+            "properties": {
+                "touching_ground": false
+            },
+            "frame_timer": 1,
+            "next_states": [
+                {"event": "frame_timeout", "state": "falling"}
+            ],
+            "animation": "falling",
+            "ai": [
+                "on_enter set_velocity this 0.0 -30.0"
+            ],
+            "templates": [
+                "reset_jumps_and_dashes"
+            ]
+        },
         "hard_landing": {
             "properties": {
-                "movement_locked_x": true,
-                "movement_locked_y": true
+                "movement_locked_x": true
             },
             "frame_timer": 20,
             "next_states": [
@@ -439,9 +445,13 @@
                 {"event": "frame_timeout", "state": "idle"},
                 {"event": "damaged", "state": "taking_damage"}
             ],
+            "ai": [
+                "on_enter add_camera_trauma 0.4"
+            ],
             "animation": "hard_landing",
             "templates": [
-                "can_jump"
+                "can_jump",
+                "reset_jumps_and_dashes"
             ]
         },
         "ledge_climb": {

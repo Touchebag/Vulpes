@@ -88,10 +88,6 @@ void Physics::update() {
         auto move_attr = move->getMovementAttributes();
 
         if (move_attr.on_ground) {
-            if (physics_props.air_diving_) {
-                // If we touch ground while diving we landed this frame
-                System::getCamera()->addTrauma(0.4f);
-            }
             state->incomingEvent(state_utils::Event::TOUCHING_FLOOR);
         } else if (move_attr.touching_wall) {
             state->incomingEvent(state_utils::Event::TOUCHING_WALL);
@@ -223,14 +219,6 @@ void Physics::update() {
 
         y_multiplicative *= constants_.y_friction;
 
-        if (act->getActionState(Actions::Action::AIR_DIVE_BOUNCE, true)) {
-            move->setVelocity(move->getVelX(), -30);
-            state->incomingEvent(state_utils::Event::DIVE_BOUNCE);
-            // TODO Reset with AI
-            resetJumps(1);
-            resetDashes(1);
-        }
-
         // Fetch movement after potentially modifying via state change
         double x = (move->getVelX() + x_additive) * x_multiplicative;
         double y = (move->getVelY() + y_additive) * y_multiplicative;
@@ -282,7 +270,6 @@ PhysicsConstants Physics::loadConstantsFromJson(nlohmann::json j, PhysicsConstan
     loadConstant(jump_impulse_y);
     loadConstant(dash_speed);
     loadConstant(dash_friction);
-    loadConstant(air_dive_impulse);
 
     return constants;
 }
@@ -309,7 +296,6 @@ std::optional<nlohmann::json> Physics::outputToJson() {
     saveConstantToJson(j, "jump_impulse_y", original_constants_.jump_impulse_y, default_constants.jump_impulse_y);
     saveConstantToJson(j, "dash_speed", original_constants_.dash_speed, default_constants.dash_speed);
     saveConstantToJson(j, "dash_friction", original_constants_.dash_friction, default_constants.dash_friction);
-    saveConstantToJson(j, "air_dive_impulse", original_constants_.air_dive_impulse, default_constants.air_dive_impulse);
 
     return j;
 }

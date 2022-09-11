@@ -24,8 +24,7 @@
         "y_friction": 0.97,
         "jump_impulse_y": -35.0,
         "dash_speed": 100.0,
-        "dash_friction": 0.8,
-        "air_dive_impulse": -30.0
+        "dash_friction": 0.8
     },
     "Rendering": {
         "height": 200,

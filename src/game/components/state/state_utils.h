@@ -26,8 +26,6 @@ enum class Event {
     JUMPING,
     FALLING,
     DASHING,
-    AIR_DIVING,
-    DIVE_BOUNCE,
     LEDGE_CLIMB,
 
     #define GENERATE_ENUM(action, string) ACTION_##action,
@@ -55,8 +53,6 @@ const std::map<std::string, Event> string_event_map {
     {"jumping", Event::JUMPING},
     {"falling", Event::FALLING},
     {"dashing", Event::DASHING},
-    {"air_diving", Event::AIR_DIVING},
-    {"dive_bounce", Event::DIVE_BOUNCE},
     {"ledge_climb", Event::LEDGE_CLIMB},
 
     #define GENERATE_ENUM(action, string) {"action_" string, Event::ACTION_##action},
@@ -75,9 +71,7 @@ struct PhysicsProperties {
     bool touching_ground_ = true;
     bool touching_wall_ = false;
     bool dashing_ = false;
-    bool air_diving_ = false;
     bool can_jump_ = true;
-    bool can_air_dive_ = false;
 };
 
 struct StateProperties {
