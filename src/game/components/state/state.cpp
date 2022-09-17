@@ -3,10 +3,10 @@
 #include "utils/log.h"
 
 #include "components/actions/actions.h"
+#include "components/ai/program.h"
 #include "components/physics/physics.h"
 #include "components/component_store.h"
 
-#include "ai/program.h"
 
 template <class T>
 State<T>::State(const T& data) :

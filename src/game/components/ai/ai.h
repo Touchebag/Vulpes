@@ -4,7 +4,7 @@
 #include "components/collision/collision.h"
 #include "components/transform.h"
 
-#include "ai/program.h"
+#include "program.h"
 
 class AI : public Component {
   public:

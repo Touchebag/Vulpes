@@ -1,6 +1,6 @@
 #include "menu_ai.h"
 
-#include "components/ai.h"
+#include "components/ai/ai.h"
 
 #include "utils/log.h"
 

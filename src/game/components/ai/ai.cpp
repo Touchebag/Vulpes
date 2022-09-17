@@ -5,7 +5,7 @@
 #include "utils/file.h"
 #include "utils/common.h"
 
-#include "ai/interpreter.h"
+#include "interpreter.h"
 #include "system/system.h"
 
 AI::AI(std::weak_ptr<ComponentStore> components) :

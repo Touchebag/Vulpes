@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "components/component_store.h"
-#include "ai/program.h"
+#include "program.h"
 
 class Interpreter {
   public:

@@ -8,7 +8,7 @@
 #include "components/actions/actions.h"
 #include "components/collision/collision.h"
 #include "components/physics/physics.h"
-#include "components/ai.h"
+#include "components/ai/ai.h"
 #include "components/damageable/damageable.h"
 #include "components/subentity.h"
 #include "components/death.h"

@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "ai/interpreter.h"
-#include "ai/program.h"
+#include "components/ai/interpreter.h"
+#include "components/ai/program.h"
 #include "components/rendering/rendering.h"
 #include "system/system.h"
 

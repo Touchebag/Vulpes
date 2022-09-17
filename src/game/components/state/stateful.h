@@ -4,11 +4,10 @@
 #include "state_handler.h"
 
 #include "components/actions/actions.h"
+#include "components/ai/program.h"
 #include "components/animation.h"
 #include "components/subentity.h"
 #include "components/collision/collision.h"
-
-#include "ai/program.h"
 
 class Stateful : public Component {
   public:
