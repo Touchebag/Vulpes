@@ -74,12 +74,6 @@ State<state_utils::EntityContent> State<state_utils::EntityContent>::loadStateFr
     if (props_json.contains("touching_wall")) {
         physics_props.touching_wall_ = props_json["touching_wall"].get<bool>();
     }
-    if (props_json.contains("dashing")) {
-        physics_props.dashing_ = props_json["dashing"].get<bool>();
-    }
-    if (props_json.contains("can_jump")) {
-        physics_props.can_jump_ = props_json["can_jump"].get<bool>();
-    }
 
     if (j.contains("frame_timer")) {
         state_props.frame_timer_ = j["frame_timer"].get<unsigned int>();

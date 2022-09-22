@@ -14,6 +14,9 @@
                 "touching_ground": false,
                 "movement_locked_x": true,
                 "movement_locked_y": true
+            },
+            "physics_constants": {
+                "x_friction": 0.8
             }
         },
         "can_jump": {

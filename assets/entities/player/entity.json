@@ -23,8 +23,7 @@
         "jump_multiplier": 0.2,
         "y_friction": 0.97,
         "jump_impulse_y": -35.0,
-        "dash_speed": 100.0,
-        "dash_friction": 0.8
+        "dash_speed": 100.0
     },
     "Rendering": {
         "height": 200,

@@ -17,6 +17,5 @@ struct PhysicsConstants {
     double jump_impulse_x = std::numeric_limits<double>::signaling_NaN();
     double jump_impulse_y = std::numeric_limits<double>::signaling_NaN();
     double dash_speed = 0.0;
-    double dash_friction = 0.0;
 };
 

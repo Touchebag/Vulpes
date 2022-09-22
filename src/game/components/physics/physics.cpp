@@ -175,11 +175,7 @@ void Physics::update() {
         x_additive += constants_.x_acceleration * x_movement_direction;
         y_additive += constants_.y_acceleration * y_movement_direction;
 
-        if (physics_props.dashing_) {
-            x_multiplicative *= constants_.dash_friction;
-        } else {
-            x_multiplicative *= constants_.x_friction;
-        }
+        x_multiplicative *= constants_.x_friction;
 
         if (!physics_props.movement_locked_y_) {
             // Only apply jump multiplier if holding jump and moving upwards
@@ -188,21 +184,20 @@ void Physics::update() {
             y_additive += constants_.gravity * multiplier;
         }
 
-        if (act->getActionState(Actions::Action::DASH, true)) {
-            if (--dashes_left_ >= 0) {
-                // If holding a direction dash in that direction
-                // else dash forward
-                if (act->getActionState(Actions::Action::MOVE_RIGHT)) {
-                    move->setVelocity(constants_.dash_speed, 0.0);
-                    facing_right.setDirection(true);
-                } else if (act->getActionState(Actions::Action::MOVE_LEFT)) {
-                    move->setVelocity(-constants_.dash_speed, 0.0);
-                    facing_right.setDirection(false);
-                } else {
-                    move->setVelocity(constants_.dash_speed * (facing_right ? 1.0 : -1.0), 0.0);
-                }
-                state->incomingEvent(state_utils::Event::DASHING);
+        if (act->getActionState(Actions::Action::DASH, true) && dashes_left_ > 0) {
+            dashes_left_--;
+            // If holding a direction dash in that direction
+            // else dash forward
+            if (act->getActionState(Actions::Action::MOVE_RIGHT)) {
+                move->setVelocity(constants_.dash_speed, 0.0);
+                facing_right.setDirection(true);
+            } else if (act->getActionState(Actions::Action::MOVE_LEFT)) {
+                move->setVelocity(-constants_.dash_speed, 0.0);
+                facing_right.setDirection(false);
+            } else {
+                move->setVelocity(constants_.dash_speed * (facing_right ? 1.0 : -1.0), 0.0);
             }
+            state->incomingEvent(state_utils::Event::DASHING);
         }
 
         if (act->getActionState(Actions::Action::JUMP, true) && jumps_left_ > 0) {
@@ -269,7 +264,6 @@ PhysicsConstants Physics::loadConstantsFromJson(nlohmann::json j, PhysicsConstan
     loadConstant(jump_impulse_x);
     loadConstant(jump_impulse_y);
     loadConstant(dash_speed);
-    loadConstant(dash_friction);
 
     return constants;
 }
@@ -295,7 +289,6 @@ std::optional<nlohmann::json> Physics::outputToJson() {
     saveConstantToJson(j, "jump_impulse_x", original_constants_.jump_impulse_x, default_constants.jump_impulse_x);
     saveConstantToJson(j, "jump_impulse_y", original_constants_.jump_impulse_y, default_constants.jump_impulse_y);
     saveConstantToJson(j, "dash_speed", original_constants_.dash_speed, default_constants.dash_speed);
-    saveConstantToJson(j, "dash_friction", original_constants_.dash_friction, default_constants.dash_friction);
 
     return j;
 }

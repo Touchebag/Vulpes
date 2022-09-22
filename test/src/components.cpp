@@ -57,8 +57,7 @@ const nlohmann::json entity_json = nlohmann::json::parse(R"--(
         "y_friction": 0.5,
         "jump_impulse_x": -32.0,
         "jump_impulse_y": 37.0,
-        "dash_speed": 100.0,
-        "dash_friction": 0.8
+        "dash_speed": 100.0
     },
     "Rendering": {
         "height": 200,

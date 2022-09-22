@@ -70,8 +70,6 @@ struct PhysicsProperties {
     bool direction_locked_ = false;
     bool touching_ground_ = true;
     bool touching_wall_ = false;
-    bool dashing_ = false;
-    bool can_jump_ = true;
 };
 
 struct StateProperties {
