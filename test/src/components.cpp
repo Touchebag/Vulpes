@@ -17,13 +17,6 @@
 const nlohmann::json entity_json = nlohmann::json::parse(R"--(
 {
     "Actions": null,
-    "Animation": {
-        "frame_list": [
-            "Idle0",
-            "Idle9",
-            "Other"
-        ]
-    },
     "AI": null,
     "Collision": {
         "type": "hitbox",
@@ -67,7 +60,12 @@ const nlohmann::json entity_json = nlohmann::json::parse(R"--(
         "tile_y": 0,
         "layer": 0
     },
-    "Stateful": null,
+    "Stateful": {
+        "states": {
+            "main": {
+            }
+        }
+    },
     "Subentity": null,
     "Transform": {
         "pos_x": 350,
@@ -279,6 +277,22 @@ TEST(TestComponents, TestSaveLoadSlope) {
 }
 
 TEST(TestComponents, TestSaveLoadAnimationFile) {
+    class TestFileDirectoryCleanup {
+      public:
+        // This class is to guarantee popping directory if test case is aborted
+        TestFileDirectoryCleanup() {
+            std::filesystem::path path = "entities";
+            path = path / "test_animation";
+            File::pushDirectory(path);
+        }
+
+        ~TestFileDirectoryCleanup() {
+            File::popDirectory();
+        }
+    };
+
+    TestFileDirectoryCleanup temp;
+
     // When empty it will default to loading file
     nlohmann::json j1;
 

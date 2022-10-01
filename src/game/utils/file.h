@@ -26,6 +26,9 @@ class File {
     static std::filesystem::path getEntityDir();
     static std::filesystem::path getCutsceneDir();
 
+    static std::filesystem::path getFullPath(std::filesystem::path path);
+    static bool isInRoot();
+
     static nlohmann::json loadSaveFile();
     static void writeSaveFile(nlohmann::json j);
 
@@ -41,8 +44,6 @@ class File {
 
   private:
     static std::stack<std::filesystem::path> current_directory_;
-
-    static std::filesystem::path getEntityPrefixPath();
 
     static std::optional<nlohmann::json> loadJson(std::filesystem::path filepath);
 

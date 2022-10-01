@@ -1,0 +1,23 @@
+[
+    {
+        "name": "whatever",
+        "frame_list": [
+            "Idle0",
+            "Idle9"
+        ]
+    },
+    {
+        "name": "override",
+        "frame_list": [
+            "Idle0",
+            "Idle9"
+        ]
+    },
+    {
+        "name": "template",
+        "frame_list": [
+            "Idle0",
+            "Idle9"
+        ]
+    }
+]

@@ -1,0 +1,55 @@
+{
+    "Actions": null,
+    "AI": null,
+    "Animation": {
+        "frame_list": [
+            "Open",
+            "Open",
+            "Open",
+            "Open",
+            "Open",
+            "Open",
+            "Open",
+            "Open",
+            "Closed",
+            "Closed",
+            "Closed",
+            "Closed",
+            "Closed",
+            "Closed",
+            "Closed",
+            "Closed"
+        ]
+    },
+    "Collision": {
+        "type": "hurtbox",
+        "height": 50,
+        "width": 50
+    },
+    "Damageable": {
+        "health": 10
+    },
+    "Death": {
+        "death_entity": {
+            "Entity": "health"
+        }
+    },
+    "Movement": null,
+    "Physics": {
+        "x_acceleration": 3.0,
+        "x_friction": 0.7,
+        "gravity": 1.0
+    },
+    "Rendering": {
+        "height": 90,
+        "texture": "Enemy",
+        "tile_x": 0,
+        "tile_y": 0,
+        "layer": 0
+    },
+    "Stateful": null,
+    "Transform": {
+        "pos_x": 550.0,
+        "pos_y": 1600.0
+    }
+}

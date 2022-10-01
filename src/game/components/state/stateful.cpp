@@ -38,26 +38,26 @@ std::shared_ptr<Stateful> Stateful::createFromJson(nlohmann::json j, std::weak_p
     return ret_ptr;
 }
 
-void Stateful::reloadFromJson(nlohmann::json /* j */, File file_instance) {
-    loadStates(file_instance);
+void Stateful::reloadFromJson(nlohmann::json j, File file_instance) {
+    original_json_ = {nullptr};
+    if (j.is_null()) {
+        auto states = file_instance.loadStates();
+
+        // TODO Error handling
+        if (states) {
+            state_handler_.reloadFromJson(states.value(), component_store_.lock());
+        }
+    } else {
+        state_handler_.reloadFromJson(j, component_store_.lock());
+        original_json_ = j;
+    }
 
     // Load initial temporary collideables
     checkTemporaryCollideables(state_handler_.getStateData().state_props);
 }
 
 std::optional<nlohmann::json> Stateful::outputToJson() {
-    nlohmann::json j;
-
-    return {j};
-}
-
-void Stateful::loadStates(File file_instance) {
-    auto states = file_instance.loadStates();
-
-    // TODO Error handling
-    if (states) {
-        state_handler_.reloadFromJson(states.value(), component_store_.lock());
-    }
+    return original_json_;
 }
 
 void Stateful::checkTemporaryCollideables(const state_utils::StateProperties& state_props) {

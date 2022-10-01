@@ -17,12 +17,10 @@ const std::filesystem::path CUTSCENE_FILE = "cutscene";
 
 const std::filesystem::path SAVE_FILE = "data.sav";
 
-const std::filesystem::path DEFAULT_ENTITY = "_default";
-
 std::stack<std::filesystem::path> File::current_directory_;
 
 void File::pushDirectory(std::filesystem::path dir) {
-    current_directory_.push(dir);
+    current_directory_.push(getCurrentDirectory() / dir);
 }
 
 void File::popDirectory() {
@@ -37,20 +35,20 @@ std::filesystem::path File::getCurrentDirectory() {
     }
 }
 
-std::filesystem::path File::getEntityPrefixPath() {
-    if (current_directory_.empty()) {
-        return ENTITY_DIR / DEFAULT_ENTITY;
-    } else {
-        return current_directory_.top();
-    }
-}
-
 std::filesystem::path File::getEntityDir() {
     return ENTITY_DIR;
 }
 
 std::filesystem::path File::getCutsceneDir() {
     return CUTSCENE_DIR;
+}
+
+std::filesystem::path File::getFullPath(std::filesystem::path path) {
+    return ASSET_DIR / getCurrentDirectory() / path;
+}
+
+bool File::isInRoot() {
+    return current_directory_.empty();
 }
 
 std::ifstream File::openFileForInput(std::filesystem::path filepath) {
@@ -81,7 +79,7 @@ std::ofstream File::openFileForOutput(std::filesystem::path filepath) {
 }
 
 std::filesystem::directory_iterator File::getDirContents(std::filesystem::path path) {
-    return std::filesystem::directory_iterator(ASSET_DIR / getEntityPrefixPath() / path);
+    return std::filesystem::directory_iterator(ASSET_DIR / getCurrentDirectory() / path);
 }
 
 std::optional<nlohmann::json> File::loadJson(std::filesystem::path filepath) {
@@ -96,11 +94,11 @@ std::optional<nlohmann::json> File::loadJson(std::filesystem::path filepath) {
 }
 
 std::optional<nlohmann::json> File::loadEntityFromFile() {
-    return loadJson(getEntityPrefixPath() / ENTITY_FILE);
+    return loadJson(getCurrentDirectory() / ENTITY_FILE);
 }
 
 std::ifstream File::openSpriteMapFile(std::filesystem::path file) {
-    auto path = getEntityPrefixPath() / TEXTURE_DIR / file;
+    auto path = getCurrentDirectory() / TEXTURE_DIR / file;
     path.replace_extension(".txt");
 
     return openFileForInput(path);
@@ -129,7 +127,7 @@ std::optional<nlohmann::json> File::loadAnimations() {
     auto file = ANIMATIONS_FILE;
     file.replace_extension(".json");
 
-    return loadJson(getEntityPrefixPath() / file);
+    return loadJson(getCurrentDirectory() / file);
 }
 
 std::optional<sf::Texture> File::loadTexture(std::filesystem::path file) {
@@ -138,7 +136,7 @@ std::optional<sf::Texture> File::loadTexture(std::filesystem::path file) {
     if (current_directory_.empty()) {
         filepath = TEXTURE_DIR;
     } else {
-        filepath = getEntityPrefixPath() / TEXTURE_DIR;
+        filepath = getCurrentDirectory() / TEXTURE_DIR;
     }
 
     filepath = filepath / file.replace_extension(".png");
@@ -161,11 +159,11 @@ std::optional<sf::Font> File::loadFont(std::filesystem::path filepath) {
 }
 
 std::optional<nlohmann::json> File::loadCutscene() {
-    return loadJson(getEntityPrefixPath() / CUTSCENE_FILE);
+    return loadJson(getCurrentDirectory() / CUTSCENE_FILE);
 }
 
 std::optional<nlohmann::json> File::loadStates() {
-    return loadJson(getEntityPrefixPath() / STATE_FILE);
+    return loadJson(getCurrentDirectory() / STATE_FILE);
 }
 
 std::shared_ptr<sf::Shader> File::loadShader(std::filesystem::path shader_name) {

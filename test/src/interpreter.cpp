@@ -391,7 +391,12 @@ TEST_F(InterpreterTestFixture, ResetJumps) {
             "jump_impulse_y": 30.0,
             "y_friction": 1.0
         },
-        "Stateful": null,
+        "Stateful": {
+            "states": {
+                "main": {
+                }
+            }
+        },
         "Transform": {
             "pos_x": 0,
             "pos_y": 0

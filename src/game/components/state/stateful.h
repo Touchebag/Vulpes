@@ -29,9 +29,9 @@ class Stateful : public Component {
     const std::vector<Program>& getAI();
 
   private:
-    void loadStates(File file_instance);
-
     void checkTemporaryCollideables(const state_utils::StateProperties& state_props);
+
+    nlohmann::json original_json_;
 
     unsigned int frame_counter_ = UINT_MAX;
 

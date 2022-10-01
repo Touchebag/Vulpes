@@ -144,6 +144,10 @@ Animation::AnimationFrameData Animation::getFrameData() {
 }
 
 void Animation::reloadFromJson(nlohmann::json j, File file_instance) {
+    if (File::isInRoot()) {
+        throw std::invalid_argument("Animation: must be explicit entity directory");
+    }
+
     sprite_sheet_map_.clear();
     textures_.clear();
 
