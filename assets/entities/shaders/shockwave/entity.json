@@ -13,10 +13,6 @@
                         "name": "time"
                     },
                     {
-                        "type": "window_size",
-                        "name": "render_size"
-                    },
-                    {
                         "type": "relative_position",
                         "name": "position"
                     }
