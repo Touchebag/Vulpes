@@ -11,17 +11,19 @@ std::vector<std::shared_ptr<BaseEntity>>& World::getWorldObjects() {
 }
 
 void World::update() {
-    if (cutscene_) {
-        cutscene_->update();
+    auto cutscene = System::getCutscene();
+
+    if (cutscene) {
+        cutscene->update();
 
         // If cutscene is over, clear from system
-        if (!cutscene_->isActive()) {
-            cutscene_.reset();
+        if (!cutscene->isActive()) {
+            cutscene.reset();
         }
     }
 
     // Check cutscene again to ensure transitions happen on same frame
-    if (!cutscene_) {
+    if (!cutscene) {
         if (new_room_) {
             loadRoom(new_room_->first, new_room_->second);
             new_room_.reset();
@@ -154,11 +156,6 @@ void World::addEntriesToWorld(nlohmann::json j, bool is_template) {
             template_objects_.insert(ent);
         }
     }
-}
-
-void World::setCutscene(std::shared_ptr<Cutscene> cutscene) {
-    cutscene_ = cutscene;
-    cutscene_->start();
 }
 
 void World::loadWorldFromFile(const std::string& path) {

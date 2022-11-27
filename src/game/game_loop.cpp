@@ -11,8 +11,6 @@
 #define MS_PER_FRAME 1000 / PHYSICS_FRAME_RATE
 
 int game_main(sf::RenderWindow& window) {
-    auto worldInstWrite = System::IWorldModify();
-
     // Rendering produces time, physics consumes
     // This stores how much "unconsumed" time is available
     sf::Time time_rendered;
@@ -43,8 +41,6 @@ int game_main(sf::RenderWindow& window) {
             });
 
     render_clock.restart();
-
-    std::shared_ptr<IRender> renderInst = System::getRender();
 
     while (window.isOpen()) {
         time_rendered += render_clock.getElapsedTime();
@@ -79,7 +75,7 @@ int game_main(sf::RenderWindow& window) {
                 }
             }
 
-            worldInstWrite.update();
+            System::IWorldModify().update();
 
             time_rendered -= sf::milliseconds(MS_PER_FRAME);
 
@@ -88,7 +84,7 @@ int game_main(sf::RenderWindow& window) {
 
         window.clear();
 
-        renderInst->render(window, static_cast<float>(time_rendered.asMilliseconds()) / static_cast<float>(MS_PER_FRAME));
+        System::getRender()->render(window, static_cast<float>(time_rendered.asMilliseconds()) / static_cast<float>(MS_PER_FRAME));
 
         window.display();
     }

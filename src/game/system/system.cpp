@@ -46,3 +46,12 @@ void System::setWorld(std::shared_ptr<World> world) {
 std::shared_ptr<World> System::getWorld() {
     return System::getInstance().world_;
 }
+
+void System::setCutscene(std::shared_ptr<Cutscene> cutscene) {
+    System::getInstance().cutscene_ = cutscene;
+    cutscene->start();
+}
+
+std::shared_ptr<Cutscene> System::getCutscene() {
+    return System::getInstance().cutscene_;
+}

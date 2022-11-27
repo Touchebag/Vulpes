@@ -13,7 +13,7 @@ int cutsceneEditorMain(sf::RenderWindow& window) {
     auto old_render = System::getRender();
     auto old_camera = System::getCamera();
     auto old_world = System::getWorld();
-    auto render = std::make_shared<EditorRender>();
+    auto render = std::make_shared<Render>();
     auto camera = std::make_shared<Camera>();
     auto world = std::make_shared<World>();
 
@@ -30,7 +30,7 @@ int cutsceneEditorMain(sf::RenderWindow& window) {
 
     auto cutscene = Cutscene::loadCutscene("door_transition");
 
-    System::IWorldModify::setCutscene(cutscene);
+    System::setCutscene(cutscene);
 
     sf::Time time_rendered;
     sf::Clock render_clock;

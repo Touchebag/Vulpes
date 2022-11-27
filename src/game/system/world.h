@@ -8,7 +8,6 @@
 #include "player.h"
 #include "nlohmann/json.hpp"
 #include "components/rendering/rendering_text.h"
-#include "cutscene.h"
 #include "camera.h"
 
 class System;
@@ -42,8 +41,6 @@ class World {
     void loadWorldFromJsonInternal(nlohmann::json j, std::unordered_set<std::string>& templates, bool is_template);
 
     void addEntriesToWorld(nlohmann::json j, bool is_template = false);
-
-    void setCutscene(std::shared_ptr<Cutscene> cutscene);
 
     void loadRoom(const std::string& room_name, unsigned int entrance_id);
 
@@ -89,6 +86,4 @@ class World {
     std::optional<nlohmann::json> layer_data_;
 
     std::optional<Camera::CameraBoundingBox> camera_box_;
-
-    std::shared_ptr<Cutscene> cutscene_;
 };

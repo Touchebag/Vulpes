@@ -37,10 +37,6 @@ void System::IWorldModify::clearWorld() {
     System::getInstance().world_->clearWorld();
 }
 
-void System::IWorldModify::setCutscene(std::shared_ptr<Cutscene> cutscene) {
-    System::getInstance().world_->setCutscene(cutscene);
-}
-
 std::vector<std::shared_ptr<BaseEntity>>& System::IWorldModify::getWorldObjects() {
     return System::getInstance().world_->getWorldObjects();
 }
