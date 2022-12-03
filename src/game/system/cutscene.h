@@ -28,11 +28,14 @@ class Cutscene {
     };
 
     static std::shared_ptr<Cutscene> loadCutscene(const std::string& cutscene_name);
-    void reloadFromJson(nlohmann::json j);
 
     void update();
     void start();
     bool isActive();
+
+    const std::vector<std::vector<std::weak_ptr<Rendering>>>& getRenderables();
+
+    void reloadFromJson(nlohmann::json j);
 
   private:
     static Cutscene::CutsceneEvent loadEventFromJson(nlohmann::json j);
@@ -57,4 +60,5 @@ class Cutscene {
 
     std::map<std::string, std::shared_ptr<BaseEntity>> world_entities_;
     std::map<std::string, std::shared_ptr<BaseEntity>> cutscene_entities_;
+    std::vector<std::vector<std::weak_ptr<Rendering>>> renderables_;
 };

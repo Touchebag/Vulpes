@@ -24,36 +24,33 @@ int cutsceneEditorMain(sf::RenderWindow& window) {
     System::setWorld(world);
 
     render->setWindowSize(window, 1000, 1000);
-    render->setCameraBox({0, 0, 1000, 1000});
 
     window.setKeyRepeatEnabled(false);
 
-    auto cutscene = Cutscene::loadCutscene("door_transition");
+    auto cutscene = Cutscene::loadCutscene("boxes");
 
     System::setCutscene(cutscene);
 
-    sf::Time time_rendered;
-    sf::Clock render_clock;
-    render_clock.restart();
-
     while (window.isOpen()) {
-        time_rendered += render_clock.getElapsedTime();
-        render_clock.restart();
-
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && window.hasFocus()){
             break;
         }
 
-        System::IWorldModify::update();
-
-        while (time_rendered.asMilliseconds() >= (MS_PER_FRAME)) {
-            System::IWorldModify::update();
-
-            time_rendered -= sf::milliseconds(MS_PER_FRAME);
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            switch (event.type) {
+                case sf::Event::KeyPressed:
+                    if (event.key.code == sf::Keyboard::Key::Right) {
+                        System::IWorldModify::update();
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
 
         window.clear();
-        render->render(window, 0.0);
+        System::getRender()->render(window, 0.0);
         window.display();
     }
 

@@ -187,6 +187,12 @@ void Render::render(sf::RenderTarget& window, double frame_fraction) {
                                   global_shaders_);
 
     drawHud(window);
+
+    if (auto cutscene = System::getCutscene()) {
+        for (auto it : cutscene->getRenderables()) {
+            renderAllEntitesInVector(it, window, frame_fraction);
+        }
+    }
 }
 
 void Render::setPlayer(std::weak_ptr<Rendering> entity) {

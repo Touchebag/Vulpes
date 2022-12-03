@@ -4,6 +4,10 @@
 #include "system/world.h"
 #include "editor_render.h"
 
+#include "cutscene_editor.h"
+
+#include "utils/log.h"
+
 int main(int argc, const char** argv) {
     sf::RenderWindow window(sf::VideoMode(1000,1000), "Level Editor");
 

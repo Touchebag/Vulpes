@@ -41,8 +41,9 @@ std::shared_ptr<Cutscene> Cutscene::loadCutscene(const std::string& cutscene_nam
         throw std::invalid_argument("");
     }
 
+    auto entities_dir = File::getFullPath(File::getEntityDir());
     // Load all cutscene specific entites
-    if (std::filesystem::is_directory(File::getEntityDir())) {
+    if (std::filesystem::is_directory(entities_dir)) {
         for (auto ent : File::getDirContents(File::getEntityDir())) {
             auto entity_name = ent.path().filename().string();
 
@@ -50,8 +51,17 @@ std::shared_ptr<Cutscene> Cutscene::loadCutscene(const std::string& cutscene_nam
             j["Entity"] = entity_name;
             auto entity = BaseEntity::createFromJson(j);
 
-            cutscene->cutscene_entities_.insert_or_assign(entity_name, entity);
-            System::IWorldModify::addEntity(entity);
+            cutscene->cutscene_entities_.insert_or_assign(entity->getTag(), entity);
+
+            if (auto renderable = entity->getComponent<Rendering>()) {
+                auto layer = static_cast<unsigned long long>(renderable->getLayer());
+
+                if (layer >= cutscene->renderables_.size()) {
+                    cutscene->renderables_.resize(layer + 1);
+                }
+
+                cutscene->renderables_.at(layer).push_back(renderable);
+            }
         }
     }
 
@@ -98,6 +108,10 @@ void Cutscene::start() {
 void Cutscene::addEvents(const std::vector<std::pair<unsigned int, CutsceneEvent>>& events) {
     events_ = events;
     next_event_ = events_.begin();
+}
+
+const std::vector<std::vector<std::weak_ptr<Rendering>>>& Cutscene::getRenderables() {
+    return renderables_;
 }
 
 Cutscene::CutsceneEvent Cutscene::loadEventFromJson(nlohmann::json j) {

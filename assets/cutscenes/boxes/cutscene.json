@@ -1,0 +1,11 @@
+{
+    "events": {
+        "0": [
+            {
+                "event": "fade_out",
+                "entity": "blue",
+                "active_frames": 60
+            }
+        ]
+    }
+}
