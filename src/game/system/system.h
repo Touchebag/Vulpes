@@ -26,6 +26,7 @@ class System {
     static std::shared_ptr<World> getWorld();
 
     static void setCutscene(std::shared_ptr<Cutscene> cutscene);
+    static void clearCutscene();
     static std::shared_ptr<Cutscene> getCutscene();
 
     // World Interfaces

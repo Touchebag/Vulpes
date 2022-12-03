@@ -18,7 +18,7 @@ void World::update() {
 
         // If cutscene is over, clear from system
         if (!cutscene->isActive()) {
-            cutscene.reset();
+            System::clearCutscene();
         }
     }
 

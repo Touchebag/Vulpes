@@ -54,6 +54,9 @@ int cutsceneEditorMain(sf::RenderWindow& window) {
         window.display();
     }
 
+    // Remove cutscene to avoid it being drawn over main editor
+    System::clearCutscene();
+
     System::setRender(old_render);
     System::setCamera(old_camera);
     System::setWorld(old_world);

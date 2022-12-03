@@ -52,6 +52,10 @@ void System::setCutscene(std::shared_ptr<Cutscene> cutscene) {
     cutscene->start();
 }
 
+void System::clearCutscene() {
+    System::getInstance().cutscene_.reset();
+}
+
 std::shared_ptr<Cutscene> System::getCutscene() {
     return System::getInstance().cutscene_;
 }
