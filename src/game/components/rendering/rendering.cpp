@@ -52,10 +52,14 @@ void Rendering::reloadFromJson(nlohmann::json j, File file_instance) {
 
     if (j.contains("tile_x")) {
         tiling_x_ = j["tile_x"].get<int>();
+    } else {
+        tiling_x_ = 1;
     }
 
     if (j.contains("tile_y")) {
         tiling_y_ = j["tile_y"].get<int>();
+    } else {
+        tiling_y_ = 1;
     }
 
     if (j.contains("layer")) {
@@ -94,13 +98,17 @@ void Rendering::recalculateTextureRect() {
     int texture_rect_x;
     int texture_rect_y;
 
-    if (tiling_x_ == 0) {
+    if (width_ == 0) {
+        texture_rect_x = original_texture_rect_.width;
+    } else if (tiling_x_ == 0) {
         texture_rect_x = width_;
     } else {
         texture_rect_x = original_texture_rect_.width * tiling_x_;
     }
 
-    if (tiling_y_ == 0) {
+    if (height_ == 0) {
+        texture_rect_y = original_texture_rect_.height;
+    } else if (tiling_y_ == 0) {
         texture_rect_y = height_;
     } else {
         texture_rect_y = original_texture_rect_.height * tiling_y_;
@@ -133,8 +141,13 @@ std::optional<nlohmann::json> Rendering::outputToJson() {
         j["width"] = width_;
     }
 
-    j["tile_x"] = tiling_x_;
-    j["tile_y"] = tiling_y_;
+    if (tiling_x_ != 1) {
+        j["tile_x"] = tiling_x_;
+    }
+
+    if (tiling_y_ != 1) {
+        j["tile_y"] = tiling_y_;
+    }
 
     j["layer"] = layer_;
 

@@ -1,15 +1,12 @@
 {
     "Rendering": {
         "height": 90,
-        "width": 90,
         "texture": "BlueBox",
-        "tile_x": 1,
-        "tile_y": 1,
         "layer": 0
     },
     "tag": "blue",
     "Transform": {
-        "pos_x": 0.0,
-        "pos_y": 0.0
+        "pos_x": 200.0,
+        "pos_y": 200.0
     }
 }

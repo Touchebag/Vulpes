@@ -43,6 +43,19 @@ void renderShadersWithDoubleBuffer(sf::RenderTarget& target,
     target.draw(sf::Sprite(front_buffer->getTexture()));
 }
 
+void setCamera(sf::RenderTarget& target, double frame_fraction = 0.0, double parallax_multiplier = 1.0) {
+    auto view = System::getCamera()->getView();
+    auto change_speed = System::getCamera()->getChangeVelocity();
+
+    // Note: interpolating size causes warping/bouncing issues
+    sf::View viewport(
+            {static_cast<float>((view.x_pos + (change_speed.x_pos * frame_fraction)) * parallax_multiplier),
+             static_cast<float>((view.y_pos + (change_speed.y_pos * frame_fraction)) * parallax_multiplier)},
+            {static_cast<float>(view.width),
+             static_cast<float>(view.height)});
+    target.setView(viewport);
+}
+
 } // namespace
 
 Render::Render() {
@@ -101,16 +114,7 @@ void Render::renderLayer(sf::RenderTarget& target, double frame_fraction, int la
         parallax_multiplier = getLayer(layer).parallax_multiplier;
     }
 
-    auto view = System::getCamera()->getView();
-    auto change_speed = System::getCamera()->getChangeVelocity();
-
-    // Note: interpolating size causes warping/bouncing issues
-    sf::View viewport(
-            {static_cast<float>((view.x_pos + (change_speed.x_pos * frame_fraction)) * parallax_multiplier),
-             static_cast<float>((view.y_pos + (change_speed.y_pos * frame_fraction)) * parallax_multiplier)},
-            {static_cast<float>(view.width),
-             static_cast<float>(view.height)});
-    target.setView(viewport);
+    setCamera(target, frame_fraction, parallax_multiplier);
 
     renderAllEntitesInVector(getLayerRenderables(layer), target, frame_fraction);
 }
@@ -121,16 +125,7 @@ void Render::drawPlayer(sf::RenderTarget& window, double frame_fraction) {
 
         front_render_buffer_->clear(sf::Color(0, 0, 0, 0));
 
-        auto view = camera->getView();
-        auto change_speed = System::getCamera()->getChangeVelocity();
-
-        // Note: interpolating size causes warping/bouncing issues
-        sf::View viewport(
-                {static_cast<float>(view.x_pos + (change_speed.x_pos * frame_fraction)),
-                 static_cast<float>(view.y_pos + (change_speed.y_pos * frame_fraction))},
-                {static_cast<float>(view.width),
-                 static_cast<float>(view.height)});
-        front_render_buffer_->setView(viewport);
+        setCamera(*front_render_buffer_, frame_fraction);
 
         player->render(*front_render_buffer_, frame_fraction);
 
@@ -189,9 +184,16 @@ void Render::render(sf::RenderTarget& window, double frame_fraction) {
     drawHud(window);
 
     if (auto cutscene = System::getCutscene()) {
+        auto current_view = window.getView();
+
+        // Set static view for cutscene layers
+        window.setView({{500, 500}, {1000, 1000}});
+
         for (auto it : cutscene->getRenderables()) {
             renderAllEntitesInVector(it, window, frame_fraction);
         }
+
+        window.setView(current_view);
     }
 }
 

@@ -11,16 +11,11 @@
 
 int cutsceneEditorMain(sf::RenderWindow& window) {
     auto old_render = System::getRender();
-    auto old_camera = System::getCamera();
     auto old_world = System::getWorld();
     auto render = std::make_shared<Render>();
-    auto camera = std::make_shared<Camera>();
     auto world = std::make_shared<World>();
 
-    camera->setView(0, 0, 1000, 1000);
-
     System::setRender(render);
-    System::setCamera(camera);
     System::setWorld(world);
 
     render->setWindowSize(window, 1000, 1000);
@@ -58,7 +53,6 @@ int cutsceneEditorMain(sf::RenderWindow& window) {
     System::clearCutscene();
 
     System::setRender(old_render);
-    System::setCamera(old_camera);
     System::setWorld(old_world);
 
     return 0;
