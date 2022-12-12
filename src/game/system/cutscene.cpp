@@ -11,6 +11,7 @@ const Bimap<std::string, Cutscene::CutsceneEventType> string_event_map = {
     {"animation", Cutscene::CutsceneEventType::ANIMATION},
     {"fade_out", Cutscene::CutsceneEventType::FADE_OUT},
     {"fade_in", Cutscene::CutsceneEventType::FADE_IN},
+    {"move", Cutscene::CutsceneEventType::MOVE},
 };
 
 void updateEntitiy(std::shared_ptr<BaseEntity> entity) {
@@ -20,6 +21,10 @@ void updateEntitiy(std::shared_ptr<BaseEntity> entity) {
 
     if (auto render = entity->getComponent<Rendering>()) {
         render->update();
+    }
+
+    if (auto move = entity->getComponent<Movement>()) {
+        move->update();
     }
 }
 
@@ -136,6 +141,9 @@ Cutscene::CutsceneEvent Cutscene::loadEventFromJson(nlohmann::json j) {
                 // Ceiling division magic
                 event.extra_data = (255 + event.active_frames - 1) / event.active_frames;
                 break;
+            case CutsceneEventType::MOVE:
+                event.extra_data = std::pair<float, float>{j["x_vel"].get<float>(), j["y_vel"].get<float>()};
+                break;
             default:
                 LOGE("This should never happen");
                 exit(EXIT_FAILURE);
@@ -224,7 +232,7 @@ std::shared_ptr<BaseEntity> Cutscene::getEntity(std::string tag) {
 void Cutscene::executeEvent(Cutscene::CutsceneEvent& event) {
     // TODO Check variant type
     switch (event.type) {
-        case Cutscene::CutsceneEventType::ANIMATION:
+        case CutsceneEventType::ANIMATION:
             if (auto entity = getEntity(event.entity_tag)) {
                 auto animation_name = std::get<std::string>(event.extra_data);
 
@@ -232,7 +240,7 @@ void Cutscene::executeEvent(Cutscene::CutsceneEvent& event) {
             }
 
             break;
-        case Cutscene::CutsceneEventType::FADE_OUT:
+        case CutsceneEventType::FADE_OUT:
             if (auto entity = getEntity(event.entity_tag)) {
                 auto fade_strength = static_cast<sf::Uint8>(std::get<int>(event.extra_data));
 
@@ -248,7 +256,7 @@ void Cutscene::executeEvent(Cutscene::CutsceneEvent& event) {
             }
 
             break;
-        case Cutscene::CutsceneEventType::FADE_IN:
+        case CutsceneEventType::FADE_IN:
             if (auto entity = getEntity(event.entity_tag)) {
                 auto fade_strength = static_cast<sf::Uint8>(std::get<int>(event.extra_data));
 
@@ -265,6 +273,17 @@ void Cutscene::executeEvent(Cutscene::CutsceneEvent& event) {
                 render->setColor(current_color);
             }
 
+            break;
+        case CutsceneEventType::MOVE:
+            if (auto entity = getEntity(event.entity_tag)) {
+                auto [x, y] = std::get<std::pair<float, float>>(event.extra_data);
+
+                if (auto move = entity->getComponent<Movement>()) {
+                    move->setVelocity(x, y);
+                } else {
+                    LOGW("Tag %s, missing move component", event.entity_tag.c_str());
+                }
+            }
             break;
         default:
             LOGD("Unknown event type");

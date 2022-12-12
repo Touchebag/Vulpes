@@ -5,6 +5,12 @@
                 "event": "animation",
                 "entity": "player",
                 "animation_name": "door_transition"
+            },
+            {
+                "event": "move",
+                "entity": "player",
+                "x_vel": 0.0,
+                "y_vel": 0.0
             }
         ],
         "1": [

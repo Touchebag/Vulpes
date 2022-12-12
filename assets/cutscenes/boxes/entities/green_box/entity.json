@@ -4,6 +4,7 @@
         "texture": "GreenBox",
         "layer": 0
     },
+    "Movement": null,
     "tag": "green",
     "Transform": {
         "pos_x": 500.0,

@@ -5,6 +5,22 @@
                 "event": "fade_out",
                 "entity": "blue",
                 "active_frames": 60
+            },
+            {
+                "event": "move",
+                "entity": "green",
+                "x_vel": -2.0,
+                "y_vel": 5.0,
+                "active_frames": 60
+            }
+        ],
+        "10": [
+            {
+                "event": "move",
+                "entity": "red",
+                "x_vel": 0.5,
+                "y_vel": -7.0,
+                "active_frames": 60
             }
         ]
     }
