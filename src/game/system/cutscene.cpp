@@ -290,3 +290,13 @@ void Cutscene::executeEvent(Cutscene::CutsceneEvent& event) {
             break;
     }
 }
+
+unsigned int Cutscene::getCurrentFrame() {
+    return frame_counter_;
+}
+
+void Cutscene::fastForward(unsigned int frame) {
+    while (frame-- > 0) {
+        update();
+    }
+}

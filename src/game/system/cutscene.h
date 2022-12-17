@@ -40,6 +40,9 @@ class Cutscene {
 
     void reloadFromJson(nlohmann::json j);
 
+    unsigned int getCurrentFrame();
+    void fastForward(unsigned int frame);
+
   private:
     static Cutscene::CutsceneEvent loadEventFromJson(nlohmann::json j);
     void addEvents(const std::vector<std::pair<unsigned int, CutsceneEvent>>& events);
