@@ -82,8 +82,13 @@ void Cutscene::reloadFromJson(nlohmann::json j) {
         for (auto it = j["events"].begin(); it != j["events"].end(); it++) {
             for (auto j_event : it.value()) {
                 auto event = loadEventFromJson(j_event);
-                events.push_back({stoi(it.key()), event});
+                auto frame = static_cast<unsigned int>(stoi(it.key()));
+
+                events.push_back({frame, event});
                 tags_.insert(event.entity_tag);
+
+                // Update length
+                total_length_ = std::max(frame + event.active_frames, total_length_);
             }
         }
     }
@@ -242,7 +247,7 @@ void Cutscene::executeEvent(Cutscene::CutsceneEvent& event) {
             break;
         case CutsceneEventType::FADE_OUT:
             if (auto entity = getEntity(event.entity_tag)) {
-                auto fade_strength = static_cast<sf::Uint8>(std::get<int>(event.extra_data));
+                auto fade_strength = static_cast<sf::Uint8>(std::get<unsigned int>(event.extra_data));
 
                 auto render = entity->getComponent<Rendering>();
                 auto current_color = render->getColor();
@@ -258,7 +263,7 @@ void Cutscene::executeEvent(Cutscene::CutsceneEvent& event) {
             break;
         case CutsceneEventType::FADE_IN:
             if (auto entity = getEntity(event.entity_tag)) {
-                auto fade_strength = static_cast<sf::Uint8>(std::get<int>(event.extra_data));
+                auto fade_strength = static_cast<sf::Uint8>(std::get<unsigned int>(event.extra_data));
 
                 auto render = entity->getComponent<Rendering>();
                 auto current_color = render->getColor();
@@ -291,12 +296,22 @@ void Cutscene::executeEvent(Cutscene::CutsceneEvent& event) {
     }
 }
 
+unsigned int Cutscene::getLength() {
+    return total_length_;
+}
+
 unsigned int Cutscene::getCurrentFrame() {
     return frame_counter_;
 }
 
-void Cutscene::fastForward(unsigned int frame) {
-    while (frame-- > 0) {
+void Cutscene::fastForward(unsigned int frames) {
+    // Ensure you can't fast forward post the end of cutscene
+    auto length = getLength();
+    if (frame_counter_ + frames > length) {
+        frames = length - frame_counter_;
+    }
+
+    while (frames-- > 0) {
         update();
     }
 }

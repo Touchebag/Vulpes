@@ -21,13 +21,13 @@ class Cutscene {
     };
 
     struct CutsceneEvent {
-        int active_frames = 1;
+        unsigned int active_frames = 1;
 
         CutsceneEventType type = CutsceneEventType::UNKNOWN;
 
         std::string entity_tag;
 
-        std::variant<int, std::string, std::pair<float, float>> extra_data;
+        std::variant<unsigned int, std::string, std::pair<float, float>> extra_data;
     };
 
     static std::shared_ptr<Cutscene> loadCutscene(const std::string& cutscene_name);
@@ -41,7 +41,8 @@ class Cutscene {
     void reloadFromJson(nlohmann::json j);
 
     unsigned int getCurrentFrame();
-    void fastForward(unsigned int frame);
+    unsigned int getLength();
+    void fastForward(unsigned int frames);
 
   private:
     static Cutscene::CutsceneEvent loadEventFromJson(nlohmann::json j);
@@ -54,6 +55,7 @@ class Cutscene {
     std::shared_ptr<BaseEntity> getEntity(std::string tag);
 
     unsigned int frame_counter_ = 0;
+    unsigned int total_length_ = 0;
 
     // Pair is starting frame
     std::vector<std::pair<unsigned int, CutsceneEvent>> events_ = {};
