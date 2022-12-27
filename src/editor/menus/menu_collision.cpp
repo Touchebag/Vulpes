@@ -1,7 +1,7 @@
 #include "menu_collision.h"
 
 #include "components/collision/collision.h"
-#include "editor_render.h"
+#include "common/editor_render.h"
 
 #include "utils/log.h"
 

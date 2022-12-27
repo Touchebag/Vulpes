@@ -1,4 +1,4 @@
-#include "level_editor/mouse.h"
+#include "editor/common/mouse.h"
 #include "mock_mouse.h"
 
 std::pair<int, int> MockMouse::mock_mouse_pos_;

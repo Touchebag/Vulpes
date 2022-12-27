@@ -2,8 +2,10 @@
 
 #include <memory>
 
-#include "editor_loop/editor_environment.h"
+#include "level_editor/editor_environment.h"
 #include "components/collision/collideables/movement/collideable_static.h"
+#include "system/system.h"
+
 #include "utils/log.h"
 
 Command::Command(std::weak_ptr<EditorEnvironment> editor_env) :

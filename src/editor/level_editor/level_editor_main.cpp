@@ -2,9 +2,9 @@
 #include "system/world.h"
 #include "system/system.h"
 #include "components/rendering/rendering_text.h"
-#include "editor_render.h"
-#include "editor_loop/editor_environment.h"
-#include "editor_loop/editor_mouse.h"
+#include "common/editor_render.h"
+#include "editor_environment.h"
+#include "editor_mouse.h"
 #include "menus/menu_main.h"
 
 bool render_current_layer_only = false;

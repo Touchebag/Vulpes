@@ -1,10 +1,10 @@
 #include "game_loop.h"
-#include "editor_loop.h"
+#include "level_editor/level_editor_main.h"
 #include "system/system.h"
 #include "system/world.h"
-#include "editor_render.h"
+#include "common/editor_render.h"
 
-#include "cutscene_editor.h"
+#include "cutscene_editor/cutscene_editor_main.h"
 
 #include "utils/log.h"
 

@@ -1,11 +1,11 @@
-#include "cutscene_editor.h"
+#include "cutscene_editor_main.h"
 
 #include <imgui.h>
 #include <imgui-SFML.h>
 
 #include "system/system.h"
 #include "base_entity.h"
-#include "editor_render.h"
+#include "common/editor_render.h"
 
 #include "utils/log.h"
 

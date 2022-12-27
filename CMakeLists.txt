@@ -7,7 +7,7 @@ set(CMAKE_INSTALL_PREFIX build)
 set(GAME_LIB_TARGET game_lib)
 set(GAME_TARGET vulpes)
 set(EDITOR_LIB_TARGET editor_lib)
-set(EDITOR_TARGET level_editor)
+set(EDITOR_TARGET editor)
 set(STATE_GRAPH_TARGET state_graph)
 set(TEST_TARGET tests)
 
@@ -80,16 +80,16 @@ IF(ImGui-SFML_FOUND)
     include_directories(SYSTEM ${CMAKE_PREFIX_PATH}/include)
 
     # Level editor library
-    file(GLOB_RECURSE EDITOR_LIB_SOURCES src/level_editor/*.cpp)
-    list(REMOVE_ITEM EDITOR_LIB_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/level_editor/main.cpp)
+    file(GLOB_RECURSE EDITOR_LIB_SOURCES src/editor/*.cpp)
+    list(REMOVE_ITEM EDITOR_LIB_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/editor/main.cpp)
     add_library(${EDITOR_LIB_TARGET} ${EDITOR_LIB_SOURCES})
     target_compile_options(${EDITOR_LIB_TARGET} PUBLIC ${CC_OPTIONS})
 
-    target_include_directories(${EDITOR_LIB_TARGET} PUBLIC src/game/ src/level_editor/ ${JSON_INCLUDE_DIRS})
+    target_include_directories(${EDITOR_LIB_TARGET} PUBLIC src/game/ src/editor/ ${JSON_INCLUDE_DIRS})
     target_link_libraries(${EDITOR_LIB_TARGET} ${GAME_LIB_TARGET} ${SFML_LIBS} ${JSON_LIBS} ImGui-SFML::ImGui-SFML)
 
     # Level editor target
-    file(GLOB_RECURSE EDITOR_SOURCES src/level_editor/main.cpp)
+    file(GLOB_RECURSE EDITOR_SOURCES src/editor/main.cpp)
     add_executable(${EDITOR_TARGET} ${EDITOR_SOURCES})
     target_compile_options(${EDITOR_TARGET} PUBLIC ${CC_OPTIONS})
 
@@ -110,8 +110,8 @@ if (GTest_FOUND)
     # Test target
     file(GLOB_RECURSE TEST_SOURCES test/src/*.cpp)
     # Remove mocked classes
-    list(REMOVE_ITEM TEST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/level_editor/mouse.cpp)
-    list(REMOVE_ITEM TEST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/level_editor/main.cpp)
+    list(REMOVE_ITEM TEST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/editor/mouse.cpp)
+    list(REMOVE_ITEM TEST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/editor/main.cpp)
 
     add_executable(${TEST_TARGET} ${TEST_SOURCES})
     target_compile_options(${TEST_TARGET} PUBLIC ${CC_OPTIONS})

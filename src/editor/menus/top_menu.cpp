@@ -1,7 +1,7 @@
 #include "top_menu.h"
 
-#include "editor_render.h"
-#include "cutscene_editor.h"
+#include "common/editor_render.h"
+#include "cutscene_editor/cutscene_editor_main.h"
 
 namespace menu {
 

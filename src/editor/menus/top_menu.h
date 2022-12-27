@@ -1,7 +1,7 @@
 #include <imgui.h>
 #include <imgui-SFML.h>
 
-#include "editor_loop/editor_environment.h"
+#include "level_editor/editor_environment.h"
 
 #include "system/system.h"
 

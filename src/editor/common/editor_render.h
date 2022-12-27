@@ -2,7 +2,8 @@
 
 #include "system/i_render.h"
 #include "system/render.h"
-#include "editor_loop/editor_environment.h"
+#include "system/camera.h"
+#include "level_editor/editor_environment.h"
 #include "components/collision/collideable.h"
 
 class EditorRender : public IRender {

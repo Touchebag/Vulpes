@@ -3,8 +3,7 @@
 #include <memory>
 
 #include "base_entity.h"
-#include "mouse.h"
-#include "editor_loop/common.h"
+#include "common/mouse.h"
 #include "command.h"
 
 #include <SFML/Graphics.hpp>

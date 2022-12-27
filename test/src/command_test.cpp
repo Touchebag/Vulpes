@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "level_editor/editor_loop/editor_environment.h"
+#include "editor/level_editor/editor_environment.h"
 #include "mocks/mock_mouse.h"
 
 #include "menus/menu_rendering.h"

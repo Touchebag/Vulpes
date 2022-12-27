@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "mouse.h"
+#include "common/mouse.h"
 #include "base_entity.h"
 
 class EditorEnvironment;
