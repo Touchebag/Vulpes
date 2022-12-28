@@ -10,7 +10,7 @@
 #define PHYSICS_FRAME_RATE 60
 #define MS_PER_FRAME 1000 / PHYSICS_FRAME_RATE
 
-int game_main(sf::RenderWindow& window) {
+int gameMain(sf::RenderWindow& window) {
     // Rendering produces time, physics consumes
     // This stores how much "unconsumed" time is available
     sf::Time time_rendered;

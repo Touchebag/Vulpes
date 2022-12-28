@@ -1,6 +1,10 @@
 #include "common.h"
 
+#include "utils/log.h"
+
 namespace editor_common {
+
+static CurrentEditor current_editor = CurrentEditor::LEVEL;
 
 std::shared_ptr<BaseEntity> makeHudText(std::pair<int, int> position = {0, 0}) {
     std::shared_ptr<BaseEntity> text_element = std::make_shared<BaseEntity>();
@@ -17,6 +21,14 @@ std::shared_ptr<BaseEntity> makeHudText(std::pair<int, int> position = {0, 0}) {
     System::IWorldModify::addEntity(text_element);
 
     return text_element;
+}
+
+void setCurrentEditor(CurrentEditor editor) {
+    current_editor = editor;
+}
+
+CurrentEditor getCurrentEditor() {
+    return current_editor;
 }
 
 } // editor_common

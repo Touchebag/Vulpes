@@ -9,4 +9,16 @@ namespace editor_common {
 
 std::shared_ptr<BaseEntity> makeHudText(std::pair<int, int> position);
 
+enum class CurrentEditor {
+    NONE,
+
+    GAME,
+
+    LEVEL,
+    CUTSCENE,
+};
+
+void setCurrentEditor(CurrentEditor editor);
+CurrentEditor getCurrentEditor();
+
 } // editor_common

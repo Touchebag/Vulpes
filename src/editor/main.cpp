@@ -1,12 +1,18 @@
 #include "game_loop.h"
-#include "level_editor/level_editor_main.h"
 #include "system/system.h"
 #include "system/world.h"
 #include "common/editor_render.h"
+#include "common/common.h"
 
+#include "level_editor/level_editor_main.h"
 #include "cutscene_editor/cutscene_editor_main.h"
 
+#include <imgui.h>
+#include <imgui-SFML.h>
+
 #include "utils/log.h"
+
+using editor_common::CurrentEditor;
 
 int main(int argc, const char** argv) {
     sf::RenderWindow window(sf::VideoMode(1000,1000), "Level Editor");
@@ -15,6 +21,8 @@ int main(int argc, const char** argv) {
     System::getRender()->setWindowSize(window, 1000, 1000);
 
     window.setKeyRepeatEnabled(false);
+
+    ImGui::SFML::Init(window);
 
     std::string level_file;
     if (argc > 1) {
@@ -27,12 +35,32 @@ int main(int argc, const char** argv) {
     System::IWorldModify::setEntrance(0);
 
     while (window.isOpen()) {
-        level_editor_main(window);
-
-        if (!window.isOpen()) {
-            break;
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            switch (event.type) {
+                case sf::Event::KeyPressed:
+                    if (event.key.code == sf::Keyboard::Key::Escape) {
+                        window.close();
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
 
-        game_main(window);
+        switch (editor_common::getCurrentEditor()) {
+            case CurrentEditor::GAME:
+                gameMain(window);
+                break;
+            case CurrentEditor::LEVEL:
+                levelEditorMain(window);
+                break;
+            case CurrentEditor::CUTSCENE:
+                cutsceneEditorMain(window);
+                break;
+            default:
+                ImGui::SFML::Shutdown();
+                exit(0);
+        }
     }
 }

@@ -1,4 +1,5 @@
-#include "utils/log.h"
+#include "level_editor_main.h"
+
 #include "system/world.h"
 #include "system/system.h"
 #include "components/rendering/rendering_text.h"
@@ -6,11 +7,13 @@
 #include "editor_environment.h"
 #include "editor_mouse.h"
 #include "menus/menu_main.h"
+#include "common/common.h"
+
+#include "utils/log.h"
 
 bool render_current_layer_only = false;
 
-int level_editor_main(sf::RenderWindow& window) {
-    ImGui::SFML::Init(window);
+int levelEditorMain(sf::RenderWindow& window) {
     sf::Clock delta_clock;
 
     auto editor_env = EditorEnvironment::create_environment(window);
@@ -32,7 +35,7 @@ int level_editor_main(sf::RenderWindow& window) {
     // Trigger one update to initiate all entities
     System::IWorldModify::update();
 
-    while (window.isOpen()) {
+    while (window.isOpen() && editor_common::getCurrentEditor() == editor_common::CurrentEditor::LEVEL) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
             editor_env->current_entity.reset();
         }
@@ -56,7 +59,7 @@ int level_editor_main(sf::RenderWindow& window) {
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
                         switch (event.key.code) {
                             case sf::Keyboard::Key::P:
-                                return 0;
+                                editor_common::setCurrentEditor(editor_common::CurrentEditor::GAME);
                                 break;
                             case sf::Keyboard::Key::S:
                                 System::IWorldModify::saveWorldToFile(System::IWorldRead::getCurrentRoomName());
@@ -180,10 +183,10 @@ int level_editor_main(sf::RenderWindow& window) {
 
         menu::renderMenus(window, editor_env);
 
+        ImGui::SFML::Render(window);
+
         window.display();
     }
-
-    ImGui::SFML::Shutdown();
 
     return 0;
 }

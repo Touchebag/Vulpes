@@ -6,6 +6,8 @@
 #include "system/system.h"
 #include "base_entity.h"
 #include "common/editor_render.h"
+#include "common/common.h"
+#include "menus/menu_main.h"
 
 #include "utils/log.h"
 
@@ -60,6 +62,8 @@ int cutsceneEditorMain(sf::RenderWindow& window) {
 
     System::setCutscene(Cutscene::loadCutscene(cutscene_name));
 
+    auto editor_env = EditorEnvironment::create_environment(window);
+
     int frame_count = 0;
 
     sf::Time time_rendered;
@@ -68,7 +72,7 @@ int cutsceneEditorMain(sf::RenderWindow& window) {
 
     bool auto_play = false;
 
-    while (window.isOpen()) {
+    while (window.isOpen() && editor_common::getCurrentEditor() == editor_common::CurrentEditor::CUTSCENE) {
         time_rendered += render_clock.getElapsedTime();
         render_clock.restart();
 
@@ -121,6 +125,9 @@ int cutsceneEditorMain(sf::RenderWindow& window) {
         System::getRender()->render(window, 0.0);
 
         renderSeekBar(cutscene_name, frame_count);
+
+        menu::renderMenus(window, editor_env);
+
         ImGui::SFML::Render(window);
 
         window.display();

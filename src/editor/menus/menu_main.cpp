@@ -110,8 +110,6 @@ void renderMenus(sf::RenderWindow& window, std::shared_ptr<EditorEnvironment> ed
     } else {
         open_last_frame = false;
     }
-
-    ImGui::SFML::Render(window);
 }
 
 } // menu

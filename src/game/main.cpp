@@ -13,5 +13,5 @@ int main() {
     System::IWorldModify::loadWorldFromFile("world.json");
     System::IWorldModify::setEntrance(0);
 
-    game_main(window);
+    gameMain(window);
 }
