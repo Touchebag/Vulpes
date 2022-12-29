@@ -7,6 +7,7 @@
 #include "editor_environment.h"
 #include "editor_mouse.h"
 #include "menus/menu_main.h"
+#include "menus/level_top_menu.h"
 #include "common/common.h"
 
 #include "utils/log.h"
@@ -34,6 +35,8 @@ int levelEditorMain(sf::RenderWindow& window) {
 
     // Trigger one update to initiate all entities
     System::IWorldModify::update();
+
+    auto top_menu = level_top_menu::createMenus();
 
     while (window.isOpen() && editor_common::getCurrentEditor() == editor_common::CurrentEditor::LEVEL) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
@@ -181,7 +184,8 @@ int levelEditorMain(sf::RenderWindow& window) {
             renderInst->render(window);
         }
 
-        menu::renderMenus(window, editor_env);
+        top_menu.draw(window);
+        menu::renderMenus(editor_env);
 
         ImGui::SFML::Render(window);
 

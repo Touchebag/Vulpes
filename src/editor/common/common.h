@@ -21,4 +21,6 @@ enum class CurrentEditor {
 void setCurrentEditor(CurrentEditor editor);
 CurrentEditor getCurrentEditor();
 
+void drawEditorMenu();
+
 } // editor_common

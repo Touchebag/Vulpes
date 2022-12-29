@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
 #include "editor/level_editor/editor_environment.h"
-#include "mocks/mock_mouse.h"
+#include "editor/level_editor/menus/menu_rendering.h"
 
-#include "menus/menu_rendering.h"
+#include "mocks/mock_mouse.h"
 
 #include "components/collision/collideables/movement/collideable_static.h"
 

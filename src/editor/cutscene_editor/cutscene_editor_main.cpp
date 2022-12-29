@@ -7,7 +7,7 @@
 #include "base_entity.h"
 #include "common/editor_render.h"
 #include "common/common.h"
-#include "menus/menu_main.h"
+#include "cutscene_top_menu.h"
 
 #include "utils/log.h"
 
@@ -45,7 +45,6 @@ void renderSeekBar(const std::string& cutscene_name, int& frame_count) {
 int cutsceneEditorMain(sf::RenderWindow& window) {
     std::string cutscene_name = "boxes";
 
-    ImGui::SFML::Init(window);
     sf::Clock delta_clock;
 
     auto old_render = System::getRender();
@@ -71,6 +70,8 @@ int cutsceneEditorMain(sf::RenderWindow& window) {
     render_clock.restart();
 
     bool auto_play = false;
+
+    auto top_menu = cutscene_top_menu::createMenus();
 
     while (window.isOpen() && editor_common::getCurrentEditor() == editor_common::CurrentEditor::CUTSCENE) {
         time_rendered += render_clock.getElapsedTime();
@@ -126,7 +127,7 @@ int cutsceneEditorMain(sf::RenderWindow& window) {
 
         renderSeekBar(cutscene_name, frame_count);
 
-        menu::renderMenus(window, editor_env);
+        top_menu.draw(window);
 
         ImGui::SFML::Render(window);
 

@@ -68,9 +68,7 @@ bool open_last_frame;
 
 } // namespace
 
-void renderMenus(sf::RenderWindow& window, std::shared_ptr<EditorEnvironment> editor_env) {
-    topMenu(window, editor_env);
-
+void renderMenus(std::shared_ptr<EditorEnvironment> editor_env) {
     if (auto ent = editor_env->current_entity) {
         if (!open_last_frame) {
             executeFunctionOnAllComponents(recreateMenuInstances);

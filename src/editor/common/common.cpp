@@ -1,5 +1,8 @@
 #include "common.h"
 
+#include <imgui.h>
+#include <imgui-SFML.h>
+
 #include "utils/log.h"
 
 namespace editor_common {
@@ -29,6 +32,20 @@ void setCurrentEditor(CurrentEditor editor) {
 
 CurrentEditor getCurrentEditor() {
     return current_editor;
+}
+
+void drawEditorMenu() {
+    bool l_ed = false;
+    ImGui::Selectable("Level", &l_ed);
+    if (l_ed) {
+        setCurrentEditor(CurrentEditor::LEVEL);
+    }
+
+    bool c_ed = false;
+    ImGui::Selectable("Cutscene", &c_ed);
+    if (c_ed) {
+        setCurrentEditor(CurrentEditor::CUTSCENE);
+    }
 }
 
 } // editor_common
