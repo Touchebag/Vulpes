@@ -6,6 +6,7 @@
 
 #include "level_editor/level_editor_main.h"
 #include "cutscene_editor/cutscene_editor_main.h"
+#include "entity_editor/entity_editor_main.h"
 
 #include <imgui.h>
 #include <imgui-SFML.h>
@@ -34,6 +35,8 @@ int main(int argc, const char** argv) {
     System::IWorldModify::loadWorldFromFile(level_file);
     System::IWorldModify::setEntrance(0);
 
+    editor_common::setCurrentEditor(editor_common::CurrentEditor::ENTITY);
+
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -57,6 +60,9 @@ int main(int argc, const char** argv) {
                 break;
             case CurrentEditor::CUTSCENE:
                 cutsceneEditorMain(window);
+                break;
+            case CurrentEditor::ENTITY:
+                entityEditorMain(window);
                 break;
             default:
                 ImGui::SFML::Shutdown();

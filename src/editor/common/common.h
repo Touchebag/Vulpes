@@ -16,6 +16,7 @@ enum class CurrentEditor {
 
     LEVEL,
     CUTSCENE,
+    ENTITY,
 };
 
 void setCurrentEditor(CurrentEditor editor);

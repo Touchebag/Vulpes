@@ -46,6 +46,12 @@ void drawEditorMenu() {
     if (c_ed) {
         setCurrentEditor(CurrentEditor::CUTSCENE);
     }
+
+    bool e_ed = false;
+    ImGui::Selectable("Entity", &e_ed);
+    if (e_ed) {
+        setCurrentEditor(CurrentEditor::ENTITY);
+    }
 }
 
 } // editor_common
