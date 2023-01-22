@@ -6,12 +6,29 @@
 #include <imgui-SFML.h>
 #include <misc/cpp/imgui_stdlib.h>
 
-#include "utils/file.h"
+#include "common/mouse.h"
 
+#include "utils/file.h"
 #include "utils/log.h"
 
 constexpr float WINDOW_WIDTH = 250.0f;
 constexpr float WINDOW_HEIGHT = 30.0f;
+
+namespace {
+
+bool mouseCollides(const UnpackedState& state, const std::pair<float, float> mouse_pos) {
+    if (mouse_pos.first  >= state.x - (WINDOW_WIDTH / 2.0f) &&
+        mouse_pos.first  <= state.x + (WINDOW_WIDTH / 2.0f) &&
+        mouse_pos.second >= state.y - (WINDOW_HEIGHT / 2.0f) &&
+        mouse_pos.second <= state.y + (WINDOW_HEIGHT / 2.0f)) {
+
+        return true;
+    } else {
+        return false;
+    }
+}
+
+} // namespace
 
 StateView::StateView() :
     font_(File::loadFont("arial.ttf").value()) {
@@ -29,8 +46,16 @@ void StateView::drawState(sf::RenderWindow& window, const std::string& state_nam
 
     rect.setFillColor(sf::Color(220, 220, 220));
 
+
+    auto color = sf::Color(0, 0, 0);
+    if (active_state_ == state_name) {
+        color = sf::Color(255, 0, 0);
+    } else if (hovered_state_ == state_name) {
+        color = sf::Color(0, 0, 255);
+    }
+
     rect.setOutlineThickness(10.0f);
-    rect.setOutlineColor(sf::Color(0, 0, 0));
+    rect.setOutlineColor(color);
 
     window.draw(rect);
 
@@ -39,6 +64,7 @@ void StateView::drawState(sf::RenderWindow& window, const std::string& state_nam
 
     text.setFont(font_);
     text.setString(state.name);
+
     text.setFillColor(sf::Color(0, 0, 0));
 
     text.setCharacterSize(24);
@@ -57,10 +83,18 @@ void StateView::drawLines(sf::RenderWindow& window, const std::string& state_nam
     for (auto& it : state.next_states) {
         auto new_state = states_.at(it.second);
 
+        auto color = sf::Color(0, 0, 0);
+
+        if (active_state_ == state_name) {
+            color = sf::Color(255, 0, 0);
+        } else if (hovered_state_ == state_name) {
+            color = sf::Color(0, 0, 255);
+        }
+
         sf::Vertex line[] =
         {
-            sf::Vertex(sf::Vector2f(state.x, state.y), sf::Color(0, 0, 0)),
-            sf::Vertex(sf::Vector2f(new_state.x, new_state.y), sf::Color(0, 0, 0))
+            sf::Vertex(sf::Vector2f(state.x, state.y), color),
+            sf::Vertex(sf::Vector2f(new_state.x, new_state.y), color)
         };
 
         window.draw(line, 2, sf::Lines);
@@ -76,6 +110,19 @@ void StateView::unpack(const nlohmann::json& state_file) {
 }
 
 void StateView::draw(sf::RenderWindow& window) {
+    Mouse mouse{window};
+    auto mouse_pos = mouse.getMouseWorldPosition();
+
+    hovered_state_ = "";
+
+    for (auto& it : states_) {
+        if (mouseCollides(it.second, mouse_pos)) {
+            hovered_state_ = it.first;
+
+            break;
+        }
+    }
+
     // Draw lines first to appear behind boxes
     for (auto& it : states_) {
         drawLines(window, it.first);
@@ -123,5 +170,17 @@ void StateView::positionStates() {
 
         current_col_index = 0;
         current_row_index++;
+    }
+}
+
+void StateView::handleMouseClick(std::pair<float, float> mouse_pos) {
+    active_state_ = "";
+
+    for (auto& it : states_) {
+        if (mouseCollides(it.second, mouse_pos)) {
+            active_state_ = it.first;
+
+            break;
+        }
     }
 }

@@ -49,3 +49,7 @@ UnpackedEntity UnpackedEntity::unpackEntity(const std::string& entity_name) {
 void UnpackedEntity::draw(sf::RenderWindow& window) {
     state_view.draw(window);
 }
+
+void UnpackedEntity::handleMouseClick(std::pair<float, float> mouse_pos) {
+    state_view.handleMouseClick(mouse_pos);
+}

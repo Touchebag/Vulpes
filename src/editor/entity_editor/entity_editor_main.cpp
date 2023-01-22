@@ -5,9 +5,9 @@
 
 #include "system/system.h"
 #include "base_entity.h"
+
 #include "common/editor_render.h"
 #include "common/common.h"
-
 #include "entity_top_menu.h"
 #include "unpacked_entity.h"
 #include "editor_view.h"
@@ -19,6 +19,9 @@
 
 int entityEditorMain(sf::RenderWindow& window) {
     auto old_view = window.getView();
+    auto old_camera = System::getCamera();
+
+    System::setCamera(std::make_shared<Camera>());
 
     sf::Clock delta_clock;
 
@@ -43,6 +46,14 @@ int entityEditorMain(sf::RenderWindow& window) {
             view.handleMouseEvent(event);
 
             switch (event.type) {
+                case sf::Event::MouseButtonPressed:
+                    if (event.mouseButton.button == sf::Mouse::Button::Left) {
+                        Mouse mouse{window};
+                        auto mouse_pos = mouse.getMouseWorldPosition();
+
+                        entity.handleMouseClick(mouse_pos);
+                    }
+                    break;
                 default:
                     break;
             }
@@ -63,6 +74,7 @@ int entityEditorMain(sf::RenderWindow& window) {
     }
 
     window.setView(old_view);
+    System::setCamera(old_camera);
 
     return 0;
 }

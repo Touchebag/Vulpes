@@ -1,5 +1,7 @@
 #include "editor_view.h"
 
+#include "system/system.h"
+
 #include "utils/log.h"
 
 namespace entity_editor {
@@ -54,6 +56,7 @@ void EditorView::setView(std::pair<float, float> pos, std::pair<float, float> si
     view.setSize(size_.first, size_.second);
     view.setCenter(center_position_.first, center_position_.second);
 
+    System::getCamera()->setView(center_position_.first, center_position_.second, size_.first, size_.second);
     window_.setView(view);
 }
 

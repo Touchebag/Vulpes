@@ -13,6 +13,8 @@ class StateView {
 
     void draw(sf::RenderWindow& window);
 
+    void handleMouseClick(std::pair<float, float> mouse_pos);
+
   private:
     void drawState(sf::RenderWindow& window, const std::string& state_name);
     void drawLines(sf::RenderWindow& window, const std::string& state_name);
@@ -20,6 +22,9 @@ class StateView {
     void positionStates();
 
     sf::Font font_;
+
+    std::string hovered_state_ = "";
+    std::string active_state_ = "";
 
     std::unordered_map<std::string, UnpackedState> states_;
 };
