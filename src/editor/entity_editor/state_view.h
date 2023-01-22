@@ -7,13 +7,19 @@
 
 class StateView {
   public:
+    StateView();
+
     void unpack(const nlohmann::json& state_file);
 
     void draw(sf::RenderWindow& window);
 
   private:
     void drawState(sf::RenderWindow& window, const std::string& state_name);
+    void drawLines(sf::RenderWindow& window, const std::string& state_name);
+
     void positionStates();
+
+    sf::Font font_;
 
     std::unordered_map<std::string, UnpackedState> states_;
 };

@@ -6,17 +6,26 @@
 #include <imgui-SFML.h>
 #include <misc/cpp/imgui_stdlib.h>
 
+#include "utils/file.h"
+
 #include "utils/log.h"
 
-constexpr int WINDOW_WIDTH = 150;
-constexpr int WINDOW_HEIGHT = 100;
+constexpr float WINDOW_WIDTH = 250.0f;
+constexpr float WINDOW_HEIGHT = 30.0f;
+
+StateView::StateView() :
+    font_(File::loadFont("arial.ttf").value()) {
+}
 
 void StateView::drawState(sf::RenderWindow& window, const std::string& state_name) {
     UnpackedState state = states_.at(state_name);
 
-    sf::RectangleShape rect({static_cast<float>(WINDOW_WIDTH), static_cast<float>(WINDOW_HEIGHT)});
+    // Background rectangle
+    sf::RectangleShape rect({WINDOW_WIDTH, WINDOW_HEIGHT});
 
-    rect.setPosition({static_cast<float>(state.x), static_cast<float>(state.y)});
+    auto size = rect.getLocalBounds();
+    rect.setOrigin({size.width / 2.0f, size.height / 2.0f});
+    rect.setPosition({state.x, state.y});
 
     rect.setFillColor(sf::Color(220, 220, 220));
 
@@ -24,6 +33,38 @@ void StateView::drawState(sf::RenderWindow& window, const std::string& state_nam
     rect.setOutlineColor(sf::Color(0, 0, 0));
 
     window.draw(rect);
+
+    // Text
+    sf::Text text;
+
+    text.setFont(font_);
+    text.setString(state.name);
+    text.setFillColor(sf::Color(0, 0, 0));
+
+    text.setCharacterSize(24);
+    text.setStyle(sf::Text::Bold);
+
+    size = text.getLocalBounds();
+    text.setOrigin({size.width / 2.0f, 16.0f});
+    text.setPosition({state.x, state.y});
+
+    window.draw(text);
+}
+
+void StateView::drawLines(sf::RenderWindow& window, const std::string& state_name) {
+    UnpackedState state = states_.at(state_name);
+
+    for (auto& it : state.next_states) {
+        auto new_state = states_.at(it.second);
+
+        sf::Vertex line[] =
+        {
+            sf::Vertex(sf::Vector2f(state.x, state.y), sf::Color(0, 0, 0)),
+            sf::Vertex(sf::Vector2f(new_state.x, new_state.y), sf::Color(0, 0, 0))
+        };
+
+        window.draw(line, 2, sf::Lines);
+    }
 }
 
 void StateView::unpack(const nlohmann::json& state_file) {
@@ -35,14 +76,19 @@ void StateView::unpack(const nlohmann::json& state_file) {
 }
 
 void StateView::draw(sf::RenderWindow& window) {
+    // Draw lines first to appear behind boxes
+    for (auto& it : states_) {
+        drawLines(window, it.first);
+    }
+
     for (auto& it : states_) {
         drawState(window, it.first);
     }
 }
 
 void StateView::positionStates() {
-    constexpr int x_padding = 50;
-    constexpr int y_padding = 50;
+    constexpr int x_padding = 150.0;
+    constexpr int y_padding = 100.0;
 
     std::vector<std::string> current_row;
     std::vector<std::string> next_row;
@@ -66,8 +112,8 @@ void StateView::positionStates() {
                 }
             }
 
-            state.x = current_row_index * (x_padding + WINDOW_WIDTH) + x_padding;
-            state.y = current_col_index * (y_padding + WINDOW_HEIGHT) + x_padding;
+            state.x = static_cast<float>(current_row_index) * (x_padding + WINDOW_WIDTH) + x_padding;
+            state.y = static_cast<float>(current_col_index) * (y_padding + WINDOW_HEIGHT) + y_padding;
 
             current_col_index++;
         }
