@@ -9,7 +9,7 @@ class StateView {
   public:
     void unpack(const nlohmann::json& state_file);
 
-    void update(sf::RenderWindow& window);
+    void update();
 
   private:
     void drawState(const std::string& state_name);

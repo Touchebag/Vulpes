@@ -34,7 +34,7 @@ void StateView::unpack(const nlohmann::json& state_file) {
     }
 }
 
-void StateView::update(sf::RenderWindow& window) {
+void StateView::update() {
     for (auto& it : states_) {
         drawState(it.first);
     }

@@ -7,28 +7,23 @@
 #include "base_entity.h"
 #include "common/editor_render.h"
 #include "common/common.h"
-#include "entity_top_menu.h"
 
+#include "entity_top_menu.h"
 #include "unpacked_entity.h"
+#include "editor_view.h"
 
 #include "utils/log.h"
 
 #define PHYSICS_FRAME_RATE 60
 #define MS_PER_FRAME 1000 / PHYSICS_FRAME_RATE
 
-void setWindowSize(sf::RenderWindow& window, int width, int height) {
-    auto view = window.getView();
-    view.setSize({static_cast<float>(width), static_cast<float>(height)});
-    view.setCenter({static_cast<float>(width) / 2.0f, static_cast<float>(height) / 2.0f});
-
-    window.setView(view);
-}
-
 int entityEditorMain(sf::RenderWindow& window) {
-    setWindowSize(window, 1000, 1000);
     sf::Clock delta_clock;
 
     window.setKeyRepeatEnabled(true);
+
+    entity_editor::EditorView view(window);
+    view.setView({500.0, 500.0}, {1000.0, 1000.0});
 
     auto top_menu = entity_top_menu::createMenus();
 
@@ -42,14 +37,23 @@ int entityEditorMain(sf::RenderWindow& window) {
         sf::Event event;
         while (window.pollEvent(event)) {
             ImGui::SFML::ProcessEvent(event);
+
+            view.handleMouseEvent(event);
+
+            switch (event.type) {
+                default:
+                    break;
+            }
         }
 
         ImGui::SFML::Update(window, delta_clock.restart());
 
         window.clear(sf::Color(255, 255, 255));
+
+        view.update();
         top_menu.draw(window);
 
-        entity.update(window);
+        entity.update();
 
         ImGui::SFML::Render(window);
 
