@@ -8,7 +8,7 @@ namespace entity_editor {
 
 class EditorView {
   public:
-    EditorView(sf::RenderWindow& window);
+    explicit EditorView(sf::RenderWindow& window);
 
     void update();
 

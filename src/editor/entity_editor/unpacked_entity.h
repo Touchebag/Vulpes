@@ -11,7 +11,7 @@ class UnpackedEntity {
   public:
     static UnpackedEntity unpackEntity(const std::string& entity_name);
 
-    void update();
+    void draw(sf::RenderWindow& window);
 
   private:
     std::string entity_name_;

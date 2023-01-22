@@ -35,8 +35,6 @@ int main(int argc, const char** argv) {
     System::IWorldModify::loadWorldFromFile(level_file);
     System::IWorldModify::setEntrance(0);
 
-    editor_common::setCurrentEditor(editor_common::CurrentEditor::ENTITY);
-
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {

@@ -18,6 +18,8 @@
 #define MS_PER_FRAME 1000 / PHYSICS_FRAME_RATE
 
 int entityEditorMain(sf::RenderWindow& window) {
+    auto old_view = window.getView();
+
     sf::Clock delta_clock;
 
     window.setKeyRepeatEnabled(true);
@@ -53,12 +55,14 @@ int entityEditorMain(sf::RenderWindow& window) {
         view.update();
         top_menu.draw(window);
 
-        entity.update();
+        entity.draw(window);
 
         ImGui::SFML::Render(window);
 
         window.display();
     }
+
+    window.setView(old_view);
 
     return 0;
 }

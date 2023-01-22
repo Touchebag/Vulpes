@@ -9,10 +9,11 @@ class StateView {
   public:
     void unpack(const nlohmann::json& state_file);
 
-    void update();
+    void draw(sf::RenderWindow& window);
 
   private:
-    void drawState(const std::string& state_name);
+    void drawState(sf::RenderWindow& window, const std::string& state_name);
+    void positionStates();
 
     std::unordered_map<std::string, UnpackedState> states_;
 };

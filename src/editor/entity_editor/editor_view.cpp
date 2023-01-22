@@ -39,8 +39,8 @@ void EditorView::update() {
         std::pair<float, float> new_pos;
         auto distance = mouse_.getMouseWorldDistance();
 
-        new_pos.first = initial_mouse_pos_.first + distance.first;
-        new_pos.second = initial_mouse_pos_.second + distance.second;
+        new_pos.first = initial_mouse_pos_.first - distance.first;
+        new_pos.second = initial_mouse_pos_.second - distance.second;
 
         setView(new_pos, size_);
     }

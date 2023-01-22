@@ -46,6 +46,6 @@ UnpackedEntity UnpackedEntity::unpackEntity(const std::string& entity_name) {
     return entity;
 }
 
-void UnpackedEntity::update() {
-    state_view.update();
+void UnpackedEntity::draw(sf::RenderWindow& window) {
+    state_view.draw(window);
 }

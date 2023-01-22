@@ -2,15 +2,18 @@
 
 #include <nlohmann/json.hpp>
 
-class UnpackedState {
-  public:
-    UnpackedState(std::string name, nlohmann::json j);
+struct UnpackedState {
+    UnpackedState(const std::string& name, nlohmann::json j);
 
     // Data
+
     std::string name;
     // Needed for renaming
     std::string old_name;
 
-    int x;
-    int y;
+    // Event, state
+    std::map<std::string, std::string> next_states;
+
+    int x = 0;
+    int y = 0;
 };
