@@ -28,6 +28,29 @@ bool mouseCollides(const UnpackedState& state, const std::pair<float, float> mou
     }
 }
 
+void drawLineRect(sf::RenderWindow& window, sf::Vector2f from, sf::Vector2f to, float thickness, sf::Color color) {
+    sf::Vertex vertices[4];
+
+    sf::Vector2f dist = to - from;
+    sf::Vector2f unit_vector = dist / std::sqrt(dist.x * dist.x + dist.y * dist.y);
+    sf::Vector2f unit_perpendicular(-unit_vector.y, unit_vector.x);
+
+    sf::Vector2f thickness_offset = (thickness / 2.f) * unit_perpendicular;
+
+    // Used to prevent bi-directional lines from overlapping
+    sf::Vector2f position_offset = (10.0f) * unit_perpendicular;
+
+    vertices[0].position = from + thickness_offset + position_offset;
+    vertices[1].position = to + thickness_offset + position_offset;
+    vertices[2].position = to - thickness_offset + position_offset;
+    vertices[3].position = from - thickness_offset + position_offset;
+
+    for (int i=0; i<4; ++i)
+        vertices[i].color = color;
+
+    window.draw(vertices, 4, sf::Quads);
+}
+
 } // namespace
 
 StateView::StateView() :
@@ -45,7 +68,6 @@ void StateView::drawState(sf::RenderWindow& window, const std::string& state_nam
     rect.setPosition({state.x, state.y});
 
     rect.setFillColor(sf::Color(220, 220, 220));
-
 
     auto color = sf::Color(0, 0, 0);
     if (active_state_ == state_name) {
@@ -84,20 +106,17 @@ void StateView::drawLines(sf::RenderWindow& window, const std::string& state_nam
         auto new_state = states_.at(it.second);
 
         auto color = sf::Color(0, 0, 0);
+        float thickness = 2.0f;
 
         if (active_state_ == state_name) {
             color = sf::Color(255, 0, 0);
+            thickness = 5.0f;
         } else if (hovered_state_ == state_name) {
             color = sf::Color(0, 0, 255);
+            thickness = 5.0f;
         }
 
-        sf::Vertex line[] =
-        {
-            sf::Vertex(sf::Vector2f(state.x, state.y), color),
-            sf::Vertex(sf::Vector2f(new_state.x, new_state.y), color)
-        };
-
-        window.draw(line, 2, sf::Lines);
+        drawLineRect(window, {state.x, state.y}, {new_state.x, new_state.y}, thickness, color);
     }
 }
 
