@@ -39,7 +39,7 @@ void EditorView::handleMouseEvent(sf::Event event) {
 void EditorView::update() {
     if (dragging_view_) {
         std::pair<float, float> new_pos;
-        auto distance = mouse_.getMouseWorldDistance();
+        auto distance = mouse_.getMouseDistance();
 
         new_pos.first = initial_mouse_pos_.first - distance.first;
         new_pos.second = initial_mouse_pos_.second - distance.second;
