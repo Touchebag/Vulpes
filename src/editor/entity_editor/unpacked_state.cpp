@@ -13,4 +13,10 @@ UnpackedState::UnpackedState(const std::string& state_name, nlohmann::json j) {
             next_states.insert_or_assign(event, state);
         }
     }
+
+    if (j.contains("templates")) {
+        for (auto it : j["templates"]) {
+            templates.push_back(it);
+        }
+    }
 }

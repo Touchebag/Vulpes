@@ -27,4 +27,5 @@ class StateView {
     std::string active_state_ = "";
 
     std::unordered_map<std::string, UnpackedState> states_;
+    std::unordered_map<std::string, UnpackedState> templates_;
 };

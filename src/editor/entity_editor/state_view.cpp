@@ -102,7 +102,15 @@ void StateView::drawState(sf::RenderWindow& window, const std::string& state_nam
 void StateView::drawLines(sf::RenderWindow& window, const std::string& state_name) {
     UnpackedState state = states_.at(state_name);
 
-    for (auto& it : state.next_states) {
+    auto next_states = state.next_states;
+    for (auto template_name : state.templates) {
+        auto templ = templates_.at(template_name);
+        for (auto ns : templ.next_states) {
+            next_states.insert({ns.first, ns.second});
+        }
+    }
+
+    for (auto& it : next_states) {
         auto new_state = states_.at(it.second);
 
         auto color = sf::Color(0, 0, 0);
@@ -121,6 +129,10 @@ void StateView::drawLines(sf::RenderWindow& window, const std::string& state_nam
 }
 
 void StateView::unpack(const nlohmann::json& state_file) {
+    for (auto s : state_file["templates"].items()) {
+        templates_.insert_or_assign(s.key(), UnpackedState(s.key(), s.value()));
+    }
+
     for (auto s : state_file["states"].items()) {
         states_.insert_or_assign(s.key(), UnpackedState(s.key(), s.value()));
     }
@@ -171,7 +183,15 @@ void StateView::positionStates() {
 
             auto& state = states_.at(it);
 
-            for (auto ns : state.next_states) {
+            auto next_states = state.next_states;
+            for (auto template_name : state.templates) {
+                auto templ = templates_.at(template_name);
+                for (auto ns : templ.next_states) {
+                    next_states.insert({ns.first, ns.second});
+                }
+            }
+
+            for (auto ns : next_states) {
                 if (checked_states.count(ns.second) == 0) {
                     next_row.push_back(ns.second);
                     checked_states.insert(ns.second);

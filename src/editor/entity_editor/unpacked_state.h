@@ -14,6 +14,8 @@ struct UnpackedState {
     // Event, state
     std::map<std::string, std::string> next_states;
 
+    std::vector<std::string> templates;
+
     float x = 0.0;
     float y = 0.0;
 };
