@@ -104,6 +104,9 @@
                         "y": 0
                     }
                 }
+            ],
+            "next_states": [
+                {"event": "ledge_climb", "state": "ledge_climb"}
             ]
         }
     },

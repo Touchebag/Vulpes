@@ -2,11 +2,9 @@
 
 #include "utils/log.h"
 
-UnpackedState::UnpackedState(const std::string& name, nlohmann::json j) {
-    this->name = name;
-    this->old_name = name;
-
-    // TODO Templates
+UnpackedState::UnpackedState(const std::string& state_name, nlohmann::json j) {
+    this->name = state_name;
+    this->old_name = state_name;
 
     if (j.contains("next_states")) {
         for (auto it : j["next_states"]) {

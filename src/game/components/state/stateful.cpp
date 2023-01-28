@@ -57,7 +57,7 @@ void Stateful::reloadFromJson(nlohmann::json j, File file_instance) {
 }
 
 std::optional<nlohmann::json> Stateful::outputToJson() {
-    return original_json_;
+    return {original_json_};
 }
 
 void Stateful::checkTemporaryCollideables(const state_utils::StateProperties& state_props) {
