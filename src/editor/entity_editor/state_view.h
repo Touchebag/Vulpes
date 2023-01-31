@@ -10,6 +10,7 @@ class StateView {
     StateView();
 
     void unpack(const nlohmann::json& state_file);
+    nlohmann::json repack();
 
     void draw(sf::RenderWindow& window);
 

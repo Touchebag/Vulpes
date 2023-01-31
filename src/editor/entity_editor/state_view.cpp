@@ -4,7 +4,6 @@
 
 #include <imgui.h>
 #include <imgui-SFML.h>
-#include <misc/cpp/imgui_stdlib.h>
 
 #include "common/mouse.h"
 
@@ -138,6 +137,24 @@ void StateView::unpack(const nlohmann::json& state_file) {
     }
 
     positionStates();
+}
+
+nlohmann::json StateView::repack() {
+    nlohmann::json j;
+
+    nlohmann::json templates;
+    for (auto it : templates_) {
+        templates[it.second.name] = it.second.repack();
+    }
+    j["templates"] = templates;
+
+    nlohmann::json states;
+    for (auto it : states_) {
+        states[it.second.name] = it.second.repack();
+    }
+    j["states"] = states;
+
+    return j;
 }
 
 void StateView::draw(sf::RenderWindow& window) {

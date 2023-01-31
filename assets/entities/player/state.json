@@ -124,13 +124,13 @@
         },
         "idle": {
             "next_states": [
-                {"event": "moving_x", "state": "running"},
-                {"event": "jumping", "state": "jump_start"},
-                {"event": "airborne", "state": "falling"},
-                {"event": "dashing", "state": "dash_startup"},
                 {"event": "action_attack1", "state": "attack"},
                 {"event": "action_attack2", "state": "shoot"},
-                {"event": "damaged", "state": "taking_damage"}
+                {"event": "airborne", "state": "falling"},
+                {"event": "damaged", "state": "taking_damage"},
+                {"event": "dashing", "state": "dash_startup"},
+                {"event": "jumping", "state": "jump_start"},
+                {"event": "moving_x", "state": "running"}
             ],
             "templates": [
                 "reset_jumps_and_dashes",
@@ -143,13 +143,13 @@
         },
         "running": {
             "next_states": [
-                {"event": "no_movement_x", "state": "idle"},
-                {"event": "jumping", "state": "jump_start"},
-                {"event": "airborne", "state": "falling"},
-                {"event": "dashing", "state": "dash_startup"},
                 {"event": "action_attack1", "state": "attack"},
                 {"event": "action_attack2", "state": "shoot"},
-                {"event": "damaged", "state": "taking_damage"}
+                {"event": "airborne", "state": "falling"},
+                {"event": "damaged", "state": "taking_damage"},
+                {"event": "dashing", "state": "dash_startup"},
+                {"event": "jumping", "state": "jump_start"},
+                {"event": "no_movement_x", "state": "idle"}
             ],
             "templates": [
                 "reset_jumps_and_dashes",
@@ -166,22 +166,22 @@
             ],
             "frame_timer": 3,
             "next_states": [
-                {"event": "touching_floor", "state": "idle"},
-                {"event": "touching_wall", "state": "wall_slide_rising"},
-                {"event": "frame_timeout", "state": "jumping"},
+                {"event": "damaged", "state": "taking_damage"},
                 {"event": "dashing", "state": "dash_startup"},
-                {"event": "damaged", "state": "taking_damage"}
+                {"event": "frame_timeout", "state": "jumping"},
+                {"event": "touching_floor", "state": "idle"},
+                {"event": "touching_wall", "state": "wall_slide_rising"}
             ],
             "animation": "jumping"
         },
         "jumping": {
             "next_states": [
-                {"event": "touching_floor", "state": "idle"},
-                {"event": "touching_wall", "state": "wall_slide_rising"},
-                {"event": "jumping", "state": "jump_start"},
-                {"event": "falling", "state": "falling"},
+                {"event": "damaged", "state": "taking_damage"},
                 {"event": "dashing", "state": "dash_startup"},
-                {"event": "damaged", "state": "taking_damage"}
+                {"event": "falling", "state": "falling"},
+                {"event": "jumping", "state": "jump_start"},
+                {"event": "touching_floor", "state": "idle"},
+                {"event": "touching_wall", "state": "wall_slide_rising"}
             ],
             "animation": "jumping",
             "templates": [
@@ -193,11 +193,11 @@
         },
         "falling": {
             "next_states": [
-                {"event": "touching_floor", "state": "idle"},
-                {"event": "touching_wall", "state": "wall_slide"},
-                {"event": "jumping", "state": "jump_start"},
+                {"event": "damaged", "state": "taking_damage"},
                 {"event": "dashing", "state": "dash_startup"},
-                {"event": "damaged", "state": "taking_damage"}
+                {"event": "jumping", "state": "jump_start"},
+                {"event": "touching_floor", "state": "idle"},
+                {"event": "touching_wall", "state": "wall_slide"}
             ],
             "animation": "falling",
             "templates": [
@@ -215,12 +215,12 @@
             },
             "frame_timer": 1,
             "next_states": [
-                {"event": "touching_floor", "state": "idle"},
-                {"event": "touching_wall", "state": "wall_slide_rising"},
-                {"event": "jumping", "state": "wall_jump"},
-                {"event": "falling", "state": "wall_slide"},
                 {"event": "damaged", "state": "taking_damage"},
-                {"event": "frame_timeout", "state": "falling"}
+                {"event": "falling", "state": "wall_slide"},
+                {"event": "frame_timeout", "state": "falling"},
+                {"event": "jumping", "state": "wall_jump"},
+                {"event": "touching_floor", "state": "idle"},
+                {"event": "touching_wall", "state": "wall_slide_rising"}
             ],
             "animation": "climbing",
             "templates": [
@@ -237,12 +237,12 @@
             },
             "frame_timer": 1,
             "next_states": [
-                {"event": "touching_floor", "state": "idle"},
-                {"event": "touching_wall", "state": "wall_slide"},
-                {"event": "jumping", "state": "wall_jump"},
-                {"event": "damaged", "state": "taking_damage"},
                 {"event": "action_move_up", "state": "wall_slide_rising"},
-                {"event": "frame_timeout", "state": "falling"}
+                {"event": "damaged", "state": "taking_damage"},
+                {"event": "frame_timeout", "state": "falling"},
+                {"event": "jumping", "state": "wall_jump"},
+                {"event": "touching_floor", "state": "idle"},
+                {"event": "touching_wall", "state": "wall_slide"}
             ],
             "animation": "wall_slide",
             "templates": [
@@ -258,10 +258,10 @@
             },
             "frame_timer": 10,
             "next_states": [
-                {"event": "touching_wall", "state": "wall_slide"},
+                {"event": "damaged", "state": "taking_damage"},
                 {"event": "dashing", "state": "dash_startup"},
                 {"event": "frame_timeout", "state": "jump_start"},
-                {"event": "damaged", "state": "taking_damage"}
+                {"event": "touching_wall", "state": "wall_slide"}
             ],
             "animation": "jumping",
             "templates": [
@@ -292,11 +292,11 @@
             },
             "frame_timer": 10,
             "next_states": [
-                {"event": "touching_floor", "state": "idle"},
-                {"event": "touching_wall", "state": "wall_slide"},
-                {"event": "jumping", "state": "jump_start"},
+                {"event": "damaged", "state": "taking_damage"},
                 {"event": "frame_timeout", "state": "falling"},
-                {"event": "damaged", "state": "taking_damage"}
+                {"event": "jumping", "state": "jump_start"},
+                {"event": "touching_floor", "state": "idle"},
+                {"event": "touching_wall", "state": "wall_slide"}
             ],
             "templates": [
                 "can_double_jump",
@@ -314,9 +314,9 @@
                 "Entity": "attack"
             },
             "next_states": [
-                {"event": "jumping", "state": "jump_start"},
+                {"event": "damaged", "state": "taking_damage"},
                 {"event": "frame_timeout", "state": "attack_end_lag"},
-                {"event": "damaged", "state": "taking_damage"}
+                {"event": "jumping", "state": "jump_start"}
             ],
             "animation": "attacking"
         },
@@ -327,9 +327,9 @@
             },
             "frame_timer": 30,
             "next_states": [
-                {"event": "jumping", "state": "jump_start"},
+                {"event": "damaged", "state": "taking_damage"},
                 {"event": "frame_timeout", "state": "idle"},
-                {"event": "damaged", "state": "taking_damage"}
+                {"event": "jumping", "state": "jump_start"}
             ],
             "animation": "attacking"
         },
@@ -346,9 +346,9 @@
                 }
             },
             "next_states": [
-                {"event": "jumping", "state": "jump_start"},
+                {"event": "damaged", "state": "taking_damage"},
                 {"event": "frame_timeout", "state": "shoot_end_lag"},
-                {"event": "damaged", "state": "taking_damage"}
+                {"event": "jumping", "state": "jump_start"}
             ],
             "animation": "attacking"
         },
@@ -359,9 +359,9 @@
             },
             "frame_timer": 30,
             "next_states": [
-                {"event": "jumping", "state": "jump_start"},
+                {"event": "damaged", "state": "taking_damage"},
                 {"event": "frame_timeout", "state": "idle"},
-                {"event": "damaged", "state": "taking_damage"}
+                {"event": "jumping", "state": "jump_start"}
             ],
             "animation": "attacking"
         },
@@ -382,8 +382,8 @@
                 "movement_locked_x": true
             },
             "next_states": [
-                {"event": "frame_timeout", "state": "air_dive"},
-                {"event": "damaged", "state": "taking_damage"}
+                {"event": "damaged", "state": "taking_damage"},
+                {"event": "frame_timeout", "state": "air_dive"}
             ],
             "ai": [
                 "on_enter set_velocity this 0.0 -30.0"
@@ -397,9 +397,9 @@
                 "movement_locked_x": true
             },
             "next_states": [
-                {"event": "touching_floor", "state": "hard_landing"},
+                {"event": "action_ai1", "state": "air_dive_bounce"},
                 {"event": "damaged", "state": "taking_damage"},
-                {"event": "action_ai1", "state": "air_dive_bounce"}
+                {"event": "touching_floor", "state": "hard_landing"}
             ],
             "physics_constants": {
                 "gravity": 5.0
@@ -447,9 +447,9 @@
             },
             "frame_timer": 20,
             "next_states": [
-                {"event": "jumping", "state": "jump_start"},
+                {"event": "damaged", "state": "taking_damage"},
                 {"event": "frame_timeout", "state": "idle"},
-                {"event": "damaged", "state": "taking_damage"}
+                {"event": "jumping", "state": "jump_start"}
             ],
             "ai": [
                 "on_enter add_camera_trauma 0.4"

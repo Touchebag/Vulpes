@@ -1,0 +1,14 @@
+{
+    "Animation": null,
+    "Rendering": {
+        "height": 500,
+        "texture": "Walk",
+        "layer": 1
+    },
+    "Movement": null,
+    "tag": "girl",
+    "Transform": {
+        "pos_x": 500.0,
+        "pos_y": 700.0
+    }
+}

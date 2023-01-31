@@ -1,0 +1,66 @@
+{
+    "events": {
+        "0": [
+            {
+                "event": "animation",
+                "entity": "girl",
+                "animation_name": "walk"
+            },
+            {
+                "event": "fade_out",
+                "entity": "forest",
+                "active_frames": 1
+            },
+            {
+                "event": "fade_out",
+                "entity": "hills",
+                "active_frames": 1
+            },
+            {
+                "event": "move",
+                "entity": "house",
+                "x_vel": 5.0,
+                "y_vel": 0.0,
+                "active_frames": 150
+            }
+        ],
+        "120": [
+            {
+                "event": "fade_out",
+                "entity": "house",
+                "active_frames": 30
+            },
+            {
+                "event": "fade_in",
+                "entity": "hills",
+                "active_frames": 30
+            },
+            {
+                "event": "move",
+                "entity": "hills",
+                "x_vel": 5.0,
+                "y_vel": 0.0,
+                "active_frames": 150
+            }
+        ],
+        "240": [
+            {
+                "event": "fade_out",
+                "entity": "hills",
+                "active_frames": 30
+            },
+            {
+                "event": "fade_in",
+                "entity": "forest",
+                "active_frames": 30
+            },
+            {
+                "event": "move",
+                "entity": "forest",
+                "x_vel": 5.0,
+                "y_vel": 0.0,
+                "active_frames": 150
+            }
+        ]
+    }
+}

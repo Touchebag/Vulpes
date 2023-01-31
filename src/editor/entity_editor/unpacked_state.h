@@ -4,6 +4,7 @@
 
 struct UnpackedState {
     UnpackedState(const std::string& name, nlohmann::json j);
+    nlohmann::json repack();
 
     // Data
 
@@ -18,4 +19,7 @@ struct UnpackedState {
 
     float x = 0.0;
     float y = 0.0;
+
+  private:
+    nlohmann::json original_json_;
 };
