@@ -17,8 +17,22 @@ class StateView {
     void handleMouseClick(std::pair<float, float> mouse_pos);
 
   private:
+    struct Line {
+        sf::Vector2f from;
+        sf::Vector2f to;
+
+        float thickness = 1.0;
+        sf::Color color = {0, 0, 0};
+    };
+
+    std::vector<Line> normal_lines_;
+    std::vector<Line> selected_lines_;
+    std::vector<Line> hovered_lines_;
+
     void drawState(sf::RenderWindow& window, const std::string& state_name);
-    void drawLines(sf::RenderWindow& window, const std::string& state_name);
+
+    void drawLineRect(sf::RenderWindow& window, Line line);
+    void createLines(const std::string& state_name);
 
     void positionStates();
 

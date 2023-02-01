@@ -27,29 +27,6 @@ bool mouseCollides(const UnpackedState& state, const std::pair<float, float> mou
     }
 }
 
-void drawLineRect(sf::RenderWindow& window, sf::Vector2f from, sf::Vector2f to, float thickness, sf::Color color) {
-    sf::Vertex vertices[4];
-
-    sf::Vector2f dist = to - from;
-    sf::Vector2f unit_vector = dist / std::sqrt(dist.x * dist.x + dist.y * dist.y);
-    sf::Vector2f unit_perpendicular(-unit_vector.y, unit_vector.x);
-
-    sf::Vector2f thickness_offset = (thickness / 2.f) * unit_perpendicular;
-
-    // Used to prevent bi-directional lines from overlapping
-    sf::Vector2f position_offset = (10.0f) * unit_perpendicular;
-
-    vertices[0].position = from + thickness_offset + position_offset;
-    vertices[1].position = to + thickness_offset + position_offset;
-    vertices[2].position = to - thickness_offset + position_offset;
-    vertices[3].position = from - thickness_offset + position_offset;
-
-    for (int i=0; i<4; ++i)
-        vertices[i].color = color;
-
-    window.draw(vertices, 4, sf::Quads);
-}
-
 } // namespace
 
 StateView::StateView() :
@@ -98,7 +75,30 @@ void StateView::drawState(sf::RenderWindow& window, const std::string& state_nam
     window.draw(text);
 }
 
-void StateView::drawLines(sf::RenderWindow& window, const std::string& state_name) {
+void StateView::drawLineRect(sf::RenderWindow& window, StateView::Line line) {
+    sf::Vertex vertices[4];
+
+    sf::Vector2f dist = line.to - line.from;
+    sf::Vector2f unit_vector = dist / std::sqrt(dist.x * dist.x + dist.y * dist.y);
+    sf::Vector2f unit_perpendicular(-unit_vector.y, unit_vector.x);
+
+    sf::Vector2f thickness_offset = (line.thickness / 2.f) * unit_perpendicular;
+
+    // Used to prevent bi-directional lines from overlapping
+    sf::Vector2f position_offset = (10.0f) * unit_perpendicular;
+
+    vertices[0].position = line.from + thickness_offset + position_offset;
+    vertices[1].position = line.to + thickness_offset + position_offset;
+    vertices[2].position = line.to - thickness_offset + position_offset;
+    vertices[3].position = line.from - thickness_offset + position_offset;
+
+    for (int i=0; i<4; ++i)
+        vertices[i].color = line.color;
+
+    window.draw(vertices, 4, sf::Quads);
+}
+
+void StateView::createLines(const std::string& state_name) {
     UnpackedState state = states_.at(state_name);
 
     auto next_states = state.next_states;
@@ -112,18 +112,26 @@ void StateView::drawLines(sf::RenderWindow& window, const std::string& state_nam
     for (auto& it : next_states) {
         auto new_state = states_.at(it.second);
 
-        auto color = sf::Color(0, 0, 0);
-        float thickness = 2.0f;
-
+        Line line;
         if (active_state_ == state_name) {
-            color = sf::Color(255, 0, 0);
-            thickness = 5.0f;
+            line.from = {state.x, state.y};
+            line.to = {new_state.x, new_state.y};
+            line.color = sf::Color(255, 0, 0);
+            line.thickness = 5.0f;
+            selected_lines_.push_back(line);
         } else if (hovered_state_ == state_name) {
-            color = sf::Color(0, 0, 255);
-            thickness = 5.0f;
+            line.from = {state.x, state.y};
+            line.to = {new_state.x, new_state.y};
+            line.color = sf::Color(0, 0, 255);
+            line.thickness = 5.0f;
+            hovered_lines_.push_back(line);
+        } else {
+            line.from = {state.x, state.y};
+            line.to = {new_state.x, new_state.y};
+            line.color = sf::Color(0, 0, 0);
+            line.thickness = 2.0f;
+            normal_lines_.push_back(line);
         }
-
-        drawLineRect(window, {state.x, state.y}, {new_state.x, new_state.y}, thickness, color);
     }
 }
 
@@ -172,10 +180,27 @@ void StateView::draw(sf::RenderWindow& window) {
     }
 
     // Draw lines first to appear behind boxes
+    normal_lines_.clear();
+    selected_lines_.clear();
+    hovered_lines_.clear();
+
     for (auto& it : states_) {
-        drawLines(window, it.first);
+        createLines(it.first);
     }
 
+    for (auto it : normal_lines_) {
+        drawLineRect(window, it);
+    }
+
+    for (auto it : selected_lines_) {
+        drawLineRect(window, it);
+    }
+
+    for (auto it : hovered_lines_) {
+        drawLineRect(window, it);
+    }
+
+    // Draw states on top
     for (auto& it : states_) {
         drawState(window, it.first);
     }
