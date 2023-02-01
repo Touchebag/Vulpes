@@ -22,6 +22,8 @@ class EditorView {
 
     Mouse mouse_;
 
+    void updateView();
+
     bool dragging_view_ = false;
 
     std::pair<float, float> initial_mouse_pos_;

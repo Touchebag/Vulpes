@@ -14,6 +14,13 @@ EditorView::EditorView(sf::RenderWindow& window) :
 void EditorView::handleMouseEvent(sf::Event event) {
     switch (event.type) {
         case sf::Event::MouseWheelScrolled:
+            if (event.mouseWheelScroll.delta > 0) {
+                size_ = {std::max(100.0f, size_.first - 200.0f), std::max(100.0f, size_.second - 200.0f)};
+                updateView();
+            } else {
+                size_ = {size_.first + 200.0f, size_.second + 200.0f};
+                updateView();
+            }
             break;
         case sf::Event::MouseButtonPressed:
             if (event.mouseButton.button == sf::Mouse::Button::Left ||
@@ -52,6 +59,10 @@ void EditorView::setView(std::pair<float, float> pos, std::pair<float, float> si
     center_position_ = pos;
     size_ = size;
 
+    updateView();
+}
+
+void EditorView::updateView() {
     auto view = window_.getView();
     view.setSize(size_.first, size_.second);
     view.setCenter(center_position_.first, center_position_.second);
