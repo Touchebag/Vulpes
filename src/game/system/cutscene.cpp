@@ -34,7 +34,7 @@ std::shared_ptr<Cutscene> Cutscene::loadCutscene(const std::string& cutscene_nam
     auto cutscene = std::make_shared<Cutscene>();
     auto cutscene_dir_path = File::getCutsceneDir();
 
-    File::pushDirectory(cutscene_dir_path / cutscene_name);
+    auto dir_scope = File::pushDirectory(cutscene_dir_path / cutscene_name);
 
     // Load events
     if (auto j_opt = File::loadCutscene()) {
@@ -69,8 +69,6 @@ std::shared_ptr<Cutscene> Cutscene::loadCutscene(const std::string& cutscene_nam
             }
         }
     }
-
-    File::popDirectory();
 
     return cutscene;
 }

@@ -12,7 +12,7 @@ struct EntityAssets {
 };
 
 EntityAssets loadAllAssets(const std::string& entity_name) {
-    File::pushDirectory(File::getEntityDir() / entity_name);
+    auto dir_scope = File::pushDirectory(File::getEntityDir() / entity_name);
 
     EntityAssets assets;
 
@@ -26,8 +26,6 @@ EntityAssets loadAllAssets(const std::string& entity_name) {
     if (auto j_state = File::loadStates()) {
         assets.state = j_state.value();
     }
-
-    File::popDirectory();
 
     return assets;
 }

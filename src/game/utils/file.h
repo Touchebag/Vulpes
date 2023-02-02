@@ -11,6 +11,27 @@
 
 class File {
   public:
+    class DirectoryScope {
+      public:
+        explicit DirectoryScope(std::filesystem::path dir) : dir_(dir) {
+        }
+
+        ~DirectoryScope() {
+            // Allow creation of empty/placeholder scopes
+            if (dir_.string() != "") {
+                File::popDirectory(dir_);
+            }
+        }
+
+        DirectoryScope(const DirectoryScope&) = delete;
+        DirectoryScope& operator=(const DirectoryScope&) = delete;
+
+        DirectoryScope& operator=(DirectoryScope&&) = default;
+
+      private:
+        std::filesystem::path dir_;
+    };
+
     static std::filesystem::directory_iterator getDirContents(const std::filesystem::path path);
 
     static std::optional<nlohmann::json> loadEntityFromFile();
@@ -38,11 +59,12 @@ class File {
 
     static bool writeJsonToFile(std::filesystem::path filepath, nlohmann::json world);
 
-    static void pushDirectory(std::filesystem::path dir);
-    static void popDirectory();
+    [[nodiscard]] static DirectoryScope pushDirectory(std::filesystem::path dir);
     static std::filesystem::path getCurrentDirectory();
 
   private:
+    static void popDirectory(std::filesystem::path);
+
     static std::stack<std::filesystem::path> current_directory_;
 
     static std::optional<nlohmann::json> loadJson(std::filesystem::path filepath);

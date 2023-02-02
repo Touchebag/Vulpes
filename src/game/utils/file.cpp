@@ -19,12 +19,19 @@ const std::filesystem::path SAVE_FILE = "data.sav";
 
 std::stack<std::filesystem::path> File::current_directory_;
 
-void File::pushDirectory(std::filesystem::path dir) {
+File::DirectoryScope File::pushDirectory(std::filesystem::path dir) {
     current_directory_.push(getCurrentDirectory() / dir);
+
+    return DirectoryScope{getCurrentDirectory()};
 }
 
-void File::popDirectory() {
-    current_directory_.pop();
+void File::popDirectory(std::filesystem::path dir) {
+    if (dir == getCurrentDirectory()) {
+        current_directory_.pop();
+    } else {
+        LOGE("Pop directory: invalid path: %s", dir.string().c_str());
+        throw std::runtime_error("");
+    }
 }
 
 std::filesystem::path File::getCurrentDirectory() {

@@ -43,13 +43,16 @@ std::shared_ptr<BaseEntity> BaseEntity::createFromJson(const nlohmann::json& j) 
 void BaseEntity::reloadFromJson(const nlohmann::json& j) {
     nlohmann::json entity_json;
 
+    // Only used if loading entity. Create placeholder in outer scope
+    File::DirectoryScope dir_scope(std::filesystem::path(""));
+
     //----- Fetching -----
 
     if (j.contains("Entity")) {
         auto entity_name = j["Entity"].get<std::string>();
 
         auto entity_path = File::getEntityDir() / entity_name;
-        File::pushDirectory(entity_path);
+        dir_scope = std::move(File::pushDirectory(entity_path));
 
         if (auto j_entity = File::loadEntityFromFile()) {
             entity_json = j_entity.value();
@@ -116,10 +119,6 @@ void BaseEntity::reloadFromJson(const nlohmann::json& j) {
     createComponentFromJson(Stateful);
     if (getComponent<Stateful>()) {
         getComponent<Stateful>()->incomingEvent(state_utils::Event::START);
-    }
-
-    if (!entity_file_name_.empty()) {
-        File::popDirectory();
     }
 }
 

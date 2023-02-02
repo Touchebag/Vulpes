@@ -6,22 +6,12 @@
 #include "utils/log.h"
 
 class UnpackedStateTestFixture : public ::testing::Test {
-  public:
-    void SetUp() override {
-    }
-
-    void TearDown() override {
-        if (File::getCurrentDirectory() != "") {
-            File::popDirectory();
-        }
-    }
-
   protected:
     const std::string entity_name_ = "player";
 };
 
 TEST_F(UnpackedStateTestFixture, UnpackRepackState) {
-    File::pushDirectory(File::getEntityDir() / entity_name_);
+    auto dir_scope = File::pushDirectory(File::getEntityDir() / entity_name_);
 
     auto j1 = File::loadStates().value();
 

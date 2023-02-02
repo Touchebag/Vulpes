@@ -277,21 +277,9 @@ TEST(TestComponents, TestSaveLoadSlope) {
 }
 
 TEST(TestComponents, TestSaveLoadAnimationFile) {
-    class TestFileDirectoryCleanup {
-      public:
-        // This class is to guarantee popping directory if test case is aborted
-        TestFileDirectoryCleanup() {
-            std::filesystem::path path = "entities";
-            path = path / "test_animation";
-            File::pushDirectory(path);
-        }
-
-        ~TestFileDirectoryCleanup() {
-            File::popDirectory();
-        }
-    };
-
-    TestFileDirectoryCleanup temp;
+    std::filesystem::path path = "entities";
+    path = path / "test_animation";
+    auto dir_scope = File::pushDirectory(path);
 
     // When empty it will default to loading file
     nlohmann::json j1;
