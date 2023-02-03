@@ -254,14 +254,24 @@ void StateView::positionStates() {
     }
 }
 
-void StateView::handleMouseClick(std::pair<float, float> mouse_pos) {
-    active_state_ = "";
-
-    for (auto& it : states_) {
-        if (mouseCollides(it.second, mouse_pos)) {
-            active_state_ = it.first;
-
+void StateView::handleKeyPress(sf::Event event) {
+    switch (event.key.code) {
+        case sf::Keyboard::Key::Escape:
+            active_state_ = "";
             break;
+        default:
+            break;
+    }
+}
+
+void StateView::handleMouseClick(sf::Event event, std::pair<float, float> mouse_pos) {
+    if (event.mouseButton.button == sf::Mouse::Button::Left) {
+        for (auto& it : states_) {
+            if (mouseCollides(it.second, mouse_pos)) {
+                active_state_ = it.first;
+
+                break;
+            }
         }
     }
 }

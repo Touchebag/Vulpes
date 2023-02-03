@@ -35,10 +35,6 @@ int entityEditorMain(sf::RenderWindow& window) {
     auto entity = UnpackedEntity::unpackEntity("player");
 
     while (window.isOpen() && editor_common::getCurrentEditor() == editor_common::CurrentEditor::ENTITY) {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && window.hasFocus()){
-            window.close();
-        }
-
         sf::Event event;
         while (window.pollEvent(event)) {
             ImGui::SFML::ProcessEvent(event);
@@ -46,13 +42,14 @@ int entityEditorMain(sf::RenderWindow& window) {
             view.handleMouseEvent(event);
 
             switch (event.type) {
+                case sf::Event::Closed:
+                    window.close();
+                    break;
+                case sf::Event::KeyPressed:
+                    entity.handleKeyPress(event);
+                    break;
                 case sf::Event::MouseButtonPressed:
-                    if (event.mouseButton.button == sf::Mouse::Button::Left) {
-                        Mouse mouse{window};
-                        auto mouse_pos = mouse.getMouseWorldPosition();
-
-                        entity.handleMouseClick(mouse_pos);
-                    }
+                    entity.handleMouseClick(event, Mouse(window));
                     break;
                 default:
                     break;

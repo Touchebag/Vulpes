@@ -14,7 +14,8 @@ class StateView {
 
     void draw(sf::RenderWindow& window);
 
-    void handleMouseClick(std::pair<float, float> mouse_pos);
+    void handleKeyPress(sf::Event event);
+    void handleMouseClick(sf::Event event, std::pair<float, float> mouse_pos);
 
   private:
     struct Line {

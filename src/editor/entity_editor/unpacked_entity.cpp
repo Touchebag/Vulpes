@@ -48,6 +48,10 @@ void UnpackedEntity::draw(sf::RenderWindow& window) {
     state_view.draw(window);
 }
 
-void UnpackedEntity::handleMouseClick(std::pair<float, float> mouse_pos) {
-    state_view.handleMouseClick(mouse_pos);
+void UnpackedEntity::handleKeyPress(sf::Event event) {
+    state_view.handleKeyPress(event);
+}
+
+void UnpackedEntity::handleMouseClick(sf::Event event, Mouse mouse) {
+    state_view.handleMouseClick(event, mouse.getMouseWorldPosition());
 }

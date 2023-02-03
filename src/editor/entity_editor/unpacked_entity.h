@@ -6,12 +6,14 @@
 #include <nlohmann/json.hpp>
 
 #include "state_view.h"
+#include "common/mouse.h"
 
 class UnpackedEntity {
   public:
     static UnpackedEntity unpackEntity(const std::string& entity_name);
 
-    void handleMouseClick(std::pair<float, float> mouse_pos);
+    void handleKeyPress(sf::Event event);
+    void handleMouseClick(sf::Event event, Mouse mouse);
 
     void draw(sf::RenderWindow& window);
 
