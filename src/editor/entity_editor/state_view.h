@@ -31,6 +31,7 @@ class StateView {
     std::vector<Line> hovered_lines_;
 
     void drawState(sf::RenderWindow& window, const std::string& state_name);
+    void drawEditWindow();
 
     void drawLineRect(sf::RenderWindow& window, Line line);
     void createLines(const std::string& state_name);
@@ -41,6 +42,14 @@ class StateView {
 
     std::string hovered_state_ = "";
     std::string active_state_ = "";
+
+    struct ActiveState {
+        static const int BUFFER_SIZE = 100;
+
+        char name[BUFFER_SIZE];
+    };
+
+    ActiveState active_state_data_ = ActiveState{};
 
     std::unordered_map<std::string, UnpackedState> states_;
     std::unordered_map<std::string, UnpackedState> templates_;

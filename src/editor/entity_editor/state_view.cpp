@@ -33,6 +33,22 @@ StateView::StateView() :
     font_(File::loadFont("arial.ttf").value()) {
 }
 
+void StateView::drawEditWindow() {
+    auto state = states_.at(active_state_);
+
+    ImGui::Begin("StateEdit", nullptr, 0
+            | ImGuiWindowFlags_AlwaysAutoResize
+            );
+
+    ImGui::Text("Name");
+    ImGui::InputText(state.name.c_str(), active_state_data_.name, ActiveState::BUFFER_SIZE);
+    if (ImGui::IsItemDeactivatedAfterEdit()) {
+        states_.at(active_state_).name = active_state_data_.name;
+    }
+
+    ImGui::End();
+}
+
 void StateView::drawState(sf::RenderWindow& window, const std::string& state_name) {
     UnpackedState state = states_.at(state_name);
 
@@ -203,6 +219,10 @@ void StateView::draw(sf::RenderWindow& window) {
     // Draw states on top
     for (auto& it : states_) {
         drawState(window, it.first);
+    }
+
+    if (!active_state_.empty()) {
+        drawEditWindow();
     }
 }
 

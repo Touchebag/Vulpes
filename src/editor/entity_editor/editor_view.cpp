@@ -23,18 +23,14 @@ void EditorView::handleMouseEvent(sf::Event event) {
             }
             break;
         case sf::Event::MouseButtonPressed:
-            if (event.mouseButton.button == sf::Mouse::Button::Left ||
-                event.mouseButton.button == sf::Mouse::Button::Right) {
-
+            if (event.mouseButton.button == sf::Mouse::Button::Right) {
                 mouse_.saveMousePosition();
                 initial_mouse_pos_ = center_position_;
                 dragging_view_ = true;
             }
             break;
         case sf::Event::MouseButtonReleased:
-            if (event.mouseButton.button == sf::Mouse::Button::Left ||
-                event.mouseButton.button == sf::Mouse::Button::Right) {
-
+            if (event.mouseButton.button == sf::Mouse::Button::Right) {
                 dragging_view_ = false;
             }
             break;

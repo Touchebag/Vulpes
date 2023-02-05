@@ -53,5 +53,7 @@ void UnpackedEntity::handleKeyPress(sf::Event event) {
 }
 
 void UnpackedEntity::handleMouseClick(sf::Event event, Mouse mouse) {
-    state_view.handleMouseClick(event, mouse.getMouseWorldPosition());
+    if (!ImGui::GetIO().WantCaptureMouse) {
+        state_view.handleMouseClick(event, mouse.getMouseWorldPosition());
+    }
 }
