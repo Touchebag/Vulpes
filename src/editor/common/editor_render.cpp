@@ -89,6 +89,20 @@ void EditorRender::render(sf::RenderTarget& window, double frame_fraction) {
     texture.clear(sf::Color(0, 0, 0, 0));
     texture.setView(view);
 
+    if (render_hitboxes_) {
+        for (auto it : type_color_map) {
+            renderHitboxes(texture, it.first, it.second);
+        }
+    } else if (collideable_render_) {
+        renderSingleHitbox(texture, collideable_render_,
+                type_color_map.at(static_cast<unsigned int>(collideable_render_->getType())).second);
+        collideable_render_.reset();
+    }
+
+    if (render_entrances_) {
+        renderEntrances(texture, System::IWorldRead::getEntrances());
+    }
+
     if (auto env = editor_env_.lock()) {
         if (auto ent = env->current_entity) {
             auto rend = ent->getComponent<Rendering>();
@@ -102,20 +116,40 @@ void EditorRender::render(sf::RenderTarget& window, double frame_fraction) {
                 texture.draw(rectangle);
             }
         }
-    }
 
-    if (render_hitboxes_) {
-        for (auto it : type_color_map) {
-            renderHitboxes(texture, it.first, it.second);
+        if (env->grid_size > 0) {
+            float grid_size = static_cast<float>(env->grid_size);
+            float left = env->view_pos_x - env->view_size / 2.0f;
+            float right = env->view_pos_x + env->view_size / 2.0f;
+            float top = env->view_pos_y - env->view_size / 2.0f;
+            float bottom = env->view_pos_y + env->view_size / 2.0f;
+
+            sf::Color color(200, 200, 200, 128);
+
+            // Horizontal lines
+            for (float y = static_cast<float>(round(top / grid_size)) * grid_size;
+                       y < bottom;
+                       y += grid_size) {
+                sf::Vertex lines[2] {
+                    sf::Vertex(sf::Vector2f(left, y), color),
+                    sf::Vertex(sf::Vector2f(right, y), color)
+                };
+
+                texture.draw(lines, 2, sf::Lines);
+            }
+
+            // Vertical lines
+            for (float x = static_cast<float>(round(left / grid_size)) * grid_size;
+                       x < right;
+                       x += grid_size) {
+                sf::Vertex lines[2] {
+                    sf::Vertex(sf::Vector2f(x, top), color),
+                    sf::Vertex(sf::Vector2f(x, bottom), color)
+                };
+
+                texture.draw(lines, 2, sf::Lines);
+            }
         }
-    } else if (collideable_render_) {
-        renderSingleHitbox(texture, collideable_render_,
-                type_color_map.at(static_cast<unsigned int>(collideable_render_->getType())).second);
-        collideable_render_.reset();
-    }
-
-    if (render_entrances_) {
-        renderEntrances(texture, System::IWorldRead::getEntrances());
     }
 
     texture.display();

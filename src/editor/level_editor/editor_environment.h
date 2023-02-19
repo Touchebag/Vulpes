@@ -65,6 +65,8 @@ class EditorEnvironment {
 
     MenuList menus;
 
+    int grid_size = 0;
+
   private:
     explicit EditorEnvironment(sf::RenderWindow& window);
 };

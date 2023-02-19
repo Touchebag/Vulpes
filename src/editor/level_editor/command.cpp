@@ -8,6 +8,14 @@
 
 #include "utils/log.h"
 
+namespace {
+
+int roundToNearest(float value, int factor) {
+    return static_cast<int>(round(static_cast<double>(value) / static_cast<double>(factor))) * factor;
+}
+
+}
+
 Command::Command(std::weak_ptr<EditorEnvironment> editor_env) :
         editor_env_(editor_env) {
     if (!editor_env.lock()) {
@@ -21,11 +29,11 @@ void Command::update() {
         case (Command::Commands::MOVE):
             {
                 auto mouse_world_dist = editor_env->mouse->getMouseWorldDistance();
-
                 if(auto transform = editor_env->current_entity->getComponent<Transform>()) {
+                    auto grid_size = std::max(editor_env->grid_size, 1);
                     transform->setPosition(
-                            original_entity_position_.first + static_cast<int>(mouse_world_dist.first),
-                            original_entity_position_.second + static_cast<int>(mouse_world_dist.second));
+                            roundToNearest(static_cast<float>(original_entity_position_.first) + mouse_world_dist.first, grid_size),
+                            roundToNearest(static_cast<float>(original_entity_position_.second) + mouse_world_dist.second, grid_size));
                 }
             }
             break;
@@ -110,12 +118,9 @@ void Command::handleCommand(Commands command) {
 
     switch (command) {
         case (Commands::MOVE):
-            {
-                if (auto trans = editor_env->current_entity->getComponent<Transform>()) {
-                    original_entity_position_ = {trans->getX(), trans->getY()};
-                    editor_env->current_command = Command::Commands::MOVE;
-                }
-
+            if (auto trans = editor_env->current_entity->getComponent<Transform>()) {
+                original_entity_position_ = {trans->getX(), trans->getY()};
+                editor_env->current_command = Command::Commands::MOVE;
             }
             break;
         default:
