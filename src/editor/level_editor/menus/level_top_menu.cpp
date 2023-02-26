@@ -23,6 +23,25 @@ void renderingMenu() {
     }
 }
 
+void environmentMenu() {
+    if (auto editor_env = EditorEnvironment::get_environment()) {
+        auto grid_size = editor_env->grid_size;
+        bool grid_enabled = grid_size > 0;
+
+        if (ImGui::Checkbox("Enable grid", &(grid_enabled))) {
+            editor_env->grid_size = grid_enabled ? 50 : 0;
+        }
+
+        if (grid_enabled) {
+            if (ImGui::InputInt("Grid size", &(grid_size))) {
+                editor_env->grid_size = grid_size;
+            }
+        }
+    } else {
+        ImGui::Text("ERROR: Failed to get environment");
+    }
+}
+
 } // namespace
 
 namespace level_top_menu {
@@ -33,6 +52,7 @@ TopMenu createMenus() {
     top_menu.addMenu("File", &fileMenu);
     top_menu.addMenu("Editor", &editor_common::drawEditorMenu);
     top_menu.addMenu("Rendering", &renderingMenu);
+    top_menu.addMenu("Environment", &environmentMenu);
 
     return top_menu;
 }
