@@ -3,7 +3,9 @@
 #include "components/collision/collideables/movement/collideable_static.h"
 #include "system/system.h"
 
-void EditorMouse::handleMousePress(std::shared_ptr<EditorEnvironment> editor_env) {
+void EditorMouse::handleMousePress() {
+    auto editor_env = EditorEnvironment::get_environment();
+
     if (editor_env->event.mouseButton.button == sf::Mouse::Button::Left) {
         // Store current mouse position
         editor_env->mouse->saveMousePosition();
@@ -58,14 +60,18 @@ void EditorMouse::handleMousePress(std::shared_ptr<EditorEnvironment> editor_env
     }
 }
 
-void EditorMouse::handleMouseRelease(std::shared_ptr<EditorEnvironment> editor_env) {
+void EditorMouse::handleMouseRelease() {
+    auto editor_env = EditorEnvironment::get_environment();
+
     editor_env->mouse->saveMousePosition();
 
     editor_env->command->stopCommand();
     editor_env->current_command = Command::Commands::NONE;
 }
 
-void EditorMouse::handleMouseScroll(std::shared_ptr<EditorEnvironment> editor_env) {
+void EditorMouse::handleMouseScroll() {
+    auto editor_env = EditorEnvironment::get_environment();
+
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
         editor_env->current_layer = editor_env->change_layer(editor_env->event.mouseWheelScroll.delta > 0.0);
         editor_env->command->current_layer_ = editor_env->current_layer;

@@ -8,6 +8,6 @@
 
 namespace menu {
 
-void renderMenus(std::shared_ptr<EditorEnvironment> editor_env);
+void renderMenus();
 
 } // menu

@@ -68,7 +68,9 @@ bool open_last_frame;
 
 } // namespace
 
-void renderMenus(std::shared_ptr<EditorEnvironment> editor_env) {
+void renderMenus() {
+    auto editor_env = EditorEnvironment::get_environment();
+
     if (auto ent = editor_env->current_entity) {
         if (!open_last_frame) {
             executeFunctionOnAllComponents(recreateMenuInstances);

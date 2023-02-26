@@ -10,6 +10,8 @@
 class CommandTestFixture : public ::testing::Test {
   public:
     CommandTestFixture() {
+        EditorEnvironment::create_environment(window_);
+        editor_env = EditorEnvironment::get_environment();
     }
 
     void SetUp() override {
@@ -24,7 +26,7 @@ class CommandTestFixture : public ::testing::Test {
 
   protected:
     sf::RenderWindow window_;
-    std::shared_ptr<EditorEnvironment> editor_env = EditorEnvironment::create_environment(window_);
+    std::shared_ptr<EditorEnvironment> editor_env;
 };
 
 void assertCorrectNumberOfEntities(long long unsigned number) {

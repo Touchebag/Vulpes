@@ -42,7 +42,8 @@ class EditorEnvironment {
     static constexpr float VIEW_POS_Y = 500.0;
     static constexpr float VIEW_SIZE = 1000.0;
 
-    static std::shared_ptr<EditorEnvironment> create_environment(sf::RenderWindow& window);
+    static void create_environment(sf::RenderWindow& window);
+    static std::shared_ptr<EditorEnvironment> get_environment();
 
     int change_layer(bool towards_screen);
 

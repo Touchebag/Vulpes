@@ -4,8 +4,8 @@
 
 class EditorMouse {
   public:
-    static void handleMousePress(std::shared_ptr<EditorEnvironment> editor_env);
-    static void handleMouseRelease(std::shared_ptr<EditorEnvironment> editor_env);
+    static void handleMousePress();
+    static void handleMouseRelease();
 
-    static void handleMouseScroll(std::shared_ptr<EditorEnvironment> editor_env);
+    static void handleMouseScroll();
 };

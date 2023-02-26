@@ -61,8 +61,6 @@ int cutsceneEditorMain(sf::RenderWindow& window) {
 
     System::setCutscene(Cutscene::loadCutscene(cutscene_name));
 
-    auto editor_env = EditorEnvironment::create_environment(window);
-
     int frame_count = 0;
 
     sf::Time time_rendered;

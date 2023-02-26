@@ -2,15 +2,25 @@
 
 #include "utils/log.h"
 
-std::shared_ptr<EditorEnvironment> EditorEnvironment::create_environment(sf::RenderWindow& window) {
-    auto env = std::shared_ptr<EditorEnvironment>(new EditorEnvironment(window));
-    env->command = std::make_shared<Command>(env);
+namespace editor_environment {
 
-    env->view_pos_x = EditorEnvironment::VIEW_POS_X;
-    env->view_pos_y = EditorEnvironment::VIEW_POS_Y;
-    env->view_size = EditorEnvironment::VIEW_SIZE;
+std::shared_ptr<EditorEnvironment> environment_ = {};
 
-    return env;
+} // editor_environment
+
+using editor_environment::environment_;
+
+void EditorEnvironment::create_environment(sf::RenderWindow& window) {
+    environment_ = std::shared_ptr<EditorEnvironment>(new EditorEnvironment(window));
+    environment_->command = std::make_shared<Command>(environment_);
+
+    environment_->view_pos_x = EditorEnvironment::VIEW_POS_X;
+    environment_->view_pos_y = EditorEnvironment::VIEW_POS_Y;
+    environment_->view_size = EditorEnvironment::VIEW_SIZE;
+}
+
+std::shared_ptr<EditorEnvironment> EditorEnvironment::get_environment() {
+    return environment_;
 }
 
 EditorEnvironment::EditorEnvironment(sf::RenderWindow& window) :

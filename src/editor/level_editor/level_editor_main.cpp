@@ -17,7 +17,8 @@ bool render_current_layer_only = false;
 int levelEditorMain(sf::RenderWindow& window) {
     sf::Clock delta_clock;
 
-    auto editor_env = EditorEnvironment::create_environment(window);
+    EditorEnvironment::create_environment(window);
+    auto editor_env = EditorEnvironment::get_environment();
 
     auto renderInst = std::dynamic_pointer_cast<EditorRender>(System::getRender());
     renderInst->setEditorEnvironment(editor_env);
@@ -56,7 +57,7 @@ int levelEditorMain(sf::RenderWindow& window) {
                     System::getRender()->setWindowSize(window, event.size.width, event.size.height);
                     break;
                 case sf::Event::MouseWheelScrolled:
-                    EditorMouse::handleMouseScroll(editor_env);
+                    EditorMouse::handleMouseScroll();
                     break;
                 case sf::Event::KeyPressed:
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
@@ -143,10 +144,10 @@ int levelEditorMain(sf::RenderWindow& window) {
                     }
                     break;
                 case sf::Event::MouseButtonPressed:
-                    EditorMouse::handleMousePress(editor_env);
+                    EditorMouse::handleMousePress();
                     break;
                 case sf::Event::MouseButtonReleased:
-                    EditorMouse::handleMouseRelease(editor_env);
+                    EditorMouse::handleMouseRelease();
                     break;
                 default:
                     break;
@@ -185,7 +186,7 @@ int levelEditorMain(sf::RenderWindow& window) {
         }
 
         top_menu.draw(window);
-        menu::renderMenus(editor_env);
+        menu::renderMenus();
 
         ImGui::SFML::Render(window);
 
