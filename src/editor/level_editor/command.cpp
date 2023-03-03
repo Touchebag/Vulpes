@@ -37,6 +37,22 @@ void Command::update() {
                 }
             }
             break;
+        case (Command::Commands::RESIZE):
+            {
+                auto mouse_world_dist = editor_env->mouse->getMouseWorldDistance();
+                auto grid_size = std::max(editor_env->grid_size, 1);
+                auto width = roundToNearest(static_cast<float>(original_entity_position_.first) + mouse_world_dist.first, grid_size);
+                auto height = roundToNearest(static_cast<float>(original_entity_position_.second) + mouse_world_dist.second, grid_size);
+
+                if(auto coll = editor_env->current_entity->getComponent<Collision>()) {
+                    coll->getCollideable()->setHitbox(width, height);
+                }
+
+                if(auto rndr = editor_env->current_entity->getComponent<Rendering>()) {
+                    rndr->setSize(width, height);
+                }
+            }
+            break;
         default:
             break;
     }
@@ -121,6 +137,12 @@ void Command::handleCommand(Commands command) {
             if (auto trans = editor_env->current_entity->getComponent<Transform>()) {
                 original_entity_position_ = {trans->getX(), trans->getY()};
                 editor_env->current_command = Command::Commands::MOVE;
+            }
+            break;
+        case (Commands::RESIZE):
+            if (auto rndr = editor_env->current_entity->getComponent<Rendering>()) {
+                original_entity_position_ = rndr->getSize();
+                editor_env->current_command = Command::Commands::RESIZE;
             }
             break;
         default:

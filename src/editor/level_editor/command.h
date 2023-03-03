@@ -49,4 +49,5 @@ class Command {
     std::weak_ptr<EditorEnvironment> editor_env_;
 
     std::pair<int, int> original_entity_position_;
+    std::pair<int, int> original_entity_size_;
 };
