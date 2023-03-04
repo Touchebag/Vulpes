@@ -33,6 +33,7 @@ void World::update() {
                 player_->update();
             }
 
+            update_loop_active_ = true;
             for (auto it = world_objects_.begin();
                       it != world_objects_.end();
                       ) {
@@ -62,6 +63,14 @@ void World::update() {
                     ++it;
                 }
             }
+            update_loop_active_ = false;
+
+            if (!added_objects_.empty()) {
+                for (auto it : added_objects_) {
+                    // Re-add object without update_loop_active nor conditions
+                    addEntity(it);
+                }
+            }
 
             if (player_ && player_->getComponent<Damageable>()) {
                 if (auto health_text = std::dynamic_pointer_cast<RenderingText>(player_health_->getComponent<Rendering>())) {
@@ -74,7 +83,8 @@ void World::update() {
             // TODO Move to in between world_objects update and deferred objects update
             System::getEnvironment()->triggerConditionalEvents();
 
-            // Delete all expired entities at end of frame
+            // Delete all deferred entities at end of frame
+            added_objects_.clear();
             clearDeletedEntities();
         }
     }
@@ -346,15 +356,20 @@ nlohmann::json World::saveWorldToJson() {
 
 void World::addEntity(std::shared_ptr<BaseEntity> entity, std::optional<std::string> condition) {
     if (!condition || System::getEnvironment()->getFlag(condition.value())) {
-        world_objects_.push_back(entity);
+        // If in update loop, defer to frame end to avoid invalidating iterators
+        if (update_loop_active_) {
+            added_objects_.push_back(entity);
+        } else {
+            world_objects_.push_back(entity);
 
-        auto coll = entity->getComponent<Collision>();
-        if (coll && coll->getCollideable()) {
-            addCollideable(coll->getCollideable());
-        }
+            auto coll = entity->getComponent<Collision>();
+            if (coll && coll->getCollideable()) {
+                addCollideable(coll->getCollideable());
+            }
 
-        if (auto render = entity->getComponent<Rendering>()) {
-            System::getRender()->addEntity(render);
+            if (auto render = entity->getComponent<Rendering>()) {
+                System::getRender()->addEntity(render);
+            }
         }
     } else {
         auto evt_trigger = std::make_shared<event_triggers::AddEntity>(entity);

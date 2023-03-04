@@ -60,8 +60,12 @@ class World {
 
     std::shared_ptr<ComponentStore> player_health_ = std::make_shared<ComponentStore>();
 
+    // Used to tell if we are currently iterating through entity list
+    bool update_loop_active_ = false;
+
     std::vector<std::shared_ptr<BaseEntity>> world_objects_;
-    // Temporary storage to delete entities simultaneously at frame end
+    // Temporary storage to add/delete entities simultaneously at frame end
+    std::vector<std::shared_ptr<BaseEntity>> added_objects_;
     std::vector<std::shared_ptr<BaseEntity>> deleted_objects_;
 
     std::array<std::vector<std::weak_ptr<const Collideable>>, static_cast<int>(Collideable::CollisionType::MAX_NUM)> collideables_;
