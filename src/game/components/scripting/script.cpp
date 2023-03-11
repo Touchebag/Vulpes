@@ -1,4 +1,4 @@
-#include "ai.h"
+#include "script.h"
 
 #include "utils/log.h"
 #include "utils/bimap.h"
@@ -8,11 +8,11 @@
 #include "interpreter.h"
 #include "system/system.h"
 
-AI::AI(std::weak_ptr<ComponentStore> components) :
+Scripting::Scripting(std::weak_ptr<ComponentStore> components) :
     Component(components) {
 }
 
-void AI::update() {
+void Scripting::update() {
     if (auto state = getComponent<Stateful>()) {
         frame_timer_++;
 
@@ -20,13 +20,13 @@ void AI::update() {
         extra_data.frame_timer = frame_timer_;
         extra_data.this_components = component_store_.lock();
 
-        for (auto& it : state->getAI()) {
+        for (auto& it : state->getScript()) {
             Interpreter::executeProgram(it, extra_data);
         }
     }
 }
 
-void AI::executeProgram(const Program& program) {
+void Scripting::executeProgram(const Program& program) {
     Interpreter::ExtraInputData extra_data;
     extra_data.frame_timer = frame_timer_;
     extra_data.this_components = component_store_.lock();
@@ -34,18 +34,18 @@ void AI::executeProgram(const Program& program) {
     Interpreter::executeProgram(program, extra_data);
 }
 
-std::shared_ptr<AI> AI::createFromJson(nlohmann::json j, std::weak_ptr<ComponentStore> components, File file_instance) {
-    auto ret_ptr = std::make_shared<AI>(components);
+std::shared_ptr<Scripting> Scripting::createFromJson(nlohmann::json j, std::weak_ptr<ComponentStore> components, File file_instance) {
+    auto ret_ptr = std::make_shared<Scripting>(components);
 
     ret_ptr->reloadFromJson(j, file_instance);
 
     return ret_ptr;
 }
 
-void AI::reloadFromJson(nlohmann::json /* j */, File /* file */) {
+void Scripting::reloadFromJson(nlohmann::json /* j */, File /* file */) {
 }
 
-std::optional<nlohmann::json> AI::outputToJson() {
+std::optional<nlohmann::json> Scripting::outputToJson() {
     nlohmann::json j;
 
     return j;

@@ -111,7 +111,7 @@ void BaseEntity::reloadFromJson(const nlohmann::json& j) {
 
     createComponentFromJson(Physics);
 
-    createComponentFromJson(AI);
+    createComponentFromJson(Scripting);
 
     createComponentFromJson(Damageable);
 
@@ -149,7 +149,7 @@ std::optional<nlohmann::json> BaseEntity::outputToJson() {
 
     saveComponentToJson(Physics);
 
-    saveComponentToJson(AI);
+    saveComponentToJson(Scripting);
 
     saveComponentToJson(Damageable);
 
@@ -175,7 +175,7 @@ void BaseEntity::update() {
     // If previous frame was the last one (i.e. ticked down to 0) then trigger event before this frame
     update_component(Stateful);
 
-    update_component(AI);
+    update_component(Scripting);
 
     update_component(Physics);
 

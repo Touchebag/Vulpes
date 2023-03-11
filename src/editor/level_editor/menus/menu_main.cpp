@@ -1,7 +1,7 @@
 #include "menu_main.h"
 
 #include "menu_actions.h"
-#include "menu_ai.h"
+#include "menu_scripting.h"
 #include "menu_animation.h"
 #include "menu_collision.h"
 #include "menu_damageable.h"
@@ -50,7 +50,7 @@ namespace {
 
 #define executeFunctionOnAllComponents(function) { \
         function(Actions); \
-        function(AI); \
+        function(Scripting); \
         function(Animation); \
         function(Collision); \
         function(Damageable); \

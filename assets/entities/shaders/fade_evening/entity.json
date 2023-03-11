@@ -1,6 +1,6 @@
 {
     "Actions": null,
-    "AI": null,
+    "Scripting": null,
     "Rendering": {
         "layer": 0,
         "shaders": [

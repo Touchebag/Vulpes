@@ -1,6 +1,6 @@
 {
     "Actions": null,
-    "AI": null,
+    "Scripting": null,
     "Collision": {
         "height": 50,
         "type": "collectible",

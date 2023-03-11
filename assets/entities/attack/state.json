@@ -1,7 +1,7 @@
 {
     "states": {
         "main": {
-            "ai": [
+            "script": [
                 "if animation_looped then (action die)"
             ]
         }

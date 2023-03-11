@@ -1,14 +1,14 @@
 #include <gtest/gtest.h>
 
-#include "components/ai/interpreter.h"
-#include "components/ai/program.h"
+#include "components/scripting/interpreter.h"
+#include "components/scripting/program.h"
 #include "components/rendering/rendering.h"
 #include "system/system.h"
 
 #include "utils/log.h"
 
-using ai::Bool;
-using ai::Target;
+using scripting::Bool;
+using scripting::Target;
 
 class InterpreterTestFixture : public ::testing::Test {
   public:
@@ -355,7 +355,7 @@ TEST_F(InterpreterTestFixture, OnEnterExit) {
     j["Entity"] = "on_enter_exit";
     auto entitiy = BaseEntity::createFromJson(j);
 
-    auto ai = entitiy->getComponent<AI>();
+    auto script = entitiy->getComponent<Scripting>();
     auto move = entitiy->getComponent<Movement>();
     auto state = entitiy->getComponent<Stateful>();
 
@@ -385,7 +385,7 @@ TEST_F(InterpreterTestFixture, ResetJumps) {
     nlohmann::json j = nlohmann::json::parse(R"--(
     {
         "Actions": null,
-        "AI": null,
+        "Script": null,
         "Movement": null,
         "Physics": {
             "jump_impulse_y": 30.0,

@@ -1,6 +1,6 @@
 {
     "Actions": null,
-    "AI": null,
+    "Scripting": null,
     "Animation": "idle",
     "Collision": {
         "type": "enemy_hitbox",

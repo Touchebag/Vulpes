@@ -10,9 +10,9 @@
 
 namespace {
 
-void checkType(ai::Type expected, ai::Type actual) {
+void checkType(scripting::Type expected, scripting::Type actual) {
     // Void can return whatever
-    if (expected != ai::Type::VOID && expected != actual) {
+    if (expected != scripting::Type::VOID && expected != actual) {
         std::stringstream error_message;
         error_message << "type error. Expected " << static_cast<int>(expected) <<
                          ", got " << static_cast<int>(actual);
@@ -33,8 +33,8 @@ std::vector<std::string> tokenizeString(std::string str) {
     return ret_vec;
 }
 
-ai::InstructionData parseInstruction(std::string instruction) {
-    ai::InstructionData instruction_data;
+scripting::InstructionData parseInstruction(std::string instruction) {
+    scripting::InstructionData instruction_data;
 
     // Should be able to parse literal int without keyword
     try {
@@ -44,14 +44,14 @@ ai::InstructionData parseInstruction(std::string instruction) {
         (void)std::stoi(instruction, n.get());
         // Check if entire string could be parsed as int
         if (*n == instruction.length()) {
-            instruction_data = {ai::Instruction::INT, ai::Type::INT, {}};
+            instruction_data = {scripting::Instruction::INT, scripting::Type::INT, {}};
             return instruction_data;
         }
 
         // Try read double
         (void)std::stod(instruction, n.get());
         if (*n == instruction.length()) {
-            instruction_data = {ai::Instruction::FLOAT, ai::Type::FLOAT, {}};
+            instruction_data = {scripting::Instruction::FLOAT, scripting::Type::FLOAT, {}};
             return instruction_data;
         }
     } catch (std::invalid_argument&) {
@@ -63,19 +63,19 @@ ai::InstructionData parseInstruction(std::string instruction) {
             throw std::invalid_argument("Program: Parse error, unmatched '");
         }
 
-        instruction_data = {ai::Instruction::STRING, ai::Type::STRING, {}};
+        instruction_data = {scripting::Instruction::STRING, scripting::Type::STRING, {}};
 
         return instruction_data;
     }
 
     if (instruction == "true" || instruction == "false") {
-        instruction_data = {ai::Instruction::BOOL, ai::Type::BOOL, {}};
+        instruction_data = {scripting::Instruction::BOOL, scripting::Type::BOOL, {}};
 
         return instruction_data;
     }
 
     try {
-        instruction_data = ai::string_instruction_map.at(instruction);
+        instruction_data = scripting::string_instruction_map.at(instruction);
     } catch (std::out_of_range& e) {
         throw std::invalid_argument("Program: Unknown instruction " + instruction);
     }
@@ -84,7 +84,7 @@ ai::InstructionData parseInstruction(std::string instruction) {
 }
 
 // Convenience function to allow easier error handling of argument strings
-ai::InstructionData parseInstruction(std::vector<std::string> instructions) {
+scripting::InstructionData parseInstruction(std::vector<std::string> instructions) {
     if (instructions.empty()) {
         throw std::invalid_argument("Program: Instruction list is empty");
     }
@@ -156,7 +156,7 @@ Program Program::loadProgram(const std::string& program_string) {
     return program_out;
 }
 
-ai::Type Program::translateAndStore(std::vector<std::string> lexed_input) {
+scripting::Type Program::translateAndStore(std::vector<std::string> lexed_input) {
     // TODO Check length
     auto instruction_data = parseInstruction(lexed_input[0]);
     auto arguments = extractArguments(lexed_input);
@@ -172,48 +172,48 @@ ai::Type Program::translateAndStore(std::vector<std::string> lexed_input) {
 
     // Need to evaluate arguments first
     switch (instruction_data.instruction) {
-        case ai::Instruction::INT:
-            program_.push_back(static_cast<int>(ai::Instruction::INT));
+        case scripting::Instruction::INT:
+            program_.push_back(static_cast<int>(scripting::Instruction::INT));
             program_.push_back(std::stoi(lexed_input[0]));
             break;
-        case ai::Instruction::BOOL:
-            program_.push_back(static_cast<int>(ai::Instruction::BOOL));
+        case scripting::Instruction::BOOL:
+            program_.push_back(static_cast<int>(scripting::Instruction::BOOL));
 
             if (lexed_input[0] == "true") {
-                program_.push_back(ai::Bool::TRUE);
+                program_.push_back(scripting::Bool::TRUE);
             } else {
-                program_.push_back(ai::Bool::FALSE);
+                program_.push_back(scripting::Bool::FALSE);
             }
 
             break;
-        case ai::Instruction::STRING:
-            program_.push_back(static_cast<int>(ai::Instruction::STRING));
+        case scripting::Instruction::STRING:
+            program_.push_back(static_cast<int>(scripting::Instruction::STRING));
 
             // Remove surrounding quotation marks
             strings_.insert({string_id_counter_, std::string(lexed_input[0].begin() + 1, lexed_input[0].end() - 1)});
             program_.push_back(string_id_counter_);
             string_id_counter_++;
             break;
-        case ai::Instruction::FLOAT:
-            program_.push_back(static_cast<int>(ai::Instruction::FLOAT));
+        case scripting::Instruction::FLOAT:
+            program_.push_back(static_cast<int>(scripting::Instruction::FLOAT));
 
             floats_.insert({float_id_counter_, std::stod(lexed_input[0])});
             program_.push_back(float_id_counter_);
             float_id_counter_++;
             break;
-        case ai::Instruction::ACTION:
-            program_.push_back(static_cast<int>(ai::Instruction::ACTION));
+        case scripting::Instruction::ACTION:
+            program_.push_back(static_cast<int>(scripting::Instruction::ACTION));
             program_.push_back(parseAction(lexed_input[1]));
             break;
-        case ai::Instruction::ENABLE_ACTION:
-            program_.push_back(static_cast<int>(ai::Instruction::ENABLE_ACTION));
+        case scripting::Instruction::ENABLE_ACTION:
+            program_.push_back(static_cast<int>(scripting::Instruction::ENABLE_ACTION));
             program_.push_back(parseAction(lexed_input[1]));
             break;
-        case ai::Instruction::DISABLE_ACTION:
-            program_.push_back(static_cast<int>(ai::Instruction::DISABLE_ACTION));
+        case scripting::Instruction::DISABLE_ACTION:
+            program_.push_back(static_cast<int>(scripting::Instruction::DISABLE_ACTION));
             program_.push_back(parseAction(lexed_input[1]));
             break;
-        case ai::Instruction::IF:
+        case scripting::Instruction::IF:
         {
             // Push condition
             auto condition = arguments[0];
@@ -224,7 +224,7 @@ ai::Type Program::translateAndStore(std::vector<std::string> lexed_input) {
             translateAndStore(condition);
 
             // Push IF statement
-            program_.push_back(static_cast<int>(ai::Instruction::IF));
+            program_.push_back(static_cast<int>(scripting::Instruction::IF));
 
             // Ignore THEN
 

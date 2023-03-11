@@ -17,7 +17,7 @@
 const nlohmann::json entity_json = nlohmann::json::parse(R"--(
 {
     "Actions": null,
-    "AI": null,
+    "Scripting": null,
     "Collision": {
         "type": "hitbox",
         "height": 200,

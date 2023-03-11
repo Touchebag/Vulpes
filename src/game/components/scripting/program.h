@@ -22,7 +22,7 @@ class Program {
     MetaData getMetaData();
 
   private:
-    ai::Type translateAndStore(std::vector<std::string> lexed_input);
+    scripting::Type translateAndStore(std::vector<std::string> lexed_input);
 
     MetaData meta_data_ = MetaData::NONE;
 

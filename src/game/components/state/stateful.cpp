@@ -8,13 +8,13 @@
 
 namespace {
 
-void executeProgramsInVector(std::vector<Program> programs, std::shared_ptr<AI> ai) {
-    if (ai) {
+void executeProgramsInVector(std::vector<Program> programs, std::shared_ptr<Scripting> script) {
+    if (script) {
         for (auto& prog : programs) {
-            ai->executeProgram(prog);
+            script->executeProgram(prog);
         }
     } else {
-        LOGW("Stateful: no AI");
+        LOGW("Stateful: no Scripting component");
     }
 }
 
@@ -77,16 +77,16 @@ void Stateful::resetState() {
 }
 
 void Stateful::incomingEvent(state_utils::Event event) {
-    auto progs = state_handler_.getStateData().ai_on_exit;
+    auto progs = state_handler_.getStateData().script_on_exit;
     auto new_state = state_handler_.incomingEvent(event);
 
     if (auto ns = new_state.lock()) {
-        // AI actions on state switch
-        auto ai = getComponent<AI>();
-        executeProgramsInVector(progs, ai);
+        // Script actions on state switch
+        auto script = getComponent<Scripting>();
+        executeProgramsInVector(progs, script);
 
-        progs = ns->getData().ai_on_enter;
-        executeProgramsInVector(progs, ai);
+        progs = ns->getData().script_on_enter;
+        executeProgramsInVector(progs, script);
 
         auto state_props = ns->getData().state_props;
         auto physics_constants = ns->getData().physics_constants;
@@ -129,6 +129,6 @@ const nlohmann::json& Stateful::getEntity() {
     return state_handler_.getStateData().entity;
 }
 
-const std::vector<Program>& Stateful::getAI() {
-    return state_handler_.getStateData().ai;
+const std::vector<Program>& Stateful::getScript() {
+    return state_handler_.getStateData().script;
 }

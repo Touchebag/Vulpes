@@ -23,7 +23,7 @@ template std::shared_ptr<Animation> Component::getComponent() const;
 template std::shared_ptr<Stateful> Component::getComponent() const;
 template std::shared_ptr<Actions> Component::getComponent() const;
 template std::shared_ptr<Physics> Component::getComponent() const;
-template std::shared_ptr<AI> Component::getComponent() const;
+template std::shared_ptr<Scripting> Component::getComponent() const;
 template std::shared_ptr<Damageable> Component::getComponent() const;
 template std::shared_ptr<Subentity> Component::getComponent() const;
 template std::shared_ptr<Death> Component::getComponent() const;

@@ -26,7 +26,7 @@
                 { "event": "action_move_right", "state": "turnaround" },
                 { "event": "action_move_left", "state": "turnaround" }
             ],
-            "ai": [
+            "script": [
                 "if (grt (position_x player) (position_x this)) then (action move_right)",
                 "if (lss (position_x player) (position_x this)) then (action move_left)"
             ],
@@ -38,7 +38,7 @@
             "next_states": [
                 { "event": "action_ai1", "state": "main" }
             ],
-            "ai": [
+            "script": [
                 "action move_forward",
                 "if (frame_timer 30) then (action ai1)"
             ],

@@ -6,13 +6,13 @@
 
 #include "program.h"
 
-class AI : public Component {
+class Scripting : public Component {
   public:
-    explicit AI(std::weak_ptr<ComponentStore> components);
+    explicit Scripting(std::weak_ptr<ComponentStore> components);
 
     void update() override;
 
-    static std::shared_ptr<AI> createFromJson(nlohmann::json, std::weak_ptr<ComponentStore>, File file_instance = File());
+    static std::shared_ptr<Scripting> createFromJson(nlohmann::json, std::weak_ptr<ComponentStore>, File file_instance = File());
     void reloadFromJson(nlohmann::json j, File file_instance = File()) override;
     std::optional<nlohmann::json> outputToJson() override;
 

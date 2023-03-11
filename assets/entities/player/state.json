@@ -20,13 +20,13 @@
             }
         },
         "can_jump": {
-            "ai": [
+            "script": [
                 "on_enter enable_action jump",
                 "on_exit disable_action jump"
             ]
         },
         "can_double_jump": {
-            "ai": [
+            "script": [
                 "on_enter if (true) then (enable_action jump)",
                 "on_exit disable_action jump"
             ]
@@ -36,25 +36,25 @@
                 "jump_impulse_x": -50.0,
                 "jump_impulse_y": -45.0
             },
-            "ai": [
+            "script": [
                 "on_enter if (true) then (enable_action jump)",
                 "on_exit disable_action jump"
             ]
         },
         "can_dash": {
-            "ai": [
+            "script": [
                 "on_enter if (flag 'Action.dash') then (enable_action dash)",
                 "on_exit disable_action dash"
             ]
         },
         "can_attack": {
-            "ai": [
+            "script": [
                 "on_enter if (flag 'Action.attack1') then (enable_action attack1)",
                 "on_exit disable_action attack1"
             ]
         },
         "can_interact": {
-            "ai": [
+            "script": [
                 "on_enter enable_action interact",
                 "on_exit disable_action interact"
             ]
@@ -65,13 +65,13 @@
             ]
         },
         "reset_jumps_and_dashes": {
-            "ai": [
+            "script": [
                 "on_enter reset_jumps 2",
                 "on_enter reset_dashes 1"
             ]
         },
         "wall_stick": {
-            "ai": [
+            "script": [
                 "move this 0.01 0.0"
             ],
             "physics_constants": {
@@ -115,7 +115,7 @@
             "next_states": [
                 {"event": "start", "state": "idle"}
             ],
-            "ai": [
+            "script": [
                 "on_exit disable_action jump",
                 "on_exit disable_action dash",
                 "on_exit disable_action attack1"
@@ -385,7 +385,7 @@
                 {"event": "damaged", "state": "taking_damage"},
                 {"event": "frame_timeout", "state": "air_dive"}
             ],
-            "ai": [
+            "script": [
                 "on_enter set_velocity this 0.0 -30.0"
             ],
             "animation": "air_diving",
@@ -405,7 +405,7 @@
                 "gravity": 5.0
             },
             "animation": "falling",
-            "ai": [
+            "script": [
                 "if (sensor 'player_dive') then (action ai1)"
             ],
             "collideables": [
@@ -434,7 +434,7 @@
                 {"event": "frame_timeout", "state": "falling"}
             ],
             "animation": "falling",
-            "ai": [
+            "script": [
                 "on_enter set_velocity this 0.0 -30.0"
             ],
             "templates": [
@@ -451,7 +451,7 @@
                 {"event": "frame_timeout", "state": "idle"},
                 {"event": "jumping", "state": "jump_start"}
             ],
-            "ai": [
+            "script": [
                 "on_enter add_camera_trauma 0.4"
             ],
             "animation": "hard_landing",

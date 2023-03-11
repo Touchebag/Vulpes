@@ -9,7 +9,7 @@
 #include <SFML/Graphics.hpp>
 
 class MenuActions;
-class MenuAI;
+class MenuScripting;
 class MenuAnimation;
 class MenuCollision;
 class MenuDamageable;
@@ -23,7 +23,7 @@ class MenuTransform;
 
 struct MenuList {
     std::shared_ptr<MenuActions> Actions;
-    std::shared_ptr<MenuAI> AI;
+    std::shared_ptr<MenuScripting> Scripting;
     std::shared_ptr<MenuAnimation> Animation;
     std::shared_ptr<MenuCollision> Collision;
     std::shared_ptr<MenuDamageable> Damageable;

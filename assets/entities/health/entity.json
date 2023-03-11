@@ -1,6 +1,6 @@
 {
     "Actions": null,
-    "AI": null,
+    "Scripting": null,
     "Collision": {
         "health": 20,
         "height": 50,

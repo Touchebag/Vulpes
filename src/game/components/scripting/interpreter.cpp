@@ -6,8 +6,8 @@
 
 #include "utils/log.h"
 
-using ai::Bool;
-using ai::Target;
+using scripting::Bool;
+using scripting::Target;
 
 // These are just for easy access
 #define POP() pop_with_stack(stack)
@@ -34,7 +34,7 @@ int pop_with_stack(std::stack<int>& stack) {
     if (stack.empty()) {
         // This should be handled by type checker
         // TODO Consider removing
-        LOGW("AI: Stack is empty");
+        LOGW("SCRIPT: Stack is empty");
         return 0;
     }
 
@@ -57,9 +57,9 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
     auto byte_code = program.getProgram();
 
     for (auto pc = byte_code.begin(); pc < byte_code.end(); pc++) {
-        LOGV("AI COMMAND START");
-        switch (static_cast<ai::Instruction>(*pc)) {
-            case ai::Instruction::INT:
+        LOGV("SCRIPT COMMAND START");
+        switch (static_cast<scripting::Instruction>(*pc)) {
+            case scripting::Instruction::INT:
                 LOGV("INT");
                 pc++;
 
@@ -67,12 +67,12 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
 
                 PUSH(*pc);
                 break;
-            case ai::Instruction::BOOL:
+            case scripting::Instruction::BOOL:
                 LOGV("BOOL");
                 pc++;
                 PUSH(*pc);
                 break;
-            case ai::Instruction::STRING:
+            case scripting::Instruction::STRING:
                 LOGV("STRING");
                 pc++;
 
@@ -80,7 +80,7 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
 
                 PUSH(*pc);
                 break;
-            case ai::Instruction::FLOAT:
+            case scripting::Instruction::FLOAT:
                 LOGV("FLOAT");
                 pc++;
 
@@ -88,15 +88,15 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
 
                 PUSH(*pc);
                 break;
-            case ai::Instruction::PLAYER:
+            case scripting::Instruction::PLAYER:
                 LOGV("PLAYER");
                 PUSH(Target::PLAYER);
                 break;
-            case ai::Instruction::THIS:
+            case scripting::Instruction::THIS:
                 LOGV("THIS");
                 PUSH(Target::THIS);
                 break;
-            case ai::Instruction::POSITION_X:
+            case scripting::Instruction::POSITION_X:
             {
                 LOGV("POSITION_X");
 
@@ -106,14 +106,14 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                         PUSH(trans->getX());
                         break;
                     } else {
-                        LOGW("AI POSITION_X: Missing Transform component");
+                        LOGW("SCRIPT POSITION_X: Missing Transform component");
                     }
                 }
 
                 PUSH(0);
                 break;
             }
-            case ai::Instruction::FRAME_TIMER:
+            case scripting::Instruction::FRAME_TIMER:
                 LOGV("FRAME_TIMER");
                 if (static_cast<int>(extra_input.frame_timer) >= POP()) {
                     PUSH(Bool::TRUE);
@@ -121,9 +121,9 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                     PUSH(Bool::FALSE);
                 }
                 break;
-            case ai::Instruction::COLLIDES:
+            case scripting::Instruction::COLLIDES:
                 LOGV("COLLIDES");
-                if (POP() == ai::Target::PLAYER) {
+                if (POP() == scripting::Target::PLAYER) {
                     if (auto this_coll = extra_input.this_components->getComponent<Collision>()) {
                         if (this_coll->collides(player_components->getComponent<Collision>())) {
                             PUSH(Bool::TRUE);
@@ -131,14 +131,14 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                             PUSH(Bool::FALSE);
                         }
                     } else {
-                        LOGW("AI COLLIDES: Missing Collision component");
+                        LOGW("SCRIPT COLLIDES: Missing Collision component");
                         PUSH(Bool::FALSE);
                     }
                 } else {
                     PUSH(Bool::FALSE);
                 }
                 break;
-            case ai::Instruction::FLAG:
+            case scripting::Instruction::FLAG:
             {
                 LOGV("FLAG");
 
@@ -153,7 +153,7 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
 
                 break;
             }
-            case ai::Instruction::ANIMATION_LOOPED:
+            case scripting::Instruction::ANIMATION_LOOPED:
                 LOGV("ANIMATION_LOOPED");
                 if (auto anim = extra_input.this_components->getComponent<Animation>()) {
                     if (anim->hasAnimationLooped()) {
@@ -162,11 +162,11 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                         PUSH(Bool::FALSE);
                     }
                 } else {
-                    LOGW("AI ANIMATION_LOOPED: Missing Animation component");
+                    LOGW("SCRIPT ANIMATION_LOOPED: Missing Animation component");
                     PUSH(Bool::FALSE);
                 }
                 break;
-            case ai::Instruction::SENSOR:
+            case scripting::Instruction::SENSOR:
             {
                 LOGV("SENSOR");
                 auto str = program.getString(POP());
@@ -179,12 +179,12 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                         PUSH(Bool::FALSE);
                     }
                 } else {
-                    LOGW("AI SENSOR: Missing Collision component");
+                    LOGW("SCRIPT SENSOR: Missing Collision component");
                     PUSH(Bool::FALSE);
                 }
                 break;
             }
-            case ai::Instruction::GRT:
+            case scripting::Instruction::GRT:
             {
                 LOGV("GRT");
                 auto a = POP();
@@ -197,7 +197,7 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                 PUSH(b > a ? Bool::TRUE : Bool::FALSE);
                 break;
             }
-            case ai::Instruction::LSS:
+            case scripting::Instruction::LSS:
             {
                 LOGV("LSS");
                 auto a = POP();
@@ -209,7 +209,7 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                 PUSH(b < a ? Bool::TRUE : Bool::FALSE);
                 break;
             }
-            case ai::Instruction::AND:
+            case scripting::Instruction::AND:
             {
                 LOGV("AND");
                 auto a = POP();
@@ -221,7 +221,7 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                 PUSH(a && b ? Bool::TRUE : Bool::FALSE);
                 break;
             }
-            case ai::Instruction::OR:
+            case scripting::Instruction::OR:
             {
                 LOGV("OR");
                 auto a = POP();
@@ -233,7 +233,7 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                 PUSH(a || b ? Bool::TRUE : Bool::FALSE);
                 break;
             }
-            case ai::Instruction::ACTION:
+            case scripting::Instruction::ACTION:
                 LOGV("ACTION");
 
                 if (auto act = extra_input.this_components->getComponent<Actions>()) {
@@ -242,11 +242,11 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                     auto action = static_cast<Actions::Action>(*pc);
                     act->addAction(action);
                 } else {
-                    LOGW("AI ACTION: Missing Actions component");
+                    LOGW("SCRIPT ACTION: Missing Actions component");
                 }
 
                 break;
-            case ai::Instruction::MOVE:
+            case scripting::Instruction::MOVE:
             {
                 LOGV("MOVE");
 
@@ -263,13 +263,13 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
 
                         move->setVelocity(move->getVelX() + vel_x, move->getVelY() + vel_y);
                     } else {
-                        LOGW("AI MOVE: Missing Movement component");
+                        LOGW("SCRIPT MOVE: Missing Movement component");
                     }
                 }
 
                 break;
             }
-            case ai::Instruction::SET_VELOCITY:
+            case scripting::Instruction::SET_VELOCITY:
             {
                 LOGV("SET_VELOCITY");
 
@@ -286,13 +286,13 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
 
                         move->setVelocity(vel_x, vel_y);
                     } else {
-                        LOGW("AI SET_VELOCITY: Missing Movement component");
+                        LOGW("SCRIPT SET_VELOCITY: Missing Movement component");
                     }
                 }
 
                 break;
             }
-            case ai::Instruction::ENABLE_ACTION:
+            case scripting::Instruction::ENABLE_ACTION:
                 LOGV("ENABLE_ACTION");
 
                 if (auto action = extra_input.this_components->getComponent<Actions>()) {
@@ -301,11 +301,11 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
 
                     action->enableAction(static_cast<Actions::Action>(act), true);
                 } else {
-                    LOGW("AI ENABLE_ACTION: Missing Actions component");
+                    LOGW("SCRIPT ENABLE_ACTION: Missing Actions component");
                 }
 
                 break;
-            case ai::Instruction::DISABLE_ACTION:
+            case scripting::Instruction::DISABLE_ACTION:
                 LOGV("DISABLE_ACTION");
 
                 if (auto action = extra_input.this_components->getComponent<Actions>()) {
@@ -314,23 +314,23 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
 
                     action->enableAction(static_cast<Actions::Action>(act), false);
                 } else {
-                    LOGW("AI DISABLE_ACTION: Missing Actions component");
+                    LOGW("SCRIPT DISABLE_ACTION: Missing Actions component");
                 }
 
                 break;
-            case ai::Instruction::RESET_JUMPS:
+            case scripting::Instruction::RESET_JUMPS:
                 LOGV("RESET_JUMPS");
                 if (auto physics = extra_input.this_components->getComponent<Physics>()) {
                     physics->resetJumps(POP());
                 }
                 break;
-            case ai::Instruction::RESET_DASHES:
+            case scripting::Instruction::RESET_DASHES:
                 LOGV("RESET_DASHES");
                 if (auto physics = extra_input.this_components->getComponent<Physics>()) {
                     physics->resetDashes(POP());
                 }
                 break;
-            case ai::Instruction::ADD_SHADER_TO_LAYER:
+            case scripting::Instruction::ADD_SHADER_TO_LAYER:
                 LOGV("ADD_SHADER_TO_LAYER");
 
                 if (auto rndr = extra_input.this_components->getComponent<Rendering>()) {
@@ -351,15 +351,15 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                         if (shaders.size() > shader_index) {
                             System::getRender()->addShader(shaders.at(shader_index), layer);
                         } else {
-                            LOGW("AI ADD_SHADER_TO_LAYER: Unknown shader id %i", shader_id);
+                            LOGW("SCRIPT ADD_SHADER_TO_LAYER: Unknown shader id %i", shader_id);
                         }
                     }
                 } else {
-                    LOGW("AI ADD_SHADER_TO_LAYER: Missing Rendering component");
+                    LOGW("SCRIPT ADD_SHADER_TO_LAYER: Missing Rendering component");
                 }
 
                 break;
-            case ai::Instruction::ADD_GLOBAL_SHADER:
+            case scripting::Instruction::ADD_GLOBAL_SHADER:
                 LOGV("ADD_GLOBAL_SHADER");
 
                 if (auto rndr = extra_input.this_components->getComponent<Rendering>()) {
@@ -378,15 +378,15 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                         if (shaders.size() > shader_index) {
                             System::getRender()->addGlobalShader(shaders.at(shader_index));
                         } else {
-                            LOGW("AI ADD_GLOBAL_SHADER: Unknown shader id %i", shader_id);
+                            LOGW("SCRIPT ADD_GLOBAL_SHADER: Unknown shader id %i", shader_id);
                         }
                     }
                 } else {
-                    LOGW("AI ADD_GLOBAL_SHADER: Missing Rendering component");
+                    LOGW("SCRIPT ADD_GLOBAL_SHADER: Missing Rendering component");
                 }
 
                 break;
-            case ai::Instruction::ADD_CAMERA_TRAUMA:
+            case scripting::Instruction::ADD_CAMERA_TRAUMA:
             {
                 LOGV("ADD_CAMERA_TRAUMA");
 
@@ -395,7 +395,7 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
 
                 break;
             }
-            case ai::Instruction::IF:
+            case scripting::Instruction::IF:
             {
                 LOGV("IF");
                 auto condition = POP();
@@ -416,7 +416,7 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
 
                 break;
             }
-            case ai::Instruction::THEN:
+            case scripting::Instruction::THEN:
                 // NOP
                 break;
             default:

@@ -4,7 +4,7 @@
             "next_states": [
                 { "event": "action_ai1", "state": "idle" }
             ],
-            "ai": [
+            "script": [
                 "add_shader_to_layer 0 3",
                 "add_shader_to_layer 0 4",
                 "add_shader_to_layer 0 5",

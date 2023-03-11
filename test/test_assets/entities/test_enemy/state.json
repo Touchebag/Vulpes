@@ -5,7 +5,7 @@
                 { "event": "action_ai1", "state": "move_right_turnaround" },
                 { "event": "action_ai2", "state": "move_left_turnaround" }
             ],
-            "ai": [
+            "script": [
                 "if (grt (position_x player) (position_x this)) then (action ai1)",
                 "if (lss (position_x player) (position_x this)) then (action ai2)"
             ],
@@ -23,7 +23,7 @@
             "next_states": [
                 { "event": "action_ai1", "state": "move_right" }
             ],
-            "ai": [
+            "script": [
                 "action move_right",
                 "if (frame_timer 30) then (action ai1)"
             ]
@@ -32,7 +32,7 @@
             "next_states": [
                 { "event": "action_ai1", "state": "move_left_turnaround" }
             ],
-            "ai": [
+            "script": [
                 "if (grt (position_x player) (position_x this)) then (action move_right)",
                 "if (lss (position_x player) (position_x this)) then (action ai1)"
             ]
@@ -41,7 +41,7 @@
             "next_states": [
                 { "event": "action_ai1", "state": "move_left" }
             ],
-            "ai": [
+            "script": [
                 "action move_left",
                 "if (frame_timer 30) then (action ai1)"
             ]
@@ -50,7 +50,7 @@
             "next_states": [
                 { "event": "action_ai1", "state": "move_right_turnaround" }
             ],
-            "ai": [
+            "script": [
                 "if (grt (position_x player) (position_x this)) then (action ai1)",
                 "if (lss (position_x player) (position_x this)) then (action move_left)"
             ]

@@ -73,12 +73,12 @@ void ComponentStore::setComponent(std::shared_ptr<Physics> component) {
 }
 
 template <>
-std::shared_ptr<AI> ComponentStore::getComponent() const {
-    return ai;
+std::shared_ptr<Scripting> ComponentStore::getComponent() const {
+    return scripting;
 }
 template <>
-void ComponentStore::setComponent(std::shared_ptr<AI> component) {
-    ai = component;
+void ComponentStore::setComponent(std::shared_ptr<Scripting> component) {
+    scripting = component;
 }
 
 template <>

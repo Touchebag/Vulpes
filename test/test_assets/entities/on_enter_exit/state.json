@@ -4,7 +4,7 @@
             "next_states": [
                 { "event": "action_ai1", "state": "state2" }
             ],
-            "ai": [
+            "script": [
                 "on_exit move this 100.0 30.0"
             ]
         },
@@ -19,7 +19,7 @@
             ]
         },
         "state4": {
-            "ai": [
+            "script": [
                 "on_enter move this 20.0 -50.0"
             ]
         }

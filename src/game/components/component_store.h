@@ -8,7 +8,7 @@
 #include "components/actions/actions.h"
 #include "components/collision/collision.h"
 #include "components/physics/physics.h"
-#include "components/ai/ai.h"
+#include "components/scripting/script.h"
 #include "components/damageable/damageable.h"
 #include "components/subentity.h"
 #include "components/death.h"
@@ -30,7 +30,7 @@ class ComponentStore {
     std::shared_ptr<Stateful> stateful = nullptr;
     std::shared_ptr<Actions> actions = nullptr;
     std::shared_ptr<Physics> physics = nullptr;
-    std::shared_ptr<AI> ai = nullptr;
+    std::shared_ptr<Scripting> scripting = nullptr;
     std::shared_ptr<Damageable> damageable = nullptr;
     std::shared_ptr<Subentity> subentity = nullptr;
     std::shared_ptr<Death> death = nullptr;

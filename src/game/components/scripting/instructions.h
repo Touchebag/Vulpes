@@ -2,7 +2,7 @@
 
 #include <unordered_map>
 
-namespace ai {
+namespace scripting {
 
 enum class Instruction {
     // Literal values
@@ -132,4 +132,4 @@ static const std::unordered_map<std::string, InstructionData> string_instruction
     {"add_camera_trauma", {Instruction::ADD_CAMERA_TRAUMA, Type::VOID, {Type::FLOAT}}},
 };
 
-} // ai
+} // scripting

@@ -4,13 +4,13 @@
             "next_states": [
                 { "event": "action_ai1", "state": "idle" }
             ],
-            "ai": [
+            "script": [
                 "add_global_shader 0",
                 "action ai1"
             ]
         },
         "idle": {
-            "ai": [
+            "script": [
                 "if (frame_timer 90) then (action die)"
             ]
         }

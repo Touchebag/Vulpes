@@ -46,8 +46,8 @@ nlohmann::json UnpackedState::repack() {
         j["collideables"] = original_json_["collideables"];
     }
 
-    if (original_json_.contains("ai")) {
-        j["ai"] = original_json_["ai"];
+    if (original_json_.contains("script")) {
+        j["script"] = original_json_["script"];
     }
 
     if (original_json_.contains("animation")) {

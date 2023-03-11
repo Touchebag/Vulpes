@@ -3,7 +3,7 @@
 #include "utils/log.h"
 
 #include "components/actions/actions.h"
-#include "components/ai/program.h"
+#include "components/scripting/program.h"
 #include "components/physics/physics.h"
 #include "components/component_store.h"
 
@@ -51,9 +51,9 @@ State<state_utils::EntityContent> State<state_utils::EntityContent>::loadStateFr
     state_utils::PhysicsProperties physics_props;
     state_utils::StateProperties state_props;
     nlohmann::json entity;
-    std::vector<Program> ai;
-    std::vector<Program> ai_on_enter;
-    std::vector<Program> ai_on_exit;
+    std::vector<Program> script;
+    std::vector<Program> script_on_enter;
+    std::vector<Program> script_on_exit;
     std::optional<PhysicsConstants> physics_consts = std::nullopt;
 
     nlohmann::json props_json = j["properties"];
@@ -93,18 +93,18 @@ State<state_utils::EntityContent> State<state_utils::EntityContent>::loadStateFr
         entity = j["spawn_entity"];
     }
 
-    if (j.contains("ai")) {
-        for (auto it : j["ai"]) {
+    if (j.contains("script")) {
+        for (auto it : j["script"]) {
             auto program = Program::loadProgram(it.get<std::string>());
             // TODO Check correct type
 
             auto meta = program.getMetaData();
             if (meta == Program::MetaData::ON_ENTER) {
-                ai_on_enter.push_back(program);
+                script_on_enter.push_back(program);
             } else if (meta == Program::MetaData::ON_EXIT) {
-                ai_on_exit.push_back(program);
+                script_on_exit.push_back(program);
             } else {
-                ai.push_back(program);
+                script.push_back(program);
             }
         }
     }
@@ -122,9 +122,9 @@ State<state_utils::EntityContent> State<state_utils::EntityContent>::loadStateFr
     entity_content.physics_props     = physics_props;
     entity_content.state_props       = state_props;
     entity_content.entity            = entity;
-    entity_content.ai                = ai;
-    entity_content.ai_on_enter       = ai_on_enter;
-    entity_content.ai_on_exit        = ai_on_exit;
+    entity_content.script            = script;
+    entity_content.script_on_enter   = script_on_enter;
+    entity_content.script_on_exit    = script_on_exit;
     entity_content.physics_constants = physics_consts;
 
     auto new_state = State(entity_content);
