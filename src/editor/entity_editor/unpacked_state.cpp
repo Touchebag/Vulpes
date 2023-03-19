@@ -16,6 +16,12 @@ UnpackedState::UnpackedState(const std::string& state_name, nlohmann::json j) :
         }
     }
 
+    if (j.contains("script")) {
+        for (auto it : j["script"]) {
+            script.push_back(it);
+        }
+    }
+
     if (j.contains("templates")) {
         for (auto it : j["templates"]) {
             templates.push_back(it);
@@ -46,10 +52,6 @@ nlohmann::json UnpackedState::repack() {
         j["collideables"] = original_json_["collideables"];
     }
 
-    if (original_json_.contains("script")) {
-        j["script"] = original_json_["script"];
-    }
-
     if (original_json_.contains("animation")) {
         j["animation"] = original_json_["animation"];
     }
@@ -60,6 +62,14 @@ nlohmann::json UnpackedState::repack() {
             j_templates.push_back(it);
         }
         j["templates"] = j_templates;
+    }
+
+    if (!script.empty()) {
+        std::vector<std::string> j_script;
+        for (auto it : script) {
+            j_script.push_back(it);
+        }
+        j["script"] = j_script;
     }
 
     if (!next_states.empty()) {

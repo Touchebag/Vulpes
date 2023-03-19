@@ -34,17 +34,23 @@ StateView::StateView() :
 }
 
 void StateView::drawEditWindow() {
-    auto state = states_.at(active_state_);
+    auto& state = states_.at(active_state_);
 
     ImGui::Begin("StateEdit", nullptr, 0
             | ImGuiWindowFlags_AlwaysAutoResize
             );
 
     ImGui::Text("Name");
-    ImGui::InputText(state.name.c_str(), active_state_data_.name, ActiveState::BUFFER_SIZE);
+    ImGui::InputText(state.name.c_str(), active_state_data_.name, ActiveState::IMGUI_INPUT_BUFFER_SIZE);
     if (ImGui::IsItemDeactivatedAfterEdit()) {
         states_.at(active_state_).name = active_state_data_.name;
     }
+
+    if (ImGui::Button("Scripting")) {
+        scripting_editor_.setActive();
+    }
+
+    scripting_editor_.drawMenu(state.script);
 
     ImGui::End();
 }

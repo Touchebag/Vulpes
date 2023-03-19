@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <nlohmann/json.hpp>
 
+#include "components/scripting_editor.h"
 #include "unpacked_state.h"
 
 class StateView {
@@ -44,10 +45,12 @@ class StateView {
     std::string active_state_ = "";
 
     struct ActiveState {
-        static const int BUFFER_SIZE = 100;
+        static const int IMGUI_INPUT_BUFFER_SIZE = 500;
 
-        char name[BUFFER_SIZE];
+        char name[IMGUI_INPUT_BUFFER_SIZE];
     };
+
+    entity_editor::ScriptingEditor scripting_editor_;
 
     ActiveState active_state_data_ = ActiveState{};
 
