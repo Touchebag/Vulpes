@@ -15,8 +15,10 @@ class ScriptingEditor {
   private:
     bool active_ = false;
 
-    long long unsigned int current_edit_ = 0;
-    std::string edit_copy_string_ = {};
+    int current_edit_ = -1;
+
+    static const unsigned int IMGUI_BUFFER_SIZE = 500;
+    char text_buf_[IMGUI_BUFFER_SIZE] = {};
 };
 
 } // entity_editor

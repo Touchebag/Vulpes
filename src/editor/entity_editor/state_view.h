@@ -50,7 +50,7 @@ class StateView {
         char name[IMGUI_INPUT_BUFFER_SIZE];
     };
 
-    entity_editor::ScriptingEditor scripting_editor_;
+    entity_editor::ScriptingEditor scripting_editor_{};
 
     ActiveState active_state_data_ = ActiveState{};
 

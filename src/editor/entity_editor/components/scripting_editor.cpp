@@ -5,8 +5,6 @@
 
 #include "utils/log.h"
 
-static const unsigned int IMGUI_BUFFER_SIZE = 500;
-
 namespace entity_editor {
 
 void ScriptingEditor::setActive() {
@@ -15,32 +13,36 @@ void ScriptingEditor::setActive() {
 
 void ScriptingEditor::drawMenu(std::vector<std::string>& script) {
     if (active_) {
-        ImGui::Begin("Scripting");
+        ImGui::Begin("Scripting", nullptr, 0
+            | ImGuiWindowFlags_AlwaysAutoResize
+            );
 
-        for (long long unsigned int i = 0; i < script.size(); i++) {
-            if (!edit_copy_string_.empty() && current_edit_ == i) {
-                ImGui::InputText("", &(script[i]), IMGUI_BUFFER_SIZE);
+        for (int i = 0; i < static_cast<int>(script.size()); i++) {
+            ImGui::PushID(std::to_string(i).c_str());
+            if (current_edit_ == i) {
+                if (ImGui::Button("Done")) {
+                    script[i] = text_buf_;
+                    current_edit_ = - 1;
+                }
 
                 ImGui::SameLine();
-                if (ImGui::Button("Done")) {
-                    edit_copy_string_.clear();
-                }
+                ImGui::InputText("##script_text_input", text_buf_, IMGUI_BUFFER_SIZE);
 
                 ImGui::SameLine();
                 if (ImGui::Button("Cancel")) {
-                    // Restore old value on cancel
-                    script[current_edit_] = edit_copy_string_;
-                    edit_copy_string_.clear();
+                    // Keep old value on cancel
+                    current_edit_ = - 1;
                 }
             } else {
                 if (ImGui::Button("Edit")) {
-                    // Make a safety copy in case cancel
-                    edit_copy_string_ = script[i];
+                    strncpy(text_buf_, script[i].c_str(), IMGUI_BUFFER_SIZE - 1);
                     current_edit_ = i;
                 }
+
                 ImGui::SameLine();
                 ImGui::Text("%s", script[i].c_str());
             }
+            ImGui::PopID();
         }
 
         if (ImGui::Button("Close")) {
