@@ -70,9 +70,6 @@ enum class Type {
     // Typed target
     TARGET,
 
-    // Typed action
-    ACTION,
-
     // To help with parsing
     THEN,
 };

@@ -20,19 +20,6 @@ void checkType(scripting::Type expected, scripting::Type actual) {
     }
 }
 
-std::vector<std::string> tokenizeString(std::string str) {
-    std::vector<std::string> ret_vec;
-    const std::regex re("[A-z0-9\\._'\\-]+|\\(|\\)");
-
-    std::smatch sm;
-    while (std::regex_search(str, sm, re)) {
-        ret_vec.push_back(sm.str());
-        str = sm.suffix();
-    }
-
-    return ret_vec;
-}
-
 scripting::InstructionData parseInstruction(std::string instruction) {
     scripting::InstructionData instruction_data;
 
@@ -256,6 +243,19 @@ scripting::Type Program::translateAndStore(std::vector<std::string> lexed_input)
     }
 
     return instruction_data.return_type;
+}
+
+std::vector<std::string> Program::tokenizeString(std::string str) {
+    std::vector<std::string> ret_vec;
+    const std::regex re("[A-z0-9\\._'\\-]+|\\(|\\)");
+
+    std::smatch sm;
+    while (std::regex_search(str, sm, re)) {
+        ret_vec.push_back(sm.str());
+        str = sm.suffix();
+    }
+
+    return ret_vec;
 }
 
 const std::vector<int> Program::getProgram() {

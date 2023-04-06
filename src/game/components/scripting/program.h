@@ -21,6 +21,8 @@ class Program {
 
     MetaData getMetaData();
 
+    static std::vector<std::string> tokenizeString(std::string str);
+
   private:
     scripting::Type translateAndStore(std::vector<std::string> lexed_input);
 
