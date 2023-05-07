@@ -1,5 +1,6 @@
 #include "scripting_editor.h"
 
+#include <algorithm>
 #include <memory>
 #include <stdexcept>
 #include <stack>
@@ -12,6 +13,84 @@
 
 #include "utils/log.h"
 
+namespace {
+
+using entity_editor::ScriptingEditor;
+
+int autoCompleteCallback(ImGuiInputTextCallbackData* input_data) {
+    auto formatted_string = ScriptingEditor::autoCompleteProgramString(input_data->Buf);
+
+    input_data->DeleteChars(0, input_data->BufTextLen);
+    input_data->InsertChars(0, formatted_string.c_str());
+
+    return 0;
+}
+
+// Assumes string is trimmed of special characters: ()'
+std::string formatProgramStringRecursive(std::deque<std::string>& input, bool add_parens) {
+    if (input.empty()) {
+        return "";
+    }
+
+    std::string output;
+
+    auto token = input.front();
+    input.pop_front();
+
+    try {
+        auto type_info = scripting::string_instruction_map.at(token);
+
+        if (!type_info.args_return_type.empty()) {
+            // Don't add parentheses on outer instruction
+            if (add_parens) {
+                output.append("(");
+            }
+
+            output.append(token);
+
+            for (unsigned long long i = 0; i < type_info.args_return_type.size(); i++) {
+                if (input.empty()) {
+                    // If string not complete, return what we have
+                    return output;
+                }
+
+                output.append(" ");
+                output.append(formatProgramStringRecursive(input, true));
+            }
+
+            if (add_parens) {
+                output.append(")");
+            }
+        } else {
+            output.append(token);
+        }
+    } catch (const std::out_of_range& e) {
+        // If not instruction, try parse int
+        try {
+            std::unique_ptr<size_t> n = std::make_unique<size_t>();
+            (void)std::stoi(token, n.get());
+
+            // Check if entire string could be parsed as int
+            if (*n != token.length()) {
+                throw std::invalid_argument("Invalid input");
+            }
+
+            output.append(token);
+        } catch (std::invalid_argument&) {
+            // If not int, assume string
+
+            // Re-add the correct amount of quotation marks
+            output.append("'");
+            output.append(token);
+            output.append("'");
+        }
+    }
+
+    return output;
+}
+
+} // namespace
+
 namespace entity_editor {
 
 void ScriptingEditor::setActive() {
@@ -23,18 +102,16 @@ scripting::Type ScriptingEditor::getExpectedType(std::vector<std::string> tokens
 
     type_stack.push(scripting::Type::VOID);
 
-    for (auto it : tokens) {
+    for (auto it = tokens.begin(); it != tokens.end(); it++) {
         auto expected_type = type_stack.top();
 
-        if (it == "(" || it == ")") {
+        if (*it == "(" || *it == ")") {
             continue;
         } else {
-            auto type = expected_type;
-
             try {
-                auto instruction = scripting::string_instruction_map.at(it);
+                auto instruction = scripting::string_instruction_map.at(*it);
 
-                if (type == instruction.return_type) {
+                if (expected_type == instruction.return_type) {
                     // Remove return type and replace with argument types
                     type_stack.pop();
 
@@ -48,50 +125,50 @@ scripting::Type ScriptingEditor::getExpectedType(std::vector<std::string> tokens
                 }
             } catch (const std::out_of_range& e) {
                 // Check if string
-                if (type == scripting::Type::STRING) {
-                    if (it.size() > 1 && it.front() == '\'' && it.back() == '\'') {
+                if (expected_type == scripting::Type::STRING) {
+                    if (it->size() > 1 && it->front() == '\'' && it->back() == '\'') {
                         type_stack.pop();
+                    } else {
+                        throw std::invalid_argument("Invalid string format");
                     }
                 // Check if int
-                } else if (type == scripting::Type::INT) {
+                } else if (expected_type == scripting::Type::INT) {
                     try {
                         std::unique_ptr<size_t> n = std::make_unique<size_t>();
-                        (void)std::stoi(it, n.get());
+                        (void)std::stoi(*it, n.get());
                         // Check if entire string could be parsed as int
-                        if (*n == it.length()) {
+                        if (*n == it->length()) {
                             type_stack.pop();
                         }
                     } catch (std::invalid_argument&) {
                         throw std::invalid_argument("Invalid int format");
                     }
                 } else {
-                    // TODO Match half words
                     throw std::invalid_argument("Invalid token");
                 }
             }
         }
+
+        if (type_stack.empty()) {
+            return scripting::Type::NONE;
+        }
     }
 
-    if (type_stack.empty()) {
-        throw std::invalid_argument("Type stack empty");
-    } else {
-        return type_stack.top();
-    }
+    return type_stack.top();
 }
 
-std::set<std::string> ScriptingEditor::getAutoCompletionSuggestions(const std::string& input) {
+std::pair<std::string, std::set<std::string>> ScriptingEditor::getAutoCompletionSuggestions(const std::string& input) {
     auto tokens = Program::tokenizeString(input);
     std::string last_token;
 
     if (!tokens.empty()) {
         if (scripting::string_instruction_map.count(tokens.back()) < 1) {
-            // Remove last token if partial
-            last_token = tokens.back();
-            tokens.pop_back();
-
-            // Ignore parentheses
             if (last_token == ")" || last_token == "(") {
-                last_token.clear();
+                // Ignore parentheses
+            } else {
+                // Remove last token if partial
+                last_token = tokens.back();
+                tokens.pop_back();
             }
         }
     }
@@ -109,7 +186,62 @@ std::set<std::string> ScriptingEditor::getAutoCompletionSuggestions(const std::s
         }
     }
 
-    return suggestions;
+    std::string input_without_partial_token;
+    for (auto it = tokens.begin(); it != tokens.end(); it++) {
+        input_without_partial_token += *it;
+
+        // Don't add space et end
+        if (it != tokens.end() - 1) {
+            input_without_partial_token += " ";
+        }
+    }
+
+    return {input_without_partial_token, suggestions};
+}
+
+std::string ScriptingEditor::formatProgramString(std::string input) {
+    std::string output;
+
+    auto trimmed_string = std::string();
+
+    for (auto it : input) {
+        if (it == '\''|| it == '('  || it == ')') {
+            it++;
+        } else {
+            trimmed_string += it;
+        }
+    }
+
+    auto tokens = Program::tokenizeString(trimmed_string);
+    auto queue = std::deque<std::string>(tokens.begin(), tokens.end());
+
+    output = formatProgramStringRecursive(queue, false);
+
+    // Check if output type checks
+    tokens = Program::tokenizeString(output);
+    if (getExpectedType(tokens) != scripting::Type::NONE) {
+        // If output is partial, append space for next token
+        output.append(" ");
+    }
+
+    return output;
+}
+
+std::string ScriptingEditor::autoCompleteProgramString(std::string input) {
+    try {
+        auto [rest_of_string, suggestions] = ScriptingEditor::getAutoCompletionSuggestions(input);
+
+        if (suggestions.size() == 1) {
+            rest_of_string += " ";
+            rest_of_string += *suggestions.begin();
+        }
+
+        input = ScriptingEditor::formatProgramString(rest_of_string);
+    } catch (const std::invalid_argument& e) {
+        // Do nothing if string doesn't type check
+    }
+
+    return input;
 }
 
 void ScriptingEditor::drawMenu(std::vector<std::string>& script) {
@@ -127,13 +259,13 @@ void ScriptingEditor::drawMenu(std::vector<std::string>& script) {
                 }
 
                 ImGui::SameLine();
-                bool text_entered = ImGui::InputText("##script_text_input", text_buf_, IMGUI_BUFFER_SIZE);
+                bool text_entered = ImGui::InputText("##script_text_input", text_buf_, IMGUI_BUFFER_SIZE, ImGuiInputTextFlags_CallbackCompletion, autoCompleteCallback);
                 // Save position for auto completion popup
                 ImVec2 input_field_position = {ImGui::GetItemRectMin().x, ImGui::GetItemRectMax().y};
 
                 if (text_entered) {
                     try {
-                        completion_values_ = getAutoCompletionSuggestions({text_buf_});
+                        completion_values_ = getAutoCompletionSuggestions({text_buf_}).second;
                     } catch (const std::invalid_argument&) {
                         // Do nothing if failed to parse
                     }

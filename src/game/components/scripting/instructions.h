@@ -59,6 +59,9 @@ enum class Instruction {
 };
 
 enum class Type {
+    // Used for editor
+    NONE,
+
     VOID,
 
     INT,

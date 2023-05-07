@@ -16,14 +16,18 @@ class ScriptingEditor {
     void drawMenu(std::vector<std::string>& script);
 
     static scripting::Type getExpectedType(std::vector<std::string> tokens);
-    static std::set<std::string> getAutoCompletionSuggestions(const std::string& text);
+    static std::string formatProgramString(std::string input);
+
+    static std::pair<std::string, std::set<std::string>> getAutoCompletionSuggestions(const std::string& text);
+    static std::string autoCompleteProgramString(std::string input);
+
+    static const unsigned int IMGUI_BUFFER_SIZE = 500;
 
   private:
     bool active_ = false;
 
     int current_edit_ = -1;
 
-    static const unsigned int IMGUI_BUFFER_SIZE = 500;
     char text_buf_[IMGUI_BUFFER_SIZE] = {};
 
     std::set<std::string> completion_values_;
