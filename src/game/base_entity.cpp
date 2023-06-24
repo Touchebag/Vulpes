@@ -81,10 +81,16 @@ void BaseEntity::reloadFromJson(const nlohmann::json& j) {
 
     //----- Parsing -----
 
+    tag_.clear();
     if (entity_json.contains("tag")) {
-        tag_ = entity_json["tag"].get<std::string>();
-    } else {
-        tag_.clear();
+        auto tag = entity_json["tag"].get<std::string>();
+        if (!tag.empty() && tag.front() != '_') {
+            tag_ = tag;
+        } else {
+            std::string msg = "Invalid tag ";
+            msg += tag;
+            throw std::invalid_argument(msg);
+        }
     }
 
     if (entity_json.contains("condition")) {

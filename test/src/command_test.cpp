@@ -156,20 +156,20 @@ TEST_F(CommandTestFixture, ChangeTiling) {
 
     entity->setComponent<Rendering>(std::make_shared<Rendering>(entity->components_));
 
-    ASSERT_EQ(0, entity->getComponent<Rendering>()->tiling_x_);
-    ASSERT_EQ(0, entity->getComponent<Rendering>()->tiling_y_);
+    EXPECT_EQ(1, entity->getComponent<Rendering>()->tiling_x_);
+    EXPECT_EQ(1, entity->getComponent<Rendering>()->tiling_y_);
 
     editor_env->current_entity = entity;
 
     editor_env->menus.Rendering->setTiling(entity->getComponent<Rendering>(), 1, 0);
 
-    ASSERT_EQ(1, entity->getComponent<Rendering>()->tiling_x_);
-    ASSERT_EQ(0, entity->getComponent<Rendering>()->tiling_y_);
+    EXPECT_EQ(1, entity->getComponent<Rendering>()->tiling_x_);
+    EXPECT_EQ(0, entity->getComponent<Rendering>()->tiling_y_);
 
     editor_env->menus.Rendering->setTiling(entity->getComponent<Rendering>(), 1, 2);
 
-    ASSERT_EQ(1, entity->getComponent<Rendering>()->tiling_x_);
-    ASSERT_EQ(2, entity->getComponent<Rendering>()->tiling_y_);
+    EXPECT_EQ(1, entity->getComponent<Rendering>()->tiling_x_);
+    EXPECT_EQ(2, entity->getComponent<Rendering>()->tiling_y_);
 }
 
 TEST_F(CommandTestFixture, ChangeTexture) {

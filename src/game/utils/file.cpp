@@ -86,7 +86,12 @@ std::ofstream File::openFileForOutput(std::filesystem::path filepath) {
 }
 
 std::filesystem::directory_iterator File::getDirContents(std::filesystem::path path) {
-    return std::filesystem::directory_iterator(ASSET_DIR / getCurrentDirectory() / path);
+    auto full_path = ASSET_DIR / getCurrentDirectory() / path;
+    if (std::filesystem::is_directory(full_path)) {
+        return std::filesystem::directory_iterator(full_path);
+    } else {
+        return {};
+    }
 }
 
 std::optional<nlohmann::json> File::loadJson(std::filesystem::path filepath) {

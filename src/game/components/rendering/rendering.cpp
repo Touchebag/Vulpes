@@ -14,11 +14,13 @@ Rendering::Rendering(std::weak_ptr<ComponentStore> components) :
 void Rendering::setTexture(std::shared_ptr<sf::Texture> texture) {
     texture_ = texture;
 
-    sprite_.setTexture(*texture_, true);
-    original_texture_rect_ = sprite_.getTextureRect();
-    texture_->setRepeated(true);
+    if (texture_) {
+        sprite_.setTexture(*texture_, true);
+        original_texture_rect_ = sprite_.getTextureRect();
+        texture_->setRepeated(true);
 
-    recalculateTextureRect();
+        recalculateTextureRect();
+    }
 
 }
 
@@ -52,14 +54,10 @@ void Rendering::reloadFromJson(nlohmann::json j, File file_instance) {
 
     if (j.contains("tile_x")) {
         tiling_x_ = j["tile_x"].get<int>();
-    } else {
-        tiling_x_ = 1;
     }
 
     if (j.contains("tile_y")) {
         tiling_y_ = j["tile_y"].get<int>();
-    } else {
-        tiling_y_ = 1;
     }
 
     if (j.contains("layer")) {

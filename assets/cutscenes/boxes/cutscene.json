@@ -2,22 +2,63 @@
     "events": {
         "0": [
             {
+                "event": "set_position",
+                "entity": "_boxA",
+                "x_pos": 800.0,
+                "y_pos": 800.0
+            },
+            {
+                "event": "set_texture",
+                "entity": "_boxA",
+                "texture": "RedBox",
+                "height": 90,
+                "layer": 0
+            },
+            {
+                "event": "set_position",
+                "entity": "_boxB",
+                "x_pos": 500.0,
+                "y_pos": 500.0
+            },
+            {
+                "event": "set_texture",
+                "entity": "_boxB",
+                "texture": "GreenBox",
+                "height": 90,
+                "layer": 0
+            },
+            {
+                "event": "set_position",
+                "entity": "_boxC",
+                "x_pos": 200.0,
+                "y_pos": 200.0
+            },
+            {
+                "event": "set_texture",
+                "entity": "_boxC",
+                "texture": "BlueBox",
+                "height": 90,
+                "layer": 0
+            }
+        ],
+        "1": [
+            {
                 "event": "fade_out",
-                "entity": "blue",
+                "entity": "_boxA",
                 "active_frames": 60
             },
             {
                 "event": "move",
-                "entity": "green",
+                "entity": "_boxB",
                 "x_vel": -2.0,
                 "y_vel": 5.0,
                 "active_frames": 60
             }
         ],
-        "10": [
+        "11": [
             {
                 "event": "move",
-                "entity": "red",
+                "entity": "_boxC",
                 "x_vel": 0.5,
                 "y_vel": -7.0,
                 "active_frames": 60

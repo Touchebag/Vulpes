@@ -49,8 +49,8 @@ class Rendering : public Component {
 
     // Number of repeated sprites
     // 0 = infinite tiling
-    int tiling_x_ = 0;
-    int tiling_y_ = 0;
+    int tiling_x_ = 1;
+    int tiling_y_ = 1;
 
   private:
     std::shared_ptr<sf::Texture> texture_;

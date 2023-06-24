@@ -18,6 +18,10 @@ class Cutscene {
         FADE_IN,
 
         MOVE,
+        SET_POSITION,
+
+        SET_TEXTURE,
+        ENABLE
     };
 
     struct CutsceneEvent {
@@ -27,7 +31,10 @@ class Cutscene {
 
         std::string entity_tag;
 
-        std::variant<unsigned int, std::string, std::pair<float, float>> extra_data;
+        std::vector<int> extra_data_int;
+        std::vector<unsigned int> extra_data_uint;
+        std::vector<float> extra_data_float;
+        std::vector<std::string> extra_data_str;
     };
 
     static std::shared_ptr<Cutscene> loadCutscene(const std::string& cutscene_name);
@@ -47,12 +54,16 @@ class Cutscene {
   private:
     static Cutscene::CutsceneEvent loadEventFromJson(nlohmann::json j);
     void addEvents(const std::vector<std::pair<unsigned int, CutsceneEvent>>& events);
-    void executeEvent(CutsceneEvent& event);
+    void executeEvent(const CutsceneEvent& event);
+
+    void addRenderable(std::shared_ptr<Rendering> renderable, unsigned int layer);
 
     unsigned int getNextEventFrame();
     CutsceneEvent popEvent();
 
-    std::shared_ptr<BaseEntity> getEntity(std::string tag);
+    void applyFunctionOnTaggedEntites(const std::string& tag, std::function<void(std::shared_ptr<BaseEntity>)>);
+
+    std::shared_ptr<BaseEntity> getEntity(const std::string& tag);
 
     unsigned int frame_counter_ = 0;
     unsigned int total_length_ = 0;
@@ -69,4 +80,6 @@ class Cutscene {
     std::map<std::string, std::shared_ptr<BaseEntity>> world_entities_;
     std::map<std::string, std::shared_ptr<BaseEntity>> cutscene_entities_;
     std::vector<std::vector<std::weak_ptr<Rendering>>> renderables_;
+
+    std::unordered_map<std::string, std::shared_ptr<sf::Texture>> textures_;
 };

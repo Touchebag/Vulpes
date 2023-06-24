@@ -297,3 +297,23 @@ TEST(TestComponents, TestCanHandleNullptrComponentStore) {
     auto component = Death::createFromJson({}, {});
     ASSERT_EQ(component->getComponent<Movement>(), nullptr);
 }
+
+TEST(TestComponents, TestTags) {
+    auto j = nlohmann::json{};
+
+    j["tag"] = "validtag";
+
+    auto entity = BaseEntity::createFromJson(j);
+    EXPECT_TRUE(entity != nullptr);
+
+    j["tag"] = "_invalidtag";
+
+    EXPECT_THROW({
+        try {
+            entity = BaseEntity::createFromJson(j);
+        } catch (const std::invalid_argument& e) {
+            EXPECT_STREQ("Invalid tag _invalidtag", e.what());
+            throw;
+        }
+    }, std::invalid_argument);
+}

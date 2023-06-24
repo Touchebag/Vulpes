@@ -9,9 +9,14 @@ namespace {
 
 const Bimap<std::string, Cutscene::CutsceneEventType> string_event_map = {
     {"animation", Cutscene::CutsceneEventType::ANIMATION},
+
     {"fade_out", Cutscene::CutsceneEventType::FADE_OUT},
     {"fade_in", Cutscene::CutsceneEventType::FADE_IN},
+
     {"move", Cutscene::CutsceneEventType::MOVE},
+    {"set_position", Cutscene::CutsceneEventType::SET_POSITION},
+
+    {"set_texture", Cutscene::CutsceneEventType::SET_TEXTURE},
 };
 
 void updateEntitiy(std::shared_ptr<BaseEntity> entity) {
@@ -46,27 +51,14 @@ std::shared_ptr<Cutscene> Cutscene::loadCutscene(const std::string& cutscene_nam
         throw std::invalid_argument("");
     }
 
-    auto entities_dir = File::getFullPath(File::getEntityDir());
-    // Load all cutscene specific entites
-    if (std::filesystem::is_directory(entities_dir)) {
-        for (auto ent : File::getDirContents(File::getEntityDir())) {
-            auto entity_name = ent.path().filename().string();
-
-            nlohmann::json j;
-            j["Entity"] = entity_name;
-            auto entity = BaseEntity::createFromJson(j);
-
-            cutscene->cutscene_entities_.insert_or_assign(entity->getTag(), entity);
-
-            if (auto renderable = entity->getComponent<Rendering>()) {
-                auto layer = static_cast<unsigned long long>(renderable->getLayer());
-
-                if (layer >= cutscene->renderables_.size()) {
-                    cutscene->renderables_.resize(layer + 1);
-                }
-
-                cutscene->renderables_.at(layer).push_back(renderable);
-            }
+    // Load textures
+    for (auto file : File::getDirContents("textures")) {
+        auto filename = file.path().stem();
+        if (auto texture = File::loadTexture(filename)) {
+            cutscene->textures_.insert({filename.u8string(), std::make_shared<sf::Texture>(texture.value())});
+        } else {
+            LOGE("Cutscene %s: Failed to load texture %s", cutscene_name.c_str(), filename.u8string().c_str());
+            throw std::invalid_argument("");
         }
     }
 
@@ -83,7 +75,25 @@ void Cutscene::reloadFromJson(nlohmann::json j) {
                 auto frame = static_cast<unsigned int>(stoi(it.key()));
 
                 events.push_back({frame, event});
-                tags_.insert(event.entity_tag);
+
+                auto tag = event.entity_tag;
+                // Create cutscene specific entities of all '_'-prefixed tags
+                if (!tag.empty() && tag.front() == '_' && cutscene_entities_.count(tag) == 0) {
+                    nlohmann::json j_ent{};
+
+                    auto entity = BaseEntity::createFromJson(j_ent);
+                    entity->setComponent<Transform>(std::make_shared<Transform>(entity->components_));
+                    entity->setComponent<Movement>(std::make_shared<Movement>(entity->components_));
+
+                    cutscene_entities_.insert_or_assign(tag, entity);
+
+                    if (auto renderable = entity->getComponent<Rendering>()) {
+                        auto layer = renderable->getLayer();
+                        addRenderable(renderable, layer);
+                    }
+                } else {
+                    tags_.insert(event.entity_tag);
+                }
 
                 // Update length
                 total_length_ = std::max(frame + event.active_frames, total_length_);
@@ -111,6 +121,9 @@ void Cutscene::start() {
     next_event_ = events_.begin();
     active_events_.clear();
     world_entities_ = System::IWorldModify::getEntitesByTags(tags_);
+
+    // Call frame 0 for initalisation
+    update();
 }
 
 void Cutscene::addEvents(const std::vector<std::pair<unsigned int, CutsceneEvent>>& events) {
@@ -137,18 +150,40 @@ Cutscene::CutsceneEvent Cutscene::loadEventFromJson(nlohmann::json j) {
 
         switch (type) {
             case CutsceneEventType::ANIMATION:
-                event.extra_data = j["animation_name"].get<std::string>();
+                event.extra_data_str.push_back(j["animation_name"].get<std::string>());
                 break;
             case CutsceneEventType::FADE_OUT:
             case CutsceneEventType::FADE_IN:
                 // Ceiling division magic
-                event.extra_data = (255 + event.active_frames - 1) / event.active_frames;
+                event.extra_data_uint.push_back((255 + event.active_frames - 1) / event.active_frames);
                 break;
             case CutsceneEventType::MOVE:
-                event.extra_data = std::pair<float, float>{j["x_vel"].get<float>(), j["y_vel"].get<float>()};
+                event.extra_data_float.push_back(j["x_vel"].get<float>());
+                event.extra_data_float.push_back(j["y_vel"].get<float>());
+                break;
+            case CutsceneEventType::SET_POSITION:
+                event.extra_data_float.push_back(j["x_pos"].get<float>());
+                event.extra_data_float.push_back(j["y_pos"].get<float>());
+                break;
+            case CutsceneEventType::SET_TEXTURE:
+                event.extra_data_str.push_back(j["texture"].get<std::string>());
+                event.extra_data_uint.push_back(j["layer"].get<unsigned int>());
+
+                event.extra_data_int.resize(2);
+                if (j.contains("width")) {
+                    event.extra_data_int.at(0) = j["width"].get<int>();
+                } else {
+                    event.extra_data_int.at(0) = 0.0;
+                }
+                if (j.contains("height")) {
+                    event.extra_data_int.at(1) = j["height"].get<int>();
+                } else {
+                    event.extra_data_int.at(1) = 0.0;
+                }
+
                 break;
             default:
-                LOGE("This should never happen");
+                LOGE("Invalid cutscene event type. This should never happen");
                 exit(EXIT_FAILURE);
         }
     } catch (std::out_of_range& e) {
@@ -218,7 +253,7 @@ Cutscene::CutsceneEvent Cutscene::popEvent() {
     }
 }
 
-std::shared_ptr<BaseEntity> Cutscene::getEntity(std::string tag) {
+std::shared_ptr<BaseEntity> Cutscene::getEntity(const std::string& tag) {
     try {
         if (cutscene_entities_.count(tag) != 0) {
             return cutscene_entities_.at(tag);
@@ -232,66 +267,119 @@ std::shared_ptr<BaseEntity> Cutscene::getEntity(std::string tag) {
     return {};
 }
 
-void Cutscene::executeEvent(Cutscene::CutsceneEvent& event) {
-    // TODO Check variant type
+void Cutscene::executeEvent(const Cutscene::CutsceneEvent& event) {
+    auto tag = event.entity_tag;
+
     switch (event.type) {
         case CutsceneEventType::ANIMATION:
-            if (auto entity = getEntity(event.entity_tag)) {
-                auto animation_name = std::get<std::string>(event.extra_data);
+            applyFunctionOnTaggedEntites(tag, [&] (std::shared_ptr<BaseEntity> entity) {
+                auto animation_name = event.extra_data_str.at(0);
 
                 entity->getComponent<Animation>()->setFrameList(animation_name);
-            }
+            });
 
             break;
         case CutsceneEventType::FADE_OUT:
-            if (auto entity = getEntity(event.entity_tag)) {
-                auto fade_strength = static_cast<sf::Uint8>(std::get<unsigned int>(event.extra_data));
+            applyFunctionOnTaggedEntites(tag, [&] (std::shared_ptr<BaseEntity> entity) {
+                if (auto render = entity->getComponent<Rendering>()) {
+                    auto fade_strength = event.extra_data_uint.at(0);
 
-                auto render = entity->getComponent<Rendering>();
-                auto current_color = render->getColor();
+                    auto current_color = render->getColor();
 
-                // Avoid underflow
-                fade_strength = std::min(fade_strength, current_color.a);
+                    // Avoid underflow
+                    fade_strength = std::min(fade_strength, static_cast<unsigned int>(current_color.a));
 
-                current_color -= {0, 0, 0, fade_strength};
+                    current_color -= {0, 0, 0, static_cast<sf::Uint8>(fade_strength)};
 
-                render->setColor(current_color);
-            }
+                    render->setColor(current_color);
+                }
+            });
 
             break;
         case CutsceneEventType::FADE_IN:
-            if (auto entity = getEntity(event.entity_tag)) {
-                auto fade_strength = static_cast<sf::Uint8>(std::get<unsigned int>(event.extra_data));
+            applyFunctionOnTaggedEntites(tag, [&] (std::shared_ptr<BaseEntity> entity) {
+                if (auto render = entity->getComponent<Rendering>()) {
+                    auto fade_strength = event.extra_data_uint.at(0);
+                    auto current_color = render->getColor();
 
-                auto render = entity->getComponent<Rendering>();
-                auto current_color = render->getColor();
+                    if (255 - current_color.a) {
+                        // Clamp if overflow
+                        fade_strength = 255 - current_color.a;
+                    }
 
-                if (255 - current_color.a) {
-                    // Clamp if overflow
-                    fade_strength = 255 - current_color.a;
+                    current_color += {0, 0, 0, static_cast<sf::Uint8>(fade_strength)};
+
+                    render->setColor(current_color);
                 }
-
-                current_color += {0, 0, 0, fade_strength};
-
-                render->setColor(current_color);
-            }
+            });
 
             break;
         case CutsceneEventType::MOVE:
-            if (auto entity = getEntity(event.entity_tag)) {
-                auto [x, y] = std::get<std::pair<float, float>>(event.extra_data);
-
+            applyFunctionOnTaggedEntites(tag, [&] (std::shared_ptr<BaseEntity> entity) {
                 if (auto move = entity->getComponent<Movement>()) {
+                    auto x = event.extra_data_float.at(0);
+                    auto y = event.extra_data_float.at(1);
+
                     move->setVelocity(x, y);
                 } else {
                     LOGW("Tag %s, missing move component", event.entity_tag.c_str());
                 }
-            }
+            });
+
+            break;
+        case CutsceneEventType::SET_POSITION:
+            applyFunctionOnTaggedEntites(tag, [&] (std::shared_ptr<BaseEntity> entity) {
+                if (auto trans = entity->getComponent<Transform>()) {
+                    auto x = event.extra_data_float.at(0);
+                    auto y = event.extra_data_float.at(1);
+
+                    trans->setPosition(static_cast<int>(x), static_cast<int>(y));
+                } else {
+                    LOGW("Tag %s, missing transform component", event.entity_tag.c_str());
+                }
+            });
+
+            break;
+        case CutsceneEventType::SET_TEXTURE:
+            applyFunctionOnTaggedEntites(tag, [&] (std::shared_ptr<BaseEntity> entity) {
+                auto texture_name = event.extra_data_str.at(0);
+
+                if (!entity->getComponent<Rendering>()) {
+                    entity->setComponent<Rendering>(std::make_shared<Rendering>(entity->components_));
+                    addRenderable(entity->getComponent<Rendering>(), event.extra_data_uint.at(0));
+                }
+
+                auto render = entity->getComponent<Rendering>();
+
+                if (texture_name.empty()) {
+                    // Empty name is special case to disable texture
+                    render->setTexture(nullptr);
+                } else {
+                    render->setTexture(textures_.at(texture_name));
+                    render->setSize(event.extra_data_int.at(0), event.extra_data_int.at(1));
+                }
+            });
+
             break;
         default:
             LOGD("Unknown event type");
             break;
     }
+}
+
+void Cutscene::applyFunctionOnTaggedEntites(const std::string& tag,
+                                            std::function<void(std::shared_ptr<BaseEntity>)> func) {
+    if (auto entity = getEntity(tag)) {
+        func(entity);
+    }
+}
+
+void Cutscene::addRenderable(std::shared_ptr<Rendering> renderable, unsigned int layer) {
+    if (layer >= renderables_.size()) {
+        renderables_.resize(layer + 1);
+    }
+
+    renderables_.at(layer).push_back(renderable);
 }
 
 unsigned int Cutscene::getLength() {

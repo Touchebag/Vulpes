@@ -24,7 +24,7 @@ TEST_F(CutsceneTestFixture, TestFadeOut) {
     nlohmann::json j = nlohmann::json::parse(R"--(
     {
         "events": {
-            "0": [
+            "1": [
                 {
                     "event": "fade_out",
                     "entity": "cutscene_test",
