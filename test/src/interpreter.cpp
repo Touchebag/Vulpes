@@ -77,14 +77,18 @@ TEST_F(InterpreterTestFixture, FrameTimer) {
 
 TEST_F(InterpreterTestFixture, PlayerPosition) {
     auto output = parseAndRun("position_x player");
+    EXPECT_EQ(output, 0);
 
+    output = parseAndRun("position_y player");
     EXPECT_EQ(output, 0);
 
     System::IWorldModify::getPlayer().lock()->getComponent<Transform>()->setPosition(5, 2);
 
     output = parseAndRun("position_x player");
-
     EXPECT_EQ(output, 5);
+
+    output = parseAndRun("position_y player");
+    EXPECT_EQ(output, 2);
 }
 
 TEST_F(InterpreterTestFixture, ThisPosition) {
@@ -92,8 +96,10 @@ TEST_F(InterpreterTestFixture, ThisPosition) {
     extra_data_.this_components->getComponent<Transform>()->setPosition(3, 6);
 
     auto output = parseAndRun("position_x this");
-
     EXPECT_EQ(output, 3);
+
+    output = parseAndRun("position_y this");
+    EXPECT_EQ(output, 6);
 }
 
 TEST_F(InterpreterTestFixture, ThisCollides) {

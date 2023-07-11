@@ -113,6 +113,23 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                 PUSH(0);
                 break;
             }
+            case scripting::Instruction::POSITION_Y:
+            {
+                LOGV("POSITION_Y");
+
+                GET_TARGET;
+                if (target) {
+                    if (auto trans = target->getComponent<Transform>()) {
+                        PUSH(trans->getY());
+                        break;
+                    } else {
+                        LOGW("SCRIPT POSITION_Y: Missing Transform component");
+                    }
+                }
+
+                PUSH(0);
+                break;
+            }
             case scripting::Instruction::FRAME_TIMER:
                 LOGV("FRAME_TIMER");
                 if (static_cast<int>(extra_input.frame_timer) >= POP()) {

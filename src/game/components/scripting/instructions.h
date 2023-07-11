@@ -20,6 +20,7 @@ enum class Instruction {
 
     // Properties
     POSITION_X,
+    POSITION_Y,
 
     // Checks
     COLLIDES,
@@ -100,6 +101,7 @@ static const std::unordered_map<std::string, InstructionData> string_instruction
     {"this", {Instruction::THIS, Type::TARGET, {}}},
 
     {"position_x", {Instruction::POSITION_X, Type::INT, {Type::TARGET}}},
+    {"position_y", {Instruction::POSITION_Y, Type::INT, {Type::TARGET}}},
 
     {"collides", {Instruction::COLLIDES, Type::BOOL, {Type::TARGET}}},
     {"flag", {Instruction::FLAG, Type::BOOL, {Type::STRING}}},
