@@ -105,6 +105,9 @@
                     }
                 }
             ],
+            "script": [
+                "if (and (not (sensor 'ledge_climb_top')) (sensor 'ledge_climb_bottom')) then (set_position this (position_x this) (sub (collision_history 'ledge_climb_bottom' 0 top_edge) 100))"
+            ],
             "next_states": [
                 {"event": "ledge_climb", "state": "ledge_climb"}
             ]

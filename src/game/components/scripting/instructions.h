@@ -46,6 +46,7 @@ enum class Instruction {
     LSS,
 
     // Logical operators
+    NOT,
     AND,
     OR,
 
@@ -144,6 +145,7 @@ static const std::unordered_map<std::string, InstructionData> string_instruction
     {"grt", {Instruction::GRT, Type::BOOL, {Type::INT, Type::INT}}},
     {"lss", {Instruction::LSS, Type::BOOL, {Type::INT, Type::INT}}},
 
+    {"not", {Instruction::NOT, Type::BOOL, {Type::BOOL}}},
     {"and", {Instruction::AND, Type::BOOL, {Type::BOOL, Type::BOOL}}},
     {"or", {Instruction::OR, Type::BOOL, {Type::BOOL, Type::BOOL}}},
 

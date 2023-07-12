@@ -312,6 +312,14 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                 PUSH(b < a ? Bool::TRUE : Bool::FALSE);
                 break;
             }
+            case scripting::Instruction::NOT:
+            {
+                LOGV("NOT");
+                auto a = POP();
+
+                PUSH(a ? Bool::FALSE : Bool::TRUE);
+                break;
+            }
             case scripting::Instruction::AND:
             {
                 LOGV("AND");

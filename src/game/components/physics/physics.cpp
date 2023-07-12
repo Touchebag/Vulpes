@@ -46,29 +46,6 @@ void saveConstantToJson(nlohmann::json& j, std::string name, double constant, do
     }
 }
 
-void setShiftedLedgeClimbPosition(std::shared_ptr<Transform> trans, std::shared_ptr<Collision> coll) {
-    auto world_colls = System::IWorldRead::getCollideables(Collideable::CollisionType::STATIC);
-
-    if (!trans || !coll) {
-        return;
-    }
-
-    for (auto it = world_colls.begin(); it != world_colls.end(); ++it) {
-        if (coll->collides(*it)) {
-            // If this entrance would put the player inside an object
-            // move player to spawn on top of object
-            auto other_coll = it->lock();
-            auto other_hbox = other_coll->getHitbox();
-            auto other_trans = other_coll->getTransform().lock();
-
-            auto new_y_pos = other_trans->getY() - static_cast<int>(other_hbox->height_ / 2) -
-                static_cast<int>(coll->getCollideable()->getHitbox()->height_ / 2);
-
-            trans->setPosition(trans->getX(), new_y_pos);
-        }
-    }
-}
-
 } // namespace
 
 Physics::Physics(std::weak_ptr<ComponentStore> components) :
@@ -102,30 +79,6 @@ void Physics::update() {
         FacingDirection facing_right;
 
         facing_right.setDirection(move->isFacingRight());
-
-        // Ledge climb will override movement this frame
-        if (auto coll = getComponent<Collision>()) {
-            if (coll->isSensorTriggered("ledge_climb_bottom") && !coll->isSensorTriggered("ledge_climb_top")) {
-                move->setVelocity(0.0, 0.0);
-                // TODO Use width of sensor instead of hard coded value
-                auto max_move = move->getMaximumMovement(31.0 * (facing_right ? 1.0 : -1.0), 0.0);
-
-                // No collision would happen without transform, no validation needed
-                auto trans = getComponent<Transform>();
-
-                // Force a position inside wall
-                auto coll_width = coll->getCollideable()->getHitbox()->width_;
-                trans->setPosition(trans->getX() + static_cast<int>(max_move.first) + static_cast<int>(facing_right ? coll_width : -coll_width),
-                                   trans->getY());
-
-                // Force move to on top of current collision
-                setShiftedLedgeClimbPosition(trans, coll);
-
-                state->incomingEvent(state_utils::Event::LEDGE_CLIMB);
-
-                return;
-            }
-        }
 
         facing_right.lockDirection(physics_props.direction_locked_);
 
