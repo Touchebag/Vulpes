@@ -362,7 +362,7 @@ TEST_F(InterpreterTestFixture, Move) {
 TEST_F(InterpreterTestFixture, SetVelocity) {
     extra_data_.this_components->setComponent<Movement>(std::make_shared<Movement>(extra_data_.this_components));
 
-    // Ensure veolcity is absolute
+    // Ensure velocity is absolute
     extra_data_.this_components->getComponent<Movement>()->setVelocity(1.0, -1.0);
 
     auto output = parseAndRun("set_velocity this 1.2 5.5");
@@ -373,6 +373,21 @@ TEST_F(InterpreterTestFixture, SetVelocity) {
 
     EXPECT_EQ(vel_x, 1.2);
     EXPECT_EQ(vel_y, 5.5);
+}
+
+TEST_F(InterpreterTestFixture, SetPosition) {
+    extra_data_.this_components->setComponent<Transform>(std::make_shared<Transform>(extra_data_.this_components));
+
+    extra_data_.this_components->getComponent<Transform>()->setPosition(1.0, -1.0);
+
+    auto output = parseAndRun("set_position this 4 7");
+    EXPECT_EQ(output, 0);
+
+    auto pos_x = extra_data_.this_components->getComponent<Transform>()->getX();
+    auto pos_y = extra_data_.this_components->getComponent<Transform>()->getY();
+
+    EXPECT_EQ(pos_x, 4);
+    EXPECT_EQ(pos_y, 7);
 }
 
 TEST_F(InterpreterTestFixture, EnableDisableAction) {

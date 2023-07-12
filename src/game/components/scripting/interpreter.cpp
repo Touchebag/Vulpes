@@ -331,6 +331,24 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
 
                 break;
             }
+            case scripting::Instruction::SET_POSITION:
+            {
+                LOGV("SET_POSITION");
+
+                auto pos_y = POP();
+                auto pos_x = POP();
+
+                GET_TARGET;
+                if (target) {
+                    if (auto trans = target->getComponent<Transform>()) {
+                        trans->setPosition(pos_x, pos_y);
+                    } else {
+                        LOGW("SCRIPT SET_POSITION: Missing Transform component");
+                    }
+                }
+
+                break;
+            }
             case scripting::Instruction::ENABLE_ACTION:
                 LOGV("ENABLE_ACTION");
 

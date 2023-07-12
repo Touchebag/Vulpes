@@ -50,6 +50,7 @@ enum class Instruction {
     // Component modifications
     MOVE,
     SET_VELOCITY,
+    SET_POSITION,
 
     ENABLE_ACTION,
     DISABLE_ACTION,
@@ -128,6 +129,7 @@ static const std::unordered_map<std::string, InstructionData> string_instruction
 
     {"move", {Instruction::MOVE, Type::VOID, {Type::TARGET, Type::FLOAT, Type::FLOAT}}},
     {"set_velocity", {Instruction::SET_VELOCITY, Type::VOID, {Type::TARGET, Type::FLOAT, Type::FLOAT}}},
+    {"set_position", {Instruction::SET_POSITION, Type::VOID, {Type::TARGET, Type::INT, Type::INT}}},
 
     {"enable_action", {Instruction::ENABLE_ACTION, Type::VOID, {Type::STRING}}},
     {"disable_action", {Instruction::DISABLE_ACTION, Type::VOID, {Type::STRING}}},
