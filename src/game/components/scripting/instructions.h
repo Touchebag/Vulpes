@@ -11,6 +11,10 @@ enum class Instruction {
     STRING,
     FLOAT,
 
+    // Variables
+    GET,
+    SET,
+
     // Dynamic values
     FRAME_TIMER,
 
@@ -119,6 +123,9 @@ struct InstructionData {
 };
 
 static const std::unordered_map<std::string, InstructionData> string_instruction_map = {
+    {"get", {Instruction::GET, Type::INT, {Type::STRING}}},
+    {"set", {Instruction::SET, Type::VOID, {Type::STRING, Type::INT}}},
+
     {"frame_timer", {Instruction::FRAME_TIMER, Type::BOOL, {Type::INT}}},
 
     {"player", {Instruction::PLAYER, Type::TARGET, {}}},
@@ -169,5 +176,7 @@ static const std::unordered_map<std::string, InstructionData> string_instruction
 
     {"add_camera_trauma", {Instruction::ADD_CAMERA_TRAUMA, Type::VOID, {Type::FLOAT}}},
 };
+
+using VariableMap = std::unordered_map<std::string, int>;
 
 } // scripting

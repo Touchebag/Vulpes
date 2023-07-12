@@ -22,6 +22,7 @@ class InterpreterTestFixture : public ::testing::Test {
 
         extra_data_.this_components = std::make_shared<ComponentStore>();
         extra_data_.frame_timer = 0;
+        extra_data_.variables = std::make_shared<scripting::VariableMap>();
     }
 
     int parseAndRun(std::string source) {
@@ -59,6 +60,23 @@ TEST_F(InterpreterTestFixture, FloatLiteral) {
     auto program = Program::loadProgram("4.3");
 
     EXPECT_EQ(program.getFloat(0), 4.3);
+}
+
+TEST_F(InterpreterTestFixture, GetSetVariables) {
+    auto output = parseAndRun("set 'test_var' 4");
+    EXPECT_EQ(output, 0);
+
+    output = parseAndRun("get 'test_var'");
+    EXPECT_EQ(output, 4);
+
+    output = parseAndRun("set 'test_var2' 7");
+    EXPECT_EQ(output, 0);
+
+    output = parseAndRun("get 'test_var2'");
+    EXPECT_EQ(output, 7);
+
+    output = parseAndRun("get 'test_var'");
+    EXPECT_EQ(output, 4);
 }
 
 TEST_F(InterpreterTestFixture, FrameTimer) {

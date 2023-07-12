@@ -90,6 +90,28 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
 
                 PUSH(*pc);
                 break;
+            case scripting::Instruction::GET:
+            {
+                LOGV("GET");
+
+                auto var_name = program.getString(POP());
+                auto value = extra_input.variables->at(var_name);
+
+                PUSH(value);
+                break;
+            }
+            case scripting::Instruction::SET:
+            {
+                LOGV("SET");
+
+                auto value = POP();
+                auto var_name = program.getString(POP());
+
+                extra_input.variables->insert({var_name, value});
+
+                PUSH(0);
+                break;
+            }
             case scripting::Instruction::PLAYER:
                 LOGV("PLAYER");
                 PUSH(Target::PLAYER);

@@ -20,4 +20,6 @@ class Scripting : public Component {
 
   private:
     unsigned int frame_timer_ = 0;
+
+    std::shared_ptr<scripting::VariableMap> variables_;
 };

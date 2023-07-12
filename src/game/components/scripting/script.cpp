@@ -30,6 +30,7 @@ void Scripting::executeProgram(const Program& program) {
     Interpreter::ExtraInputData extra_data;
     extra_data.frame_timer = frame_timer_;
     extra_data.this_components = component_store_.lock();
+    extra_data.variables = variables_;
 
     Interpreter::executeProgram(program, extra_data);
 }

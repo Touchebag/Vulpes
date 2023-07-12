@@ -10,6 +10,7 @@ class Interpreter {
     struct ExtraInputData {
         std::shared_ptr<ComponentStore> this_components = std::make_shared<ComponentStore>();
         unsigned int frame_timer = 0;
+        std::shared_ptr<scripting::VariableMap> variables = std::make_shared<scripting::VariableMap>();
     };
 
     static int executeProgram(Program program, ExtraInputData extra_data);
