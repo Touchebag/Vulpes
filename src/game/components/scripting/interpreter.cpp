@@ -107,7 +107,35 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                 auto value = POP();
                 auto var_name = program.getString(POP());
 
-                extra_input.variables->insert({var_name, value});
+                extra_input.variables->insert_or_assign(var_name, value);
+
+                PUSH(0);
+                break;
+            }
+            case scripting::Instruction::INC_VAR:
+            {
+                LOGV("INC_VAR");
+
+                auto var_name = program.getString(POP());
+                auto value = extra_input.variables->at(var_name);
+
+                value++;
+
+                extra_input.variables->insert_or_assign(var_name, value);
+
+                PUSH(0);
+                break;
+            }
+            case scripting::Instruction::DEC_VAR:
+            {
+                LOGV("DEC_VAR");
+
+                auto var_name = program.getString(POP());
+                auto value = extra_input.variables->at(var_name);
+
+                value--;
+
+                extra_input.variables->insert_or_assign(var_name, value);
 
                 PUSH(0);
                 break;

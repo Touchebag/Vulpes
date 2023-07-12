@@ -79,6 +79,23 @@ TEST_F(InterpreterTestFixture, GetSetVariables) {
     EXPECT_EQ(output, 4);
 }
 
+TEST_F(InterpreterTestFixture, IncDecVar) {
+    auto output = parseAndRun("set 'test_var' 4");
+    EXPECT_EQ(output, 0);
+
+    output = parseAndRun("get 'test_var'");
+    EXPECT_EQ(output, 4);
+
+    output = parseAndRun("inc_var 'test_var'");
+    output = parseAndRun("get 'test_var'");
+    EXPECT_EQ(output, 5);
+
+    output = parseAndRun("dec_var 'test_var'");
+    output = parseAndRun("dec_var 'test_var'");
+    output = parseAndRun("get 'test_var'");
+    EXPECT_EQ(output, 3);
+}
+
 TEST_F(InterpreterTestFixture, FrameTimer) {
     auto output = parseAndRun("frame_timer 2");
 

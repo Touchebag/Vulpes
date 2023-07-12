@@ -15,6 +15,9 @@ enum class Instruction {
     GET,
     SET,
 
+    INC_VAR, // Convenience
+    DEC_VAR, // Convenience
+
     // Dynamic values
     FRAME_TIMER,
 
@@ -125,6 +128,9 @@ struct InstructionData {
 static const std::unordered_map<std::string, InstructionData> string_instruction_map = {
     {"get", {Instruction::GET, Type::INT, {Type::STRING}}},
     {"set", {Instruction::SET, Type::VOID, {Type::STRING, Type::INT}}},
+
+    {"inc_var", {Instruction::INC_VAR, Type::VOID, {Type::STRING}}},
+    {"dec_var", {Instruction::DEC_VAR, Type::VOID, {Type::STRING}}},
 
     {"frame_timer", {Instruction::FRAME_TIMER, Type::BOOL, {Type::INT}}},
 
