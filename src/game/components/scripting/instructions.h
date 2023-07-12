@@ -14,6 +14,10 @@ enum class Instruction {
     // Dynamic values
     FRAME_TIMER,
 
+    // Arithmetic operations
+    ADD,
+    SUB,
+
     // Targets
     PLAYER,
     THIS,
@@ -99,6 +103,9 @@ static const std::unordered_map<std::string, InstructionData> string_instruction
 
     {"player", {Instruction::PLAYER, Type::TARGET, {}}},
     {"this", {Instruction::THIS, Type::TARGET, {}}},
+
+    {"add", {Instruction::ADD, Type::INT, {Type::INT, Type::INT}}},
+    {"sub", {Instruction::SUB, Type::INT, {Type::INT, Type::INT}}},
 
     {"position_x", {Instruction::POSITION_X, Type::INT, {Type::TARGET}}},
     {"position_y", {Instruction::POSITION_Y, Type::INT, {Type::TARGET}}},

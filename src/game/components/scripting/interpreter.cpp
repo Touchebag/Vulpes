@@ -96,6 +96,28 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                 LOGV("THIS");
                 PUSH(Target::THIS);
                 break;
+            case scripting::Instruction::ADD:
+            {
+                LOGV("ADD");
+
+                // Reverse stack order
+                int i2 = POP();
+                int i1 = POP();
+
+                PUSH(i1 + i2);
+                break;
+            }
+            case scripting::Instruction::SUB:
+            {
+                LOGV("SUB");
+
+                // Reverse stack order
+                int i2 = POP();
+                int i1 = POP();
+
+                PUSH(i1 - i2);
+                break;
+            }
             case scripting::Instruction::POSITION_X:
             {
                 LOGV("POSITION_X");

@@ -75,6 +75,46 @@ TEST_F(InterpreterTestFixture, FrameTimer) {
     EXPECT_EQ(output, Bool::TRUE);
 }
 
+TEST_F(InterpreterTestFixture, AddInt) {
+    auto output = parseAndRun("add 0 3");
+    EXPECT_EQ(output, 3);
+
+    output = parseAndRun("add 2 5");
+    EXPECT_EQ(output, 7);
+
+    output = parseAndRun("add 5 2");
+    EXPECT_EQ(output, 7);
+
+    output = parseAndRun("add 4 -2");
+    EXPECT_EQ(output, 2);
+
+    output = parseAndRun("add 3 -5");
+    EXPECT_EQ(output, -2);
+
+    output = parseAndRun("add (add 1 25) 17");
+    EXPECT_EQ(output, 43);
+}
+
+TEST_F(InterpreterTestFixture, SubInt) {
+    auto output = parseAndRun("sub 3 0");
+    EXPECT_EQ(output, 3);
+
+    output = parseAndRun("sub 3 3");
+    EXPECT_EQ(output, 0);
+
+    output = parseAndRun("sub 4 1");
+    EXPECT_EQ(output, 3);
+
+    output = parseAndRun("sub 1 4");
+    EXPECT_EQ(output, -3);
+
+    output = parseAndRun("sub -3 2");
+    EXPECT_EQ(output, -5);
+
+    output = parseAndRun("sub 6 -1");
+    EXPECT_EQ(output, 7);
+}
+
 TEST_F(InterpreterTestFixture, PlayerPosition) {
     auto output = parseAndRun("position_x player");
     EXPECT_EQ(output, 0);
