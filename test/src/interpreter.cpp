@@ -142,6 +142,49 @@ TEST_F(InterpreterTestFixture, ThisPosition) {
     EXPECT_EQ(output, 6);
 }
 
+TEST_F(InterpreterTestFixture, CollisionHistory) {
+    auto str = R"--({
+        "Collision": {
+            "height": 200,
+            "type": "static",
+            "width": 100
+        },
+        "Transform": {
+            "pos_x": 20,
+            "pos_y": 10
+        }
+    })--";
+
+    auto entity = BaseEntity::createFromJson(nlohmann::json::parse(str));
+    System::IWorldModify::addEntity(entity);
+
+    str = R"--({
+        "Entity": "test_enemy"
+    })--";
+
+    entity = BaseEntity::createFromJson(nlohmann::json::parse(str));
+
+    extra_data_.this_components = entity->components_;
+
+    extra_data_.this_components->getComponent<Transform>()->setPosition(0, 0);
+    extra_data_.this_components->getComponent<Collision>()->update();
+
+    auto output = parseAndRun("sensor 'test_sensor'");
+    EXPECT_EQ(output, Bool::TRUE);
+
+    output = parseAndRun("collision_history 'test_sensor' 0 top_edge");
+    EXPECT_EQ(output, -90);
+
+    output = parseAndRun("collision_history 'test_sensor' 0 bottom_edge");
+    EXPECT_EQ(output, 110);
+
+    output = parseAndRun("collision_history 'test_sensor' 0 left_edge");
+    EXPECT_EQ(output, -30);
+
+    output = parseAndRun("collision_history 'test_sensor' 0 right_edge");
+    EXPECT_EQ(output, 70);
+}
+
 TEST_F(InterpreterTestFixture, ThisCollides) {
     System::IWorldModify::getPlayer().lock()->getComponent<Transform>()->setPosition(500, 500);
 

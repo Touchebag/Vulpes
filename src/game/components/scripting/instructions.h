@@ -26,6 +26,15 @@ enum class Instruction {
     POSITION_X,
     POSITION_Y,
 
+    // Collision history
+    COLLISION_HISTORY,
+
+    // Collision properties
+    TOP_EDGE,
+    BOTTOM_EDGE,
+    LEFT_EDGE,
+    RIGHT_EDGE,
+
     // Checks
     COLLIDES,
     FLAG,
@@ -79,6 +88,8 @@ enum class Type {
     // Typed target
     TARGET,
 
+    COLL_PROP,
+
     // To help with parsing
     THEN,
 };
@@ -93,6 +104,13 @@ enum Target {
     PLAYER,
 };
 
+enum CollideableProperty {
+    TOP_EDGE,
+    BOTTOM_EDGE,
+    LEFT_EDGE,
+    RIGHT_EDGE,
+};
+
 struct InstructionData {
     Instruction instruction;
     Type return_type;
@@ -105,11 +123,18 @@ static const std::unordered_map<std::string, InstructionData> string_instruction
     {"player", {Instruction::PLAYER, Type::TARGET, {}}},
     {"this", {Instruction::THIS, Type::TARGET, {}}},
 
+    {"top_edge", {Instruction::TOP_EDGE, Type::COLL_PROP, {}}},
+    {"bottom_edge", {Instruction::BOTTOM_EDGE, Type::COLL_PROP, {}}},
+    {"left_edge", {Instruction::LEFT_EDGE, Type::COLL_PROP, {}}},
+    {"right_edge", {Instruction::RIGHT_EDGE, Type::COLL_PROP, {}}},
+
     {"add", {Instruction::ADD, Type::INT, {Type::INT, Type::INT}}},
     {"sub", {Instruction::SUB, Type::INT, {Type::INT, Type::INT}}},
 
     {"position_x", {Instruction::POSITION_X, Type::INT, {Type::TARGET}}},
     {"position_y", {Instruction::POSITION_Y, Type::INT, {Type::TARGET}}},
+
+    {"collision_history", {Instruction::COLLISION_HISTORY, Type::INT, {Type::STRING, Type::INT, Type::COLL_PROP}}},
 
     {"collides", {Instruction::COLLIDES, Type::BOOL, {Type::TARGET}}},
     {"flag", {Instruction::FLAG, Type::BOOL, {Type::STRING}}},

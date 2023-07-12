@@ -15,10 +15,13 @@ class CollideableSensor : public Collideable {
 
     std::string getName();
 
+    std::shared_ptr<const Collideable> getLastCollideable();
+
     bool hasTriggered();
 
   private:
-    bool triggered_ = false;
+    // Keep the previous collideable for scripting access
+    std::weak_ptr<const Collideable> last_trigger_coll_;
 
     CollisionType target_type_;
 

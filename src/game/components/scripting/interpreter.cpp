@@ -3,11 +3,13 @@
 #include <stack>
 
 #include "system/system.h"
+#include "components/collision/collideables/collideable_sensor.h"
 
 #include "utils/log.h"
 
 using scripting::Bool;
 using scripting::Target;
+using scripting::CollideableProperty;
 
 // These are just for easy access
 #define POP() pop_with_stack(stack)
@@ -96,6 +98,22 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                 LOGV("THIS");
                 PUSH(Target::THIS);
                 break;
+            case scripting::Instruction::TOP_EDGE:
+                LOGV("TOP_EDGE");
+                PUSH(CollideableProperty::TOP_EDGE);
+                break;
+            case scripting::Instruction::BOTTOM_EDGE:
+                LOGV("BOTTOM_EDGE");
+                PUSH(CollideableProperty::BOTTOM_EDGE);
+                break;
+            case scripting::Instruction::LEFT_EDGE:
+                LOGV("LEFT_EDGE");
+                PUSH(CollideableProperty::LEFT_EDGE);
+                break;
+            case scripting::Instruction::RIGHT_EDGE:
+                LOGV("RIGHT_EDGE");
+                PUSH(CollideableProperty::RIGHT_EDGE);
+                break;
             case scripting::Instruction::ADD:
             {
                 LOGV("ADD");
@@ -150,6 +168,52 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                 }
 
                 PUSH(0);
+                break;
+            }
+            case scripting::Instruction::COLLISION_HISTORY:
+            {
+                LOGV("COLLISION_HISTORY");
+
+                auto target_prop = POP();
+                auto history_index = POP();
+                auto sensor_name = program.getString(POP());
+
+                if (auto coll = extra_input.this_components->getComponent<Collision>()) {
+                    if (std::shared_ptr<CollideableSensor> sens = coll->getSensor(sensor_name)) {
+                        if (auto last_coll = sens->getLastCollideable(/* history_index */)) {
+                            auto hbox = last_coll->getHitbox();
+                            auto trans = last_coll->getTransform().lock();
+
+                            if (!trans) {
+                                LOGW("SCRIPT COLLISION_HISTORY: Could not lock transform");
+                                break;
+                            }
+
+                            switch (target_prop) {
+                                case CollideableProperty::TOP_EDGE:
+                                    PUSH(trans->getY() - (hbox->height_ / 2));
+                                    break;
+                                case CollideableProperty::BOTTOM_EDGE:
+                                    PUSH(trans->getY() + (hbox->height_ / 2));
+                                    break;
+                                case CollideableProperty::LEFT_EDGE:
+                                    PUSH(trans->getX() - (hbox->width_ / 2));
+                                    break;
+                                case CollideableProperty::RIGHT_EDGE:
+                                    PUSH(trans->getX() + (hbox->width_ / 2));
+                                    break;
+                                default:
+                                    LOGW("SCRIPT COLLISION_HISTORY: This should never happen");
+                                    break;
+                            }
+                        } else {
+                            LOGW("SCRIPT COLLISION_HISTORY: Sensor '%s', history position %i not found", sensor_name.c_str(), history_index);
+                        }
+                    } else {
+                        LOGW("SCRIPT COLLISION_HISTORY: Sensor '%s' not found", sensor_name.c_str());
+                    }
+                }
+
                 break;
             }
             case scripting::Instruction::FRAME_TIMER:

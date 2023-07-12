@@ -37,6 +37,7 @@ class Collision : public Component {
     void addTemporaryCollideable(nlohmann::json temp_coll);
     void clearTemporaryCollideables();
 
+    std::shared_ptr<CollideableSensor> getSensor(std::string sensor_name);
     bool isSensorTriggered(std::string sensor_name);
 
     // Type-specific functions

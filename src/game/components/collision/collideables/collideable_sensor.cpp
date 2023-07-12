@@ -28,22 +28,26 @@ void CollideableSensor::update() {
 
     for (auto it : System::IWorldRead::getCollideables(target_type_)) {
         if (auto coll = it.lock()) {
-            if (collides(coll)) {
-                triggered_ = !sharesElements(getTeams(), coll->getTeams());
+            if (collides(coll) && !sharesElements(getTeams(), coll->getTeams())) {
+                last_trigger_coll_ = it;
                 return;
             }
         }
     }
 
-    triggered_ = false;
+    last_trigger_coll_.reset();
 }
 
 bool CollideableSensor::hasTriggered() {
-    return triggered_;
+    return static_cast<bool>(last_trigger_coll_.lock());
 }
 
 std::string CollideableSensor::getName() {
     return name_;
+}
+
+std::shared_ptr<const Collideable> CollideableSensor::getLastCollideable() {
+    return last_trigger_coll_.lock();
 }
 
 void CollideableSensor::reloadFromJson(nlohmann::json j) {

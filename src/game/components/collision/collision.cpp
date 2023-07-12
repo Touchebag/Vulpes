@@ -86,6 +86,18 @@ bool Collision::isSensorTriggered(std::string sensor_name) {
     return false;
 }
 
+std::shared_ptr<CollideableSensor> Collision::getSensor(std::string sensor_name) {
+    try {
+        if (auto coll = sensor_colls_.at(sensor_name).lock()) {
+            return coll;
+        }
+    } catch (std::out_of_range &e) {
+        // If sensor does not exist, just return none
+    }
+
+    return nullptr;
+}
+
 void Collision::addTemporaryCollideable(nlohmann::json j) {
     for (nlohmann::json j_coll : j) {
         auto coll = Collideable::createFromJson(j_coll, component_store_);
