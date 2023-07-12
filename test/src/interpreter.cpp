@@ -473,19 +473,19 @@ TEST_F(InterpreterTestFixture, EnableDisableAction) {
 
     extra_data_.this_components->getComponent<Actions>()->addAction(Actions::Action::MOVE_LEFT);
 
-    auto isEnabled = extra_data_.this_components->getComponent<Actions>()->getActionState(Actions::Action::MOVE_LEFT);
+    auto isEnabled = extra_data_.this_components->getComponent<Actions>()->getActionState(Actions::Action::MOVE_LEFT, true);
     EXPECT_TRUE(isEnabled);
 
     auto output = parseAndRun("disable_action move_left");
     EXPECT_EQ(output, 0);
 
-    isEnabled = extra_data_.this_components->getComponent<Actions>()->getActionState(Actions::Action::MOVE_LEFT);
+    isEnabled = extra_data_.this_components->getComponent<Actions>()->getActionState(Actions::Action::MOVE_LEFT, true);
     EXPECT_FALSE(isEnabled);
 
     output = parseAndRun("enable_action move_left");
     EXPECT_EQ(output, 0);
 
-    isEnabled = extra_data_.this_components->getComponent<Actions>()->getActionState(Actions::Action::MOVE_LEFT);
+    isEnabled = extra_data_.this_components->getComponent<Actions>()->getActionState(Actions::Action::MOVE_LEFT, true);
     EXPECT_TRUE(isEnabled);
 }
 
@@ -518,53 +518,4 @@ TEST_F(InterpreterTestFixture, OnEnterExit) {
 
     EXPECT_EQ(move->getVelX(), 120.0);
     EXPECT_EQ(move->getVelY(), -20.0);
-}
-
-TEST_F(InterpreterTestFixture, ResetJumps) {
-    nlohmann::json j = nlohmann::json::parse(R"--(
-    {
-        "Actions": null,
-        "Script": null,
-        "Movement": null,
-        "Physics": {
-            "jump_impulse_y": 30.0,
-            "y_friction": 1.0
-        },
-        "Stateful": {
-            "states": {
-                "main": {
-                }
-            }
-        },
-        "Transform": {
-            "pos_x": 0,
-            "pos_y": 0
-        }
-    })--");
-
-    auto entity = BaseEntity::createFromJson(j);
-    extra_data_.this_components = entity->components_;
-
-    auto phys = extra_data_.this_components->getComponent<Physics>();
-    auto move = extra_data_.this_components->getComponent<Movement>();
-    auto act = extra_data_.this_components->getComponent<Actions>();
-
-    act->addAction(Actions::Action::JUMP);
-
-    // Should be 0 by default
-    ASSERT_EQ(0.0, move->getVelY());
-
-    // Jumping should not work
-    phys->update();
-    ASSERT_EQ(0.0, move->getVelY());
-
-    // Should be able to jump once
-    parseAndRun("reset_jumps 1");
-
-    phys->update();
-    ASSERT_EQ(30.0, move->getVelY());
-
-    // ...but not more
-    phys->update();
-    ASSERT_EQ(30.0, move->getVelY());
 }

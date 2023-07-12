@@ -21,13 +21,7 @@
         },
         "can_jump": {
             "script": [
-                "on_enter enable_action jump",
-                "on_exit disable_action jump"
-            ]
-        },
-        "can_double_jump": {
-            "script": [
-                "on_enter if (true) then (enable_action jump)",
+                "on_enter if (grt (get 'jumps_left') 0) then (enable_action jump)",
                 "on_exit disable_action jump"
             ]
         },
@@ -37,13 +31,13 @@
                 "jump_impulse_y": -45.0
             },
             "script": [
-                "on_enter if (true) then (enable_action jump)",
+                "on_enter if (grt (get 'jumps_left') 0) then (enable_action jump)",
                 "on_exit disable_action jump"
             ]
         },
         "can_dash": {
             "script": [
-                "on_enter if (flag 'Action.dash') then (enable_action dash)",
+                "on_enter if (and (flag 'Action.dash') (grt (get 'dashes_left') 0)) then (enable_action dash)",
                 "on_exit disable_action dash"
             ]
         },
@@ -66,8 +60,8 @@
         },
         "reset_jumps_and_dashes": {
             "script": [
-                "on_enter reset_jumps 2",
-                "on_enter reset_dashes 1"
+                "on_enter set 'jumps_left' 2",
+                "on_enter set 'dashes_left' 1"
             ]
         },
         "wall_stick": {
@@ -167,6 +161,9 @@
             "templates": [
                 "airborne"
             ],
+            "script": [
+                "on_enter dec_var 'jumps_left'"
+            ],
             "frame_timer": 3,
             "next_states": [
                 {"event": "damaged", "state": "taking_damage"},
@@ -189,7 +186,7 @@
             "animation": "jumping",
             "templates": [
                 "airborne",
-                "can_double_jump",
+                "can_jump",
                 "can_dash",
                 "can_air_dive"
             ]
@@ -205,7 +202,7 @@
             "animation": "falling",
             "templates": [
                 "ledge_climb_sensors",
-                "can_double_jump",
+                "can_jump",
                 "can_dash",
                 "airborne",
                 "can_air_dive"
@@ -287,6 +284,9 @@
             "templates": [
                 "dashing"
             ],
+            "script": [
+                "on_enter dec_var 'dashes_left'"
+            ],
             "animation": "dashing"
         },
         "dashing": {
@@ -302,7 +302,7 @@
                 {"event": "touching_wall", "state": "wall_slide"}
             ],
             "templates": [
-                "can_double_jump",
+                "can_jump",
                 "dashing"
             ],
             "animation": "dashing"

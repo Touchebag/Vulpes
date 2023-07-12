@@ -137,8 +137,7 @@ void Physics::update() {
             y_additive += constants_.gravity * multiplier;
         }
 
-        if (act->getActionState(Actions::Action::DASH, true) && dashes_left_ > 0) {
-            dashes_left_--;
+        if (act->getActionState(Actions::Action::DASH, true)) {
             // If holding a direction dash in that direction
             // else dash forward
             if (act->getActionState(Actions::Action::MOVE_RIGHT)) {
@@ -153,8 +152,7 @@ void Physics::update() {
             state->incomingEvent(state_utils::Event::DASHING);
         }
 
-        if (act->getActionState(Actions::Action::JUMP, true) && jumps_left_ > 0) {
-            jumps_left_--;
+        if (act->getActionState(Actions::Action::JUMP, true)) {
             if (!std::isnan(constants_.jump_impulse_x)) {
                 int dir = facing_right ? 1.0 : -1.0;
                 move->setVelocity(constants_.jump_impulse_x * dir, move->getVelY());
@@ -244,12 +242,4 @@ std::optional<nlohmann::json> Physics::outputToJson() {
     saveConstantToJson(j, "dash_speed", original_constants_.dash_speed, default_constants.dash_speed);
 
     return j;
-}
-
-void Physics::resetJumps(int max_jumps) {
-    jumps_left_ = max_jumps;
-}
-
-void Physics::resetDashes(int max_dashes) {
-    dashes_left_ = max_dashes;
 }

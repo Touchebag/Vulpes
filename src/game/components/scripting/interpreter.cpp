@@ -497,18 +497,6 @@ int Interpreter::executeProgram(Program program, ExtraInputData extra_input) {
                 }
 
                 break;
-            case scripting::Instruction::RESET_JUMPS:
-                LOGV("RESET_JUMPS");
-                if (auto physics = extra_input.this_components->getComponent<Physics>()) {
-                    physics->resetJumps(POP());
-                }
-                break;
-            case scripting::Instruction::RESET_DASHES:
-                LOGV("RESET_DASHES");
-                if (auto physics = extra_input.this_components->getComponent<Physics>()) {
-                    physics->resetDashes(POP());
-                }
-                break;
             case scripting::Instruction::ADD_SHADER_TO_LAYER:
                 LOGV("ADD_SHADER_TO_LAYER");
 

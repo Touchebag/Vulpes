@@ -20,9 +20,6 @@ class Physics : public Component {
     void setPhysicsConstants();
     PhysicsConstants getPhysicsConstants();
 
-    void resetJumps(int max_jumps);
-    void resetDashes(int max_dashes);
-
     static std::shared_ptr<Physics> createFromJson(nlohmann::json, std::weak_ptr<ComponentStore>, File file_instance = File());
 
     static PhysicsConstants loadConstantsFromJson(nlohmann::json j, PhysicsConstants default_constants);
@@ -32,7 +29,4 @@ class Physics : public Component {
   private:
     PhysicsConstants constants_;
     PhysicsConstants original_constants_;
-
-    int jumps_left_ = 0;
-    int dashes_left_ = 0;
 };
