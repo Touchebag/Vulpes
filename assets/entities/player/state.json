@@ -22,6 +22,7 @@
         "can_jump": {
             "script": [
                 "on_enter if (grt (get 'jumps_left') 0) then (enable_action jump)",
+                "on_enter if (true) then (enable_action high_jump)",
                 "on_exit disable_action jump"
             ]
         },
@@ -32,6 +33,7 @@
             },
             "script": [
                 "on_enter if (grt (get 'jumps_left') 0) then (enable_action jump)",
+                "on_enter if (true) then (enable_action high_jump)",
                 "on_exit disable_action jump"
             ]
         },

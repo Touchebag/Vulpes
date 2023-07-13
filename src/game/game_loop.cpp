@@ -18,8 +18,7 @@ int gameMain(sf::RenderWindow& window) {
 
     System::getInput()->setKeyboardMap({
             {sf::Keyboard::Key::Space, {Actions::Action::JUMP,
-                                        Actions::Action::WALL_JUMP,
-                                        Actions::Action::DOUBLE_JUMP}},
+                                        Actions::Action::HIGH_JUMP}},
             {sf::Keyboard::Key::Left, {Actions::Action::MOVE_LEFT}},
             {sf::Keyboard::Key::Right, {Actions::Action::MOVE_RIGHT}},
             {sf::Keyboard::Key::Up, {Actions::Action::MOVE_UP,
@@ -33,8 +32,7 @@ int gameMain(sf::RenderWindow& window) {
 
     System::getInput()->setButtonMap({
             {0, {Actions::Action::JUMP,
-                 Actions::Action::WALL_JUMP,
-                 Actions::Action::DOUBLE_JUMP}},
+                 Actions::Action::HIGH_JUMP}},
             {5, {Actions::Action::DASH}},
             {2, {Actions::Action::ATTACK1}},
             {1, {Actions::Action::INTERACT}}

@@ -132,7 +132,7 @@ void Physics::update() {
 
         if (!physics_props.movement_locked_y_) {
             // Only apply jump multiplier if holding jump and moving upwards
-            auto multiplier = (act->getActionState(Actions::Action::JUMP)
+            auto multiplier = (act->getActionState(Actions::Action::HIGH_JUMP)
                                && move->getVelY() < 0.0) ? constants_.jump_multiplier : 1.0;
             y_additive += constants_.gravity * multiplier;
         }

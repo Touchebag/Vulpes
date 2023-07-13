@@ -46,12 +46,9 @@ bool Actions::getActionState(Action action, bool first_frame) {
     const int BUFFER_SIZE = 1;
 
     auto it = current_actions_.find(action);
-    return (it != current_actions_.end()
-            && (!first_frame
-                || (isActionEnabled(action) // Don't allow first frame actions if disabled
-                    && it->second.frame_count <= BUFFER_SIZE) // This allows for a one frame buffer
-               )
-           );
+    return (it != current_actions_.end() &&
+            isActionEnabled(action) &&
+           (!first_frame || it->second.frame_count <= BUFFER_SIZE)); // This allows for a one frame buffer
 }
 
 void Actions::addAction(Action action) {
@@ -80,13 +77,15 @@ void Actions::addAction(Action action) {
         action_state.active = ActionState::ActiveState::ACTIVE;
         action_state.frame_count = 0;
         current_actions_.insert_or_assign(action, action_state);
+
+        if (!isActionEnabled(action)) {
+            LOGV("Action disabled: %s", string_action_map.at(action).c_str());
+        }
     }
 
     if (!isActionEnabled(action)) {
-        LOGV("Action disabled: %s", string_action_map.at(action).c_str());
         return;
     }
-
 
     // Trigger corresponding event
     if (auto state = getComponent<Stateful>()) {
