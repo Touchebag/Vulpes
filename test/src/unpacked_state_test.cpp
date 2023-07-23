@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "entity_editor/state_view.h"
+#include "entity_editor/components/state_editor.h"
 #include "utils/file.h"
 
 #include "utils/log.h"
@@ -15,7 +15,7 @@ TEST_F(UnpackedStateTestFixture, UnpackRepackState) {
 
     auto j1 = File::loadStates().value();
 
-    auto unpacked_state = StateView();
+    auto unpacked_state = entity_editor::StateEditor();
     unpacked_state.unpack(j1);
     auto j2 = unpacked_state.repack();
 

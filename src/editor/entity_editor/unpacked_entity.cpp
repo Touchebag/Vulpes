@@ -32,6 +32,8 @@ EntityAssets loadAllAssets(const std::string& entity_name) {
 
 } // namespace
 
+namespace entity_editor {
+
 UnpackedEntity UnpackedEntity::unpackEntity(const std::string& entity_name) {
     UnpackedEntity entity = UnpackedEntity{};
 
@@ -39,21 +41,33 @@ UnpackedEntity UnpackedEntity::unpackEntity(const std::string& entity_name) {
 
     auto assets = loadAllAssets(entity_name);
 
-    entity.state_view.unpack(assets.state);
+    entity.state_editor_.unpack(assets.state);
 
     return entity;
 }
 
 void UnpackedEntity::draw(sf::RenderWindow& window) {
-    state_view.draw(window);
+    switch (entity_editor::EntityEditorCommon::getCurrentEditorView()) {
+        case EntityEditorView::STATE:
+            state_editor_.draw(window);
+            break;
+        case EntityEditorView::ANIMATION:
+            animation_editor_.draw(window);
+            break;
+        default:
+            LOGW("EntityEditor, no view selected")
+            break;
+    }
 }
 
 void UnpackedEntity::handleKeyPress(sf::Event event) {
-    state_view.handleKeyPress(event);
+    state_editor_.handleKeyPress(event);
 }
 
 void UnpackedEntity::handleMouseClick(sf::Event event, Mouse mouse) {
     if (!ImGui::GetIO().WantCaptureMouse) {
-        state_view.handleMouseClick(event, mouse.getMouseWorldPosition());
+        state_editor_.handleMouseClick(event, mouse.getMouseWorldPosition());
     }
 }
+
+} // entity_editor

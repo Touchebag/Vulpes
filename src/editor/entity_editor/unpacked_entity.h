@@ -5,8 +5,12 @@
 
 #include <nlohmann/json.hpp>
 
-#include "state_view.h"
+#include "components/animation_editor.h"
+#include "components/state_editor.h"
 #include "common/mouse.h"
+#include "entity_common.h"
+
+namespace entity_editor {
 
 class UnpackedEntity {
   public:
@@ -20,5 +24,8 @@ class UnpackedEntity {
   private:
     std::string entity_name_;
 
-    StateView state_view;
+    entity_editor::AnimationEditor animation_editor_;
+    entity_editor::StateEditor state_editor_;
 };
+
+} // entity_editor

@@ -3,12 +3,14 @@
 #include <SFML/Graphics.hpp>
 #include <nlohmann/json.hpp>
 
-#include "components/scripting_editor.h"
+#include "scripting_editor.h"
 #include "unpacked_state.h"
 
-class StateView {
+namespace entity_editor {
+
+class StateEditor {
   public:
-    StateView();
+    StateEditor();
 
     void unpack(const nlohmann::json& state_file);
     nlohmann::json repack();
@@ -57,3 +59,5 @@ class StateView {
     std::unordered_map<std::string, UnpackedState> states_;
     std::unordered_map<std::string, UnpackedState> templates_;
 };
+
+} // entity_editor

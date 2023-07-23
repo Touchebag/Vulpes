@@ -32,7 +32,7 @@ int entityEditorMain(sf::RenderWindow& window) {
 
     auto top_menu = entity_top_menu::createMenus();
 
-    auto entity = UnpackedEntity::unpackEntity("player");
+    auto entity = entity_editor::UnpackedEntity::unpackEntity("player");
 
     while (window.isOpen() && editor_common::getCurrentEditor() == editor_common::CurrentEditor::ENTITY) {
         sf::Event event;

@@ -1,4 +1,4 @@
-#include "state_view.h"
+#include "state_editor.h"
 
 #include <set>
 
@@ -29,11 +29,13 @@ bool mouseCollides(const UnpackedState& state, const std::pair<float, float> mou
 
 } // namespace
 
-StateView::StateView() :
+namespace entity_editor {
+
+StateEditor::StateEditor() :
     font_(File::loadFont("arial.ttf").value()) {
 }
 
-void StateView::drawEditWindow() {
+void StateEditor::drawEditWindow() {
     auto& state = states_.at(active_state_);
 
     ImGui::Begin("StateEdit", nullptr, 0
@@ -55,7 +57,7 @@ void StateView::drawEditWindow() {
     ImGui::End();
 }
 
-void StateView::drawState(sf::RenderWindow& window, const std::string& state_name) {
+void StateEditor::drawState(sf::RenderWindow& window, const std::string& state_name) {
     UnpackedState state = states_.at(state_name);
 
     // Background rectangle
@@ -97,7 +99,7 @@ void StateView::drawState(sf::RenderWindow& window, const std::string& state_nam
     window.draw(text);
 }
 
-void StateView::drawLineRect(sf::RenderWindow& window, StateView::Line line) {
+void StateEditor::drawLineRect(sf::RenderWindow& window, StateEditor::Line line) {
     sf::Vertex vertices[4];
 
     sf::Vector2f dist = line.to - line.from;
@@ -120,7 +122,7 @@ void StateView::drawLineRect(sf::RenderWindow& window, StateView::Line line) {
     window.draw(vertices, 4, sf::Quads);
 }
 
-void StateView::createLines(const std::string& state_name) {
+void StateEditor::createLines(const std::string& state_name) {
     UnpackedState state = states_.at(state_name);
 
     auto next_states = state.next_states;
@@ -157,7 +159,7 @@ void StateView::createLines(const std::string& state_name) {
     }
 }
 
-void StateView::unpack(const nlohmann::json& state_file) {
+void StateEditor::unpack(const nlohmann::json& state_file) {
     for (auto s : state_file["templates"].items()) {
         templates_.insert_or_assign(s.key(), UnpackedState(s.key(), s.value()));
     }
@@ -169,7 +171,7 @@ void StateView::unpack(const nlohmann::json& state_file) {
     positionStates();
 }
 
-nlohmann::json StateView::repack() {
+nlohmann::json StateEditor::repack() {
     nlohmann::json j;
 
     nlohmann::json templates;
@@ -187,7 +189,7 @@ nlohmann::json StateView::repack() {
     return j;
 }
 
-void StateView::draw(sf::RenderWindow& window) {
+void StateEditor::draw(sf::RenderWindow& window) {
     Mouse mouse{window};
     auto mouse_pos = mouse.getMouseWorldPosition();
 
@@ -232,7 +234,7 @@ void StateView::draw(sf::RenderWindow& window) {
     }
 }
 
-void StateView::positionStates() {
+void StateEditor::positionStates() {
     constexpr int x_padding = 150.0;
     constexpr int y_padding = 100.0;
 
@@ -280,7 +282,7 @@ void StateView::positionStates() {
     }
 }
 
-void StateView::handleKeyPress(sf::Event event) {
+void StateEditor::handleKeyPress(sf::Event event) {
     switch (event.key.code) {
         case sf::Keyboard::Key::Escape:
             active_state_ = "";
@@ -290,7 +292,7 @@ void StateView::handleKeyPress(sf::Event event) {
     }
 }
 
-void StateView::handleMouseClick(sf::Event event, std::pair<float, float> mouse_pos) {
+void StateEditor::handleMouseClick(sf::Event event, std::pair<float, float> mouse_pos) {
     if (event.mouseButton.button == sf::Mouse::Button::Left) {
         for (auto& it : states_) {
             if (mouseCollides(it.second, mouse_pos)) {
@@ -301,3 +303,5 @@ void StateView::handleMouseClick(sf::Event event, std::pair<float, float> mouse_
         }
     }
 }
+
+} // entity_editor
