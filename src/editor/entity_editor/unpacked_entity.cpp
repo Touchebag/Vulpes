@@ -9,6 +9,7 @@ namespace {
 struct EntityAssets {
     nlohmann::json entity;
     nlohmann::json state;
+    nlohmann::json animations;
 };
 
 EntityAssets loadAllAssets(const std::string& entity_name) {
@@ -27,6 +28,10 @@ EntityAssets loadAllAssets(const std::string& entity_name) {
         assets.state = j_state.value();
     }
 
+    if (auto j_anim = File::loadAnimations()) {
+        assets.animations = j_anim.value();
+    }
+
     return assets;
 }
 
@@ -38,10 +43,11 @@ UnpackedEntity UnpackedEntity::unpackEntity(const std::string& entity_name) {
     UnpackedEntity entity = UnpackedEntity{};
 
     entity.entity_name_ = entity_name;
-
     auto assets = loadAllAssets(entity_name);
 
     entity.state_editor_.unpack(assets.state);
+
+    entity.animation_editor_.unpack(assets.animations);
 
     return entity;
 }

@@ -11,14 +11,25 @@
 namespace entity_editor {
 
 AnimationEditor::AnimationEditor() {
-    // render_texture_ = std::make_shared<sf::RenderTexture>();
-    //
-    // render_texture_->create(200, 200);
-    // render_texture_->clear();
-    // render_texture_->display();
-    //
-    // auto a = Animation::createFromJson({}, {}, {});
-    // a->getFrameData();
+}
+
+void AnimationEditor::unpack(const nlohmann::json& animation_json) {
+    animations_.clear();
+
+    for (auto [key, value] : animation_json.items()) {
+        auto unpacked_anim = UnpackedAnimation(value);
+
+        animations_.insert({key, unpacked_anim});
+    }
+}
+
+nlohmann::json AnimationEditor::repack() {
+    nlohmann::json packed_anims;
+
+    for (auto it : animations_) {
+        packed_anims[it.first] = it.second.repack();
+    }
+    return packed_anims;
 }
 
 void AnimationEditor::draw(sf::RenderWindow& /* window */) {
