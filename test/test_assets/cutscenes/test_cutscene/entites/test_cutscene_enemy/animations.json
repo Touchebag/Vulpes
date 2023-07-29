@@ -1,6 +1,5 @@
-[
-    {
-        "name": "idle",
+{
+    "idle": {
 		"frame_list": [
 			"Open",
             "Open",
@@ -20,4 +19,4 @@
             "Closed"
 		]
     }
-]
+}

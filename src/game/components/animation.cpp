@@ -177,9 +177,9 @@ void Animation::reloadFromJson(nlohmann::json j, File file_instance) {
         // TODO Error handling
         nlohmann::json j_anim_list = file_instance.loadAnimations().value();
 
-        for (auto animation : j_anim_list) {
-            auto frame_data_list = loadAnimationFromJson(animation, sprite_map);
-            sprite_sheet_map_.emplace(animation["name"], frame_data_list);
+        for (auto [name, data] : j_anim_list.items()) {
+            auto frame_data_list = loadAnimationFromJson(data, sprite_map);
+            sprite_sheet_map_.emplace(name, frame_data_list);
         }
 
         original_frame_list_.reset();

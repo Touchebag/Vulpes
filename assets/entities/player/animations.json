@@ -1,6 +1,5 @@
-[
-    {
-        "name": "idle",
+{
+    "idle": {
         "frame_list": [
             "Idle0",
             "Idle0",
@@ -34,8 +33,7 @@
             "Idle9"
         ]
     },
-    {
-        "name": "running",
+    "running": {
         "frame_list": [
             "Running0",
             "Running0",
@@ -87,14 +85,12 @@
             "Running11"
         ]
     },
-    {
-        "name": "falling",
+    "falling": {
         "frame_list": [
             "Falling"
         ]
     },
-    {
-        "name": "air_diving",
+    "air_diving": {
         "frame_list": [
             "Falling",
             "Falling",
@@ -144,20 +140,17 @@
             }
         ]
     },
-    {
-        "name": "wall_slide",
+    "wall_slide": {
         "frame_list": [
             "Wall_slide"
         ]
     },
-    {
-        "name": "jumping",
+    "jumping": {
         "frame_list": [
             "Jumping"
         ]
     },
-    {
-        "name": "dashing",
+    "dashing": {
         "frame_list": [
             "Dashing",
             "Dashing",
@@ -209,8 +202,7 @@
             }
         ]
     },
-    {
-        "name": "door_transition",
+    "door_transition": {
         "frame_list": [
             "Door_transition0",
             "Door_transition0",
@@ -246,14 +238,12 @@
             "Door_transition3"
         ]
     },
-    {
-        "name": "climbing",
+    "climbing": {
         "frame_list": [
             "Climbing"
         ]
     },
-    {
-        "name": "attacking",
+    "attacking": {
         "frame_list": [
             "Attacking"
         ],
@@ -266,8 +256,7 @@
             }
         ]
     },
-    {
-        "name": "hard_landing",
+    "hard_landing": {
         "frame_list": [
             "Crouching"
         ],
@@ -280,8 +269,7 @@
             }
         ]
     },
-    {
-        "name": "ledge_climb",
+    "ledge_climb": {
         "frame_list": [
             "Falling",
             "Falling",
@@ -324,4 +312,4 @@
             }
         ]
     }
-]
+}
