@@ -4,12 +4,16 @@
 
 #include "utils/log.h"
 
+#include "components/rendering/rendering.h"
+
 namespace {
 
 struct EntityAssets {
     nlohmann::json entity;
     nlohmann::json state;
     nlohmann::json animations;
+
+    std::shared_ptr<sf::Texture> texture;
 };
 
 EntityAssets loadAllAssets(const std::string& entity_name) {
@@ -26,6 +30,15 @@ EntityAssets loadAllAssets(const std::string& entity_name) {
 
     if (auto j_state = File::loadStates()) {
         assets.state = j_state.value();
+    }
+
+    if (assets.entity.contains("Rendering")) {
+        auto render = assets.entity["Rendering"];
+        if (render.contains("texture")) {
+            if (auto texture = File::loadTexture(render["texture"].get<std::string>())) {
+                assets.texture = std::make_shared<sf::Texture>(texture.value());
+            }
+        }
     }
 
     if (auto j_anim = File::loadAnimations()) {
@@ -47,7 +60,7 @@ UnpackedEntity UnpackedEntity::unpackEntity(const std::string& entity_name) {
 
     entity.state_editor_.unpack(assets.state);
 
-    entity.animation_editor_.unpack(assets.animations);
+    entity.animation_editor_.unpack(assets.animations, assets.texture);
 
     return entity;
 }

@@ -16,13 +16,16 @@ class AnimationEditor {
 
     void draw(sf::RenderWindow& window);
 
-    void unpack(const nlohmann::json& animation_json);
+    void unpack(const nlohmann::json& animation_json, std::shared_ptr<sf::Texture> texture);
     nlohmann::json repack();
 
   private:
-    bool active_ = false;
+    void render();
 
     std::map<std::string, UnpackedAnimation> animations_;
+    std::shared_ptr<sf::Texture> texture_;
+
+    sf::Sprite render_sprite_;
     std::shared_ptr<sf::RenderTexture> render_texture_;
 };
 

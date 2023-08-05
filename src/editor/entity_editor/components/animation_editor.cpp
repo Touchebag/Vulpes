@@ -11,9 +11,15 @@
 namespace entity_editor {
 
 AnimationEditor::AnimationEditor() {
+    render_texture_ = std::make_shared<sf::RenderTexture>();
+    render_texture_->create(500, 500);
+
+    auto view = render_texture_->getView().getSize();
+
+    render_sprite_.setPosition(view.x / 2, view.y / 2);
 }
 
-void AnimationEditor::unpack(const nlohmann::json& animation_json) {
+void AnimationEditor::unpack(const nlohmann::json& animation_json, std::shared_ptr<sf::Texture> texture) {
     animations_.clear();
 
     for (auto [key, value] : animation_json.items()) {
@@ -21,6 +27,8 @@ void AnimationEditor::unpack(const nlohmann::json& animation_json) {
 
         animations_.insert({key, unpacked_anim});
     }
+
+    texture_ = texture;
 }
 
 nlohmann::json AnimationEditor::repack() {
@@ -32,20 +40,29 @@ nlohmann::json AnimationEditor::repack() {
     return packed_anims;
 }
 
+void AnimationEditor::render() {
+    render_sprite_.setTexture(*texture_);
+
+    auto view = render_texture_->getView().getSize();
+    auto sprite_size = render_sprite_.getLocalBounds();
+    render_sprite_.setOrigin(static_cast<float>(sprite_size.width / 2.0), static_cast<float>(sprite_size.height / 2.0));
+    render_sprite_.setScale(view.x / sprite_size.width, view.y / sprite_size.height);
+
+    render_texture_->clear(sf::Color(0, 0, 0, 255));
+    render_texture_->draw(render_sprite_);
+    render_texture_->display();
+}
+
 void AnimationEditor::draw(sf::RenderWindow& /* window */) {
-    if (active_) {
-        ImGui::Begin("Animation", nullptr, 0
-            | ImGuiWindowFlags_AlwaysAutoResize
-            );
+    render();
 
-        ImGui::Image(*render_texture_);
+    ImGui::Begin("Animation", nullptr, 0
+        | ImGuiWindowFlags_AlwaysAutoResize
+        );
 
-        if (ImGui::Button("Close")) {
-            active_ = false;
-        }
+    ImGui::Image(*render_texture_);
 
-        ImGui::End();
-    }
+    ImGui::End();
 }
 
 } // entity_editor
