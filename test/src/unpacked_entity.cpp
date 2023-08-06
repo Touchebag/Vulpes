@@ -14,10 +14,12 @@ class UnpackedEntityTestFixture : public ::testing::Test {
 TEST_F(UnpackedEntityTestFixture, UnpackRepackAnimation) {
     auto dir_scope = File::pushDirectory(File::getEntityDir() / entity_name_);
 
-    auto j1 = File::loadAnimations().value();
-
     auto unpacked_animation = entity_editor::AnimationEditor();
-    unpacked_animation.unpack(j1);
+
+    auto j1 = File::loadAnimations().value();
+    auto texture = std::make_shared<sf::Texture>(File::loadTexture("Player.png").value());
+    unpacked_animation.unpack(j1, texture);
+
     auto j2 = unpacked_animation.repack();
 
     EXPECT_TRUE(j1 == j2) << j1.dump() << std::endl << j2.dump() << std::endl;

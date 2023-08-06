@@ -10,19 +10,17 @@ struct UnpackedAnimation {
     explicit UnpackedAnimation(const nlohmann::json& j);
     nlohmann::json repack();
 
-    std::string texture;
-    util::Rectangle sprite_rectangle;
-
     std::string name;
 
-    std::vector<std::string> frame_list;
+    std::unordered_map<std::string, std::pair<std::string, util::Rectangle>> sprite_rect_map;
 
-    struct AnimationMetaData {
+    struct AnimationFrameData {
+        std::string name;
         std::optional<int> x_offset;
         std::optional<int> y_offset;
         std::optional<double> x_scale;
         std::optional<double> y_scale;
     };
 
-    std::map<int, AnimationMetaData> meta_data;
+    std::vector<AnimationFrameData> frame_list;
 };

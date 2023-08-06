@@ -21,6 +21,7 @@ class AnimationEditor {
 
   private:
     void render();
+    void updateTextureCoords();
 
     std::map<std::string, UnpackedAnimation> animations_;
     std::shared_ptr<sf::Texture> texture_;

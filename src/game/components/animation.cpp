@@ -18,20 +18,15 @@ std::shared_ptr<Animation> Animation::createFromJson(nlohmann::json j, std::weak
     return ret_ptr;
 }
 
-std::unordered_map<std::string, Animation::AnimationFrameData> Animation::loadSpriteMap(File file_instance, std::string file) {
-    auto fs = file_instance.openSpriteMapFile(file);
-    std::unordered_map<std::string, AnimationFrameData> sprite_map;
+std::unordered_map<std::string, std::pair< std::string, util::Rectangle>> Animation::loadSpriteMap(std::string file) {
+    auto fs = File::openSpriteMapFile(file);
+    std::unordered_map<std::string, std::pair<std::string, util::Rectangle>> sprite_map;
 
     std::vector<std::string> map_str(std::istream_iterator<std::string>{fs},
                                      std::istream_iterator<std::string>());
 
     // TODO Range check
     for (auto it = map_str.begin(); it < map_str.end(); ++it) {
-        AnimationFrameData frame_data;
-
-        // Texture name should be same as sprite map file
-        frame_data.texture = file;
-
         util::Rectangle rect;
 
         // File name
@@ -49,9 +44,7 @@ std::unordered_map<std::string, Animation::AnimationFrameData> Animation::loadSp
         ++it;
         rect.height = std::stoi(*it);
 
-        frame_data.sprite_rectangle = rect;
-
-        sprite_map.insert({name, frame_data});
+        sprite_map.insert({name, {file, rect}});
     }
 
     return sprite_map;
@@ -65,7 +58,7 @@ void Animation::loadTexture(File file_instance, std::string file_path) {
 
 std::shared_ptr<std::vector<Animation::AnimationFrameData>> Animation::loadAnimationFromJson(
         const nlohmann::json& j,
-        const std::unordered_map<std::string, Animation::AnimationFrameData>& sprite_map) {
+        const std::unordered_map<std::string, std::pair<std::string, util::Rectangle>>& sprite_map) {
     auto frame_data_list = std::make_shared<std::vector<AnimationFrameData>>();
 
     std::unordered_map<int, AnimationFrameData> meta_data;
@@ -100,7 +93,12 @@ std::shared_ptr<std::vector<Animation::AnimationFrameData>> Animation::loadAnima
 
     int i = 0;
     for (auto it : j["frame_list"]) {
-        AnimationFrameData frame_data = sprite_map.at(it.get<std::string>());
+        AnimationFrameData frame_data;
+        auto name = it.get<std::string>();
+
+        auto sprite_rect = sprite_map.at(name);
+        frame_data.texture = sprite_rect.first;
+        frame_data.sprite_rectangle = sprite_rect.second;
 
         if (meta_data.count(i)) {
             auto frame_md = meta_data.at(i);
@@ -151,12 +149,12 @@ void Animation::reloadFromJson(nlohmann::json j, File file_instance) {
     sprite_sheet_map_.clear();
     textures_.clear();
 
-    std::unordered_map<std::string, AnimationFrameData> sprite_map;
+    std::unordered_map<std::string, std::pair<std::string, util::Rectangle>> sprite_map;
     // TODO Move directory name completely into File class
     for (auto& file : file_instance.getDirContents("textures")) {
         auto path = file.path();
         if (path.extension() == ".txt") {
-            for (auto it : loadSpriteMap(file_instance, path.stem().string())) {
+            for (auto it : loadSpriteMap(path.stem().string())) {
                 if (sprite_map.find(it.first) != sprite_map.end()) {
                     LOGW("Animation: entry \"%s\" already exists, overwriting", it.first.c_str());
                 }

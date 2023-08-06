@@ -17,8 +17,6 @@ struct EntityAssets {
 };
 
 EntityAssets loadAllAssets(const std::string& entity_name) {
-    auto dir_scope = File::pushDirectory(File::getEntityDir() / entity_name);
-
     EntityAssets assets;
 
     if (auto j_entity = File::loadEntityFromFile()) {
@@ -53,6 +51,8 @@ EntityAssets loadAllAssets(const std::string& entity_name) {
 namespace entity_editor {
 
 UnpackedEntity UnpackedEntity::unpackEntity(const std::string& entity_name) {
+    auto dir_scope = File::pushDirectory(File::getEntityDir() / entity_name);
+
     UnpackedEntity entity = UnpackedEntity{};
 
     entity.entity_name_ = entity_name;

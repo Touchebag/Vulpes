@@ -24,6 +24,8 @@ class Animation : public Component {
     // Returns true if current animation has just looped
     bool hasAnimationLooped();
 
+    static std::unordered_map<std::string, std::pair<std::string, util::Rectangle>> loadSpriteMap(std::string file);
+
   private:
     struct AnimationFrameData {
         std::string texture;
@@ -36,12 +38,11 @@ class Animation : public Component {
 
     AnimationFrameData getFrameData();
 
-    std::unordered_map<std::string, AnimationFrameData> loadSpriteMap(File file_instance, std::string file);
     void loadTexture(File file_instance, std::string file);
 
     std::shared_ptr<std::vector<AnimationFrameData>> loadAnimationFromJson(
             const nlohmann::json& j,
-            const std::unordered_map<std::string, AnimationFrameData>& sprite_map);
+            const std::unordered_map<std::string, std::pair<std::string, util::Rectangle>>& sprite_map);
 
     void setRenderTexture();
 

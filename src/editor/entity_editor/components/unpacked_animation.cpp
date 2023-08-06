@@ -1,17 +1,24 @@
 #include "unpacked_animation.h"
 
+#include "components/animation.h"
+
 #include "utils/log.h"
 
 UnpackedAnimation::UnpackedAnimation(const nlohmann::json& j) {
+
     for (auto it : j["frame_list"]) {
-        frame_list.push_back(it.get<std::string>());
+        AnimationFrameData data;
+        data.name = it.get<std::string>();
+        frame_list.push_back(data);
     }
+
+    sprite_rect_map = Animation::loadSpriteMap("Player");
 
     if (j.contains("meta_data")) {
         for (auto it : j["meta_data"]) {
-            AnimationMetaData data;
-
             int frame_number = it["frame"];
+
+            auto& data = frame_list.at(frame_number);
 
             if (it.contains("x_offset")) {
                 data.x_offset = it["x_offset"];
@@ -26,8 +33,6 @@ UnpackedAnimation::UnpackedAnimation(const nlohmann::json& j) {
             if (it.contains("y_scale")) {
                 data.y_scale = it["y_scale"];
             }
-
-            meta_data.insert({frame_number, data});
         }
     }
 }
@@ -35,34 +40,44 @@ UnpackedAnimation::UnpackedAnimation(const nlohmann::json& j) {
 nlohmann::json UnpackedAnimation::repack() {
     nlohmann::json j;
 
-    j["frame_list"] = frame_list;
+    std::vector<std::string> names;
+    std::vector<nlohmann::json> meta_data;
 
-    if (!meta_data.empty()) {
-        std::vector<nlohmann::json> meta_json;
+    int i = 0;
+    for (auto it : frame_list) {
+        names.push_back(it.name);
 
-        for (auto it : meta_data) {
-            nlohmann::json frame_json;
+        nlohmann::json frame_json;
 
-            frame_json["frame"] = it.first;
-
-            if (it.second.x_offset) {
-                frame_json["x_offset"] = it.second.x_offset.value();
-            }
-            if (it.second.y_offset) {
-                frame_json["y_offset"] = it.second.y_offset.value();
-            }
-
-            if (it.second.x_scale) {
-                frame_json["x_scale"] = it.second.x_scale.value();
-            }
-            if (it.second.y_scale) {
-                frame_json["y_scale"] = it.second.y_scale.value();
-            }
-
-            meta_json.push_back(frame_json);
+        // Add frame number on every member in case none are defined
+        if (it.x_offset) {
+            frame_json["frame"] = i;
+            frame_json["x_offset"] = it.x_offset.value();
+        }
+        if (it.y_offset) {
+            frame_json["frame"] = i;
+            frame_json["y_offset"] = it.y_offset.value();
         }
 
-        j["meta_data"] = meta_json;
+        if (it.x_scale) {
+            frame_json["frame"] = i;
+            frame_json["x_scale"] = it.x_scale.value();
+        }
+        if (it.y_scale) {
+            frame_json["frame"] = i;
+            frame_json["y_scale"] = it.y_scale.value();
+        }
+
+        if (!frame_json.empty()) {
+            meta_data.push_back(frame_json);
+        }
+
+        i++;
+    }
+
+    j["frame_list"] = names;
+    if (!meta_data.empty()) {
+        j["meta_data"] = meta_data;
     }
 
     return j;
