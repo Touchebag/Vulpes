@@ -8,6 +8,80 @@
 
 #include "utils/log.h"
 
+namespace {
+
+void renderMetaDataFields(UnpackedAnimation::AnimationFrameData& data) {
+    int temp_x = data.x_offset ? data.x_offset.value() : 0;
+
+    ImGui::Text("Offset");
+    ImGui::Text("X");
+    ImGui::SameLine();
+    ImGui::SliderInt("##x_offset", &temp_x, -200, 200);
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100);
+    ImGui::InputInt("##x_offset_box", &temp_x);
+    ImGui::PopItemWidth();
+
+    if (temp_x != 0) {
+        data.x_offset = {temp_x};
+    } else {
+        data.x_offset = std::nullopt;
+    }
+
+    int temp_y = data.y_offset ? data.y_offset.value() : 0;
+
+    ImGui::SameLine();
+    ImGui::Text("Y");
+    ImGui::SameLine();
+    ImGui::SliderInt("##y_offset", &temp_y, -200, 200);
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100);
+    ImGui::InputInt("##y_offset_box", &temp_y);
+    ImGui::PopItemWidth();
+
+    if (temp_y != 0) {
+        data.y_offset = {temp_y};
+    } else {
+        data.y_offset = std::nullopt;
+    }
+
+    float temp_xf = data.x_scale ? static_cast<float>(data.x_scale.value()) : 1.0f;
+
+    ImGui::Text("Scale");
+    ImGui::Text("X");
+    ImGui::SameLine();
+    ImGui::SliderFloat("##x_scale", &temp_xf, 0.1f, 5.0f);
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100);
+    ImGui::InputFloat("##x_scale_box", &temp_xf, 0.1f);
+    ImGui::PopItemWidth();
+
+    if (temp_xf != 0) {
+        data.x_scale = {temp_xf};
+    } else {
+        data.x_scale = std::nullopt;
+    }
+
+    float temp_yf = data.y_scale ? static_cast<float>(data.y_scale.value()) : 1.0f;
+
+    ImGui::SameLine();
+    ImGui::Text("Y");
+    ImGui::SameLine();
+    ImGui::SliderFloat("##y_scale", &temp_yf, 0.1f, 5.0f);
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100);
+    ImGui::InputFloat("##y_scale_box", &temp_yf, 0.1f);
+    ImGui::PopItemWidth();
+
+    if (temp_yf != 0) {
+        data.y_scale = {temp_yf};
+    } else {
+        data.y_scale = std::nullopt;
+    }
+}
+
+} // namespace
+
 namespace entity_editor {
 
 AnimationEditor::AnimationEditor() :
@@ -146,6 +220,8 @@ void AnimationEditor::draw(sf::RenderWindow& /* window */) {
             time_rendered_ = sf::milliseconds(0);
             autoplay_ = !autoplay_;
         }
+
+        renderMetaDataFields(current_animation_->frame_list.at(current_frame_));
 
         ImGui::End();
     }
