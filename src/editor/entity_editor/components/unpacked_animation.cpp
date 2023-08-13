@@ -4,8 +4,8 @@
 
 #include "utils/log.h"
 
-UnpackedAnimation::UnpackedAnimation(const nlohmann::json& j) {
-
+UnpackedAnimation::UnpackedAnimation(const std::string& animation_name, const nlohmann::json& j) :
+  name(animation_name) {
     for (auto it : j["frame_list"]) {
         AnimationFrameData data;
         data.name = it.get<std::string>();

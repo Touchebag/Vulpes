@@ -7,7 +7,7 @@
 #include "utils/common.h"
 
 struct UnpackedAnimation {
-    explicit UnpackedAnimation(const nlohmann::json& j);
+    explicit UnpackedAnimation(const std::string& name, const nlohmann::json& j);
     nlohmann::json repack();
 
     std::string name;

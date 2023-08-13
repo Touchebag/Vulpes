@@ -23,7 +23,7 @@ void AnimationEditor::unpack(const nlohmann::json& animation_json, std::shared_p
     animations_.clear();
 
     for (auto [key, value] : animation_json.items()) {
-        auto unpacked_anim = std::make_shared<UnpackedAnimation>(value);
+        auto unpacked_anim = std::make_shared<UnpackedAnimation>(key, value);
 
         animations_.insert({key, unpacked_anim});
     }
@@ -97,6 +97,22 @@ void AnimationEditor::draw(sf::RenderWindow& /* window */) {
         ImGui::Begin("Animation", nullptr, 0
             | ImGuiWindowFlags_AlwaysAutoResize
             );
+
+        ImGui::Text("Animation");
+        ImGui::SameLine();
+        if (ImGui::BeginCombo("##AnimationList", current_animation_->name.c_str())) {
+            for (auto& it : animations_) {
+                bool is_selected = (current_animation_->name == it.first);
+                if (ImGui::Selectable(it.first.c_str(), is_selected)) {
+                    setAnimation(it.first);
+                }
+
+                // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                if (is_selected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
 
         ImGui::Image(*render_texture_);
 
