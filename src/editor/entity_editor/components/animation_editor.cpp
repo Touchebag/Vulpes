@@ -11,7 +11,7 @@
 namespace entity_editor {
 
 AnimationEditor::AnimationEditor() :
-    render_texture_(std::make_shared<sf::RenderTexture>()) {
+  render_texture_(std::make_shared<sf::RenderTexture>()) {
     render_texture_->create(500, 500);
 
     auto view = render_texture_->getView().getSize();
@@ -23,10 +23,13 @@ void AnimationEditor::unpack(const nlohmann::json& animation_json, std::shared_p
     animations_.clear();
 
     for (auto [key, value] : animation_json.items()) {
-        auto unpacked_anim = UnpackedAnimation(value);
+        auto unpacked_anim = std::make_shared<UnpackedAnimation>(value);
 
         animations_.insert({key, unpacked_anim});
     }
+
+    current_animation_ = animations_.at("idle");
+    current_frame_ = 0;
 
     texture_ = texture;
 }
@@ -35,17 +38,26 @@ nlohmann::json AnimationEditor::repack() {
     nlohmann::json packed_anims;
 
     for (auto it : animations_) {
-        packed_anims[it.first] = it.second.repack();
+        packed_anims[it.first] = it.second->repack();
     }
     return packed_anims;
 }
 
 void AnimationEditor::updateTextureCoords() {
+    if (autoplay_) {
+        time_rendered_ += render_clock_.getElapsedTime();
+        render_clock_.restart();
+
+        if (time_rendered_.asMilliseconds() >= 16) {
+            current_frame_++;
+            current_frame_ %= static_cast<int>(current_animation_->frame_list.size());
+            time_rendered_ -= sf::milliseconds(16);
+        }
+    }
+
     render_sprite_.setTexture(*texture_);
 
-    auto animation = animations_.at("idle");
-    auto current_frame = animation.frame_list.at(0);
-    auto rect = animation.sprite_rect_map.at(current_frame.name);
+    auto rect = current_animation_->sprite_rect_map.at(current_animation_->frame_list.at(current_frame_).name);
 
     render_sprite_.setTextureRect(sf::IntRect(rect.second.x, rect.second.y, rect.second.width, rect.second.height));
 
@@ -62,16 +74,41 @@ void AnimationEditor::render() {
 }
 
 void AnimationEditor::draw(sf::RenderWindow& /* window */) {
-    updateTextureCoords();
-    render();
+    if (current_animation_) {
+        updateTextureCoords();
+        render();
 
-    ImGui::Begin("Animation", nullptr, 0
-        | ImGuiWindowFlags_AlwaysAutoResize
-        );
+        ImGui::Begin("Animation", nullptr, 0
+            | ImGuiWindowFlags_AlwaysAutoResize
+            );
 
-    ImGui::Image(*render_texture_);
+        ImGui::Image(*render_texture_);
 
-    ImGui::End();
+        ImGui::SameLine();
+        if (ImGui::BeginListBox("##FrameList", ImVec2(200.0f, static_cast<float>(render_texture_->getSize().y)))) {
+            for (int i = 0; i < static_cast<int>(current_animation_->frame_list.size()); i++) {
+                auto& frame = current_animation_->frame_list.at(i);
+                auto name = frame.name + "##" + std::to_string(i);
+
+                bool is_selected = (current_frame_ == i);
+                if (ImGui::Selectable(name.c_str(), is_selected)) {
+                    current_frame_ = i;
+                }
+
+                // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                if (is_selected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndListBox();
+        }
+
+        if(ImGui::Button("Play")) {
+            time_rendered_ = sf::milliseconds(0);
+            autoplay_ = !autoplay_;
+        }
+
+        ImGui::End();
+    }
 }
 
 } // entity_editor

@@ -23,11 +23,19 @@ class AnimationEditor {
     void render();
     void updateTextureCoords();
 
-    std::map<std::string, UnpackedAnimation> animations_;
+    std::map<std::string, std::shared_ptr<UnpackedAnimation>> animations_;
     std::shared_ptr<sf::Texture> texture_;
 
     sf::Sprite render_sprite_;
     std::shared_ptr<sf::RenderTexture> render_texture_;
+
+    std::shared_ptr<UnpackedAnimation> current_animation_;
+    int current_frame_ = 0;
+
+    bool autoplay_ = false;
+
+    sf::Time time_rendered_;
+    sf::Clock render_clock_;
 };
 
 } // entity_editor
