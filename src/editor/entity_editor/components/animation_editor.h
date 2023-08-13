@@ -22,6 +22,7 @@ class AnimationEditor {
   private:
     void render();
     void updateTextureCoords();
+    void setAnimation(const std::string& name);
 
     std::map<std::string, std::shared_ptr<UnpackedAnimation>> animations_;
     std::shared_ptr<sf::Texture> texture_;
@@ -31,6 +32,7 @@ class AnimationEditor {
 
     std::shared_ptr<UnpackedAnimation> current_animation_;
     int current_frame_ = 0;
+    float current_scaling_ = 1.0;
 
     bool autoplay_ = false;
 

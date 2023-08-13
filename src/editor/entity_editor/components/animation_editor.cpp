@@ -28,10 +28,27 @@ void AnimationEditor::unpack(const nlohmann::json& animation_json, std::shared_p
         animations_.insert({key, unpacked_anim});
     }
 
-    current_animation_ = animations_.at("idle");
+    setAnimation("idle");
     current_frame_ = 0;
 
     texture_ = texture;
+}
+
+void AnimationEditor::setAnimation(const std::string& name) {
+    current_animation_ = animations_.at(name);
+
+    int max_width = 0;
+    int max_height = 0;
+    for (auto& it : current_animation_->frame_list) {
+        auto rect = current_animation_->sprite_rect_map.at(it.name);
+        max_width = std::max(max_width, rect.second.width);
+        max_height = std::max(max_height, rect.second.height);
+    }
+
+    auto render_size = render_texture_->getView().getSize();
+    float x_scale = static_cast<float>(render_size.x) / static_cast<float>(max_width);
+    float y_scale = static_cast<float>(render_size.y) / static_cast<float>(max_height);
+    current_scaling_ = std::min(x_scale, y_scale);
 }
 
 nlohmann::json AnimationEditor::repack() {
@@ -61,10 +78,9 @@ void AnimationEditor::updateTextureCoords() {
 
     render_sprite_.setTextureRect(sf::IntRect(rect.second.x, rect.second.y, rect.second.width, rect.second.height));
 
-    auto view = render_texture_->getView().getSize();
     auto sprite_size = render_sprite_.getLocalBounds();
     render_sprite_.setOrigin(static_cast<float>(sprite_size.width / 2.0), static_cast<float>(sprite_size.height / 2.0));
-    render_sprite_.setScale(view.x / sprite_size.width, view.y / sprite_size.height);
+    render_sprite_.setScale(current_scaling_, current_scaling_);
 }
 
 void AnimationEditor::render() {
