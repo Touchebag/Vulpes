@@ -14,9 +14,9 @@ AnimationEditor::AnimationEditor() :
   render_texture_(std::make_shared<sf::RenderTexture>()) {
     render_texture_->create(500, 500);
 
-    auto view = render_texture_->getView().getSize();
+    render_texture_->setView(sf::View(sf::FloatRect(-250, -250, 500, 500)));
 
-    render_sprite_.setPosition(view.x / 2, view.y / 2);
+    render_sprite_.setPosition(0.0f, 0.0f);
 }
 
 void AnimationEditor::unpack(const nlohmann::json& animation_json, std::shared_ptr<sf::Texture> texture) {
@@ -41,8 +41,8 @@ void AnimationEditor::setAnimation(const std::string& name) {
     int max_height = 0;
     for (auto& it : current_animation_->frame_list) {
         auto rect = current_animation_->sprite_rect_map.at(it.name);
-        max_width = std::max(max_width, rect.second.width);
-        max_height = std::max(max_height, rect.second.height);
+        max_width = std::max(max_width, rect.second.width + 2 * (it.x_offset ? abs(it.x_offset.value()) : 0));
+        max_height = std::max(max_height, rect.second.height + 2 * (it.y_offset ? abs(it.y_offset.value()) : 0));
     }
 
     auto render_size = render_texture_->getView().getSize();
@@ -74,13 +74,21 @@ void AnimationEditor::updateTextureCoords() {
 
     render_sprite_.setTexture(*texture_);
 
-    auto rect = current_animation_->sprite_rect_map.at(current_animation_->frame_list.at(current_frame_).name);
+    auto& frame = current_animation_->frame_list.at(current_frame_);
+    auto rect = current_animation_->sprite_rect_map.at(frame.name);
 
     render_sprite_.setTextureRect(sf::IntRect(rect.second.x, rect.second.y, rect.second.width, rect.second.height));
 
     auto sprite_size = render_sprite_.getLocalBounds();
     render_sprite_.setOrigin(static_cast<float>(sprite_size.width / 2.0), static_cast<float>(sprite_size.height / 2.0));
-    render_sprite_.setScale(current_scaling_, current_scaling_);
+
+    // Offset
+    render_sprite_.setPosition(frame.x_offset ? static_cast<float>(frame.x_offset.value()) : 0.0f,
+                               frame.y_offset ? static_cast<float>(frame.y_offset.value()) : 0.0f);
+
+    // Scale
+    render_sprite_.setScale(current_scaling_ * static_cast<float>(frame.x_scale ? frame.x_scale.value() : 1.0),
+                            current_scaling_ * static_cast<float>(frame.y_scale ? frame.y_scale.value() : 1.0));
 }
 
 void AnimationEditor::render() {
