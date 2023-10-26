@@ -9,7 +9,7 @@
 
 namespace {
 
-const std::array<std::pair<Collideable::CollisionType, sf::Color>, 11> type_color_map = {{
+const std::vector<std::pair<Collideable::CollisionType, sf::Color>> type_color_map = {{
     {Collideable::CollisionType::STATIC, sf::Color(0, 128, 0, 200)},
     {Collideable::CollisionType::SLOPE, sf::Color(0, 0, 128, 200)},
     {Collideable::CollisionType::HURTBOX, sf::Color(255, 255, 0, 200)},

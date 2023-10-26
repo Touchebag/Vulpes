@@ -1,5 +1,5 @@
 {
-    "background": "checkerboard",
+    "background": "bg_day",
     "camera": {
         "bottom": 2000.0,
         "left": -2000.0,
@@ -22,22 +22,43 @@
                 "width": 4000
             },
             "Transform": {
-                "pos_x": 0,
-                "pos_y": 500
+                "pos_x": 0.0,
+                "pos_y": 500.0
             }
         },
         {
+            "Collision": {
+                "direction": "left",
+                "height": 200,
+                "type": "slope",
+                "width": 200
+            },
             "Rendering": {
-                "height": 10,
-                "layer": -1,
-                "texture": "Box",
-                "tile_x": 0,
-                "tile_y": 0,
-                "width": 10
+                "height": 200,
+                "layer": 0,
+                "texture": "slope",
+                "width": 200
             },
             "Transform": {
-                "pos_x": 0,
-                "pos_y": 0
+                "pos_x": -300.0,
+                "pos_y": 350.0
+            }
+        },
+        {
+            "Collision": {
+                "height": 600,
+                "type": "static",
+                "width": 300
+            },
+            "Rendering": {
+                "height": 600,
+                "layer": 0,
+                "texture": "Forest/dirt",
+                "width": 300
+            },
+            "Transform": {
+                "pos_x": -550.0,
+                "pos_y": 150.0
             }
         }
     ],
