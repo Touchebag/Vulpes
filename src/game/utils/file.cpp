@@ -75,7 +75,7 @@ std::ifstream File::openFileForInput(std::filesystem::path filepath) {
 std::ofstream File::openFileForOutput(std::filesystem::path filepath) {
     filepath = ASSET_DIR / filepath;
 
-    std::ofstream fs(filepath);
+    std::ofstream fs(filepath, std::ios::binary);
 
     if (!fs) {
         LOGE("Failed to open file %s for output", filepath.string().c_str());
