@@ -67,8 +67,6 @@ Collideable::CollisionType CollideableStatic::getType() const {
     return Collideable::CollisionType::STATIC;
 }
 
-// TODO Mostly duplicated code with CollideableSemiSolid
-// See if can be broken out
 std::pair<double, double> CollideableStatic::getMaximumMovement(double stepX, double stepY,
         std::shared_ptr<const Collideable> other_coll) const {
     auto other_trans = other_coll->getTransform().lock();

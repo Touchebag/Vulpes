@@ -625,3 +625,43 @@ TEST_F(DynamicCollisionTestFixture, GrazeAgainstCornerButNoCollision) {
     EXPECT_EQ(40, pos_x);
     EXPECT_EQ(40, pos_y);
 }
+
+TEST_F(DynamicCollisionTestFixture, MoveUpSlope) {
+    System::IWorldModify().clearWorld();
+
+    System::IWorldModify::addEntity(entity_);
+
+    std::string slope_json = R"--(
+{
+    "Collision": {
+        "type": "slope",
+        "direction": "right",
+        "height": 100,
+        "width": 200
+    },
+    "Transform": {
+        "pos_x": 250,
+        "pos_y": 75
+    }
+}
+    )--";
+
+    auto slope = BaseEntity::createFromJson(nlohmann::json::parse(slope_json));
+    System::IWorldModify::addEntity(slope);
+
+    entity_->getComponent<Movement>()->move(150, 0);
+    auto pos_x = entity_->getComponent<Transform>()->getX();
+    auto pos_y = entity_->getComponent<Transform>()->getY();
+
+    // Should be in middle of slope
+    EXPECT_EQ(250, pos_x);
+    EXPECT_EQ(50, pos_y);
+
+    entity_->getComponent<Movement>()->move(150, 0);
+    pos_x = entity_->getComponent<Transform>()->getX();
+    pos_y = entity_->getComponent<Transform>()->getY();
+
+    // Should be outstide slope but clamped to slope top
+    EXPECT_EQ(400, pos_x);
+    EXPECT_EQ(0, pos_y);
+}

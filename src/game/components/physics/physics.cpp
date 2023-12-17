@@ -53,7 +53,6 @@ Physics::Physics(std::weak_ptr<ComponentStore> components) :
 }
 
 void Physics::update() {
-    // TODO Move somwhere more logical (transform?)
     auto state = getComponent<Stateful>();
     auto move = getComponent<Movement>();
     auto act = getComponent<Actions>();

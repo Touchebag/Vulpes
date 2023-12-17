@@ -24,7 +24,7 @@ status=$?
 if [[ ${status} -eq 0 ]];
 then
     echo Cppcheck found, running
-    cppcheck --error-exitcode=1 --enable=all --suppress=useStlAlgorithm --suppress=missingInclude --suppress=unusedFunction --suppress=redundantAssignment ../src >/dev/null
+    cppcheck --error-exitcode=1 --enable=all --suppress=useStlAlgorithm --suppress=missingInclude --suppress=missingIncludeSystem --suppress=unusedFunction --suppress=redundantAssignment ../src >/dev/null
     cppcheck_status=$?
 else
     echo Cppcheck not found, skipping

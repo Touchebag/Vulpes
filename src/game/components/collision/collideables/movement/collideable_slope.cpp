@@ -8,20 +8,9 @@ CollideableSlope::CollideableSlope(std::weak_ptr<ComponentStore> components) :
 }
 
 void CollideableSlope::recalculateConstants() {
-    if (auto this_trans = getTransform().lock()) {
-        auto top = getAbsTop(this_trans, hbox_);
-        auto bot = getAbsBottom(this_trans, hbox_);
-        auto left = getAbsLeft(this_trans, hbox_);
-        auto right = getAbsRight(this_trans, hbox_);
-
-        // Y axis is flipped so upward (right) facing slopes will be negative
-        if (direction_right_) {
-            slope_coeff_ = static_cast<double>(top - bot) / (right - left);
-            slope_const_ = bot - static_cast<int>(slope_coeff_ * left);
-        } else {
-            slope_coeff_ = static_cast<double>(bot - top) / (right - left);
-            slope_const_ = top - static_cast<int>(slope_coeff_ * left);
-        }
+    if (auto hbox = getHitbox()) {
+        slope_coeff_ = static_cast<double>(hbox->height_) / static_cast<double>(hbox->width_);
+        slope_coeff_ *= direction_right_ ? -1 : 1;
     }
 }
 
@@ -36,7 +25,7 @@ void CollideableSlope::reloadFromJson(nlohmann::json j) {
         } else if (str == "left") {
             direction_right_ = false;
         } else {
-            LOGD("Slope: missing direction, defaulting to right");
+            LOGD("Slope: invalid direction, defaulting to right");
         }
     } else {
         LOGD("Slope: missing direction, defaulting to right");
@@ -57,14 +46,17 @@ Collideable::CollisionType CollideableSlope::getType() const {
     return Collideable::CollisionType::SLOPE;
 }
 
-int CollideableSlope::getCurrentHeight(int x) const {
-    auto ret_x = static_cast<int>(x * slope_coeff_) + slope_const_;
+double CollideableSlope::getCurrentHeight(double x, std::shared_ptr<const Transform> this_trans) const {
+    // Normalise around zero
+    double x0 = x - this_trans->getX();
+    // Calculate y distance from zero
+    double h0 = x0 * slope_coeff_;
+    // Translate back to absolute values, clamping at top
+    double abs_h = std::max(h0 + this_trans->getY(), static_cast<double>(getAbsTop(this_trans, hbox_)));
 
-    return ret_x;
+    return abs_h;
 }
 
-// TODO Some duplicated code with CollideableStatic
-// See if can be broken out
 std::pair<double, double> CollideableSlope::getMaximumMovement(double stepX, double stepY,
         std::shared_ptr<const Collideable> other_coll) const {
     auto other_trans = other_coll->getTransform().lock();
@@ -92,21 +84,8 @@ std::pair<double, double> CollideableSlope::getMaximumMovement(double stepX, dou
         // Current position needed to calculate relative movement for snapping
         int entity_current_ground_pos = other_trans->getY() + static_cast<int>(other_hbox->height_ / 2);
         int entity_new_ground_pos = new_pos->getY() + static_cast<int>(other_hbox->height_ / 2);
-        int current_height = 0;
 
-        // Clamp height at edges
-        int entity_x_pos = other_trans->getX();
-        if (entity_x_pos < getAbsLeft(this_trans, hbox_)) {
-            current_height = direction_right_ ?
-                                 getAbsBottom(this_trans, hbox_) :
-                                 getAbsTop(this_trans, hbox_);
-        } else if (entity_x_pos > getAbsRight(this_trans, hbox_)) {
-            current_height = direction_right_ ?
-                                 getAbsTop(this_trans, hbox_) :
-                                 getAbsBottom(this_trans, hbox_);
-        } else {
-            current_height = getCurrentHeight(static_cast<int>(other_trans->getX() + retX));
-        }
+        int current_height = static_cast<int>(getCurrentHeight(other_trans->getX() + retX, this_trans));
 
         // If new position is just above slope surface, snap downwards
         // but only if we are moving down (e.g. not if jumping up slope)

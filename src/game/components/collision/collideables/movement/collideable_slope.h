@@ -17,10 +17,9 @@ class CollideableSlope : public ICollideableMovement {
   private:
     void recalculateConstants();
 
-    int getCurrentHeight(int x) const;
+    double getCurrentHeight(double x, std::shared_ptr<const Transform> this_trans) const;
 
     double slope_coeff_ = 0.0;
-    int slope_const_ = 0;
 
     bool direction_right_ = true;
 };
