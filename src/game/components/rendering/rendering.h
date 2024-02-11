@@ -61,6 +61,9 @@ class Rendering : public Component {
 
     int layer_ = 0;
 
+    double flip_x_ = 1.0;
+    double flip_y_ = 1.0;
+
     double x_scale_ = 1.0;
     double y_scale_ = 1.0;
 

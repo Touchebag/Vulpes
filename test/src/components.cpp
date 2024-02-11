@@ -122,7 +122,25 @@ TEST(TestComponents, TestSaveLoadEntityFile) {
     EXPECT_TRUE(j1 == j2) << j1.dump() << std::endl << j2.dump() << std::endl;
 }
 
-TEST(TestComponents, TestSaveLoadStatic) {
+TEST(TestComponents, TestSaveLoadRendering) {
+    nlohmann::json j1 = nlohmann::json::parse(R"--(
+    {
+        "height": 200,
+        "width": 100,
+        "texture": "box.png",
+        "tile_x": 0,
+        "tile_y": 0,
+        "flip_x": true,
+        "layer": 0
+    })--");
+
+    std::shared_ptr<Rendering> rndr = Rendering::createFromJson(j1, {});
+
+    nlohmann::json j2 = rndr->outputToJson().value();
+    ASSERT_TRUE(j1 == j2) << j1.dump() << std::endl << j2.dump() << std::endl;
+}
+
+TEST(TestComponents, TestSaveLoadStaticCollision) {
     nlohmann::json j1 = nlohmann::json::parse("{ \"width\": 46, \"height\": 52 }");
     nlohmann::json attack = nlohmann::json::parse("{ \"damage\": 5, \"knockback_x\": 50, \"knockback_y\": 10 }");
 

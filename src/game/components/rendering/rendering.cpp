@@ -60,6 +60,14 @@ void Rendering::reloadFromJson(nlohmann::json j, File file_instance) {
         tiling_y_ = j["tile_y"].get<int>();
     }
 
+    if (j.contains("flip_x")) {
+        flip_x_ = j["flip_x"].get<bool>() ? -1.0 : 1.0;
+    }
+
+    if (j.contains("flip_y")) {
+        flip_y_ = j["flip_y"].get<bool>() ? -1.0 : 1.0;
+    }
+
     if (j.contains("layer")) {
         layer_ = j["layer"].get<int>();
     } else {
@@ -147,6 +155,14 @@ std::optional<nlohmann::json> Rendering::outputToJson() {
         j["tile_y"] = tiling_y_;
     }
 
+    if (flip_x_ == -1.0) {
+        j["flip_x"] = true;
+    }
+
+    if (flip_y_ == -1.0) {
+        j["flip_y"] = true;
+    }
+
     j["layer"] = layer_;
 
     return {j};
@@ -177,8 +193,8 @@ void Rendering::setTextureCoords(int pos_x, int pos_y, int width, int height) {
         x_scale = y_scale;
     }
 
-    sprite_.setScale(static_cast<float>(mirror_scale * x_scale * x_scale_),
-                     static_cast<float>(y_scale * y_scale_));
+    sprite_.setScale(static_cast<float>(mirror_scale * x_scale * x_scale_ * flip_x_),
+                     static_cast<float>(y_scale * y_scale_ * flip_y_));
 }
 
 void Rendering::setSize(int width, int height) {
