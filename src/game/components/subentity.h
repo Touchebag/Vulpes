@@ -21,5 +21,5 @@ class Subentity : public Component {
   private:
     void set_position();
 
-    std::weak_ptr<BaseEntity> entity_;
+    std::unordered_map<std::string, std::shared_ptr<BaseEntity>> entities_;
 };

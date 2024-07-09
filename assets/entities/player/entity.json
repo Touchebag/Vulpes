@@ -33,7 +33,18 @@
         "layer": 0
     },
     "Stateful": null,
-    "Subentity": null,
+    "Subentity": {
+        "entities": [
+            {
+                "entity": "attack",
+                "tag": "attack"
+            },
+            {
+                "entity": "attack",
+                "tag": "shot"
+            }
+        ]
+    },
     "tag": "player",
     "Transform": {
         "pos_x": 0,
