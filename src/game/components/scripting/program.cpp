@@ -8,6 +8,8 @@
 #include <algorithm>
 #include <regex>
 
+#include "lexer.h"
+
 namespace {
 
 void checkType(scripting::Type expected, scripting::Type actual) {
@@ -128,17 +130,18 @@ int parseAction(const std::string& action_string) {
 Program Program::loadProgram(const std::string& program_string) {
     Program program_out;
 
-    auto lexed_program = tokenizeString(program_string);
+    Lexer lexer{};
+    auto lexed_program = lexer.tokenizeProgram(program_string);
 
-    if (lexed_program[0] == "on_enter") {
-        program_out.meta_data_ = MetaData::ON_ENTER;
-        lexed_program.erase(lexed_program.begin());
-    } else if (lexed_program[0] == "on_exit") {
-        program_out.meta_data_ = MetaData::ON_EXIT;
-        lexed_program.erase(lexed_program.begin());
-    }
-
-    program_out.translateAndStore(lexed_program);
+    // if (lexed_program[0] == "on_enter") {
+    //     program_out.meta_data_ = MetaData::ON_ENTER;
+    //     lexed_program.erase(lexed_program.begin());
+    // } else if (lexed_program[0] == "on_exit") {
+    //     program_out.meta_data_ = MetaData::ON_EXIT;
+    //     lexed_program.erase(lexed_program.begin());
+    // }
+    //
+    // program_out.translateAndStore(lexed_program);
 
     return program_out;
 }
@@ -246,16 +249,19 @@ scripting::Type Program::translateAndStore(std::vector<std::string> lexed_input)
 }
 
 std::vector<std::string> Program::tokenizeString(std::string str) {
-    std::vector<std::string> ret_vec;
-    const std::regex re("[A-z0-9\\._'\\-]+|\\(|\\)");
-
-    std::smatch sm;
-    while (std::regex_search(str, sm, re)) {
-        ret_vec.push_back(sm.str());
-        str = sm.suffix();
+    for (auto it = str.begin(); it < str.end(); ) {
+        LOGD("%c", *it++);
     }
-
-    return ret_vec;
+    // std::vector<std::string> ret_vec;
+    // const std::regex re("[A-z0-9\\._'\\-]+|\\(|\\)");
+    //
+    // std::smatch sm;
+    // while (std::regex_search(str, sm, re)) {
+    //     ret_vec.push_back(sm.str());
+    //     str = sm.suffix();
+    // }
+    //
+    return {" "};
 }
 
 const std::vector<int> Program::getProgram() {
