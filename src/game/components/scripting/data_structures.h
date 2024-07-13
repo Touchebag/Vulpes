@@ -1,15 +1,38 @@
 #pragma once
 
 #include <unordered_map>
+#include <string>
+#include <variant>
 
 namespace scripting {
 
+enum class TokenType {
+    LEFT_PAREN,
+    RIGHT_PAREN,
+
+    MINUS,
+
+    INTEGER,
+    DECIMAL,
+    STRING,
+
+    IDENTIFIER,
+};
+
+struct Token {
+    TokenType type;
+    std::string lexeme;
+};
+
 enum class Instruction {
+    INVALID,
+
     // Literal values
     INT,
     BOOL,
     STRING,
     FLOAT,
+    ACTION_LITERAL,
 
     // Variables
     GET,
@@ -93,6 +116,8 @@ enum class Type {
     // Typed target
     TARGET,
 
+    ACTION,
+
     COLL_PROP,
 
     // To help with parsing
@@ -120,6 +145,15 @@ struct InstructionData {
     Instruction instruction;
     Type return_type;
     std::vector<Type> args_return_type;
+};
+
+struct Operation {
+    Instruction instruction;
+    Type return_type;
+
+    std::variant<bool, int, float, std::string> data = 0;
+
+    std::vector<Operation> arguments = {};
 };
 
 static const std::unordered_map<std::string, InstructionData> string_instruction_map = {
@@ -162,14 +196,14 @@ static const std::unordered_map<std::string, InstructionData> string_instruction
     {"if", {Instruction::IF, Type::VOID, {Type::BOOL, Type::THEN, Type::VOID}}},
     {"then", {Instruction::THEN, Type::THEN, {}}},
 
-    {"action", {Instruction::ACTION, Type::VOID, {Type::STRING}}},
+    {"action", {Instruction::ACTION, Type::VOID, {Type::ACTION}}},
 
     {"move", {Instruction::MOVE, Type::VOID, {Type::TARGET, Type::FLOAT, Type::FLOAT}}},
     {"set_velocity", {Instruction::SET_VELOCITY, Type::VOID, {Type::TARGET, Type::FLOAT, Type::FLOAT}}},
     {"set_position", {Instruction::SET_POSITION, Type::VOID, {Type::TARGET, Type::INT, Type::INT}}},
 
-    {"enable_action", {Instruction::ENABLE_ACTION, Type::VOID, {Type::STRING}}},
-    {"disable_action", {Instruction::DISABLE_ACTION, Type::VOID, {Type::STRING}}},
+    {"enable_action", {Instruction::ENABLE_ACTION, Type::VOID, {Type::ACTION}}},
+    {"disable_action", {Instruction::DISABLE_ACTION, Type::VOID, {Type::ACTION}}},
 
     {"add_shader_to_layer", {Instruction::ADD_SHADER_TO_LAYER, Type::VOID, {Type::INT, Type::INT}}},
     {"add_global_shader", {Instruction::ADD_GLOBAL_SHADER, Type::VOID, {Type::INT}}},

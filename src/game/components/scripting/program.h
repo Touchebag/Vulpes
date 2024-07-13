@@ -3,7 +3,8 @@
 #include <vector>
 #include <string>
 
-#include "instructions.h"
+#include "data_structures.h"
+#include "parser.h"
 
 class Program {
   public:
@@ -24,6 +25,7 @@ class Program {
     static std::vector<std::string> tokenizeString(std::string str);
 
   private:
+    void compile(Parser::ParsedAST ast);
     scripting::Type translateAndStore(std::vector<std::string> lexed_input);
 
     MetaData meta_data_ = MetaData::NONE;

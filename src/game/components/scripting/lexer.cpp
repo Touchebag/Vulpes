@@ -110,13 +110,7 @@ void Lexer::addIdentifier() {
         advance();
     }
 
-    // Parse keywords directly
-    std::string lexeme {current_lexeme_start_, current_char_};
-    if (scripting::string_keyword_map.count(lexeme) > 0) {
-        addToken(scripting::string_keyword_map.at(lexeme));
-    } else {
-        addToken(TokenType::IDENTIFIER);
-    }
+    addToken(TokenType::IDENTIFIER);
 
 }
 

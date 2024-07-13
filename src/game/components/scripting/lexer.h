@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 
-#include "tokens.h"
+#include "data_structures.h"
 
 class Lexer {
   public:

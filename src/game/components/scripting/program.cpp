@@ -9,6 +9,7 @@
 #include <regex>
 
 #include "lexer.h"
+#include "parser.h"
 
 namespace {
 
@@ -133,17 +134,23 @@ Program Program::loadProgram(const std::string& program_string) {
     Lexer lexer{};
     auto lexed_program = lexer.tokenizeProgram(program_string);
 
-    // if (lexed_program[0] == "on_enter") {
-    //     program_out.meta_data_ = MetaData::ON_ENTER;
-    //     lexed_program.erase(lexed_program.begin());
-    // } else if (lexed_program[0] == "on_exit") {
-    //     program_out.meta_data_ = MetaData::ON_EXIT;
-    //     lexed_program.erase(lexed_program.begin());
-    // }
-    //
+    Parser parser{};
+    auto ast = parser.generateAST(lexed_program);
+
+    if (ast.on_enter) {
+        program_out.meta_data_ = MetaData::ON_ENTER;
+    } else if (ast.on_exit) {
+        program_out.meta_data_ = MetaData::ON_EXIT;
+    }
+
+    program_out.compile(ast);
+
     // program_out.translateAndStore(lexed_program);
 
     return program_out;
+}
+
+void Program::compile(Parser::ParsedAST ast) {
 }
 
 scripting::Type Program::translateAndStore(std::vector<std::string> lexed_input) {
