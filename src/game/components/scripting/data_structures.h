@@ -151,7 +151,7 @@ struct Operation {
     Instruction instruction;
     Type return_type;
 
-    std::variant<bool, int, float, std::string> data = 0;
+    std::variant<bool, int, double, std::string> data = 0;
 
     std::vector<Operation> arguments = {};
 };

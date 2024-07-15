@@ -33,10 +33,6 @@ Parser::ParsedAST Parser::generateAST(std::vector<Token> lexed_tokens) {
 
     auto oper = parseStatement();
 
-    if (oper.return_type != scripting::Type::VOID) {
-        throw std::invalid_argument("Parser: Scripts must return void");
-    }
-
     ast.operation = oper;
 
     return ast;
@@ -77,7 +73,7 @@ Operation Parser::parseStatement() {
         case (TokenType::DECIMAL):
             oper.instruction = Instruction::FLOAT;
             oper.return_type = Type::FLOAT;
-            oper.data = std::stof(current_token_->lexeme);
+            oper.data = std::stod(current_token_->lexeme);
             break;
         case (TokenType::MINUS):
             advance();
@@ -86,7 +82,7 @@ Operation Parser::parseStatement() {
             if (oper.return_type == Type::INT) {
                 oper.data = 0 - std::get<int>(oper.data);
             } else if (oper.return_type == Type::FLOAT) {
-                oper.data = 0.0f - std::get<float>(oper.data);
+                oper.data = 0.0 - std::get<double>(oper.data);
             } else {
                 throw std::invalid_argument("Minus: Invalid number");
             }
@@ -116,7 +112,8 @@ Operation Parser::parseStatement() {
                     advance();
                     auto argument = parseStatement();
 
-                    if (argument.return_type != i) {
+                    // Allow void to take (and discard) any type
+                    if (i != scripting::Type::VOID && argument.return_type != i) {
                         throw std::invalid_argument(std::string{"Incorrect return type for \"" + current_token_->lexeme + "\""});
                     }
 

@@ -22,11 +22,8 @@ class Program {
 
     MetaData getMetaData();
 
-    static std::vector<std::string> tokenizeString(std::string str);
-
   private:
-    void compile(Parser::ParsedAST ast);
-    scripting::Type translateAndStore(std::vector<std::string> lexed_input);
+    void compile(scripting::Operation oper);
 
     MetaData meta_data_ = MetaData::NONE;
 

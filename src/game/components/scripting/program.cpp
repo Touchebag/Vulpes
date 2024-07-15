@@ -11,123 +11,6 @@
 #include "lexer.h"
 #include "parser.h"
 
-namespace {
-
-void checkType(scripting::Type expected, scripting::Type actual) {
-    // Void can return whatever
-    if (expected != scripting::Type::VOID && expected != actual) {
-        std::stringstream error_message;
-        error_message << "type error. Expected " << static_cast<int>(expected) <<
-                         ", got " << static_cast<int>(actual);
-        throw std::invalid_argument(error_message.str());
-    }
-}
-
-scripting::InstructionData parseInstruction(std::string instruction) {
-    scripting::InstructionData instruction_data;
-
-    // Should be able to parse literal int without keyword
-    try {
-        std::unique_ptr<size_t> n = std::make_unique<size_t>();
-
-        // Try read int
-        (void)std::stoi(instruction, n.get());
-        // Check if entire string could be parsed as int
-        if (*n == instruction.length()) {
-            instruction_data = {scripting::Instruction::INT, scripting::Type::INT, {}};
-            return instruction_data;
-        }
-
-        // Try read double
-        (void)std::stod(instruction, n.get());
-        if (*n == instruction.length()) {
-            instruction_data = {scripting::Instruction::FLOAT, scripting::Type::FLOAT, {}};
-            return instruction_data;
-        }
-    } catch (std::invalid_argument&) {
-        // If not int, just continue parsing as normal
-    }
-
-    if (instruction.front() == '\'') {
-        if (instruction.back() != '\'') {
-            throw std::invalid_argument("Program: Parse error, unmatched '");
-        }
-
-        instruction_data = {scripting::Instruction::STRING, scripting::Type::STRING, {}};
-
-        return instruction_data;
-    }
-
-    if (instruction == "true" || instruction == "false") {
-        instruction_data = {scripting::Instruction::BOOL, scripting::Type::BOOL, {}};
-
-        return instruction_data;
-    }
-
-    try {
-        instruction_data = scripting::string_instruction_map.at(instruction);
-    } catch (std::out_of_range& e) {
-        throw std::invalid_argument("Program: Unknown instruction " + instruction);
-    }
-
-    return instruction_data;
-}
-
-// Convenience function to allow easier error handling of argument strings
-scripting::InstructionData parseInstruction(std::vector<std::string> instructions) {
-    if (instructions.empty()) {
-        throw std::invalid_argument("Program: Instruction list is empty");
-    }
-
-    return parseInstruction(instructions[0]);
-}
-
-std::vector<std::vector<std::string>> extractArguments(std::vector<std::string> str) {
-    if (str.empty()) {
-        return {};
-    }
-
-    std::vector<std::vector<std::string>> ret_vec;
-    // Skip initial instruction
-    auto start_it = str.begin() + 1;
-    int paren_count = 0;
-
-    for (auto it = start_it; it != str.end(); it++) {
-        if (*it == "(") {
-            if (paren_count == 0) {
-                start_it = it;
-            }
-            paren_count++;
-        } else if (*it == ")") {
-            paren_count--;
-            if (paren_count == 0) {
-                ret_vec.push_back({start_it + 1, it});
-            }
-        } else {
-            if (paren_count == 0) {
-                ret_vec.push_back({*it});
-            }
-        }
-    }
-
-    if (paren_count != 0) {
-        throw std::invalid_argument("Program: condition parse error, unmatched parentheses");
-    }
-
-    return ret_vec;
-}
-
-int parseAction(const std::string& action_string) {
-    try {
-        return static_cast<int>(string_action_map.at(action_string));
-    } catch (std::out_of_range& e) {
-        LOGE("Program, invalid action %s", action_string.c_str());
-        throw;
-    }
-}
-
-} // namespace
-
 Program Program::loadProgram(const std::string& program_string) {
     Program program_out;
 
@@ -143,82 +26,54 @@ Program Program::loadProgram(const std::string& program_string) {
         program_out.meta_data_ = MetaData::ON_EXIT;
     }
 
-    program_out.compile(ast);
-
-    // program_out.translateAndStore(lexed_program);
+    program_out.compile(ast.operation);
 
     return program_out;
 }
 
-void Program::compile(Parser::ParsedAST ast) {
-}
-
-scripting::Type Program::translateAndStore(std::vector<std::string> lexed_input) {
-    // TODO Check length
-    auto instruction_data = parseInstruction(lexed_input[0]);
-    auto arguments = extractArguments(lexed_input);
-
-    // Check correct number of arguments
-    if (arguments.size() != instruction_data.args_return_type.size()) {
-        std::stringstream error_message;
-        error_message << "Instruction: " << lexed_input[0] <<
-                         " incorrect number of arguments. Expected " << instruction_data.args_return_type.size() <<
-                         ", got " << arguments.size();
-        throw std::invalid_argument(error_message.str());
-    }
-
+void Program::compile(scripting::Operation oper) {
     // Need to evaluate arguments first
-    switch (instruction_data.instruction) {
+    switch (oper.instruction) {
         case scripting::Instruction::INT:
-            program_.push_back(static_cast<int>(scripting::Instruction::INT));
-            program_.push_back(std::stoi(lexed_input[0]));
+            program_.push_back(static_cast<int>(oper.instruction));
+            program_.push_back(std::get<int>(oper.data));
             break;
         case scripting::Instruction::BOOL:
-            program_.push_back(static_cast<int>(scripting::Instruction::BOOL));
-
-            if (lexed_input[0] == "true") {
-                program_.push_back(scripting::Bool::TRUE);
-            } else {
-                program_.push_back(scripting::Bool::FALSE);
-            }
-
+            program_.push_back(static_cast<int>(oper.instruction));
+            program_.push_back(std::get<bool>(oper.data) ? scripting::Bool::TRUE : scripting::Bool::FALSE);
             break;
         case scripting::Instruction::STRING:
-            program_.push_back(static_cast<int>(scripting::Instruction::STRING));
+            program_.push_back(static_cast<int>(oper.instruction));
 
-            // Remove surrounding quotation marks
-            strings_.insert({string_id_counter_, std::string(lexed_input[0].begin() + 1, lexed_input[0].end() - 1)});
+            // Add string to literals and push reference
+            strings_.insert({string_id_counter_, std::get<std::string>(oper.data)});
             program_.push_back(string_id_counter_);
             string_id_counter_++;
             break;
         case scripting::Instruction::FLOAT:
-            program_.push_back(static_cast<int>(scripting::Instruction::FLOAT));
+            program_.push_back(static_cast<int>(oper.instruction));
 
-            floats_.insert({float_id_counter_, std::stod(lexed_input[0])});
+            // Store float and push reference
+            floats_.insert({float_id_counter_, std::get<double>(oper.data)});
             program_.push_back(float_id_counter_);
             float_id_counter_++;
             break;
         case scripting::Instruction::ACTION:
-            program_.push_back(static_cast<int>(scripting::Instruction::ACTION));
-            program_.push_back(parseAction(lexed_input[1]));
+            program_.push_back(static_cast<int>(oper.instruction));
+            program_.push_back(std::get<int>(oper.arguments[0].data));
             break;
         case scripting::Instruction::ENABLE_ACTION:
-            program_.push_back(static_cast<int>(scripting::Instruction::ENABLE_ACTION));
-            program_.push_back(parseAction(lexed_input[1]));
+            program_.push_back(static_cast<int>(oper.instruction));
+            program_.push_back(std::get<int>(oper.arguments[0].data));
             break;
         case scripting::Instruction::DISABLE_ACTION:
-            program_.push_back(static_cast<int>(scripting::Instruction::DISABLE_ACTION));
-            program_.push_back(parseAction(lexed_input[1]));
+            program_.push_back(static_cast<int>(oper.instruction));
+            program_.push_back(std::get<int>(oper.arguments[0].data));
             break;
         case scripting::Instruction::IF:
         {
             // Push condition
-            auto condition = arguments[0];
-            auto parsed_condition = parseInstruction(condition);
-
-            checkType(instruction_data.args_return_type[0], parsed_condition.return_type);
-
-            translateAndStore(condition);
+            compile(oper.arguments[0]);
 
             // Push IF statement
             program_.push_back(static_cast<int>(scripting::Instruction::IF));
@@ -226,49 +81,21 @@ scripting::Type Program::translateAndStore(std::vector<std::string> lexed_input)
             // Ignore THEN
 
             // Push body
-            auto body = arguments[2];
-            auto parsed_body = parseInstruction(body);
-
-            checkType(instruction_data.args_return_type[2], parsed_body.return_type);
-
-            translateAndStore(body);
+            compile(oper.arguments[2]);
 
             break;
         }
         default:
             // Push arguments
-            for (unsigned long long i = 0; i < arguments.size(); i++) {
-                auto arg = arguments[i];
-                auto parsed_arg = parseInstruction(arg);
-
-                checkType(instruction_data.args_return_type[i], parsed_arg.return_type);
-
-                translateAndStore(arg);
+            for (auto arg : oper.arguments) {
+                compile(arg);
             }
 
             // Push original operation
-            program_.push_back(static_cast<int>(instruction_data.instruction));
+            program_.push_back(static_cast<int>(oper.instruction));
 
             break;
     }
-
-    return instruction_data.return_type;
-}
-
-std::vector<std::string> Program::tokenizeString(std::string str) {
-    for (auto it = str.begin(); it < str.end(); ) {
-        LOGD("%c", *it++);
-    }
-    // std::vector<std::string> ret_vec;
-    // const std::regex re("[A-z0-9\\._'\\-]+|\\(|\\)");
-    //
-    // std::smatch sm;
-    // while (std::regex_search(str, sm, re)) {
-    //     ret_vec.push_back(sm.str());
-    //     str = sm.suffix();
-    // }
-    //
-    return {" "};
 }
 
 const std::vector<int> Program::getProgram() {
