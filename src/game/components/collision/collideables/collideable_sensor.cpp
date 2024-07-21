@@ -46,8 +46,56 @@ std::string CollideableSensor::getName() {
     return name_;
 }
 
-std::shared_ptr<const Collideable> CollideableSensor::getLastCollideable() {
-    return last_trigger_coll_.lock();
+int CollideableSensor::getPenetrationDistance(scripting::CollideableProperty edge) {
+    int dist = 0;
+
+    if (auto it = last_trigger_coll_.lock()) {
+        auto this_hbox = getHitbox();
+        auto this_trans = components_.lock()->getComponent<Transform>();
+        auto other_hbox = it->getHitbox();
+        auto other_trans = it->getTransform().lock();
+
+        // This normally should not happen (as you would not be able to collide in the first place)
+        // but components could potentially be deactivated in between checks
+        if (this_trans && other_trans) {
+            switch (edge) {
+                case scripting::CollideableProperty::TOP_EDGE:
+                    {
+                        auto this_bot = static_cast<int>(this_trans->getY()) + this_hbox->getBottom();
+                        auto other_top = static_cast<int>(other_trans->getY()) + other_hbox->getTop();
+
+                        dist = this_bot - other_top;
+                        break;
+                    }
+                case scripting::CollideableProperty::BOTTOM_EDGE:
+                    {
+                        auto this_top = static_cast<int>(this_trans->getY()) + this_hbox->getTop();
+                        auto other_bot = static_cast<int>(other_trans->getY()) + other_hbox->getBottom();
+
+                        dist = other_bot - this_top;
+                        break;
+                    }
+                case scripting::CollideableProperty::LEFT_EDGE:
+                    {
+                        auto this_right = static_cast<int>(this_trans->getX()) + this_hbox->getRight();
+                        auto other_left = static_cast<int>(other_trans->getX()) + other_hbox->getLeft();
+
+                        dist = this_right - other_left;
+                        break;
+                    }
+                case scripting::CollideableProperty::RIGHT_EDGE:
+                    {
+                        auto this_left = static_cast<int>(this_trans->getX()) + this_hbox->getLeft();
+                        auto other_right = static_cast<int>(other_trans->getX()) + other_hbox->getRight();
+
+                        dist = other_right - this_left;
+                        break;
+                    }
+            }
+        }
+    }
+
+    return dist;
 }
 
 void CollideableSensor::reloadFromJson(nlohmann::json j) {

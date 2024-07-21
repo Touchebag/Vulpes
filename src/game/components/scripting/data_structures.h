@@ -56,10 +56,9 @@ enum class Instruction {
     POSITION_X,
     POSITION_Y,
 
-    // Collision history
-    COLLISION_HISTORY,
-
     // Collision properties
+    PENETRATION_DISTANCE,
+
     TOP_EDGE,
     BOTTOM_EDGE,
     LEFT_EDGE,
@@ -147,11 +146,13 @@ struct InstructionData {
     std::vector<Type> args_return_type;
 };
 
+using return_types = std::variant<bool, int, double, std::string>;
+
 struct Operation {
     Instruction instruction;
     Type return_type;
 
-    std::variant<bool, int, double, std::string> data = 0;
+    return_types data = 0;
 
     std::vector<Operation> arguments = {};
 };
@@ -179,7 +180,7 @@ static const std::unordered_map<std::string, InstructionData> string_instruction
     {"position_x", {Instruction::POSITION_X, Type::INT, {Type::TARGET}}},
     {"position_y", {Instruction::POSITION_Y, Type::INT, {Type::TARGET}}},
 
-    {"collision_history", {Instruction::COLLISION_HISTORY, Type::INT, {Type::STRING, Type::INT, Type::COLL_PROP}}},
+    {"penetration_distance", {Instruction::PENETRATION_DISTANCE, Type::INT, {Type::STRING, Type::COLL_PROP}}},
 
     {"collides", {Instruction::COLLIDES, Type::BOOL, {Type::TARGET}}},
     {"flag", {Instruction::FLAG, Type::BOOL, {Type::STRING}}},

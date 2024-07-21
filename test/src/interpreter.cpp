@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "components/scripting/interpreter.h"
+#include "components/component_store.h"
 #include "components/scripting/program.h"
 #include "components/rendering/rendering.h"
 #include "system/system.h"
@@ -25,145 +25,145 @@ class InterpreterTestFixture : public ::testing::Test {
         extra_data_.variables = std::make_shared<scripting::VariableMap>();
     }
 
-    int parseAndRun(std::string source) {
+    scripting::return_types parseAndRun(std::string source) {
         auto program = Program::loadProgram(source);
-        return Interpreter::executeProgram(program, extra_data_);
+        return program.run(extra_data_);
     }
 
   protected:
-    Interpreter::ExtraInputData extra_data_;
+    Program::ExtraInputData extra_data_;
 };
 
 TEST_F(InterpreterTestFixture, IntLiteral) {
     auto output = parseAndRun("4");
 
-    EXPECT_EQ(output, 4);
+    EXPECT_EQ(std::get<int>(output), 4);
 }
 
 TEST_F(InterpreterTestFixture, BoolLiteral) {
     auto output = parseAndRun("true");
 
-    EXPECT_EQ(output, Bool::TRUE);
+    EXPECT_EQ(std::get<bool>(output), true);
 
     output = parseAndRun("false");
 
-    EXPECT_EQ(output, Bool::FALSE);
+    EXPECT_EQ(std::get<bool>(output), false);
 }
 
 TEST_F(InterpreterTestFixture, StringLiteral) {
-    auto program = Program::loadProgram("'string_literal'");
+    auto output = parseAndRun("'string_literal'");
 
-    EXPECT_EQ(program.getString(0), "string_literal");
+    EXPECT_EQ(std::get<std::string>(output), "string_literal");
 }
 
 TEST_F(InterpreterTestFixture, FloatLiteral) {
-    auto program = Program::loadProgram("4.3");
+    auto output = parseAndRun("4.3");
 
-    EXPECT_EQ(program.getFloat(0), 4.3);
+    EXPECT_EQ(std::get<double>(output), 4.3);
 }
 
 TEST_F(InterpreterTestFixture, GetSetVariables) {
     auto output = parseAndRun("set 'test_var' 4");
-    EXPECT_EQ(output, 0);
+    EXPECT_EQ(std::get<int>(output), 0);
 
     output = parseAndRun("get 'test_var'");
-    EXPECT_EQ(output, 4);
+    EXPECT_EQ(std::get<int>(output), 4);
 
     output = parseAndRun("set 'test_var2' 7");
-    EXPECT_EQ(output, 0);
+    EXPECT_EQ(std::get<int>(output), 0);
 
     output = parseAndRun("get 'test_var2'");
-    EXPECT_EQ(output, 7);
+    EXPECT_EQ(std::get<int>(output), 7);
 
     output = parseAndRun("get 'test_var'");
-    EXPECT_EQ(output, 4);
+    EXPECT_EQ(std::get<int>(output), 4);
 }
 
 TEST_F(InterpreterTestFixture, IncDecVar) {
     auto output = parseAndRun("set 'test_var' 4");
-    EXPECT_EQ(output, 0);
+    EXPECT_EQ(std::get<int>(output), 0);
 
     output = parseAndRun("get 'test_var'");
-    EXPECT_EQ(output, 4);
+    EXPECT_EQ(std::get<int>(output), 4);
 
     output = parseAndRun("inc_var 'test_var'");
     output = parseAndRun("get 'test_var'");
-    EXPECT_EQ(output, 5);
+    EXPECT_EQ(std::get<int>(output), 5);
 
     output = parseAndRun("dec_var 'test_var'");
     output = parseAndRun("dec_var 'test_var'");
     output = parseAndRun("get 'test_var'");
-    EXPECT_EQ(output, 3);
+    EXPECT_EQ(std::get<int>(output), 3);
 }
 
 TEST_F(InterpreterTestFixture, FrameTimer) {
     auto output = parseAndRun("frame_timer 2");
 
-    EXPECT_EQ(output, Bool::FALSE);
+    EXPECT_EQ(std::get<bool>(output), false);
 
     extra_data_.frame_timer++;
     output = parseAndRun("frame_timer 2");
-    EXPECT_EQ(output, Bool::FALSE);
+    EXPECT_EQ(std::get<bool>(output), false);
 
     extra_data_.frame_timer++;
     output = parseAndRun("frame_timer 2");
-    EXPECT_EQ(output, Bool::TRUE);
+    EXPECT_EQ(std::get<bool>(output), true);
 }
 
 TEST_F(InterpreterTestFixture, AddInt) {
     auto output = parseAndRun("add 0 3");
-    EXPECT_EQ(output, 3);
+    EXPECT_EQ(std::get<int>(output), 3);
 
     output = parseAndRun("add 2 5");
-    EXPECT_EQ(output, 7);
+    EXPECT_EQ(std::get<int>(output), 7);
 
     output = parseAndRun("add 5 2");
-    EXPECT_EQ(output, 7);
+    EXPECT_EQ(std::get<int>(output), 7);
 
     output = parseAndRun("add 4 -2");
-    EXPECT_EQ(output, 2);
+    EXPECT_EQ(std::get<int>(output), 2);
 
     output = parseAndRun("add 3 -5");
-    EXPECT_EQ(output, -2);
+    EXPECT_EQ(std::get<int>(output), -2);
 
     output = parseAndRun("add (add 1 25) 17");
-    EXPECT_EQ(output, 43);
+    EXPECT_EQ(std::get<int>(output), 43);
 }
 
 TEST_F(InterpreterTestFixture, SubInt) {
     auto output = parseAndRun("sub 3 0");
-    EXPECT_EQ(output, 3);
+    EXPECT_EQ(std::get<int>(output), 3);
 
     output = parseAndRun("sub 3 3");
-    EXPECT_EQ(output, 0);
+    EXPECT_EQ(std::get<int>(output), 0);
 
     output = parseAndRun("sub 4 1");
-    EXPECT_EQ(output, 3);
+    EXPECT_EQ(std::get<int>(output), 3);
 
     output = parseAndRun("sub 1 4");
-    EXPECT_EQ(output, -3);
+    EXPECT_EQ(std::get<int>(output), -3);
 
     output = parseAndRun("sub -3 2");
-    EXPECT_EQ(output, -5);
+    EXPECT_EQ(std::get<int>(output), -5);
 
     output = parseAndRun("sub 6 -1");
-    EXPECT_EQ(output, 7);
+    EXPECT_EQ(std::get<int>(output), 7);
 }
 
 TEST_F(InterpreterTestFixture, PlayerPosition) {
     auto output = parseAndRun("position_x player");
-    EXPECT_EQ(output, 0);
+    EXPECT_EQ(std::get<int>(output), 0);
 
     output = parseAndRun("position_y player");
-    EXPECT_EQ(output, 0);
+    EXPECT_EQ(std::get<int>(output), 0);
 
     System::IWorldModify::getPlayer().lock()->getComponent<Transform>()->setPosition(5, 2);
 
     output = parseAndRun("position_x player");
-    EXPECT_EQ(output, 5);
+    EXPECT_EQ(std::get<int>(output), 5);
 
     output = parseAndRun("position_y player");
-    EXPECT_EQ(output, 2);
+    EXPECT_EQ(std::get<int>(output), 2);
 }
 
 TEST_F(InterpreterTestFixture, ThisPosition) {
@@ -171,13 +171,13 @@ TEST_F(InterpreterTestFixture, ThisPosition) {
     extra_data_.this_components->getComponent<Transform>()->setPosition(3, 6);
 
     auto output = parseAndRun("position_x this");
-    EXPECT_EQ(output, 3);
+    EXPECT_EQ(std::get<int>(output), 3);
 
     output = parseAndRun("position_y this");
-    EXPECT_EQ(output, 6);
+    EXPECT_EQ(std::get<int>(output), 6);
 }
 
-TEST_F(InterpreterTestFixture, CollisionHistory) {
+TEST_F(InterpreterTestFixture, PenetrationDistance) {
     auto str = R"--({
         "Collision": {
             "height": 200,
@@ -185,7 +185,7 @@ TEST_F(InterpreterTestFixture, CollisionHistory) {
             "width": 100
         },
         "Transform": {
-            "pos_x": 20,
+            "pos_x": 30,
             "pos_y": 10
         }
     })--";
@@ -193,31 +193,30 @@ TEST_F(InterpreterTestFixture, CollisionHistory) {
     auto entity = BaseEntity::createFromJson(nlohmann::json::parse(str));
     System::IWorldModify::addEntity(entity);
 
-    str = R"--({
+    auto str2 = R"--({
         "Entity": "test_enemy"
     })--";
+    auto entity2 = BaseEntity::createFromJson(nlohmann::json::parse(str2));
+    System::IWorldModify::addEntity(entity2);
 
-    entity = BaseEntity::createFromJson(nlohmann::json::parse(str));
-
-    extra_data_.this_components = entity->components_;
-
+    extra_data_.this_components = entity2->components_;
     extra_data_.this_components->getComponent<Transform>()->setPosition(0, 0);
     extra_data_.this_components->getComponent<Collision>()->update();
 
     auto output = parseAndRun("sensor 'test_sensor'");
-    EXPECT_EQ(output, Bool::TRUE);
+    EXPECT_EQ(std::get<bool>(output), true);
 
-    output = parseAndRun("collision_history 'test_sensor' 0 top_edge");
-    EXPECT_EQ(output, -90);
+    output = parseAndRun("penetration_distance 'test_sensor' top_edge");
+    EXPECT_EQ(std::get<int>(output), 120);
 
-    output = parseAndRun("collision_history 'test_sensor' 0 bottom_edge");
-    EXPECT_EQ(output, 110);
+    output = parseAndRun("penetration_distance 'test_sensor' bottom_edge");
+    EXPECT_EQ(std::get<int>(output), 140);
 
-    output = parseAndRun("collision_history 'test_sensor' 0 left_edge");
-    EXPECT_EQ(output, -30);
+    output = parseAndRun("penetration_distance 'test_sensor' left_edge");
+    EXPECT_EQ(std::get<int>(output), 65);
 
-    output = parseAndRun("collision_history 'test_sensor' 0 right_edge");
-    EXPECT_EQ(output, 70);
+    output = parseAndRun("penetration_distance 'test_sensor' right_edge");
+    EXPECT_EQ(std::get<int>(output), 125);
 }
 
 TEST_F(InterpreterTestFixture, ThisCollides) {
@@ -230,23 +229,23 @@ TEST_F(InterpreterTestFixture, ThisCollides) {
 
     auto output = parseAndRun("collides player");
 
-    EXPECT_EQ(output, Bool::FALSE);
+    EXPECT_EQ(std::get<bool>(output), false);
 
     System::IWorldModify::getPlayer().lock()->getComponent<Transform>()->setPosition(0, 0);
 
     output = parseAndRun("collides player");
 
-    EXPECT_EQ(output, Bool::TRUE);
+    EXPECT_EQ(std::get<bool>(output), true);
 }
 
 TEST_F(InterpreterTestFixture, Flag) {
     auto output = parseAndRun("flag 'InterperTestFlag'");
 
-    EXPECT_EQ(output, Bool::FALSE);
+    EXPECT_EQ(std::get<bool>(output), false);
 
     System::getEnvironment()->setFlag("InterperTestFlag");
     output = parseAndRun("flag 'InterperTestFlag'");
-    EXPECT_EQ(output, Bool::TRUE);
+    EXPECT_EQ(std::get<bool>(output), true);
 }
 
 TEST_F(InterpreterTestFixture, AnimationLooped) {
@@ -260,12 +259,12 @@ TEST_F(InterpreterTestFixture, AnimationLooped) {
 
     for (auto i = 0; i < 15; i++) {
         auto output = parseAndRun("animation_looped");
-        EXPECT_EQ(output, Bool::FALSE);
+        EXPECT_EQ(std::get<bool>(output), false);
         extra_data_.this_components->getComponent<Animation>()->update();
     }
 
     auto output = parseAndRun("animation_looped");
-    EXPECT_EQ(output, Bool::TRUE);
+    EXPECT_EQ(std::get<bool>(output), true);
 }
 
 TEST_F(InterpreterTestFixture, Sensor) {
@@ -294,71 +293,71 @@ TEST_F(InterpreterTestFixture, Sensor) {
     extra_data_.this_components = entity->components_;
 
     auto output = parseAndRun("sensor 'test_sensor'");
-    EXPECT_EQ(output, Bool::FALSE);
+    EXPECT_EQ(std::get<bool>(output), false);
 
     extra_data_.this_components->getComponent<Transform>()->setPosition(100, 0);
     extra_data_.this_components->getComponent<Collision>()->update();
 
     output = parseAndRun("sensor 'test_sensor'");
-    EXPECT_EQ(output, Bool::TRUE);
+    EXPECT_EQ(std::get<bool>(output), true);
 }
 
 TEST_F(InterpreterTestFixture, Greater) {
     auto output = parseAndRun("grt 4 2");
 
-    EXPECT_EQ(output, Bool::TRUE);
+    EXPECT_EQ(std::get<bool>(output), true);
 
     output = parseAndRun("grt 1 5");
 
-    EXPECT_EQ(output, Bool::FALSE);
+    EXPECT_EQ(std::get<bool>(output), false);
 
     output = parseAndRun("grt 3 3");
 
-    EXPECT_EQ(output, Bool::FALSE);
+    EXPECT_EQ(std::get<bool>(output), false);
 }
 
 TEST_F(InterpreterTestFixture, Less) {
     auto output = parseAndRun("lss 3 9");
 
-    EXPECT_EQ(output, Bool::TRUE);
+    EXPECT_EQ(std::get<bool>(output), true);
 
     output = parseAndRun("lss 7 2");
 
-    EXPECT_EQ(output, Bool::FALSE);
+    EXPECT_EQ(std::get<bool>(output), false);
 
     output = parseAndRun("lss 2 2");
 
-    EXPECT_EQ(output, Bool::FALSE);
+    EXPECT_EQ(std::get<bool>(output), false);
 }
 
 TEST_F(InterpreterTestFixture, And) {
     auto output = parseAndRun("and true true");
 
-    EXPECT_EQ(output, Bool::TRUE);
+    EXPECT_EQ(std::get<bool>(output), true);
 
     output = parseAndRun("and false true");
 
-    EXPECT_EQ(output, Bool::FALSE);
+    EXPECT_EQ(std::get<bool>(output), false);
 }
 
 TEST_F(InterpreterTestFixture, Or) {
     auto output = parseAndRun("or false true");
 
-    EXPECT_EQ(output, Bool::TRUE);
+    EXPECT_EQ(std::get<bool>(output), true);
 
     output = parseAndRun("or false false");
 
-    EXPECT_EQ(output, Bool::FALSE);
+    EXPECT_EQ(std::get<bool>(output), false);
 }
 
 TEST_F(InterpreterTestFixture, IfThen) {
     auto output = parseAndRun("if (grt 3 4) then true");
 
-    EXPECT_EQ(output, 0);
+    EXPECT_EQ(std::get<int>(output), 0);
 
     output = parseAndRun("if (grt 4 3) then true");
 
-    EXPECT_EQ(output, Bool::TRUE);
+    EXPECT_EQ(std::get<bool>(output), true);
 }
 
 TEST_F(InterpreterTestFixture, Action) {
@@ -415,7 +414,7 @@ TEST_F(InterpreterTestFixture, Move) {
     extra_data_.this_components->getComponent<Movement>()->setVelocity(2.0, 1.0);
 
     auto output = parseAndRun("move this 1.2 5.5");
-    EXPECT_EQ(output, 0);
+    EXPECT_EQ(std::get<int>(output), 0);
 
     auto vel_x = extra_data_.this_components->getComponent<Movement>()->getVelX();
     auto vel_y = extra_data_.this_components->getComponent<Movement>()->getVelY();
@@ -428,7 +427,7 @@ TEST_F(InterpreterTestFixture, Move) {
     extra_data_.this_components->getComponent<Movement>()->setFacingRight(false);
 
     output = parseAndRun("move this 3.1 0.0");
-    EXPECT_EQ(output, 0);
+    EXPECT_EQ(std::get<int>(output), 0);
 
     vel_x = extra_data_.this_components->getComponent<Movement>()->getVelX();
     vel_y = extra_data_.this_components->getComponent<Movement>()->getVelY();
@@ -444,7 +443,7 @@ TEST_F(InterpreterTestFixture, SetVelocity) {
     extra_data_.this_components->getComponent<Movement>()->setVelocity(1.0, -1.0);
 
     auto output = parseAndRun("set_velocity this 1.2 5.5");
-    EXPECT_EQ(output, 0);
+    EXPECT_EQ(std::get<int>(output), 0);
 
     auto vel_x = extra_data_.this_components->getComponent<Movement>()->getVelX();
     auto vel_y = extra_data_.this_components->getComponent<Movement>()->getVelY();
@@ -459,7 +458,7 @@ TEST_F(InterpreterTestFixture, SetPosition) {
     extra_data_.this_components->getComponent<Transform>()->setPosition(1.0, -1.0);
 
     auto output = parseAndRun("set_position this 4 7");
-    EXPECT_EQ(output, 0);
+    EXPECT_EQ(std::get<int>(output), 0);
 
     auto pos_x = extra_data_.this_components->getComponent<Transform>()->getX();
     auto pos_y = extra_data_.this_components->getComponent<Transform>()->getY();
@@ -477,13 +476,13 @@ TEST_F(InterpreterTestFixture, EnableDisableAction) {
     EXPECT_TRUE(isEnabled);
 
     auto output = parseAndRun("disable_action move_left");
-    EXPECT_EQ(output, 0);
+    EXPECT_EQ(std::get<int>(output), 0);
 
     isEnabled = extra_data_.this_components->getComponent<Actions>()->getActionState(Actions::Action::MOVE_LEFT, true);
     EXPECT_FALSE(isEnabled);
 
     output = parseAndRun("enable_action move_left");
-    EXPECT_EQ(output, 0);
+    EXPECT_EQ(std::get<int>(output), 0);
 
     isEnabled = extra_data_.this_components->getComponent<Actions>()->getActionState(Actions::Action::MOVE_LEFT, true);
     EXPECT_TRUE(isEnabled);

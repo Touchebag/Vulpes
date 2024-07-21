@@ -2,6 +2,7 @@
 
 #include "editor/entity_editor/components/scripting_editor.h"
 #include "components/scripting/program.h"
+#include "components/component_store.h"
 
 using entity_editor::ScriptingEditor;
 using scripting::Type;

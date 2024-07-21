@@ -1,6 +1,7 @@
 #pragma once
 
 #include "components/collision/collision.h"
+#include "components/scripting/data_structures.h"
 
 class CollideableSensor : public Collideable {
   public:
@@ -15,7 +16,7 @@ class CollideableSensor : public Collideable {
 
     std::string getName();
 
-    std::shared_ptr<const Collideable> getLastCollideable();
+    int getPenetrationDistance(scripting::CollideableProperty edge);
 
     bool hasTriggered();
 

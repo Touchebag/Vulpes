@@ -4,8 +4,9 @@
 
 #include "nlohmann/json.hpp"
 
-#include "components/scripting/program.h"
 #include "components/physics/constants.h"
+
+class Program;
 
 namespace state_utils {
 

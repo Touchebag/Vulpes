@@ -10,6 +10,7 @@
 #include <imgui_stdlib.h>
 
 #include "components/scripting/program.h"
+#include "components/component_store.h"
 
 #include "utils/log.h"
 

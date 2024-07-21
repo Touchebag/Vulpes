@@ -119,7 +119,6 @@ Operation Parser::parseStatement() {
 
                     oper.arguments.push_back(argument);
                 }
-
             } else if (string_action_map.contains(current_token_->lexeme)) {
                 scripting::InstructionData inst_data;
                 oper.instruction = Instruction::ACTION_LITERAL;

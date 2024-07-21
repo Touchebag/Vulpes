@@ -5,7 +5,6 @@
 #include "utils/file.h"
 #include "utils/common.h"
 
-#include "interpreter.h"
 #include "system/system.h"
 
 Scripting::Scripting(std::weak_ptr<ComponentStore> components) :
@@ -16,23 +15,23 @@ void Scripting::update() {
     if (auto state = getComponent<Stateful>()) {
         frame_timer_++;
 
-        Interpreter::ExtraInputData extra_data;
+        Program::ExtraInputData extra_data;
         extra_data.frame_timer = frame_timer_;
         extra_data.this_components = component_store_.lock();
 
         for (auto& it : state->getScript()) {
-            Interpreter::executeProgram(it, extra_data);
+            it.run(extra_data);
         }
     }
 }
 
-void Scripting::executeProgram(const Program& program) {
-    Interpreter::ExtraInputData extra_data;
+void Scripting::executeProgram(Program& program) {
+    Program::ExtraInputData extra_data;
     extra_data.frame_timer = frame_timer_;
     extra_data.this_components = component_store_.lock();
     extra_data.variables = variables_;
 
-    Interpreter::executeProgram(program, extra_data);
+    program.run(extra_data);
 }
 
 std::shared_ptr<Scripting> Scripting::createFromJson(nlohmann::json j, std::weak_ptr<ComponentStore> components, File file_instance) {

@@ -1,7 +1,7 @@
 #include "system.h"
 
 const std::vector<std::weak_ptr<const Collideable>>& System::IWorldRead::getCollideables(Collideable::CollisionType coll_type) {
-    return System::getInstance().world_->collideables_[static_cast<unsigned long>(coll_type)];
+    return System::getInstance().world_->collideables_.at(coll_type);
 }
 
 util::Vec2i System::IWorldRead::getPlayerPosition() {
