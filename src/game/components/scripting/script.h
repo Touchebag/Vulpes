@@ -6,6 +6,8 @@
 
 #include "program.h"
 
+class ComponentStore;
+
 class Scripting : public Component {
   public:
     explicit Scripting(std::weak_ptr<ComponentStore> components);
@@ -16,7 +18,7 @@ class Scripting : public Component {
     void reloadFromJson(nlohmann::json j, File file_instance = File()) override;
     std::optional<nlohmann::json> outputToJson() override;
 
-    void executeProgram(const Program& program);
+    void executeProgram(Program& program);
 
   private:
     unsigned int frame_timer_ = 0;

@@ -10,6 +10,7 @@
 #include <imgui_stdlib.h>
 
 #include "components/scripting/program.h"
+#include "components/component_store.h"
 
 #include "utils/log.h"
 
@@ -158,45 +159,46 @@ scripting::Type ScriptingEditor::getExpectedType(std::vector<std::string> tokens
 }
 
 std::pair<std::string, std::set<std::string>> ScriptingEditor::getAutoCompletionSuggestions(const std::string& input) {
-    auto tokens = Program::tokenizeString(input);
-    std::string last_token;
-
-    if (!tokens.empty()) {
-        if (scripting::string_instruction_map.count(tokens.back()) < 1) {
-            if (last_token == ")" || last_token == "(") {
-                // Ignore parentheses
-            } else {
-                // Remove last token if partial
-                last_token = tokens.back();
-                tokens.pop_back();
-            }
-        }
-    }
-
-    auto expected_type = getExpectedType(tokens);
-
-    std::set<std::string> suggestions;
-
-    for (auto it : scripting::string_instruction_map) {
-        if (it.second.return_type == expected_type) {
-            // Check if starts with
-            if (it.first.rfind(last_token, 0) == 0) {
-                suggestions.insert(it.first);
-            }
-        }
-    }
-
-    std::string input_without_partial_token;
-    for (auto it = tokens.begin(); it != tokens.end(); it++) {
-        input_without_partial_token += *it;
-
-        // Don't add space et end
-        if (it != tokens.end() - 1) {
-            input_without_partial_token += " ";
-        }
-    }
-
-    return {input_without_partial_token, suggestions};
+    // auto tokens = Program::tokenizeString(input);
+    // std::string last_token;
+    //
+    // if (!tokens.empty()) {
+    //     if (scripting::string_instruction_map.count(tokens.back()) < 1) {
+    //         if (last_token == ")" || last_token == "(") {
+    //             // Ignore parentheses
+    //         } else {
+    //             // Remove last token if partial
+    //             last_token = tokens.back();
+    //             tokens.pop_back();
+    //         }
+    //     }
+    // }
+    //
+    // auto expected_type = getExpectedType(tokens);
+    //
+    // std::set<std::string> suggestions;
+    //
+    // for (auto it : scripting::string_instruction_map) {
+    //     if (it.second.return_type == expected_type) {
+    //         // Check if starts with
+    //         if (it.first.rfind(last_token, 0) == 0) {
+    //             suggestions.insert(it.first);
+    //         }
+    //     }
+    // }
+    //
+    // std::string input_without_partial_token;
+    // for (auto it = tokens.begin(); it != tokens.end(); it++) {
+    //     input_without_partial_token += *it;
+    //
+    //     // Don't add space et end
+    //     if (it != tokens.end() - 1) {
+    //         input_without_partial_token += " ";
+    //     }
+    // }
+    //
+    // return {input_without_partial_token, suggestions};
+    return {{}, {}};
 }
 
 std::string ScriptingEditor::formatProgramString(std::string input) {
@@ -211,18 +213,18 @@ std::string ScriptingEditor::formatProgramString(std::string input) {
             trimmed_string += it;
         }
     }
-
-    auto tokens = Program::tokenizeString(trimmed_string);
-    auto queue = std::deque<std::string>(tokens.begin(), tokens.end());
-
-    output = formatProgramStringRecursive(queue, false);
-
-    // Check if output type checks
-    tokens = Program::tokenizeString(output);
-    if (getExpectedType(tokens) != scripting::Type::NONE) {
-        // If output is partial, append space for next token
-        output.append(" ");
-    }
+    //
+    // auto tokens = Program::tokenizeString(trimmed_string);
+    // auto queue = std::deque<std::string>(tokens.begin(), tokens.end());
+    //
+    // output = formatProgramStringRecursive(queue, false);
+    //
+    // // Check if output type checks
+    // tokens = Program::tokenizeString(output);
+    // if (getExpectedType(tokens) != scripting::Type::NONE) {
+    //     // If output is partial, append space for next token
+    //     output.append(" ");
+    // }
 
     return output;
 }

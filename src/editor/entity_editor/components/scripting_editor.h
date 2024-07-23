@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "components/scripting/instructions.h"
+#include "components/scripting/data_structures.h"
 
 namespace entity_editor {
 

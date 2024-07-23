@@ -2,8 +2,12 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 
-#include "instructions.h"
+#include "data_structures.h"
+#include "parser.h"
+
+class ComponentStore;
 
 class Program {
   public:
@@ -13,20 +17,25 @@ class Program {
         ON_EXIT,
     };
 
+    struct ExtraInputData {
+        std::shared_ptr<ComponentStore> this_components = std::make_shared<ComponentStore>();
+        unsigned int frame_timer = 0;
+        std::shared_ptr<scripting::VariableMap> variables = std::make_shared<scripting::VariableMap>();
+    };
+
     static Program loadProgram(const std::string& str);
-    const std::vector<int> getProgram();
+    scripting::return_types run(ExtraInputData extra_data) const;
 
     const std::string& getString(int id);
     double getFloat(int id);
 
     MetaData getMetaData();
 
-    static std::vector<std::string> tokenizeString(std::string str);
-
   private:
-    scripting::Type translateAndStore(std::vector<std::string> lexed_input);
+    scripting::return_types executeInstruction(scripting::Operation oper, ExtraInputData& extra_data) const;
 
     MetaData meta_data_ = MetaData::NONE;
+    Parser::ParsedAST ast_;
 
     std::vector<int> program_;
 

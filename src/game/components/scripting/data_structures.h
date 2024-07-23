@@ -1,15 +1,38 @@
 #pragma once
 
 #include <unordered_map>
+#include <string>
+#include <variant>
 
 namespace scripting {
 
+enum class TokenType {
+    LEFT_PAREN,
+    RIGHT_PAREN,
+
+    MINUS,
+
+    INTEGER,
+    DECIMAL,
+    STRING,
+
+    IDENTIFIER,
+};
+
+struct Token {
+    TokenType type;
+    std::string lexeme;
+};
+
 enum class Instruction {
+    INVALID,
+
     // Literal values
     INT,
     BOOL,
     STRING,
     FLOAT,
+    ACTION_LITERAL,
 
     // Variables
     GET,
@@ -33,10 +56,9 @@ enum class Instruction {
     POSITION_X,
     POSITION_Y,
 
-    // Collision history
-    COLLISION_HISTORY,
-
     // Collision properties
+    PENETRATION_DISTANCE,
+
     TOP_EDGE,
     BOTTOM_EDGE,
     LEFT_EDGE,
@@ -93,6 +115,8 @@ enum class Type {
     // Typed target
     TARGET,
 
+    ACTION,
+
     COLL_PROP,
 
     // To help with parsing
@@ -122,6 +146,17 @@ struct InstructionData {
     std::vector<Type> args_return_type;
 };
 
+using return_types = std::variant<bool, int, double, std::string>;
+
+struct Operation {
+    Instruction instruction;
+    Type return_type;
+
+    return_types data = 0;
+
+    std::vector<Operation> arguments = {};
+};
+
 static const std::unordered_map<std::string, InstructionData> string_instruction_map = {
     {"get", {Instruction::GET, Type::INT, {Type::STRING}}},
     {"set", {Instruction::SET, Type::VOID, {Type::STRING, Type::INT}}},
@@ -145,7 +180,7 @@ static const std::unordered_map<std::string, InstructionData> string_instruction
     {"position_x", {Instruction::POSITION_X, Type::INT, {Type::TARGET}}},
     {"position_y", {Instruction::POSITION_Y, Type::INT, {Type::TARGET}}},
 
-    {"collision_history", {Instruction::COLLISION_HISTORY, Type::INT, {Type::STRING, Type::INT, Type::COLL_PROP}}},
+    {"penetration_distance", {Instruction::PENETRATION_DISTANCE, Type::INT, {Type::STRING, Type::COLL_PROP}}},
 
     {"collides", {Instruction::COLLIDES, Type::BOOL, {Type::TARGET}}},
     {"flag", {Instruction::FLAG, Type::BOOL, {Type::STRING}}},
@@ -162,14 +197,14 @@ static const std::unordered_map<std::string, InstructionData> string_instruction
     {"if", {Instruction::IF, Type::VOID, {Type::BOOL, Type::THEN, Type::VOID}}},
     {"then", {Instruction::THEN, Type::THEN, {}}},
 
-    {"action", {Instruction::ACTION, Type::VOID, {Type::STRING}}},
+    {"action", {Instruction::ACTION, Type::VOID, {Type::ACTION}}},
 
     {"move", {Instruction::MOVE, Type::VOID, {Type::TARGET, Type::FLOAT, Type::FLOAT}}},
     {"set_velocity", {Instruction::SET_VELOCITY, Type::VOID, {Type::TARGET, Type::FLOAT, Type::FLOAT}}},
     {"set_position", {Instruction::SET_POSITION, Type::VOID, {Type::TARGET, Type::INT, Type::INT}}},
 
-    {"enable_action", {Instruction::ENABLE_ACTION, Type::VOID, {Type::STRING}}},
-    {"disable_action", {Instruction::DISABLE_ACTION, Type::VOID, {Type::STRING}}},
+    {"enable_action", {Instruction::ENABLE_ACTION, Type::VOID, {Type::ACTION}}},
+    {"disable_action", {Instruction::DISABLE_ACTION, Type::VOID, {Type::ACTION}}},
 
     {"add_shader_to_layer", {Instruction::ADD_SHADER_TO_LAYER, Type::VOID, {Type::INT, Type::INT}}},
     {"add_global_shader", {Instruction::ADD_GLOBAL_SHADER, Type::VOID, {Type::INT}}},

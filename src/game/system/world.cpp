@@ -10,6 +10,12 @@ std::vector<std::shared_ptr<BaseEntity>>& World::getWorldObjects() {
     return world_objects_;
 }
 
+World::World() {
+    for (auto i = 0; i < static_cast<int>(Collideable::CollisionType::MAX_NUM); i++) {
+        collideables_.insert({static_cast<Collideable::CollisionType>(i), {}});
+    }
+}
+
 void World::update() {
     auto cutscene = System::getCutscene();
 
@@ -101,7 +107,7 @@ void World::clearWorld() {
     System::getRender()->clearLayers();
 
     for (auto& it : collideables_) {
-        it.clear();
+        it.second.clear();
     }
 
     entrances_.clear();
@@ -379,7 +385,8 @@ void World::addEntity(std::shared_ptr<BaseEntity> entity, std::optional<std::str
 }
 
 void World::addCollideable(std::shared_ptr<Collideable> collideable) {
-    collideables_[static_cast<unsigned long>(collideable->getType())].push_back(collideable);
+    auto type = collideable->getType();
+    collideables_.at(type).push_back(collideable);
 }
 
 void World::removeEntity(std::shared_ptr<BaseEntity> entity) {
@@ -459,9 +466,9 @@ void World::clearDeletedEntities() {
     deleted_objects_.clear();
 
     for (auto& coll_type : collideables_) {
-        for (auto it = coll_type.begin(); it != coll_type.end();) {
+        for (auto it = coll_type.second.begin(); it != coll_type.second.end();) {
             if (it->expired()) {
-                it = coll_type.erase(it);
+                it = coll_type.second.erase(it);
             } else {
                 it++;
             }

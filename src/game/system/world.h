@@ -19,6 +19,8 @@ class World {
   public:
     friend System;
 
+    World();
+
   private:
     // Functions
     std::weak_ptr<Player> getPlayer();
@@ -63,16 +65,16 @@ class World {
     // Used to tell if we are currently iterating through entity list
     bool update_loop_active_ = false;
 
-    std::vector<std::shared_ptr<BaseEntity>> world_objects_;
+    std::vector<std::shared_ptr<BaseEntity>> world_objects_ = {};
     // Temporary storage to add/delete entities simultaneously at frame end
-    std::vector<std::shared_ptr<BaseEntity>> added_objects_;
-    std::vector<std::shared_ptr<BaseEntity>> deleted_objects_;
+    std::vector<std::shared_ptr<BaseEntity>> added_objects_ = {};
+    std::vector<std::shared_ptr<BaseEntity>> deleted_objects_ = {};
 
-    std::array<std::vector<std::weak_ptr<const Collideable>>, static_cast<int>(Collideable::CollisionType::MAX_NUM)> collideables_;
+    std::unordered_map<Collideable::CollisionType, std::vector<std::weak_ptr<const Collideable>>> collideables_ = {};
 
-    std::vector<util::Vec2i> entrances_;
+    std::vector<util::Vec2i> entrances_ = {};
 
-    std::optional<std::pair<std::string, unsigned int>> new_room_;
+    std::optional<std::pair<std::string, unsigned int>> new_room_ = {};
 
     // Loaded template stuff
     std::vector<std::string> template_file_names_;

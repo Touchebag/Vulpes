@@ -1,6 +1,9 @@
 #include "state_handler.h"
 
 #include "components/actions/actions.h"
+#include "components/component_store.h"
+
+#include "components/scripting/program.h"
 
 #include "utils/log.h"
 

@@ -94,15 +94,15 @@
                     "name": "ledge_climb_bottom",
                     "target": "static",
                     "width": 30,
-                    "height": 150,
+                    "height": 100,
                     "offset": {
                         "x": 40,
-                        "y": 0
+                        "y": 50
                     }
                 }
             ],
             "script": [
-                "if (and (not (sensor 'ledge_climb_top')) (sensor 'ledge_climb_bottom')) then (set_position this (position_x this) (sub (collision_history 'ledge_climb_bottom' 0 top_edge) 100))"
+                "if (and (not (sensor 'ledge_climb_top')) (sensor 'ledge_climb_bottom')) then (set_position this (position_x this) (sub (position_y this) (penetration_distance 'ledge_climb_bottom' top_edge)))"
             ],
             "next_states": [
                 {"event": "ledge_climb", "state": "ledge_climb"}

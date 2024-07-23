@@ -6,7 +6,6 @@
 #include <nlohmann/json.hpp>
 
 #include "unpacked_animation.h"
-#include "components/scripting/instructions.h"
 
 namespace entity_editor {
 

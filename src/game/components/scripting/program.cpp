@@ -1,6 +1,6 @@
 #include "program.h"
 
-#include "components/actions/common.h" // For string_action_map
+#include "components/collision/collideables/collideable_sensor.h"
 
 #include "utils/log.h"
 
@@ -8,258 +8,403 @@
 #include <algorithm>
 #include <regex>
 
-namespace {
+#include "lexer.h"
+#include "parser.h"
 
-void checkType(scripting::Type expected, scripting::Type actual) {
-    // Void can return whatever
-    if (expected != scripting::Type::VOID && expected != actual) {
-        std::stringstream error_message;
-        error_message << "type error. Expected " << static_cast<int>(expected) <<
-                         ", got " << static_cast<int>(actual);
-        throw std::invalid_argument(error_message.str());
+#include "components/component_store.h"
+#include "system/system.h"
+
+#define GET_ARG(x) args_retvals.at(x)
+
+#define GET_TARGET(x) \
+    std::shared_ptr<ComponentStore> target; \
+    if (x == static_cast<int>(scripting::Target::PLAYER)) { \
+        if (auto player = System::IWorldModify::getPlayer().lock()) { \
+            target = player->components_; \
+        } else { \
+            LOGE("Scripting: Failed to get player"); \
+            exit(EXIT_FAILURE);\
+        } \
+    } else if (x == static_cast<int>(scripting::Target::THIS)) { \
+        target = extra_data.this_components; \
+    } else { \
+        LOGE("Scripting: Invalid target"); \
+        exit(EXIT_FAILURE);\
     }
-}
-
-scripting::InstructionData parseInstruction(std::string instruction) {
-    scripting::InstructionData instruction_data;
-
-    // Should be able to parse literal int without keyword
-    try {
-        std::unique_ptr<size_t> n = std::make_unique<size_t>();
-
-        // Try read int
-        (void)std::stoi(instruction, n.get());
-        // Check if entire string could be parsed as int
-        if (*n == instruction.length()) {
-            instruction_data = {scripting::Instruction::INT, scripting::Type::INT, {}};
-            return instruction_data;
-        }
-
-        // Try read double
-        (void)std::stod(instruction, n.get());
-        if (*n == instruction.length()) {
-            instruction_data = {scripting::Instruction::FLOAT, scripting::Type::FLOAT, {}};
-            return instruction_data;
-        }
-    } catch (std::invalid_argument&) {
-        // If not int, just continue parsing as normal
-    }
-
-    if (instruction.front() == '\'') {
-        if (instruction.back() != '\'') {
-            throw std::invalid_argument("Program: Parse error, unmatched '");
-        }
-
-        instruction_data = {scripting::Instruction::STRING, scripting::Type::STRING, {}};
-
-        return instruction_data;
-    }
-
-    if (instruction == "true" || instruction == "false") {
-        instruction_data = {scripting::Instruction::BOOL, scripting::Type::BOOL, {}};
-
-        return instruction_data;
-    }
-
-    try {
-        instruction_data = scripting::string_instruction_map.at(instruction);
-    } catch (std::out_of_range& e) {
-        throw std::invalid_argument("Program: Unknown instruction " + instruction);
-    }
-
-    return instruction_data;
-}
-
-// Convenience function to allow easier error handling of argument strings
-scripting::InstructionData parseInstruction(std::vector<std::string> instructions) {
-    if (instructions.empty()) {
-        throw std::invalid_argument("Program: Instruction list is empty");
-    }
-
-    return parseInstruction(instructions[0]);
-}
-
-std::vector<std::vector<std::string>> extractArguments(std::vector<std::string> str) {
-    if (str.empty()) {
-        return {};
-    }
-
-    std::vector<std::vector<std::string>> ret_vec;
-    // Skip initial instruction
-    auto start_it = str.begin() + 1;
-    int paren_count = 0;
-
-    for (auto it = start_it; it != str.end(); it++) {
-        if (*it == "(") {
-            if (paren_count == 0) {
-                start_it = it;
-            }
-            paren_count++;
-        } else if (*it == ")") {
-            paren_count--;
-            if (paren_count == 0) {
-                ret_vec.push_back({start_it + 1, it});
-            }
-        } else {
-            if (paren_count == 0) {
-                ret_vec.push_back({*it});
-            }
-        }
-    }
-
-    if (paren_count != 0) {
-        throw std::invalid_argument("Program: condition parse error, unmatched parentheses");
-    }
-
-    return ret_vec;
-}
-
-int parseAction(const std::string& action_string) {
-    try {
-        return static_cast<int>(string_action_map.at(action_string));
-    } catch (std::out_of_range& e) {
-        LOGE("Program, invalid action %s", action_string.c_str());
-        throw;
-    }
-}
-
-} // namespace
 
 Program Program::loadProgram(const std::string& program_string) {
     Program program_out;
 
-    auto lexed_program = tokenizeString(program_string);
+    Lexer lexer{};
+    auto lexed_program = lexer.tokenizeProgram(program_string);
 
-    if (lexed_program[0] == "on_enter") {
+    Parser parser{};
+    auto ast = parser.generateAST(lexed_program);
+
+    if (ast.on_enter) {
         program_out.meta_data_ = MetaData::ON_ENTER;
-        lexed_program.erase(lexed_program.begin());
-    } else if (lexed_program[0] == "on_exit") {
+    } else if (ast.on_exit) {
         program_out.meta_data_ = MetaData::ON_EXIT;
-        lexed_program.erase(lexed_program.begin());
     }
 
-    program_out.translateAndStore(lexed_program);
+    program_out.ast_ = ast;
 
     return program_out;
 }
 
-scripting::Type Program::translateAndStore(std::vector<std::string> lexed_input) {
-    // TODO Check length
-    auto instruction_data = parseInstruction(lexed_input[0]);
-    auto arguments = extractArguments(lexed_input);
+scripting::return_types Program::run(Program::ExtraInputData extra_data) const {
+    return executeInstruction(ast_.operation, extra_data);
+}
 
-    // Check correct number of arguments
-    if (arguments.size() != instruction_data.args_return_type.size()) {
-        std::stringstream error_message;
-        error_message << "Instruction: " << lexed_input[0] <<
-                         " incorrect number of arguments. Expected " << instruction_data.args_return_type.size() <<
-                         ", got " << arguments.size();
-        throw std::invalid_argument(error_message.str());
+scripting::return_types Program::executeInstruction(scripting::Operation oper, Program::ExtraInputData& extra_data) const {
+    scripting::return_types result = 12345;
+
+    std::vector<scripting::return_types> args_retvals = {};
+    if (oper.instruction == scripting::Instruction::IF) {
+        // Only evaluate first argument to drop early if false
+        args_retvals.push_back(executeInstruction(oper.arguments.at(0), extra_data));
+    } else {
+        for (auto i : oper.arguments) {
+            // Evaluate arguments
+            args_retvals.push_back(executeInstruction(i, extra_data));
+        }
     }
 
-    // Need to evaluate arguments first
-    switch (instruction_data.instruction) {
-        case scripting::Instruction::INT:
-            program_.push_back(static_cast<int>(scripting::Instruction::INT));
-            program_.push_back(std::stoi(lexed_input[0]));
+    switch (oper.instruction) {
+        case (scripting::Instruction::INT):
+            result = oper.data;
             break;
-        case scripting::Instruction::BOOL:
-            program_.push_back(static_cast<int>(scripting::Instruction::BOOL));
-
-            if (lexed_input[0] == "true") {
-                program_.push_back(scripting::Bool::TRUE);
-            } else {
-                program_.push_back(scripting::Bool::FALSE);
-            }
-
+        case (scripting::Instruction::BOOL):
+            result = oper.data;
             break;
-        case scripting::Instruction::STRING:
-            program_.push_back(static_cast<int>(scripting::Instruction::STRING));
-
-            // Remove surrounding quotation marks
-            strings_.insert({string_id_counter_, std::string(lexed_input[0].begin() + 1, lexed_input[0].end() - 1)});
-            program_.push_back(string_id_counter_);
-            string_id_counter_++;
+        case (scripting::Instruction::FLOAT):
+            result = oper.data;
             break;
-        case scripting::Instruction::FLOAT:
-            program_.push_back(static_cast<int>(scripting::Instruction::FLOAT));
-
-            floats_.insert({float_id_counter_, std::stod(lexed_input[0])});
-            program_.push_back(float_id_counter_);
-            float_id_counter_++;
+        case (scripting::Instruction::STRING):
+            result = oper.data;
             break;
-        case scripting::Instruction::ACTION:
-            program_.push_back(static_cast<int>(scripting::Instruction::ACTION));
-            program_.push_back(parseAction(lexed_input[1]));
+        case (scripting::Instruction::PLAYER):
+            result = static_cast<int>(scripting::Target::PLAYER);
             break;
-        case scripting::Instruction::ENABLE_ACTION:
-            program_.push_back(static_cast<int>(scripting::Instruction::ENABLE_ACTION));
-            program_.push_back(parseAction(lexed_input[1]));
+        case (scripting::Instruction::THIS):
+            result = static_cast<int>(scripting::Target::THIS);
             break;
-        case scripting::Instruction::DISABLE_ACTION:
-            program_.push_back(static_cast<int>(scripting::Instruction::DISABLE_ACTION));
-            program_.push_back(parseAction(lexed_input[1]));
+        case (scripting::Instruction::TOP_EDGE):
+            result = static_cast<int>(scripting::CollideableProperty::TOP_EDGE);
             break;
-        case scripting::Instruction::IF:
+        case (scripting::Instruction::BOTTOM_EDGE):
+            result = static_cast<int>(scripting::CollideableProperty::BOTTOM_EDGE);
+            break;
+        case (scripting::Instruction::LEFT_EDGE):
+            result = static_cast<int>(scripting::CollideableProperty::LEFT_EDGE);
+            break;
+        case (scripting::Instruction::RIGHT_EDGE):
+            result = static_cast<int>(scripting::CollideableProperty::RIGHT_EDGE);
+            break;
+        case (scripting::Instruction::ACTION_LITERAL):
+            result = oper.data;
+            break;
+        case (scripting::Instruction::SET):
         {
-            // Push condition
-            auto condition = arguments[0];
-            auto parsed_condition = parseInstruction(condition);
+            auto var_name = std::get<std::string>(GET_ARG(0));
+            extra_data.variables->insert_or_assign(var_name, std::get<int>(GET_ARG(1)));
 
-            checkType(instruction_data.args_return_type[0], parsed_condition.return_type);
+            result = 0;
+            break;
+        }
+        case scripting::Instruction::GET:
+        {
+            auto var_name = std::get<std::string>(GET_ARG(0));
+            auto value = extra_data.variables->at(var_name);
 
-            translateAndStore(condition);
+            result = value;
+            break;
+        }
+        case (scripting::Instruction::INC_VAR):
+        {
+            auto var_name = std::get<std::string>(GET_ARG(0));
+            auto value = extra_data.variables->at(var_name);
+            extra_data.variables->insert_or_assign(var_name, ++value);
 
-            // Push IF statement
-            program_.push_back(static_cast<int>(scripting::Instruction::IF));
+            result = value;
+            break;
+        }
+        case (scripting::Instruction::DEC_VAR):
+        {
+            auto var_name = std::get<std::string>(GET_ARG(0));
+            auto value = extra_data.variables->at(var_name);
+            extra_data.variables->insert_or_assign(var_name, --value);
 
-            // Ignore THEN
+            result = value;
+            break;
+        }
+        case (scripting::Instruction::FRAME_TIMER):
+        {
+            auto expected_frame = std::get<int>(GET_ARG(0));
 
-            // Push body
-            auto body = arguments[2];
-            auto parsed_body = parseInstruction(body);
+            result = (expected_frame <= static_cast<int>(extra_data.frame_timer));
+            break;
+        }
+        case (scripting::Instruction::ADD):
+            result = (std::get<int>(GET_ARG(0)) + std::get<int>(GET_ARG(1)));
+            break;
+        case (scripting::Instruction::SUB):
+            result = (std::get<int>(GET_ARG(0)) - std::get<int>(GET_ARG(1)));
+            break;
+        case (scripting::Instruction::POSITION_X):
+        {
+            GET_TARGET(std::get<int>(GET_ARG(0)));
+            if (target) {
+                if (auto trans = target->getComponent<Transform>()) {
+                    result = trans->getX();
+                    break;
+                } else {
+                    LOGW("SCRIPT POSITION_X: Missing Transform component");
+                }
+            }
+            break;
+        }
+        case (scripting::Instruction::POSITION_Y):
+        {
+            GET_TARGET(std::get<int>(GET_ARG(0)));
+            if (target) {
+                if (auto trans = target->getComponent<Transform>()) {
+                    result = trans->getY();
+                    break;
+                } else {
+                    LOGW("SCRIPT POSITION_Y: Missing Transform component");
+                }
+            }
+            break;
+        }
+        case scripting::Instruction::SENSOR:
+        {
+            auto sensor = std::get<std::string>(GET_ARG(0));
 
-            checkType(instruction_data.args_return_type[2], parsed_body.return_type);
+            if (auto coll = extra_data.this_components->getComponent<Collision>()) {
+                result = coll->isSensorTriggered(sensor);
+            } else {
+                LOGW("SCRIPT SENSOR: Missing Collision component");
+                result = false;
+            }
+            break;
+        }
+        case scripting::Instruction::PENETRATION_DISTANCE:
+        {
+            auto sensor_name = std::get<std::string>(GET_ARG(0));
+            auto target_prop = std::get<int>(GET_ARG(1));
 
-            translateAndStore(body);
+            if (auto coll = extra_data.this_components->getComponent<Collision>()) {
+                if (std::shared_ptr<CollideableSensor> sens = coll->getSensor(sensor_name)) {
+                    result = sens->getPenetrationDistance(static_cast<scripting::CollideableProperty>(target_prop));
+                } else {
+                    throw std::invalid_argument(std::string("SCRIPT PENETRATION_DISTANCE: Sensor \"") + sensor_name + "\" not found");
+                }
+            }
 
             break;
         }
-        default:
-            // Push arguments
-            for (unsigned long long i = 0; i < arguments.size(); i++) {
-                auto arg = arguments[i];
-                auto parsed_arg = parseInstruction(arg);
-
-                checkType(instruction_data.args_return_type[i], parsed_arg.return_type);
-
-                translateAndStore(arg);
+        case scripting::Instruction::COLLIDES:
+            if (std::get<int>(GET_ARG(0)) == static_cast<int>(scripting::Target::PLAYER)) {
+                if (auto this_coll = extra_data.this_components->getComponent<Collision>()) {
+                    if (auto player = System::IWorldModify::getPlayer().lock()) {
+                        if (this_coll->collides(player->components_->getComponent<Collision>())) {
+                            result = true;
+                        } else {
+                            result = false;
+                        }
+                    } else {
+                        result = false;
+                    }
+                } else {
+                    LOGW("SCRIPT COLLIDES: Missing Collision component");
+                    result = false;
+                }
+            } else {
+                result = false;
+            }
+            break;
+        case scripting::Instruction::FLAG:
+            result = System::getEnvironment()->getFlag(std::get<std::string>(GET_ARG(0)));
+            break;
+        case scripting::Instruction::ANIMATION_LOOPED:
+            if (auto anim = extra_data.this_components->getComponent<Animation>()) {
+                result = anim->hasAnimationLooped();
+            } else {
+                LOGW("SCRIPT ANIMATION_LOOPED: Missing Animation component");
+                result = false;
+            }
+            break;
+        case scripting::Instruction::GRT:
+            result = std::get<int>(GET_ARG(0)) > std::get<int>(GET_ARG(1));
+            break;
+        case scripting::Instruction::LSS:
+            result = std::get<int>(GET_ARG(0)) < std::get<int>(GET_ARG(1));
+            break;
+        case scripting::Instruction::NOT:
+            result = !std::get<bool>(GET_ARG(0));
+            break;
+        case scripting::Instruction::AND:
+            result = std::get<bool>(GET_ARG(0)) && std::get<bool>(GET_ARG(1));
+            break;
+        case scripting::Instruction::OR:
+            result = std::get<bool>(GET_ARG(0)) || std::get<bool>(GET_ARG(1));
+            break;
+        case scripting::Instruction::IF:
+            // If condition is true, evalute second argument
+            if (std::get<bool>(GET_ARG(0))) {
+                // Skip "then"
+                result = executeInstruction(oper.arguments.at(2), extra_data);
+            } else {
+                result = 0;
             }
 
-            // Push original operation
-            program_.push_back(static_cast<int>(instruction_data.instruction));
+            break;
+        case scripting::Instruction::THEN:
+            // NOP
+            break;
+        case scripting::Instruction::ACTION:
+            if (auto act = extra_data.this_components->getComponent<Actions>()) {
+                auto action = static_cast<Actions::Action>(std::get<int>(GET_ARG(0)));
+                act->addAction(action);
+            } else {
+                LOGW("SCRIPT ACTION: Missing Actions component");
+            }
 
+            result = 0;
+            break;
+        case scripting::Instruction::ADD_CAMERA_TRAUMA:
+            System::getCamera()->addTrauma(std::get<double>(GET_ARG(0)));
+            result = 0;
+            break;
+        case scripting::Instruction::MOVE:
+        {
+            auto vel_x = std::get<double>(GET_ARG(1));
+            auto vel_y = std::get<double>(GET_ARG(2));
+            GET_TARGET(std::get<int>(GET_ARG(0)));
+
+            if (target) {
+                if (auto move = target->getComponent<Movement>()) {
+                    // Adjust to facing direction
+                    vel_x = vel_x * (move->isFacingRight() ? 1.0 : -1.0);
+                    move->setVelocity(move->getVelX() + vel_x, move->getVelY() + vel_y);
+                } else {
+                    LOGW("SCRIPT MOVE: Missing Movement component");
+                }
+            }
+
+            result = 0;
+            break;
+        }
+        case scripting::Instruction::SET_VELOCITY:
+        {
+            auto vel_x = std::get<double>(GET_ARG(1));
+            auto vel_y = std::get<double>(GET_ARG(2));
+            GET_TARGET(std::get<int>(GET_ARG(0)));
+
+            if (target) {
+                if (auto move = target->getComponent<Movement>()) {
+                    move->setVelocity(vel_x, vel_y);
+                } else {
+                    LOGW("SCRIPT SET_VELOCITY: Missing Movement component");
+                }
+            }
+
+            result = 0;
+            break;
+        }
+        case scripting::Instruction::SET_POSITION:
+        {
+            auto pos_x = std::get<int>(GET_ARG(1));
+            auto pos_y = std::get<int>(GET_ARG(2));
+            GET_TARGET(std::get<int>(GET_ARG(0)));
+
+            if (target) {
+                if (auto trans = target->getComponent<Transform>()) {
+                    trans->setPosition(pos_x, pos_y);
+                } else {
+                    LOGW("SCRIPT SET_POSITION: Missing Transform component");
+                }
+            }
+
+            result = 0;
+            break;
+        }
+        case scripting::Instruction::ENABLE_ACTION:
+            if (auto action = extra_data.this_components->getComponent<Actions>()) {
+                action->enableAction(static_cast<Actions::Action>(std::get<int>(GET_ARG(0))), true);
+            } else {
+                LOGW("SCRIPT ENABLE_ACTION: Missing Actions component");
+            }
+
+            result = 0;
+            break;
+        case scripting::Instruction::DISABLE_ACTION:
+            if (auto action = extra_data.this_components->getComponent<Actions>()) {
+                action->enableAction(static_cast<Actions::Action>(std::get<int>(GET_ARG(0))), false);
+            } else {
+                LOGW("SCRIPT DISABLE_ACTION: Missing Actions component");
+            }
+
+            result = 0;
+            break;
+        case scripting::Instruction::ADD_SHADER_TO_LAYER:
+            if (auto rndr = extra_data.this_components->getComponent<Rendering>()) {
+                int shader_id = std::get<int>(GET_ARG(0)) - 1;
+                int layer = std::get<int>(GET_ARG(1));
+
+                auto shaders = rndr->getShaders();
+
+                // If 0 or negative, add all
+                if (shader_id < 0) {
+                    for (auto shader : shaders) {
+                        System::getRender()->addShader(shader, layer);
+                    }
+                } else {
+                    auto shader_index = static_cast<unsigned long long>(shader_id);
+                    if (shaders.size() > shader_index) {
+                        System::getRender()->addShader(shaders.at(shader_index), layer);
+                    } else {
+                        LOGW("SCRIPT ADD_SHADER_TO_LAYER: Unknown shader id %i", shader_id);
+                    }
+                }
+            } else {
+                LOGW("SCRIPT ADD_SHADER_TO_LAYER: Missing Rendering component");
+            }
+
+            result = 0;
+            break;
+        case scripting::Instruction::ADD_GLOBAL_SHADER:
+            if (auto rndr = extra_data.this_components->getComponent<Rendering>()) {
+                int shader_id = std::get<int>(GET_ARG(0)) - 1;
+
+                auto shaders = rndr->getShaders();
+
+                // If 0 or negative, add all
+                if (shader_id < 0) {
+                    for (auto shader : shaders) {
+                        System::getRender()->addGlobalShader(shader);
+                    }
+                } else {
+                    auto shader_index = static_cast<unsigned long long>(shader_id);
+                    if (shaders.size() > shader_index) {
+                        System::getRender()->addGlobalShader(shaders.at(shader_index));
+                    } else {
+                        LOGW("SCRIPT ADD_GLOBAL_SHADER: Unknown shader id %i", shader_id);
+                    }
+                }
+            } else {
+                LOGW("SCRIPT ADD_GLOBAL_SHADER: Missing Rendering component");
+            }
+
+            result = 0;
+            break;
+        case scripting::Instruction::INVALID:
+            throw std::invalid_argument("Invalid instruction");
             break;
     }
 
-    return instruction_data.return_type;
-}
-
-std::vector<std::string> Program::tokenizeString(std::string str) {
-    std::vector<std::string> ret_vec;
-    const std::regex re("[A-z0-9\\._'\\-]+|\\(|\\)");
-
-    std::smatch sm;
-    while (std::regex_search(str, sm, re)) {
-        ret_vec.push_back(sm.str());
-        str = sm.suffix();
-    }
-
-    return ret_vec;
-}
-
-const std::vector<int> Program::getProgram() {
-    return program_;
+    return result;
 }
 
 const std::string& Program::getString(int id) {
