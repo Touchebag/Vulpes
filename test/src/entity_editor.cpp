@@ -7,20 +7,20 @@
 using entity_editor::ScriptingEditor;
 using scripting::Type;
 
-namespace {
-
-std::string printSet(std::set<std::string>& input) {
-    std::string output;
-
-    for (auto& it : input) {
-        output += (it);
-        output += (" ");
-    }
-
-    return output;
-}
-
-} // namespace
+// namespace {
+//
+// std::string printSet(std::set<std::string>& input) {
+//     std::string output;
+//
+//     for (auto& it : input) {
+//         output += (it);
+//         output += (" ");
+//     }
+//
+//     return output;
+// }
+//
+// } // namespace
 
 // TEST(TestScriptingEditor, TestVoidType) {
 //     // Program must start with void

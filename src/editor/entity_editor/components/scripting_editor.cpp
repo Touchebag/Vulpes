@@ -158,7 +158,7 @@ scripting::Type ScriptingEditor::getExpectedType(std::vector<std::string> tokens
     return type_stack.top();
 }
 
-std::pair<std::string, std::set<std::string>> ScriptingEditor::getAutoCompletionSuggestions(const std::string& input) {
+std::pair<std::string, std::set<std::string>> ScriptingEditor::getAutoCompletionSuggestions(const std::string& /* input */) {
     // auto tokens = Program::tokenizeString(input);
     // std::string last_token;
     //
@@ -280,7 +280,7 @@ void ScriptingEditor::drawMenu(std::vector<std::string>& script) {
 
                     ImGui::BeginTooltip();
                     for (auto it : completion_values_) {
-                        ImGui::Text(it.c_str());
+                        ImGui::Text("%s", it.c_str());
                     }
                     ImGui::EndTooltip();
                 }

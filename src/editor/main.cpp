@@ -23,7 +23,9 @@ int main(int argc, const char** argv) {
 
     window.setKeyRepeatEnabled(false);
 
-    ImGui::SFML::Init(window);
+    if (!ImGui::SFML::Init(window)) {
+        throw std::runtime_error("Failed to initialise ImGui, exiting");
+    }
 
     std::string level_file;
     if (argc > 1) {
