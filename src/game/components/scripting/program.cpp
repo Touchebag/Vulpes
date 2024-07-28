@@ -273,6 +273,24 @@ scripting::return_types Program::executeInstruction(scripting::Operation oper, P
 
             result = 0;
             break;
+        case scripting::Instruction::SUB_ACTION:
+            if (auto sub = extra_data.this_components->getComponent<Subentity>()) {
+                auto tag = std::get<std::string>(GET_ARG(0));
+
+                if (auto ent = sub->getEntity(tag)) {
+                    if (auto act = ent->getComponent<Actions>()) {
+                        act->addAction(static_cast<Actions::Action>(std::get<int>(GET_ARG(1))));
+                    } else {
+                        LOGW("SCRIPT SUB_ACTION: Missing Subentity Action component");
+                    }
+                } else {
+                    LOGW("SCRIPT SUB_ACTION: Could not find Subentity with tag %s", tag.c_str());
+                }
+            } else {
+                LOGW("SCRIPT SUB_ACTION: Missing Subentity component");
+            }
+
+            break;
         case scripting::Instruction::ADD_CAMERA_TRAUMA:
             System::getCamera()->addTrauma(std::get<double>(GET_ARG(0)));
             result = 0;

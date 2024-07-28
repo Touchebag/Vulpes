@@ -38,10 +38,6 @@
             {
                 "entity": "attack",
                 "tag": "attack"
-            },
-            {
-                "entity": "attack",
-                "tag": "shot"
             }
         ]
     },

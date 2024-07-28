@@ -310,14 +310,10 @@
             "animation": "dashing"
         },
         "attack": {
-            "properties": {
-                "movement_locked_x": true,
-                "movement_locked_y": true
-            },
             "frame_timer": 0,
-            "spawn_entity": {
-                "Entity": "attack"
-            },
+            "script": [
+                "on_enter sub_action 'attack' ai1"
+            ],
             "next_states": [
                 {"event": "damaged", "state": "taking_damage"},
                 {"event": "frame_timeout", "state": "attack_end_lag"},
@@ -344,12 +340,9 @@
                 "movement_locked_y": true
             },
             "frame_timer": 0,
-            "spawn_entity": {
-                "Entity": "attack",
-                "Movement": {
-                    "x_speed": 20
-                }
-            },
+            "script": [
+                "on_enter sub_action 'shot' ai1"
+            ],
             "next_states": [
                 {"event": "damaged", "state": "taking_damage"},
                 {"event": "frame_timeout", "state": "shoot_end_lag"},

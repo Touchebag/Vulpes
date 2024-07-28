@@ -17,6 +17,7 @@ class Subentity : public Component {
     std::optional<nlohmann::json> outputToJson() override;
 
     void addEntity(std::shared_ptr<BaseEntity> entity);
+    std::shared_ptr<BaseEntity> getEntity(std::string tag);
 
   private:
     void set_position();

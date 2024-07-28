@@ -18,6 +18,14 @@ void Subentity::addEntity(std::shared_ptr<BaseEntity> entity) {
     set_position();
 }
 
+std::shared_ptr<BaseEntity> Subentity::getEntity(std::string tag) {
+    try {
+        return entities_.at(tag);
+    } catch (std::out_of_range& e) {
+        return {};
+    }
+}
+
 void Subentity::update() {
     for (auto& [tag, entity] : entities_) {
         entity->update();

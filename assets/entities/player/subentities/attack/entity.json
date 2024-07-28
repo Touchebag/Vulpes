@@ -1,29 +1,7 @@
 {
     "Actions": null,
     "Scripting": null,
-    "Animation": {
-        "frame_list": [
-            "Attack1_1",
-            "Attack1_1",
-            "Attack1_1",
-            "Attack1_1",
-            "Attack1_2",
-            "Attack1_2",
-            "Attack1_2",
-            "Attack1_2",
-            "Attack1_3",
-            "Attack1_3",
-            "Attack1_3",
-            "Attack1_4",
-            "Attack1_4",
-            "Attack1_4",
-            "Attack1_5",
-            "Attack1_5",
-            "Attack1_6",
-            "Attack1_7",
-            "Attack1_8"
-        ]
-    },
+    "Animation": null,
     "Collision": {
         "type": "hitbox",
         "teams": [

@@ -1,0 +1,103 @@
+{
+    "attack": {
+        "frame_list": [
+            "Attack1_1",
+            "Attack1_1",
+            "Attack1_1",
+            "Attack1_1",
+            "Attack1_2",
+            "Attack1_2",
+            "Attack1_2",
+            "Attack1_2",
+            "Attack1_3",
+            "Attack1_3",
+            "Attack1_3",
+            "Attack1_4",
+            "Attack1_4",
+            "Attack1_4",
+            "Attack1_5",
+            "Attack1_5",
+            "Attack1_6",
+            "Attack1_7",
+            "Attack1_8"
+        ]
+    },
+    "wobbling": {
+        "frame_list": [
+            "Attack1_1",
+            "Attack1_1",
+            "Attack1_1",
+            "Attack1_1",
+            "Attack1_1",
+            "Attack1_1",
+            "Attack1_1",
+            "Attack1_1",
+            "Attack1_1",
+            "Attack1_1",
+            "Attack1_1",
+            "Attack1_1"
+        ],
+        "meta_data": [
+            {
+                "frame": 0,
+                "x_scale": 1.0,
+                "y_scale": 1.0
+            },
+            {
+                "frame": 1,
+                "x_scale": 1.25,
+                "y_scale": 0.9
+            },
+            {
+                "frame": 2,
+                "x_scale": 1.5,
+                "y_scale": 0.8
+            },
+            {
+                "frame": 3,
+                "x_scale": 1.75,
+                "y_scale": 0.6
+            },
+            {
+                "frame": 4,
+                "x_scale": 1.5,
+                "y_scale": 0.8
+            },
+            {
+                "frame": 5,
+                "x_scale": 1.25,
+                "y_scale": 0.9
+            },
+            {
+                "frame": 6,
+                "x_scale": 1.0,
+                "y_scale": 0.0
+            },
+            {
+                "frame": 7,
+                "x_scale": 0.9,
+                "y_scale": 1.25
+            },
+            {
+                "frame": 8,
+                "x_scale": 0.8,
+                "y_scale": 1.5
+            },
+            {
+                "frame": 9,
+                "x_scale": 0.6,
+                "y_scale": 1.75
+            },
+            {
+                "frame": 10,
+                "x_scale": 0.8,
+                "y_scale": 1.5
+            },
+            {
+                "frame": 11,
+                "x_scale": 0.9,
+                "y_scale": 1.25
+            }
+        ]
+    }
+}

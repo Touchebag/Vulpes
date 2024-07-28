@@ -1,8 +1,21 @@
 {
     "states": {
         "main": {
-            "script": [
-                "if animation_looped then (action die)"
+            "animation": "attack",
+            "next_states": [
+                {"event": "start", "state": "attack"}
+            ]
+        },
+        "attack": {
+            "animation": "attack",
+            "next_states": [
+                {"event": "action_ai1", "state": "test"}
+            ]
+        },
+        "test": {
+            "animation": "attack",
+            "next_states": [
+                {"event": "action_ai1", "state": "attack"}
             ]
         }
     }
