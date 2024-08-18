@@ -2,9 +2,13 @@
     "Actions": null,
     "Scripting": null,
     "Collision": {
-        "height": 50,
-        "type": "collectible",
-        "width": 50
+        "collideables": [
+            {
+                "height": 50,
+                "type": "collectible",
+                "width": 50
+            }
+        ]
     },
     "Death": null,
     "Rendering": {

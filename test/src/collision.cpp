@@ -28,9 +28,13 @@ class DynamicCollisionTestFixture : public ::testing::Test {
     },
     "Movement": null,
     "Collision": {
-        "type": "static",
-        "height": 50,
-        "width": 50
+        "collideables": [
+            {
+                "type": "static",
+                "height": 50,
+                "width": 50
+            }
+        ]
     }
 }
         )--";
@@ -133,12 +137,16 @@ TEST_F(DynamicCollisionTestFixture, CollisionSemiSolidOpenTop) {
         "pos_y": 0
     },
     "Collision": {
-        "type": "static",
-        "open_sides": [
-            "top"
-        ],
-        "height": 50,
-        "width": 50
+        "collideables": [
+            {
+                "type": "static",
+                "open_sides": [
+                    "top"
+                ],
+                "height": 50,
+                "width": 50
+            }
+        ]
     }
 }
         )--";
@@ -198,12 +206,16 @@ TEST_F(DynamicCollisionTestFixture, CollisionSemiSolidOpenBottom) {
         "pos_y": 0
     },
     "Collision": {
-        "type": "static",
-        "open_sides": [
-            "bottom"
-        ],
-        "height": 50,
-        "width": 50
+        "collideables": [
+            {
+                "type": "static",
+                "open_sides": [
+                    "bottom"
+                ],
+                "height": 50,
+                "width": 50
+            }
+        ]
     }
 }
         )--";
@@ -263,12 +275,16 @@ TEST_F(DynamicCollisionTestFixture, CollisionSemiSolidOpenLeft) {
         "pos_y": 0
     },
     "Collision": {
-        "type": "static",
-        "open_sides": [
-            "left"
-        ],
-        "height": 50,
-        "width": 50
+        "collideables": [
+            {
+                "type": "static",
+                "open_sides": [
+                    "left"
+                ],
+                "height": 50,
+                "width": 50
+            }
+        ]
     }
 }
         )--";
@@ -329,12 +345,16 @@ TEST_F(DynamicCollisionTestFixture, CollisionSemiSolidOpenRight) {
         "pos_y": 0
     },
     "Collision": {
-        "type": "static",
-        "open_sides": [
-            "right"
-        ],
-        "height": 50,
-        "width": 50
+        "collideables": [
+            {
+                "type": "static",
+                "open_sides": [
+                    "right"
+                ],
+                "height": 50,
+                "width": 50
+            }
+        ]
     }
 }
         )--";
@@ -388,9 +408,13 @@ TEST_F(DynamicCollisionTestFixture, MoveDiagonalStuckOnCorner) {
     std::string entity_json = R"--(
 {
     "Collision": {
-        "type": "static",
-        "height": 20,
-        "width": 20
+        "collideables": [
+            {
+                "type": "static",
+                "height": 20,
+                "width": 20
+            }
+        ]
     },
     "Transform": {
         "pos_x": 20,
@@ -405,9 +429,13 @@ TEST_F(DynamicCollisionTestFixture, MoveDiagonalStuckOnCorner) {
     entity_json = R"--(
 {
     "Collision": {
-        "type": "static",
-        "height": 10,
-        "width": 10
+        "collideables": [
+            {
+                "type": "static",
+                "height": 10,
+                "width": 10
+            }
+        ]
     },
     "Movement": null,
     "Transform": {
@@ -433,9 +461,13 @@ TEST_F(DynamicCollisionTestFixture, TunnelingOneDirection) {
     std::string entity_json = R"--(
 {
     "Collision": {
-        "type": "static",
-        "height": 20,
-        "width": 10
+        "collideables": [
+            {
+                "type": "static",
+                "height": 20,
+                "width": 10
+            }
+        ]
     },
     "Transform": {
         "pos_x": 15,
@@ -450,9 +482,13 @@ TEST_F(DynamicCollisionTestFixture, TunnelingOneDirection) {
     entity_json = R"--(
 {
     "Collision": {
-        "type": "static",
-        "height": 10,
-        "width": 10
+        "collideables": [
+            {
+                "type": "static",
+                "height": 10,
+                "width": 10
+            }
+        ]
     },
     "Movement": null,
     "Transform": {
@@ -478,9 +514,13 @@ TEST_F(DynamicCollisionTestFixture, TunnelingStuckInCorner) {
     std::string entity_json = R"--(
 {
     "Collision": {
-        "type": "static",
-        "height": 20,
-        "width": 10
+        "collideables": [
+            {
+                "type": "static",
+                "height": 20,
+                "width": 10
+            }
+        ]
     },
     "Transform": {
         "pos_x": 15,
@@ -495,9 +535,13 @@ TEST_F(DynamicCollisionTestFixture, TunnelingStuckInCorner) {
     entity_json = R"--(
 {
     "Collision": {
-        "type": "static",
-        "height": 10,
-        "width": 20
+        "collideables": [
+            {
+                "type": "static",
+                "height": 10,
+                "width": 20
+            }
+        ]
     },
     "Transform": {
         "pos_x": 0,
@@ -512,9 +556,13 @@ TEST_F(DynamicCollisionTestFixture, TunnelingStuckInCorner) {
     entity_json = R"--(
 {
     "Collision": {
-        "type": "static",
-        "height": 10,
-        "width": 10
+        "collideables": [
+            {
+                "type": "static",
+                "height": 10,
+                "width": 10
+            }
+        ]
     },
     "Movement": null,
     "Transform": {
@@ -540,9 +588,13 @@ TEST_F(DynamicCollisionTestFixture, TunnelingOnlyXSlideDown) {
     std::string entity_json = R"--(
 {
     "Collision": {
-        "type": "static",
-        "height": 20,
-        "width": 10
+        "collideables": [
+            {
+                "type": "static",
+                "height": 20,
+                "width": 10
+            }
+        ]
     },
     "Transform": {
         "pos_x": 15,
@@ -557,9 +609,13 @@ TEST_F(DynamicCollisionTestFixture, TunnelingOnlyXSlideDown) {
     entity_json = R"--(
 {
     "Collision": {
-        "type": "static",
-        "height": 10,
-        "width": 10
+        "collideables": [
+            {
+                "type": "static",
+                "height": 10,
+                "width": 10
+            }
+        ]
     },
     "Movement": null,
     "Transform": {
@@ -585,9 +641,13 @@ TEST_F(DynamicCollisionTestFixture, GrazeAgainstCornerButNoCollision) {
     std::string entity_json = R"--(
 {
     "Collision": {
-        "type": "static",
-        "height": 10,
-        "width": 10
+        "collideables": [
+            {
+                "type": "static",
+                "height": 10,
+                "width": 10
+            }
+        ]
     },
     "Transform": {
         "pos_x": 31,
@@ -602,9 +662,13 @@ TEST_F(DynamicCollisionTestFixture, GrazeAgainstCornerButNoCollision) {
     entity_json = R"--(
 {
     "Collision": {
-        "type": "static",
-        "height": 10,
-        "width": 10
+        "collideables": [
+            {
+                "type": "static",
+                "height": 10,
+                "width": 10
+            }
+        ]
     },
     "Movement": null,
     "Transform": {
@@ -634,10 +698,14 @@ TEST_F(DynamicCollisionTestFixture, MoveUpSlope) {
     std::string slope_json = R"--(
 {
     "Collision": {
-        "type": "slope",
-        "direction": "right",
-        "height": 100,
-        "width": 200
+        "collideables": [
+            {
+                "type": "slope",
+                "direction": "right",
+                "height": 100,
+                "width": 200
+            }
+        ]
     },
     "Transform": {
         "pos_x": 250,

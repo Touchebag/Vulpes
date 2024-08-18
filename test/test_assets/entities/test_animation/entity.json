@@ -22,9 +22,13 @@
         ]
     },
     "Collision": {
-        "type": "hurtbox",
-        "height": 50,
-        "width": 50
+        "collideables": [
+            {
+                "type": "hurtbox",
+                "height": 50,
+                "width": 50
+            }
+        ]
     },
     "Damageable": {
         "health": 10

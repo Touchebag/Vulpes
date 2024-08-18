@@ -368,9 +368,10 @@ void World::addEntity(std::shared_ptr<BaseEntity> entity, std::optional<std::str
         } else {
             world_objects_.push_back(entity);
 
-            auto coll = entity->getComponent<Collision>();
-            if (coll && coll->getCollideable()) {
-                addCollideable(coll->getCollideable());
+            if (auto coll = entity->getComponent<Collision>()) {
+                for (auto c : coll->getCollideables()) {
+                    addCollideable(c);
+                }
             }
 
             if (auto render = entity->getComponent<Rendering>()) {
@@ -397,10 +398,10 @@ void World::removeEntity(std::shared_ptr<BaseEntity> entity) {
 }
 
 void World::addPlayer(std::shared_ptr<Player> player) {
-    auto coll = player->getComponent<Collision>();
-
-    if (coll && coll->getCollideable()) {
-        addCollideable(coll->getCollideable());
+    if (auto coll = player->getComponent<Collision>()) {
+        for (auto c : coll->getCollideables()) {
+            addCollideable(c);
+        }
     }
 
     System::getRender()->setPlayer(player_->getComponent<Rendering>());
@@ -425,7 +426,7 @@ void World::setShiftedPlayerPosition(Collideable::CollisionType ctype) {
             auto other_trans = other_coll->getTransform().lock();
 
             int new_y_pos = other_trans->getY() - static_cast<int>(other_hbox->height_ / 2) -
-                static_cast<int>(player_->getComponent<Collision>()->getCollideable()->getHitbox()->height_ / 2);
+                static_cast<int>(player_->getComponent<Collision>()->getCollideables().at(0)->getHitbox()->height_ / 2);
 
             p_trans->setPosition(p_trans->getX(), new_y_pos);
         }

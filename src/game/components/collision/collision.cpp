@@ -14,8 +14,7 @@
 #include "system/system.h"
 
 Collision::Collision(std::weak_ptr<ComponentStore> components) :
-    Component(components),
-    collideable_(std::make_shared<CollideableStatic>(component_store_)) {
+    Component(components) {
 }
 
 void Collision::update() {
@@ -30,48 +29,67 @@ void Collision::update() {
         it->setDirectionMultiplier(direction_multiplier);
     }
 
-    collideable_->update();
-    collideable_->setDirectionMultiplier(direction_multiplier);
+    for (auto coll : collideables_) {
+        coll->update();
+        coll->setDirectionMultiplier(direction_multiplier);
+    }
 }
 
 std::shared_ptr<Collision> Collision::createFromJson(nlohmann::json j, std::weak_ptr<ComponentStore> components, File /* file_instance */) {
     auto collision = std::make_shared<Collision>(components);
 
-    collision->setCollideable(j);
+    collision->reloadFromJson(j);
 
     return collision;
 }
 
 void Collision::reloadFromJson(nlohmann::json j, File /* file_instance */) {
-    collideable_->reloadFromJson(j);
+    collideables_.clear();
+    for (auto c : j["collideables"]) {
+        collideables_.push_back(Collideable::createFromJson(c, component_store_));
+    }
 }
 
 std::optional<nlohmann::json> Collision::outputToJson() {
-    return collideable_->outputToJson();
+    if (collideables_.size() > 0) {
+        std::vector<nlohmann::json> colls;
+        auto c = collideables_.at(0)->outputToJson();
+
+        colls.push_back(collideables_.at(0)->outputToJson().value());
+
+        nlohmann::json j;
+        j["collideables"] = colls;
+        return j;
+
+    }
+
+    return std::nullopt;
 }
 
 bool Collision::collides(std::weak_ptr<const Collision> other_entity) {
     if (auto other_coll = other_entity.lock()) {
-        return collides(other_coll->getCollideable());
+        for (auto coll : other_coll->getCollideables()) {
+            if (collides(coll)) {
+                return true;
+            }
+        }
     }
 
     return false;
 }
 
 bool Collision::collides(std::weak_ptr<const Collideable> other_entity) {
-    return collideable_->collides(other_entity);
+    for (auto coll : collideables_) {
+        if (coll->collides(other_entity)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
-Collideable::CollisionType Collision::getType() const {
-    return collideable_->getType();
-}
-
-std::weak_ptr<const Transform> Collision::getTransform() const {
-    return collideable_->getTransform();
-}
-
-std::shared_ptr<Collideable> Collision::getCollideable() const {
-    return collideable_;
+std::vector<std::shared_ptr<Collideable>> Collision::getCollideables() const {
+    return collideables_;
 }
 
 bool Collision::isSensorTriggered(std::string sensor_name) {
@@ -121,7 +139,8 @@ void Collision::setCollideable(nlohmann::json j) {
     auto coll = Collideable::createFromJson(j, component_store_);
 
     if (coll) {
-        collideable_ = coll;
+        collideables_.clear();
+        collideables_.push_back(coll);
     } else {
         // This should never happen as createFromJson will throw
         // Message here for debug reasons

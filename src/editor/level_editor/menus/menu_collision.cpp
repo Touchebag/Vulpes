@@ -20,13 +20,22 @@ void toggleCollsion(std::shared_ptr<EditorEnvironment> editor_env) {
 }
 
 std::pair<int, int> getSize(std::shared_ptr<Collision> coll) {
-    auto hbox = coll->getCollideable()->getHitbox();
-    return {hbox->width_, hbox->height_};
+    auto colls = coll->getCollideables();
+    if (colls.size() > 0) {
+        auto hbox = colls.at(0)->getHitbox();
+        return {hbox->width_, hbox->height_};
+    } else {
+        LOGW("TODO: Handle empty collideables")
+    }
+
+    return {0, 0};
 }
 
 void setSize(std::shared_ptr<Collision> coll, int width, int height) {
-    auto collideable = coll->getCollideable();
-    collideable->setHitbox(width, height);
+    auto colls = coll->getCollideables();
+    if (colls.size() > 0) {
+        colls.at(0)->setHitbox(width, height);
+    }
 }
 
 } // collision
@@ -67,7 +76,9 @@ void MenuCollision::drawMenu(std::shared_ptr<EditorEnvironment> editor_env) {
     }
 
     if (enabled) {
-        std::dynamic_pointer_cast<EditorRender>(System::getRender())->renderCollideable(coll->getCollideable());
+        for (auto c : coll->getCollideables()) {
+            std::dynamic_pointer_cast<EditorRender>(System::getRender())->renderCollideable(c);
+        }
     }
 
     drawSize(editor_env, coll);

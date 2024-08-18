@@ -20,8 +20,11 @@ void toggleRendering(std::shared_ptr<EditorEnvironment> editor_env) {
 
 std::pair<int, int> getCollisionSize(std::shared_ptr<EditorEnvironment> editor_env) {
     if (auto coll = editor_env->current_entity->getComponent<Collision>()) {
-        auto hbox = coll->getCollideable()->getHitbox();
-        return {hbox->width_, hbox->height_};
+        auto colls = coll->getCollideables();
+        if (colls.size() > 0) {
+            auto hbox = colls.at(0)->getHitbox();
+            return {hbox->width_, hbox->height_};
+        }
     }
 
     return {0, 0};

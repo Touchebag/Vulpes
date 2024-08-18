@@ -3,15 +3,19 @@
     "Scripting": null,
     "Animation": "idle",
     "Collision": {
-        "type": "enemy_hitbox",
-        "height": 50,
-        "width": 50,
-        "attack": {
-            "damage": 10,
-            "knockback_x": 100,
-            "knockback_y": -30,
-            "invincibility": 80
-        }
+        "collideables": [
+            {
+                "type": "enemy_hitbox",
+                "height": 50,
+                "width": 50,
+                "attack": {
+                    "damage": 10,
+                    "knockback_x": 100,
+                    "knockback_y": -30,
+                    "invincibility": 80
+                }
+            }
+        ]
     },
     "Damageable": {
         "health": 10

@@ -10,8 +10,12 @@ CollideableTransition::CollideableTransition(std::weak_ptr<ComponentStore> compo
 void CollideableTransition::update() {
     auto player = System::IWorldRead::getPlayer().lock();
 
-    if (player->getComponent<Collision>() && collides(player->getComponent<Collision>()->getCollideable())) {
-        System::IWorldModify::loadRoom(room_, entrance_id_);
+    if (player->getComponent<Collision>()) {
+        for (auto coll : player->getComponent<Collision>()->getCollideables()) {
+            if (collides(coll)) {
+                System::IWorldModify::loadRoom(room_, entrance_id_);
+            }
+        }
     }
 }
 

@@ -91,8 +91,15 @@ void renderMenus() {
         }
 
         if (auto coll = editor_env->current_entity->getComponent<Collision>()) {
-            ImGui::Text("Width: %i", coll->getCollideable()->getHitbox()->width_);
-            ImGui::Text("Height: %i", coll->getCollideable()->getHitbox()->height_);
+            auto colls = coll->getCollideables();
+
+            if (colls.size() > 0) {
+                ImGui::Text("Width: %i", colls.at(0)->getHitbox()->width_);
+                ImGui::Text("Height: %i", colls.at(0)->getHitbox()->height_);
+            } else {
+                ImGui::TextDisabled("Width: N/A");
+                ImGui::TextDisabled("Height: N/A");
+            }
         } else {
             ImGui::TextDisabled("Width: N/A");
             ImGui::TextDisabled("Height: N/A");

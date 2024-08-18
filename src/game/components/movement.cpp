@@ -30,38 +30,40 @@ std::pair<double, double> checkMovement(double velX, double velY,
     double x = velX;
     double y = velY;
 
-    // For broad sweep
-    auto this_trans = this_coll->getTransform().lock();
-    auto this_hbox = this_coll->getCollideable()->getHitbox();
+    for (auto c : this_coll->getCollideables()) {
+        // For broad sweep
+        auto this_trans = c->getTransform().lock();
+        auto this_hbox = c->getHitbox();
 
-    if (!(this_trans && this_hbox)) {
-        return {x, y};
-    }
+        if (!(this_trans && this_hbox)) {
+            continue;
+        }
 
-    if (move_attr.on_slope) {
-        // If on slope shrink width to minimum to avoid getting stuck on top
-        this_hbox = std::make_shared<Hitbox>(0, this_hbox->height_);
-    }
+        if (move_attr.on_slope) {
+            // If on slope shrink width to minimum to avoid getting stuck on top
+            this_hbox = std::make_shared<Hitbox>(0, this_hbox->height_);
+        }
 
-    auto broad_sweep_trans = std::make_shared<Transform>(std::weak_ptr<ComponentStore>({}));
-    auto broad_sweep_hitbox = std::make_shared<Hitbox>(0, 0);
+        auto broad_sweep_trans = std::make_shared<Transform>(std::weak_ptr<ComponentStore>({}));
+        auto broad_sweep_hitbox = std::make_shared<Hitbox>(0, 0);
 
-    recalculateTempCollision(broad_sweep_trans, broad_sweep_hitbox, this_trans, this_hbox, x, y);
+        recalculateTempCollision(broad_sweep_trans, broad_sweep_hitbox, this_trans, this_hbox, x, y);
 
-    auto world_colls = System::IWorldRead::getCollideables(type);
-    for (auto it = world_colls.begin(); it != world_colls.end(); ++it) {
-        auto other_coll = (*it).lock();
+        auto world_colls = System::IWorldRead::getCollideables(type);
+        for (auto it = world_colls.begin(); it != world_colls.end(); ++it) {
+            auto other_coll = (*it).lock();
 
-        if (other_coll) {
-            // Broad sweep
-            if (other_coll->collides(broad_sweep_trans, broad_sweep_hitbox)) {
-                if (auto movement_coll = std::dynamic_pointer_cast<const ICollideableMovement>(other_coll)) {
-                    std::pair<double, double> newMoveValues = movement_coll->getMaximumMovement(x, y, this_coll->getCollideable());
-                    x = newMoveValues.first;
-                    y = newMoveValues.second;
+            if (other_coll) {
+                // Broad sweep
+                if (other_coll->collides(broad_sweep_trans, broad_sweep_hitbox)) {
+                    if (auto movement_coll = std::dynamic_pointer_cast<const ICollideableMovement>(other_coll)) {
+                        std::pair<double, double> newMoveValues = movement_coll->getMaximumMovement(x, y, c);
+                        x = newMoveValues.first;
+                        y = newMoveValues.second;
 
-                    // Recalculate with new movement values
-                    recalculateTempCollision(broad_sweep_trans, broad_sweep_hitbox, this_trans, this_hbox, x, y);
+                        // Recalculate with new movement values
+                        recalculateTempCollision(broad_sweep_trans, broad_sweep_hitbox, this_trans, this_hbox, x, y);
+                    }
                 }
             }
         }

@@ -9,9 +9,13 @@
     "entities": [
         {
             "Collision": {
-                "height": 100,
-                "type": "static",
-                "width": 4000
+                "collideables": [
+                    {
+                        "height": 100,
+                        "type": "static",
+                        "width": 4000
+                    }
+                ]
             },
             "Rendering": {
                 "height": 100,
@@ -28,10 +32,14 @@
         },
         {
             "Collision": {
-                "direction": "left",
-                "height": 200,
-                "type": "slope",
-                "width": 200
+                "collideables": [
+                    {
+                        "direction": "left",
+                        "height": 200,
+                        "type": "slope",
+                        "width": 200
+                    }
+                ]
             },
             "Rendering": {
                 "height": 200,
@@ -46,9 +54,13 @@
         },
         {
             "Collision": {
-                "height": 600,
-                "type": "static",
-                "width": 300
+                "collideables": [
+                    {
+                        "height": 600,
+                        "type": "static",
+                        "width": 300
+                    }
+                ]
             },
             "Rendering": {
                 "height": 600,

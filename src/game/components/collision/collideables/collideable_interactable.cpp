@@ -59,12 +59,14 @@ void CollideableInteractable::update() {
 
         // If we collide with player, execute interact
         if (auto player_coll = player->getComponent<Collision>()) {
-            if (collides(player_coll->getCollideable())) {
-                if (transition_) {
-                    System::IWorldModify::loadRoom(transition_.value().first, transition_.value().second);
-                }
-                if (cutscene_) {
-                    System::setCutscene(cutscene_);
+            for (auto coll : player_coll->getCollideables()) {
+                if (collides(coll)) {
+                    if (transition_) {
+                        System::IWorldModify::loadRoom(transition_.value().first, transition_.value().second);
+                    }
+                    if (cutscene_) {
+                        System::setCutscene(cutscene_);
+                    }
                 }
             }
         }

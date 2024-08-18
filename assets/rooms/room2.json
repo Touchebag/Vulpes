@@ -8,9 +8,13 @@
     "entities": [
         {
             "Collision": {
-                "height": 184,
-                "type": "static",
-                "width": 1470
+                "collideables": [
+                    {
+                        "height": 184,
+                        "type": "static",
+                        "width": 1470
+                    }
+                ]
             },
             "Rendering": {
                 "height": 184,
@@ -27,9 +31,13 @@
         },
         {
             "Collision": {
-                "height": 1119,
-                "type": "static",
-                "width": 210
+                "collideables": [
+                    {
+                        "height": 1119,
+                        "type": "static",
+                        "width": 210
+                    }
+                ]
             },
             "Rendering": {
                 "height": 1119,
@@ -46,9 +54,13 @@
         },
         {
             "Collision": {
-                "height": 1088,
-                "type": "static",
-                "width": 204
+                "collideables": [
+                    {
+                        "height": 1088,
+                        "type": "static",
+                        "width": 204
+                    }
+                ]
             },
             "Rendering": {
                 "height": 1088,
@@ -65,9 +77,13 @@
         },
         {
             "Collision": {
-                "height": 234,
-                "type": "static",
-                "width": 1917
+                "collideables": [
+                    {
+                        "height": 234,
+                        "type": "static",
+                        "width": 1917
+                    }
+                ]
             },
             "Rendering": {
                 "height": 234,
@@ -84,13 +100,17 @@
         },
         {
             "Collision": {
-                "destination": {
-                    "entrance_id": 2,
-                    "room": "world"
-                },
-                "height": 408,
-                "type": "transition",
-                "width": 88
+                "collideables": [
+                    {
+                        "destination": {
+                            "entrance_id": 2,
+                            "room": "world"
+                        },
+                        "height": 408,
+                        "type": "transition",
+                        "width": 88
+                    }
+                ]
             },
             "Transform": {
                 "pos_x": -291,
@@ -99,13 +119,17 @@
         },
         {
             "Collision": {
-                "destination": {
-                    "entrance_id": 1,
-                    "room": "world"
-                },
-                "height": 408,
-                "type": "transition",
-                "width": 88
+                "collideables": [
+                    {
+                        "destination": {
+                            "entrance_id": 1,
+                            "room": "world"
+                        },
+                        "height": 408,
+                        "type": "transition",
+                        "width": 88
+                    }
+                ]
             },
             "Transform": {
                 "pos_x": 1143,

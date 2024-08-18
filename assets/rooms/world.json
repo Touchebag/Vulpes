@@ -8,9 +8,13 @@
     "entities": [
         {
             "Collision": {
-                "height": 4719,
-                "type": "static",
-                "width": 245
+                "collideables": [
+                    {
+                        "height": 4719,
+                        "type": "static",
+                        "width": 245
+                    }
+                ]
             },
             "Rendering": {
                 "height": 4719,
@@ -27,9 +31,13 @@
         },
         {
             "Collision": {
-                "height": 4787,
-                "type": "static",
-                "width": 204
+                "collideables": [
+                    {
+                        "height": 4787,
+                        "type": "static",
+                        "width": 204
+                    }
+                ]
             },
             "Rendering": {
                 "height": 4787,
@@ -54,14 +62,18 @@
         },
         {
             "Collision": {
-                "height": 57,
-                "type": "static",
-                "open_sides": [
-                    "bottom",
-                    "left",
-                    "right"
-                ],
-                "width": 867
+                "collideables": [
+                    {
+                        "height": 57,
+                        "type": "static",
+                        "open_sides": [
+                            "bottom",
+                            "left",
+                            "right"
+                        ],
+                        "width": 867
+                    }
+                ]
             },
             "Rendering": {
                 "height": 57,
@@ -78,9 +90,13 @@
         },
         {
             "Collision": {
-                "height": 705,
-                "type": "static",
-                "width": 70
+                "collideables": [
+                    {
+                        "height": 705,
+                        "type": "static",
+                        "width": 70
+                    }
+                ]
             },
             "Rendering": {
                 "height": 705,
@@ -97,9 +113,13 @@
         },
         {
             "Collision": {
-                "height": 2749,
-                "type": "static",
-                "width": 89
+                "collideables": [
+                    {
+                        "height": 2749,
+                        "type": "static",
+                        "width": 89
+                    }
+                ]
             },
             "Rendering": {
                 "height": 2749,
@@ -116,9 +136,13 @@
         },
         {
             "Collision": {
-                "height": 65,
-                "type": "static",
-                "width": 1015
+                "collideables": [
+                    {
+                        "height": 65,
+                        "type": "static",
+                        "width": 1015
+                    }
+                ]
             },
             "Rendering": {
                 "height": 65,
@@ -135,9 +159,13 @@
         },
         {
             "Collision": {
-                "height": 71,
-                "type": "static",
-                "width": 1606
+                "collideables": [
+                    {
+                        "height": 71,
+                        "type": "static",
+                        "width": 1606
+                    }
+                ]
             },
             "Rendering": {
                 "height": 71,
@@ -154,9 +182,13 @@
         },
         {
             "Collision": {
-                "height": 1394,
-                "type": "static",
-                "width": 101
+                "collideables": [
+                    {
+                        "height": 1394,
+                        "type": "static",
+                        "width": 101
+                    }
+                ]
             },
             "Rendering": {
                 "height": 1394,
@@ -173,9 +205,13 @@
         },
         {
             "Collision": {
-                "height": 75,
-                "type": "static",
-                "width": 996
+                "collideables": [
+                    {
+                        "height": 75,
+                        "type": "static",
+                        "width": 996
+                    }
+                ]
             },
             "Rendering": {
                 "height": 75,
@@ -192,9 +228,13 @@
         },
         {
             "Collision": {
-                "height": 75,
-                "type": "static",
-                "width": 996
+                "collideables": [
+                    {
+                        "height": 75,
+                        "type": "static",
+                        "width": 996
+                    }
+                ]
             },
             "Rendering": {
                 "height": 75,
@@ -211,9 +251,13 @@
         },
         {
             "Collision": {
-                "height": 1394,
-                "type": "static",
-                "width": 101
+                "collideables": [
+                    {
+                        "height": 1394,
+                        "type": "static",
+                        "width": 101
+                    }
+                ]
             },
             "Rendering": {
                 "height": 1394,
@@ -230,9 +274,13 @@
         },
         {
             "Collision": {
-                "height": 2365,
-                "type": "static",
-                "width": 112
+                "collideables": [
+                    {
+                        "height": 2365,
+                        "type": "static",
+                        "width": 112
+                    }
+                ]
             },
             "Rendering": {
                 "height": 2365,
@@ -249,9 +297,13 @@
         },
         {
             "Collision": {
-                "height": 161,
-                "type": "static",
-                "width": 4920
+                "collideables": [
+                    {
+                        "height": 161,
+                        "type": "static",
+                        "width": 4920
+                    }
+                ]
             },
             "Rendering": {
                 "height": 161,
@@ -268,9 +320,13 @@
         },
         {
             "Collision": {
-                "height": 156,
-                "type": "static",
-                "width": 4882
+                "collideables": [
+                    {
+                        "height": 156,
+                        "type": "static",
+                        "width": 4882
+                    }
+                ]
             },
             "Rendering": {
                 "height": 156,
@@ -287,9 +343,13 @@
         },
         {
             "Collision": {
-                "height": 367,
-                "type": "static",
-                "width": 1076
+                "collideables": [
+                    {
+                        "height": 367,
+                        "type": "static",
+                        "width": 1076
+                    }
+                ]
             },
             "Rendering": {
                 "height": 367,
@@ -358,13 +418,17 @@
         },
         {
             "Collision": {
-                "destination": {
-                    "entrance_id": 0,
-                    "room": "room2"
-                },
-                "height": 525,
-                "type": "transition",
-                "width": 173
+                "collideables": [
+                    {
+                        "destination": {
+                            "entrance_id": 0,
+                            "room": "room2"
+                        },
+                        "height": 525,
+                        "type": "transition",
+                        "width": 173
+                    }
+                ]
             },
             "Transform": {
                 "pos_x": 2704,
@@ -373,14 +437,18 @@
         },
         {
             "Collision": {
-                "cutscene": "door_transition",
-                "height": 400,
-                "transition": {
-                    "id": 1,
-                    "name": "room2"
-                },
-                "type": "interactable",
-                "width": 220
+                "collideables": [
+                    {
+                        "cutscene": "door_transition",
+                        "height": 400,
+                        "transition": {
+                            "id": 1,
+                            "name": "room2"
+                        },
+                        "type": "interactable",
+                        "width": 220
+                    }
+                ]
             },
             "Rendering": {
                 "height": 507,
@@ -425,10 +493,14 @@
         },
         {
             "Collision": {
-                "direction": "left",
-                "height": 393,
-                "type": "slope",
-                "width": 551
+                "collideables": [
+                    {
+                        "direction": "left",
+                        "height": 393,
+                        "type": "slope",
+                        "width": 551
+                    }
+                ]
             },
             "Rendering": {
                 "height": 393,
@@ -445,14 +517,18 @@
         },
         {
             "Collision": {
-                "height": 137,
-                "type": "static",
-                "open_sides": [
-                    "bottom",
-                    "left",
-                    "right"
-                ],
-                "width": 1080
+                "collideables": [
+                    {
+                        "height": 137,
+                        "type": "static",
+                        "open_sides": [
+                            "bottom",
+                            "left",
+                            "right"
+                        ],
+                        "width": 1080
+                    }
+                ]
             },
             "Rendering": {
                 "height": 137,

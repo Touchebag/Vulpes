@@ -22,12 +22,16 @@
         ]
     },
     "Collision": {
-        "type": "hurtbox",
-        "teams": [
-            2
-        ],
-        "height": 50,
-        "width": 50
+        "collideables": [
+            {
+                "type": "hurtbox",
+                "teams": [
+                    2
+                ],
+                "height": 50,
+                "width": 50
+            }
+        ]
     },
     "Death": null,
     "Rendering": {

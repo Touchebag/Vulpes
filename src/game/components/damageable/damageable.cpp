@@ -80,14 +80,13 @@ void Damageable::update() {
         return;
     }
     if (auto collision = getComponent<Collision>()) {
-        if (auto coll = collision->getCollideable()) {
+        for (auto coll : collision->getCollideables()) {
             std::set<int> this_teams;
 
             if (auto coll_damage = std::dynamic_pointer_cast<const CollideableHurtbox>(coll)) {
                 this_teams = coll_damage->getTeams();
             } else {
-                LOGW("Could not cast collision type to get teams");
-                return;
+                continue;
             }
 
             for (auto& it : System::IWorldRead::getCollideables(Collideable::CollisionType::HITBOX)) {

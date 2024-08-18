@@ -8,9 +8,13 @@
     "entities": [
         {
             "Collision": {
-                "height": 4000,
-                "type": "static",
-                "width": 245
+                "collideables": [
+                    {
+                        "height": 4000,
+                        "type": "static",
+                        "width": 245
+                    }
+                ]
             },
             "Transform": {
                 "pos_x": 200,

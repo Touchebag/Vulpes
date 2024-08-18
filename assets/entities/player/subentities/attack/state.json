@@ -6,16 +6,22 @@
                 {"event": "start", "state": "attack"}
             ]
         },
-        "attack": {
+        "idle": {
             "animation": "attack",
-            "next_states": [
-                {"event": "action_ai1", "state": "test"}
-            ]
-        },
-        "test": {
-            "animation": "attack",
+            "script": [
+                "set_position this (position_x player) (position_y player)"
+            ],
             "next_states": [
                 {"event": "action_ai1", "state": "attack"}
+            ]
+        },
+        "attack": {
+            "animation": "attack",
+            "script": [
+                "set_position this (position_x player) (position_y player)"
+            ],
+            "next_states": [
+                {"event": "action_ai1", "state": "test"}
             ]
         }
     }

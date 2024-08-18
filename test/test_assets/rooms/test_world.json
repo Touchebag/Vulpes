@@ -2,9 +2,13 @@
     "entities": [
         {
             "Collision": {
-                "type": "static",
-                "height": 200,
-                "width": 50
+                "collideables": [
+                    {
+                        "type": "static",
+                        "height": 200,
+                        "width": 50
+                    }
+                ]
             },
             "Rendering": {
                 "texture": "box.png",
@@ -21,9 +25,13 @@
         },
         {
             "Collision": {
-                "type": "static",
-                "height": 200,
-                "width": 50
+                "collideables": [
+                    {
+                        "type": "static",
+                        "height": 200,
+                        "width": 50
+                    }
+                ]
             },
             "Rendering": {
                 "texture": "box.png",
@@ -40,9 +48,13 @@
         },
         {
             "Collision": {
-                "type": "static",
-                "height": 50,
-                "width": 200
+                "collideables": [
+                    {
+                        "type": "static",
+                        "height": 50,
+                        "width": 200
+                    }
+                ]
             },
             "Rendering": {
                 "texture": "box.png",
@@ -59,9 +71,13 @@
         },
         {
             "Collision": {
-                "type": "static",
-                "height": 50,
-                "width": 200
+                "collideables": [
+                    {
+                        "type": "static",
+                        "height": 50,
+                        "width": 200
+                    }
+                ]
             },
             "Rendering": {
                 "texture": "box.png",
@@ -78,14 +94,18 @@
         },
         {
             "Collision": {
-                "type": "static",
-                "open_sides": [
-                    "bottom",
-                    "left",
-                    "right"
-                ],
-                "height": 50,
-                "width": 200
+                "collideables": [
+                    {
+                        "type": "static",
+                        "open_sides": [
+                            "bottom",
+                            "left",
+                            "right"
+                        ],
+                        "height": 50,
+                        "width": 200
+                    }
+                ]
             },
             "Rendering": {
                 "texture": "box.png",

@@ -180,9 +180,13 @@ TEST_F(InterpreterTestFixture, ThisPosition) {
 TEST_F(InterpreterTestFixture, PenetrationDistance) {
     auto str = R"--({
         "Collision": {
-            "height": 200,
-            "type": "static",
-            "width": 100
+            "collideables": [
+                {
+                    "height": 200,
+                    "type": "static",
+                    "width": 100
+                }
+            ]
         },
         "Transform": {
             "pos_x": 30,
@@ -224,8 +228,17 @@ TEST_F(InterpreterTestFixture, ThisCollides) {
 
     extra_data_.this_components->setComponent<Transform>(std::make_shared<Transform>(extra_data_.this_components));
     extra_data_.this_components->getComponent<Transform>()->setPosition(0, 0);
-    extra_data_.this_components->setComponent<Collision>(std::make_shared<Collision>(extra_data_.this_components));
-    extra_data_.this_components->getComponent<Collision>()->getCollideable()->setHitbox(10, 10);
+
+    nlohmann::json j = nlohmann::json::parse(R"--({
+    "collideables": [
+        {
+            "height": 10,
+            "type": "static",
+            "width": 10
+        }
+    ]
+    })--");
+    extra_data_.this_components->setComponent<Collision>(Collision::createFromJson(j, extra_data_.this_components));
 
     auto output = parseAndRun("collides player");
 
@@ -271,9 +284,13 @@ TEST_F(InterpreterTestFixture, Sensor) {
 
     auto str = R"--({
         "Collision": {
-            "height": 100,
-            "type": "static",
-            "width": 100
+            "collideables": [
+                {
+                    "height": 100,
+                    "type": "static",
+                    "width": 100
+                }
+            ]
         },
         "Transform": {
             "pos_x": 100,

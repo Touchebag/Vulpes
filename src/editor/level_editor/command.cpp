@@ -45,7 +45,11 @@ void Command::update() {
                 auto height = roundToNearest(static_cast<float>(original_entity_position_.second) + mouse_world_dist.second, grid_size);
 
                 if(auto coll = editor_env->current_entity->getComponent<Collision>()) {
-                    coll->getCollideable()->setHitbox(width, height);
+                    auto colls = coll->getCollideables();
+                    if (colls.size() > 0) {
+                        // Default to first collideable for now
+                        colls.at(0)->setHitbox(width, height);
+                    }
                 }
 
                 if(auto rndr = editor_env->current_entity->getComponent<Rendering>()) {

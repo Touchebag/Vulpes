@@ -19,18 +19,22 @@ const nlohmann::json entity_json = nlohmann::json::parse(R"--(
     "Actions": null,
     "Scripting": null,
     "Collision": {
-        "type": "hitbox",
-        "height": 200,
-        "width": 46,
-        "teams": [
-            1
-        ],
-        "attack": {
-            "damage": 2,
-            "knockback_x": 15,
-            "knockback_y": -5,
-            "invincibility": 10
-        }
+        "collideables": [
+            {
+                "type": "hitbox",
+                "height": 200,
+                "width": 46,
+                "teams": [
+                    1
+                ],
+                "attack": {
+                    "damage": 2,
+                    "knockback_x": 15,
+                    "knockback_y": -5,
+                    "invincibility": 10
+                }
+            }
+        ]
     },
     "Damageable": {
         "health": 100

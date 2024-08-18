@@ -3,12 +3,16 @@
     "Actions": null,
     "Animation": null,
     "Collision": {
-        "type": "hurtbox",
-        "teams": [
-            1
-        ],
-        "height": 200,
-        "width": 50
+        "collideables": [
+            {
+                "type": "hurtbox",
+                "teams": [
+                    1
+                ],
+                "height": 200,
+                "width": 50
+            }
+        ]
     },
     "Damageable": {
         "type": "player",

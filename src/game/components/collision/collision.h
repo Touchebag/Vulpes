@@ -31,7 +31,7 @@ class Collision : public Component {
     // Getters/setters
     std::weak_ptr<const Transform> getTransform() const;
 
-    std::shared_ptr<Collideable> getCollideable() const;
+    std::vector<std::shared_ptr<Collideable>> getCollideables() const;
     void setCollideable(nlohmann::json j);
 
     void addTemporaryCollideable(nlohmann::json temp_coll);
@@ -40,11 +40,8 @@ class Collision : public Component {
     std::shared_ptr<CollideableSensor> getSensor(std::string sensor_name);
     bool isSensorTriggered(std::string sensor_name);
 
-    // Type-specific functions
-    virtual Collideable::CollisionType getType() const;
-
   protected:
-    std::shared_ptr<Collideable> collideable_;
+    std::vector<std::shared_ptr<Collideable>> collideables_;
 
     std::vector<std::shared_ptr<Collideable>> temp_colls_;
 

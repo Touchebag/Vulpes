@@ -13,11 +13,15 @@ class DeathTestFixture : public ::testing::Test {
         "health": 6
     },
     "Collision": {
-        "type": "hurtbox",
-        "height": 50,
-        "width": 50,
-        "teams": [
-            2
+        "collideables": [
+            {
+                "type": "hurtbox",
+                "height": 50,
+                "width": 50,
+                "teams": [
+                    2
+                ]
+            }
         ]
     },
     "Transform": {
@@ -30,14 +34,18 @@ class DeathTestFixture : public ::testing::Test {
     std::string attack_json_ = R"--(
 {
     "Collision": {
-        "type": "hitbox",
-        "height": 50,
-        "width": 50,
-        "attack": {
-            "damage": 3
-        },
-        "teams": [
-            1
+        "collideables": [
+            {
+                "type": "hitbox",
+                "height": 50,
+                "width": 50,
+                "attack": {
+                    "damage": 3
+                },
+                "teams": [
+                    1
+                ]
+            }
         ]
     },
     "Transform": {
@@ -79,7 +87,7 @@ TEST_F(DeathTestFixture, TestHealthSameTeam) {
     auto atk = nlohmann::json::parse(attack_json_);
 
     // Change hurtbox to same team
-    ent["Collision"]["teams"] = std::vector<int>{1};
+    ent["Collision"]["collideables"].front()["teams"] = std::vector<int>{1};
 
     entity_ = BaseEntity::createFromJson(ent);
     attack_ = BaseEntity::createFromJson(atk);
